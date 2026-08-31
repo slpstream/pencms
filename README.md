@@ -6,7 +6,7 @@
 
 **Many agents via keys. One operator.**
 
-PenCMS is an MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) brain and a PHP admin, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
+PenCMS is an Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) brain and a PHP admin, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
 
 ---
 
