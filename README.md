@@ -8,6 +8,8 @@
 
 PenCMS is an Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) brain and a PHP admin, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/slpstream/pencms)
+
 ---
 
 ## Key Principles
