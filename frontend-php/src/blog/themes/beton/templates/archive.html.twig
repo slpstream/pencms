@@ -1,0 +1,22 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <section class="archive-head wrap">
+        <p class="fiche-kicker mono">Inventaire</p>
+        <h1 class="sec-title cast-type"><span class="reveal">{{ hero_title | default('Archive') }}</span></h1>
+    </section>
+
+    <div class="joint" role="separator" aria-hidden="true"><span class="mono">Reprise de bétonnage</span></div>
+
+    {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+    {% if post_list is not empty %}
+        {% for dossier in post_list %}
+            {{ theme.partial('post-fiche', { dossier: dossier, fiche_index: loop.index }) | raw }}
+        {% endfor %}
+    {% else %}
+        <p class="wrap empty-slab">No matching fiches.</p>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

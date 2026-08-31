@@ -1,0 +1,33 @@
+{% set url = contentUrl(dossier) %}
+{% set title = dossier.hero_title | default(dossier.title | default('Untitled')) %}
+{% set n = card_index | default(1) %}
+{% set tilts = ['-1.5deg', '1.1deg', '-0.9deg', '1.4deg', '-1.2deg'] %}
+{% set tilt = tilts[(n - 1) % 5] %}
+{% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+{% set stamp_date = (dossier.dateline is defined and dossier.dateline is not empty) ? dossier.dateline : (dossier.date | default('')) %}
+
+<article class="card reveal" style="--tilt:{{ tilt }};">
+    <div class="sheet">
+        <span class="tape tp-corner{% if n is even %} flip{% endif %}" aria-hidden="true"></span>
+        <header class="card-top">
+            <p class="mr card-time" data-t="{{ '%02d'|format(n) }}" aria-hidden="true"><span>{{ '%02d'|format(n) }}</span></p>
+            <p class="card-role">
+                {% if dossier.trumpet is not empty %}{{ dossier.trumpet | striptags }}{% elseif dossier.category is not empty %}{{ dossier.category | upper }}{% elseif dossier.section is not empty %}{{ dossier.section | upper }}{% else %}FEATURE{% endif %}
+            </p>
+        </header>
+        {% if has_hero %}
+            <a href="{{ url }}" class="card-polaroid" tabindex="-1" aria-hidden="true">
+                <img src="{{ contentAsset(dossier.hero_image) }}" alt="">
+            </a>
+        {% endif %}
+        <h3 class="card-name"><a href="{{ url }}">{{ title }}</a></h3>
+        {% if stamp_date is not empty %}
+            <p class="card-loc">{{ stamp_date }}</p>
+        {% endif %}
+        {% if dossier.deck is not empty %}
+            <blockquote class="card-quote"><p>{{ dossier.deck | striptags }}</p></blockquote>
+        {% endif %}
+        <a class="card-link" href="{{ url }}">READ THE FULL PAGE <span aria-hidden="true">→</span></a>
+    </div>
+    <span class="stamp-reg" aria-hidden="true">IN&nbsp;REGISTER ✓</span>
+</article>

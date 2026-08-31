@@ -1,0 +1,200 @@
+{
+  "type": "native",
+  "name": "Brainy",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A sophisticated magazine publication theme for long-form essays, news analysis, and opinion journalism with side-by-side hero layout.",
+  "editor_skin": "brainy",
+  "editor_skin_base": [],
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "page_content": { "type": "html", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#f6f4ef",
+            "dark_default": "#0f0f0f"
+          },
+          {
+            "id": "surface",
+            "label": "Surface / Subtle BG",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#f9f9f7",
+            "dark_default": "#181818"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#161613",
+            "dark_default": "#f0ede6"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#666666",
+            "dark_default": "#a8a6a1"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#f2312c",
+            "dark_default": "#ff6b6b"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#bebdb8",
+            "dark_default": "#2d2d2d"
+          },
+          {
+            "id": "border-light",
+            "label": "Light Borders",
+            "type": "color",
+            "var": "--color-border-light",
+            "default": "#e5e5e0",
+            "dark_default": "#252525"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Gentium Book Plus', 'Times New Roman', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Gentium Book Plus', 'Times New Roman', Georgia, serif", "label": "Gentium Book Plus" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" },
+              { "value": "'Playfair Display', serif", "label": "Playfair Display" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Alegreya', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Alegreya', Georgia, serif", "label": "Alegreya" },
+              { "value": "'Gentium Book Plus', 'Times New Roman', Georgia, serif", "label": "Gentium Book Plus" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" },
+              { "value": "'Newsreader', Georgia, serif", "label": "Newsreader" }
+            ]
+          },
+          {
+            "id": "font-sans",
+            "label": "Label / Sans Font",
+            "type": "select",
+            "var": "--font-sans",
+            "default": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', 'Helvetica Neue', Arial, sans-serif", "label": "Archivo" },
+              { "value": "system-ui, -apple-system, 'Segoe UI', sans-serif", "label": "System Sans" }
+            ]
+          },
+          {
+            "id": "font-dropcap",
+            "label": "Drop Cap & Pullquote Font",
+            "type": "select",
+            "var": "--font-dropcap",
+            "default": "'Calistoga', serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Calistoga', serif", "label": "Calistoga" },
+              { "value": "'Playfair Display', serif", "label": "Playfair Display" },
+              { "value": "Georgia, serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" },
+              { "value": "'Fira Code', monospace", "label": "Fira Code" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#f2312c",
+    "og_vignette_color": "#161613",
+    "og_text_color": "#161613",
+    "og_bar_color": "#f6f4ef",
+    "og_font": "GentiumBookPlus-Bold",
+    "og_fonts": {
+      "GentiumBookPlus-Bold": "assets/fonts/GentiumBookPlus-Bold.ttf",
+      "Calistoga-Regular": "assets/fonts/Calistoga-Regular.ttf",
+      "Archivo-Bold": "assets/fonts/Archivo-Bold.ttf"
+    },
+    "og_headline_style": "caption",
+    "og_text_case": "as_is",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

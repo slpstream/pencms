@@ -1,0 +1,1013 @@
+/* ==========================================================================
+   Upstack Content Skin (skin-upstack.css)
+   Layer B: Dual-Duty Stylesheet for TravenEditor (.cm-editor) & Published HTML (.traven-preview)
+   Substack-Inspired Typography: Clean Display Sans Headings + Serif Body Prose
+   ========================================================================== */
+
+:root {
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-body: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  --font-sans: var(--font-display);
+  --font-serif: var(--font-body);
+
+  --canvas-bg: #ffffff;
+  --text-color: #334155;
+  --muted-color: #64748b;
+  --border-color: #eeeeee;
+  --brand-orange: #ff6719;
+  --brand-orange-hover: #e5560d;
+  --card-bg: #ffffff;
+
+  /* Traven host contract — aliased from chrome knobs */
+  --traven-font-display: var(--font-display);
+  --traven-font-body: var(--font-body);
+  --traven-font-mono: var(--font-mono);
+
+  --traven-bg: var(--canvas-bg);
+  --traven-text: var(--text-color);
+  --traven-muted: var(--muted-color);
+  --traven-border: var(--border-color);
+  --traven-accent: var(--brand-orange);
+  --traven-accent-hover: var(--brand-orange-hover);
+  --traven-card-bg: var(--card-bg);
+  --traven-code-bg: #f5f5f5;
+  --traven-selection: color-mix(in srgb, var(--brand-orange) 18%, #ffffff);
+}
+
+/* Dark mode variable overrides */
+.cm-wysiwym-dark,
+html.cm-wysiwym-dark,
+[data-theme="dark"] {
+  --canvas-bg: #121212;
+  --text-color: #cbd5e1;
+  --muted-color: #94a3b8;
+  --border-color: #2e2e2e;
+  --brand-orange: #ff6719;
+  --brand-orange-hover: #ff7a38;
+  --card-bg: #1e1e1e;
+
+  --traven-code-bg: #1a1a1a;
+  --traven-selection: color-mix(in srgb, var(--brand-orange) 28%, #000000);
+}
+
+/* --------------------------------------------------------------------------
+   1. Base Canvas & Scroller (Editor & Preview)
+   -------------------------------------------------------------------------- */
+.cm-editor,
+.traven-preview {
+  font-family: var(--traven-font-body) !important;
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--traven-text) !important;
+  background-color: var(--traven-bg) !important;
+}
+
+/* Traven Editor scroller & selection */
+.cm-editor {
+  border-radius: 4px;
+}
+
+.cm-editor:focus,
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-scroller {
+  font-family: var(--traven-font-body) !important;
+  line-height: 1.65;
+  padding: 16px 0;
+}
+
+.cm-content {
+  padding: 0 24px;
+}
+
+.cm-selectionBackground,
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: var(--traven-selection) !important;
+}
+
+.cm-cursor {
+  border-left-color: var(--traven-accent) !important;
+  border-left-width: 2px !important;
+}
+
+.cm-fat-cursor {
+  background-color: var(--traven-accent) !important;
+  opacity: 0.5 !important;
+}
+
+/* Hero Title Block in Admin Editor + Published Dual-Duty (KB A9) */
+.hero-title-block.traven-preview {
+  background-color: var(--traven-bg) !important;
+  color: var(--traven-text) !important;
+}
+
+.post-detail-trumpet {
+  font-family: var(--traven-font-display, var(--font-sans, sans-serif)) !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--traven-accent) !important;
+}
+
+.post-detail-title,
+.upstack-post-header h1 {
+  font-family: var(--traven-font-display, var(--font-sans, sans-serif)) !important;
+  font-size: clamp(2rem, 5vw, 2.75rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  color: var(--traven-text) !important;
+}
+
+.post-detail-deck,
+.upstack-post-deck {
+  font-family: var(--traven-font-display, var(--font-sans, sans-serif)) !important;
+  font-size: 1.25rem !important;
+  line-height: 1.5 !important;
+  color: var(--traven-muted) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Typography & Headings
+   -------------------------------------------------------------------------- */
+/* Substack style: Sans-serif display headings (prose + CM only — not post header / admin title block) */
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6,
+.article-content.traven-preview h1,
+.article-content.traven-preview h2,
+.article-content.traven-preview h3,
+.article-content.traven-preview h4,
+.article-content.traven-preview h5,
+.article-content.traven-preview h6 {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 700 !important;
+  color: var(--traven-text) !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-h1 { font-size: 2.25em !important; padding-top: 24px !important; padding-bottom: 8px !important; }
+.cm-editor .cm-wysiwym-h2 { font-size: 1.65em !important; padding-top: 20px !important; padding-bottom: 6px !important; }
+.cm-editor .cm-wysiwym-h3 { font-size: 1.35em !important; padding-top: 16px !important; padding-bottom: 4px !important; }
+.cm-editor .cm-wysiwym-h4 { font-size: 1.15em !important; padding-top: 14px !important; padding-bottom: 4px !important; }
+.cm-editor .cm-wysiwym-h5 { font-size: 1.0em !important; padding-top: 12px !important; padding-bottom: 2px !important; }
+.cm-editor .cm-wysiwym-h6 { font-size: 0.9em !important; padding-top: 10px !important; padding-bottom: 2px !important; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Blank-Line Collapsing after headings (§4.3) */
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child) {
+  height: 0.6em !important;
+  min-height: 0.6em !important;
+}
+
+.article-content.traven-preview h1,
+.traven-preview .article-content h1 {
+  font-size: 2.25rem !important;
+  margin-top: 1.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.article-content.traven-preview h2,
+.traven-preview .article-content h2 {
+  font-size: 1.65rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.article-content.traven-preview h3,
+.traven-preview .article-content h3 {
+  font-size: 1.35rem !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.article-content.traven-preview h4,
+.traven-preview .article-content h4 {
+  font-size: 1.15rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.traven-preview > h1:first-child,
+.traven-preview > h2:first-child,
+.traven-preview > h3:first-child {
+  margin-top: 0 !important;
+}
+
+/* Paragraphs & Links */
+.traven-preview p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  line-height: 1.65;
+}
+
+.cm-wysiwym-link-anchor,
+.article-content.traven-preview p a,
+.traven-preview .article-content p a,
+.traven-preview .upstack-post-detail p a,
+.traven-preview .upstack-page-detail p a {
+  color: var(--traven-text) !important;
+  text-decoration: underline !important;
+  text-decoration-color: var(--traven-accent) !important;
+  text-underline-offset: 3px !important;
+  transition: color 0.15s ease;
+}
+
+.cm-wysiwym-link-anchor:hover,
+.article-content.traven-preview p a:hover,
+.traven-preview .article-content p a:hover,
+.traven-preview .upstack-post-detail p a:hover,
+.traven-preview .upstack-page-detail p a:hover {
+  color: var(--traven-accent) !important;
+}
+
+.cm-wysiwym-bold { font-weight: 700 !important; }
+.cm-wysiwym-italic { font-style: italic !important; }
+.cm-wysiwym-strikethrough { text-decoration: line-through !important; }
+.cm-wysiwym-highlight,
+.traven-preview mark {
+  background-color: #fff2ac !important;
+  color: #1a1a1a !important;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+/* Inline & Fenced Code */
+.cm-wysiwym-inline-code,
+.traven-preview code:not(pre code) {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.9em !important;
+  background-color: var(--traven-code-bg) !important;
+  color: var(--traven-text) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+  border: 1px solid var(--traven-border) !important;
+}
+
+.traven-preview pre {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.9rem !important;
+  background-color: var(--traven-code-bg) !important;
+  color: var(--traven-text) !important;
+  padding: 1rem 1.25rem !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--traven-border) !important;
+  overflow-x: auto !important;
+  margin: 1.5rem 0 !important;
+}
+
+.traven-preview pre code {
+  font-family: inherit !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. CodeMirror Line Engine & Caret Drift Rules (Hardened)
+   -------------------------------------------------------------------------- */
+.cm-editor .cm-wysiwym-codeblock-line {
+  margin: 0 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  font-family: var(--traven-font-mono) !important;
+  background-color: var(--traven-code-bg) !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-first {
+  padding-top: 12px !important;
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-last {
+  padding-bottom: 12px !important;
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+
+.cm-editor .cm-wysiwym-table-row {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-alert {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-figure-shortcode {
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+/* Component Inner Resets */
+.cm-wysiwym-component-shortcode blockquote,
+.cm-wysiwym-component-shortcode p,
+.cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cm-wysiwym-component-shortcode p + p,
+.cm-wysiwym-figure-shortcode p + p {
+  margin-top: 0.8em !important;
+}
+
+.cm-wysiwym-component-shortcode.component-blockquote {
+  overflow: hidden;
+}
+
+/* Blank-Line Collapsing around widgets (Gotcha §5) */
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Blockquotes, Pullquotes & Callouts (Gotcha §4 Exclusions)
+   -------------------------------------------------------------------------- */
+.cm-editor .cm-wysiwym-blockquote {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  padding-left: 20px !important;
+  border-left: 3px solid var(--traven-text) !important;
+  margin: 0 !important;
+  font-style: italic;
+}
+/* First line of blockquote */
+.cm-editor .cm-wysiwym-blockquote { padding-top: 10px !important; }
+/* Subsequent lines in same block */
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote { padding-top: 2px !important; }
+/* Last line of blockquote */
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) {
+  padding-bottom: 10px !important;
+}
+
+/* Native HTML blockquotes in preview (excluding alerts & pullquotes) */
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert):not(.pullquote) {
+  font-family: var(--traven-font-body) !important;
+  font-style: italic !important;
+  padding-left: 20px !important;
+  margin: 1.5rem 0 !important;
+  border-left: 3px solid var(--traven-text) !important;
+  color: var(--traven-text) !important;
+}
+
+/* Attributed Blockquotes (cite, footer, .author, .source, .attribution) */
+.traven-preview blockquote cite,
+.traven-preview blockquote footer,
+.traven-preview blockquote .author,
+.traven-preview blockquote .source,
+.traven-preview blockquote .attribution {
+  display: block !important;
+  text-align: right !important;
+  font-style: normal !important;
+  margin-top: 0.5rem !important;
+  font-size: 0.9em !important;
+  color: var(--traven-muted) !important;
+}
+
+/* Pullquotes: Larger, bolder, restricted to 70% of column width */
+.traven-preview .traven-component-pullquote,
+.traven-preview blockquote.pullquote,
+.traven-preview .pullquote {
+  font-family: var(--traven-font-display) !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  width: 70% !important;
+  max-width: 70% !important;
+  margin: 2rem auto !important;
+  padding: 1.25rem 1.5rem !important;
+  border-left: none !important;
+  border-top: 2px solid var(--traven-accent) !important;
+  border-bottom: 2px solid var(--traven-accent) !important;
+  text-align: center !important;
+  color: var(--traven-text) !important;
+  background: transparent !important;
+}
+
+.traven-preview .traven-component-pullquote > :first-child,
+.traven-preview blockquote.pullquote > :first-child,
+.traven-preview .pullquote > :first-child {
+  margin-top: 0 !important;
+}
+
+.traven-preview .traven-component-pullquote > :last-child,
+.traven-preview blockquote.pullquote > :last-child,
+.traven-preview .pullquote > :last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.traven-preview .traven-component-pullquote p,
+.traven-preview blockquote.pullquote p,
+.traven-preview .pullquote p {
+  margin-bottom: 0 !important;
+}
+
+.traven-preview .traven-component-pullquote p + p,
+.traven-preview blockquote.pullquote p + p,
+.traven-preview .pullquote p + p {
+  margin-top: 0.75rem !important;
+}
+
+.traven-preview .traven-component-pullquote cite,
+.traven-preview .traven-component-pullquote footer,
+.traven-preview .traven-component-pullquote .author,
+.traven-preview .traven-component-pullquote .source,
+.traven-preview .traven-component-pullquote .attribution,
+.traven-preview blockquote.pullquote cite,
+.traven-preview blockquote.pullquote footer,
+.traven-preview blockquote.pullquote .author,
+.traven-preview blockquote.pullquote .source,
+.traven-preview blockquote.pullquote .attribution {
+  display: block !important;
+  text-align: right !important;
+  font-size: 0.95rem !important;
+  font-weight: 400 !important;
+  margin-top: 0.75rem !important;
+}
+
+/* GitHub Alert & Callout styling (5 callout types: NOTE, TIP, IMPORTANT, WARNING, CAUTION) */
+.traven-preview .markdown-alert,
+.traven-preview .traven-alert {
+  font-family: var(--traven-font-display) !important;
+  font-style: normal !important;
+  padding: 12px 18px !important;
+  margin: 1.5rem 0 !important;
+  border-radius: 6px !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.traven-preview .markdown-alert > :first-child,
+.traven-preview .traven-alert > :first-child {
+  margin-top: 0 !important;
+}
+
+.traven-preview .markdown-alert > :last-child,
+.traven-preview .traven-alert > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.traven-preview .markdown-alert .markdown-alert-title,
+.traven-preview .traven-alert .traven-alert-title {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Light Mode Alert Colors */
+.traven-preview .markdown-alert-note,
+.traven-preview .traven-alert-note {
+  border-left-color: #2563eb !important;
+  background-color: #eff6ff !important;
+  color: #1e40af !important;
+}
+.traven-preview .markdown-alert-note .markdown-alert-title,
+.traven-preview .traven-alert-note .traven-alert-title {
+  color: #1e40af !important;
+}
+
+.traven-preview .markdown-alert-tip,
+.traven-preview .traven-alert-tip {
+  border-left-color: #16a34a !important;
+  background-color: #f0fdf4 !important;
+  color: #166534 !important;
+}
+.traven-preview .markdown-alert-tip .markdown-alert-title,
+.traven-preview .traven-alert-tip .traven-alert-title {
+  color: #166534 !important;
+}
+
+.traven-preview .markdown-alert-important,
+.traven-preview .traven-alert-important {
+  border-left-color: #9333ea !important;
+  background-color: #faf5ff !important;
+  color: #6b21a8 !important;
+}
+.traven-preview .markdown-alert-important .markdown-alert-title,
+.traven-preview .traven-alert-important .traven-alert-title {
+  color: #6b21a8 !important;
+}
+
+.traven-preview .markdown-alert-warning,
+.traven-preview .traven-alert-warning {
+  border-left-color: #d97706 !important;
+  background-color: #fffbeb !important;
+  color: #92400e !important;
+}
+.traven-preview .markdown-alert-warning .markdown-alert-title,
+.traven-preview .traven-alert-warning .traven-alert-title {
+  color: #92400e !important;
+}
+
+.traven-preview .markdown-alert-caution,
+.traven-preview .traven-alert-caution {
+  border-left-color: #dc2626 !important;
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+}
+.traven-preview .markdown-alert-caution .markdown-alert-title,
+.traven-preview .traven-alert-caution .traven-alert-title {
+  color: #991b1b !important;
+}
+
+/* Dark Mode Alert Colors */
+.cm-wysiwym-dark .traven-preview .markdown-alert,
+.cm-wysiwym-dark .traven-preview .traven-alert,
+html.cm-wysiwym-dark .traven-preview .markdown-alert,
+html.cm-wysiwym-dark .traven-preview .traven-alert,
+[data-theme="dark"] .traven-preview .markdown-alert,
+[data-theme="dark"] .traven-preview .traven-alert {
+  color: #f8fafc !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert p,
+.cm-wysiwym-dark .traven-preview .traven-alert p,
+html.cm-wysiwym-dark .traven-preview .markdown-alert p,
+html.cm-wysiwym-dark .traven-preview .traven-alert p,
+[data-theme="dark"] .traven-preview .markdown-alert p,
+[data-theme="dark"] .traven-preview .traven-alert p {
+  color: #f8fafc !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert-note,
+.cm-wysiwym-dark .traven-preview .traven-alert-note,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-note,
+html.cm-wysiwym-dark .traven-preview .traven-alert-note,
+[data-theme="dark"] .traven-preview .markdown-alert-note,
+[data-theme="dark"] .traven-preview .traven-alert-note {
+  border-left-color: #3b82f6 !important;
+  background-color: #1e293b !important;
+}
+.cm-wysiwym-dark .traven-preview .markdown-alert-note .markdown-alert-title,
+.cm-wysiwym-dark .traven-preview .traven-alert-note .traven-alert-title,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-note .markdown-alert-title,
+html.cm-wysiwym-dark .traven-preview .traven-alert-note .traven-alert-title,
+[data-theme="dark"] .traven-preview .markdown-alert-note .markdown-alert-title,
+[data-theme="dark"] .traven-preview .traven-alert-note .traven-alert-title {
+  color: #60a5fa !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert-tip,
+.cm-wysiwym-dark .traven-preview .traven-alert-tip,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-tip,
+html.cm-wysiwym-dark .traven-preview .traven-alert-tip,
+[data-theme="dark"] .traven-preview .markdown-alert-tip,
+[data-theme="dark"] .traven-preview .traven-alert-tip {
+  border-left-color: #22c55e !important;
+  background-color: #064e3b !important;
+}
+.cm-wysiwym-dark .traven-preview .markdown-alert-tip .markdown-alert-title,
+.cm-wysiwym-dark .traven-preview .traven-alert-tip .traven-alert-title,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-tip .markdown-alert-title,
+html.cm-wysiwym-dark .traven-preview .traven-alert-tip .traven-alert-title,
+[data-theme="dark"] .traven-preview .markdown-alert-tip .markdown-alert-title,
+[data-theme="dark"] .traven-preview .traven-alert-tip .traven-alert-title {
+  color: #4ade80 !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert-important,
+.cm-wysiwym-dark .traven-preview .traven-alert-important,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-important,
+html.cm-wysiwym-dark .traven-preview .traven-alert-important,
+[data-theme="dark"] .traven-preview .markdown-alert-important,
+[data-theme="dark"] .traven-preview .traven-alert-important {
+  border-left-color: #a855f7 !important;
+  background-color: #3b0764 !important;
+}
+.cm-wysiwym-dark .traven-preview .markdown-alert-important .markdown-alert-title,
+.cm-wysiwym-dark .traven-preview .traven-alert-important .traven-alert-title,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-important .markdown-alert-title,
+html.cm-wysiwym-dark .traven-preview .traven-alert-important .traven-alert-title,
+[data-theme="dark"] .traven-preview .markdown-alert-important .markdown-alert-title,
+[data-theme="dark"] .traven-preview .traven-alert-important .traven-alert-title {
+  color: #c084fc !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert-warning,
+.cm-wysiwym-dark .traven-preview .traven-alert-warning,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-warning,
+html.cm-wysiwym-dark .traven-preview .traven-alert-warning,
+[data-theme="dark"] .traven-preview .markdown-alert-warning,
+[data-theme="dark"] .traven-preview .traven-alert-warning {
+  border-left-color: #f59e0b !important;
+  background-color: #451a03 !important;
+}
+.cm-wysiwym-dark .traven-preview .markdown-alert-warning .markdown-alert-title,
+.cm-wysiwym-dark .traven-preview .traven-alert-warning .traven-alert-title,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-warning .markdown-alert-title,
+html.cm-wysiwym-dark .traven-preview .traven-alert-warning .traven-alert-title,
+[data-theme="dark"] .traven-preview .markdown-alert-warning .markdown-alert-title,
+[data-theme="dark"] .traven-preview .traven-alert-warning .traven-alert-title {
+  color: #fbbf24 !important;
+}
+
+.cm-wysiwym-dark .traven-preview .markdown-alert-caution,
+.cm-wysiwym-dark .traven-preview .traven-alert-caution,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-caution,
+html.cm-wysiwym-dark .traven-preview .traven-alert-caution,
+[data-theme="dark"] .traven-preview .markdown-alert-caution,
+[data-theme="dark"] .traven-preview .traven-alert-caution {
+  border-left-color: #ef4444 !important;
+  background-color: #450a0a !important;
+}
+.cm-wysiwym-dark .traven-preview .markdown-alert-caution .markdown-alert-title,
+.cm-wysiwym-dark .traven-preview .traven-alert-caution .traven-alert-title,
+html.cm-wysiwym-dark .traven-preview .markdown-alert-caution .markdown-alert-title,
+html.cm-wysiwym-dark .traven-preview .traven-alert-caution .traven-alert-title,
+[data-theme="dark"] .traven-preview .markdown-alert-caution .markdown-alert-title,
+[data-theme="dark"] .traven-preview .traven-alert-caution .traven-alert-title {
+  color: #f87171 !important;
+}
+
+/* --------------------------------------------------------------------------
+   4b. Info & Warning Component Boxes
+   -------------------------------------------------------------------------- */
+.traven-preview .traven-component,
+.traven-preview details.traven-component {
+  margin: 1.5rem 0 !important;
+  border-radius: 6px !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  padding: 14px 18px !important;
+  background-color: var(--traven-code-bg);
+}
+
+.cm-wysiwym-component-shortcode {
+  margin: 0 !important;
+  border-radius: 6px !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  padding: 14px 18px !important;
+  background-color: var(--traven-code-bg);
+}
+
+.traven-preview .traven-component summary.component-header,
+.traven-preview .traven-component .component-header,
+.traven-preview details.traven-component summary.component-header {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+
+.traven-preview .traven-component .component-title,
+.traven-preview .traven-component summary.component-header .component-title {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 700 !important;
+  display: inline-block;
+  padding-bottom: 8px !important;
+}
+
+.traven-preview .traven-component .component-body,
+.traven-preview details.traven-component .component-body {
+  margin-top: 4px;
+}
+
+.traven-preview .traven-component .component-body > :last-child,
+.traven-preview details.traven-component .component-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Traven Component Info (Light Mode) */
+.traven-preview .traven-component-info,
+.traven-preview details.traven-component-info {
+  border-left-color: #2563eb !important;
+  background-color: #eff6ff !important;
+  color: #1e40af !important;
+}
+.traven-preview .traven-component-info .component-title,
+.traven-preview .traven-component-info summary.component-header {
+  color: #1e40af !important;
+}
+
+/* Traven Component Warning (Light Mode) */
+.traven-preview .traven-component-warning,
+.traven-preview details.traven-component-warning {
+  border-left-color: #d97706 !important;
+  background-color: #fffbeb !important;
+  color: #92400e !important;
+}
+.traven-preview .traven-component-warning .component-title,
+.traven-preview .traven-component-warning summary.component-header {
+  color: #92400e !important;
+}
+
+/* Dark Mode Overrides for Info & Warning Component Boxes */
+.cm-wysiwym-dark .traven-preview .traven-component,
+.cm-wysiwym-dark .traven-preview details.traven-component,
+html.cm-wysiwym-dark .traven-preview .traven-component,
+html.cm-wysiwym-dark .traven-preview details.traven-component,
+[data-theme="dark"] .traven-preview .traven-component,
+[data-theme="dark"] .traven-preview details.traven-component {
+  color: #f8fafc !important;
+}
+
+.cm-wysiwym-dark .traven-preview .traven-component p,
+.cm-wysiwym-dark .traven-preview details.traven-component p,
+html.cm-wysiwym-dark .traven-preview .traven-component p,
+html.cm-wysiwym-dark .traven-preview details.traven-component p,
+[data-theme="dark"] .traven-preview .traven-component p,
+[data-theme="dark"] .traven-preview details.traven-component p {
+  color: #f8fafc !important;
+}
+
+.cm-wysiwym-dark .traven-preview .traven-component-info,
+.cm-wysiwym-dark .traven-preview details.traven-component-info,
+html.cm-wysiwym-dark .traven-preview .traven-component-info,
+html.cm-wysiwym-dark .traven-preview details.traven-component-info,
+[data-theme="dark"] .traven-preview .traven-component-info,
+[data-theme="dark"] .traven-preview details.traven-component-info {
+  border-left-color: #3b82f6 !important;
+  background-color: #1e293b !important;
+}
+.cm-wysiwym-dark .traven-preview .traven-component-info .component-title,
+.cm-wysiwym-dark .traven-preview .traven-component-info summary.component-header,
+html.cm-wysiwym-dark .traven-preview .traven-component-info .component-title,
+html.cm-wysiwym-dark .traven-preview .traven-component-info summary.component-header,
+[data-theme="dark"] .traven-preview .traven-component-info .component-title,
+[data-theme="dark"] .traven-preview .traven-component-info summary.component-header {
+  color: #60a5fa !important;
+}
+
+.cm-wysiwym-dark .traven-preview .traven-component-warning,
+.cm-wysiwym-dark .traven-preview details.traven-component-warning,
+html.cm-wysiwym-dark .traven-preview .traven-component-warning,
+html.cm-wysiwym-dark .traven-preview details.traven-component-warning,
+[data-theme="dark"] .traven-preview .traven-component-warning,
+[data-theme="dark"] .traven-preview details.traven-component-warning {
+  border-left-color: #f59e0b !important;
+  background-color: #451a03 !important;
+}
+.cm-wysiwym-dark .traven-preview .traven-component-warning .component-title,
+.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component-header,
+html.cm-wysiwym-dark .traven-preview .traven-component-warning .component-title,
+html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component-header,
+[data-theme="dark"] .traven-preview .traven-component-warning .component-title,
+[data-theme="dark"] .traven-preview .traven-component-warning summary.component-header {
+  color: #fbbf24 !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Media, Tables & Shortcodes
+   -------------------------------------------------------------------------- */
+/* Tables */
+.traven-preview table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  font-size: 1rem !important;
+}
+
+.traven-preview th,
+.traven-preview td {
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--traven-border) !important;
+  text-align: left !important;
+  height: 38px !important;
+}
+
+.traven-preview th {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 700 !important;
+  background-color: var(--traven-code-bg) !important;
+}
+
+/* Video Player (16:9 Aspect Ratio) */
+.traven-preview .traven-video-container {
+  position: relative !important;
+  aspect-ratio: 16 / 9 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  border-radius: 6px !important;
+  background: #000000 !important;
+  margin: 1.5rem 0 !important;
+}
+
+.traven-preview .traven-video-container iframe,
+.traven-preview .traven-video-container video {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+
+/* Audio Player */
+.traven-preview .traven-audio-container {
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+}
+
+.traven-preview .traven-audio-container audio {
+  width: 100% !important;
+}
+
+/* Image Float Alignments (Preview Scope) */
+.traven-preview .align-left,
+.traven-preview .inline-image-left,
+.traven-preview .alignleft,
+.traven-preview figure.align-left,
+.traven-preview figure.alignleft {
+  float: left !important;
+  margin: 0.5rem 1.5rem 1rem 0 !important;
+  max-width: 50%;
+}
+
+.traven-preview .align-right,
+.traven-preview .inline-image-right,
+.traven-preview .alignright,
+.traven-preview figure.align-right,
+.traven-preview figure.alignright {
+  float: right !important;
+  margin: 0.5rem 0 1rem 1.5rem !important;
+  max-width: 50%;
+}
+
+/* Image Alignments (Editor Scope - Auto margins, no vertical margin/float) */
+.cm-wysiwym-image-shortcode-container.align-left {
+  margin: 0 auto 0 0 !important;
+  max-width: 50%;
+}
+
+.cm-wysiwym-image-shortcode-container.align-right {
+  margin: 0 0 0 auto !important;
+  max-width: 50%;
+}
+
+/* Float Size Specificity Rules */
+.traven-preview .align-left.size-small,
+.traven-preview .align-left.img--small,
+.traven-preview .align-left.img-30,
+.traven-preview .inline-image-left.size-small,
+.traven-preview .align-right.size-small,
+.traven-preview .align-right.img--small,
+.traven-preview .align-right.img-30,
+.traven-preview .inline-image-right.size-small,
+.traven-preview figure.align-left.size-small,
+.traven-preview figure.align-right.size-small,
+.cm-wysiwym-image-shortcode-container.align-left.size-small,
+.cm-wysiwym-image-shortcode-container.align-right.size-small {
+  width: 30% !important;
+  max-width: 30% !important;
+}
+
+.traven-preview .align-left.size-medium,
+.traven-preview .align-left.img--medium,
+.traven-preview .align-left.img-50,
+.traven-preview .inline-image-left.size-medium,
+.traven-preview .align-right.size-medium,
+.traven-preview .align-right.img--medium,
+.traven-preview .align-right.img-50,
+.traven-preview .inline-image-right.size-medium,
+.traven-preview figure.align-left.size-medium,
+.traven-preview figure.align-right.size-medium,
+.cm-wysiwym-image-shortcode-container.align-left.size-medium,
+.cm-wysiwym-image-shortcode-container.align-right.size-medium {
+  width: 50% !important;
+  max-width: 50% !important;
+}
+
+/* Fullbleed Images - Fixed 16:9 Aspect Ratio (Preview Scope) */
+.traven-preview .align-fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview img.align-fullbleed {
+  width: calc(100% + 280px) !important;
+  max-width: calc(100vw - 32px) !important;
+  margin-left: calc(50% - min(480px, 50vw - 16px)) !important;
+  margin-right: calc(50% - min(480px, 50vw - 16px)) !important;
+  float: none !important;
+  clear: both !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  border-radius: 6px;
+  aspect-ratio: 16 / 9 !important;
+  overflow: hidden !important;
+}
+
+/* Fullbleed Images - Editor Scope (Zero vertical margin) */
+.cm-wysiwym-image-shortcode-container.align-fullbleed {
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  aspect-ratio: 16 / 9 !important;
+  overflow: hidden !important;
+}
+
+.traven-preview .align-fullbleed img,
+.traven-preview figure.align-fullbleed img,
+.cm-wysiwym-image-shortcode-container.align-fullbleed img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Exclude Audio from 16:9 Aspect Ratio */
+.traven-preview .align-fullbleed.traven-audio-container,
+.traven-preview .align-fullbleed.traven-audio-figure,
+.traven-preview .align-fullbleed.cm-wysiwym-audio-shortcode-container,
+.traven-preview .align-fullbleed:has(audio),
+.traven-preview .align-fullbleed:has(.traven-audio-container),
+.align-fullbleed.traven-audio-container,
+.align-fullbleed.traven-audio-figure,
+.align-fullbleed.cm-wysiwym-audio-shortcode-container,
+.align-fullbleed:has(audio),
+.align-fullbleed:has(.traven-audio-container) {
+  aspect-ratio: auto !important;
+  overflow: visible !important;
+}
+
+/* Image Captions (Preview Scope) */
+.traven-preview figcaption,
+.traven-preview .traven-figure-caption,
+.traven-preview .traven-image-caption,
+.traven-preview .figure-caption,
+.traven-preview .meta-caption {
+  font-size: 0.85rem;
+  line-height: 1.3 !important;
+  color: var(--traven-muted) !important;
+  text-align: center;
+  margin-top: 4px !important;
+  padding-top: 2px !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 8px !important;
+  font-style: italic;
+  display: block;
+}
+
+/* Image Captions (Editor Scope - Zero vertical margin) */
+.cm-wysiwym-image-caption {
+  font-size: 0.85rem;
+  line-height: 1.3 !important;
+  color: var(--traven-muted) !important;
+  text-align: center;
+  margin: 0 !important;
+  padding-top: 6px !important;
+  padding-bottom: 24px !important;
+  font-style: italic;
+  display: block;
+}

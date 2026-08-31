@@ -1,0 +1,60 @@
+{% set home_href = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set items = dossiers | default(posts | default([])) %}
+{% set index_title = '' %}
+{% if hero_title is defined and hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set index_title = hero_title %}
+{% endif %}
+
+<main id="main" class="letters-main">
+    <section class="archive" aria-label="{{ sitename | default('Archive') }}">
+        {% if index_title is not empty %}
+            <header class="essay-header">
+                <h1 class="essay-title">{{ index_title }}</h1>
+            </header>
+        {% elseif tagline is not empty %}
+            <header class="essay-header">
+                <p class="essay-subtitle">{{ tagline }}</p>
+            </header>
+        {% endif %}
+
+        {% if items is empty %}
+            <p class="empty">Nothing written yet — the first letter is on its way.</p>
+        {% else %}
+            <ol class="toc">
+                {% for item in items %}
+                    {% set item_url = theme.isStatic() ? (base_path | default('') ~ (item.slug | default('')) ~ '/index.html') : ('post.php?slug=' ~ (item.slug | default('')) ~ '&section=' ~ (item.section | default('blog'))) %}
+                    {% set item_date = item.date | default('') %}
+                    {% set item_desc = item.deck | default(item.description | default('')) %}
+                    <li class="toc-entry">
+                        <a class="toc-link" href="{{ item_url }}">
+                            <span class="toc-title">{{ item.hero_title | default(item.title | default('Untitled')) }}</span>
+                            <span class="toc-leader" aria-hidden="true"></span>
+                            {% if item_date is not empty %}
+                                <time class="toc-date" datetime="{{ item_date }}">{{ item_date | date('M j, Y') }}</time>
+                            {% else %}
+                                <span class="toc-date">{{ "now" | date('M j, Y') }}</span>
+                            {% endif %}
+                        </a>
+                        {% if item_desc is not empty %}
+                            <p class="toc-excerpt">{{ item_desc | striptags }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+
+        {% if pagination is defined and pagination.multiple %}
+            <nav class="pagination" aria-label="Pages">
+                {% if pagination.newer is defined and pagination.newer is not empty %}<a href="{{ pagination.newer }}">&larr; Newer</a>{% else %}<span></span>{% endif %}
+                <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                {% if pagination.older is defined and pagination.older is not empty %}<a href="{{ pagination.older }}">Older &rarr;</a>{% else %}<span></span>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

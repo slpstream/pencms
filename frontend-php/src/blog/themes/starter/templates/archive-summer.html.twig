@@ -1,0 +1,44 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<section class="hero-banner">
+    <h1 class="hero-title-text">Summer Archives ☀️</h1>
+    <p class="hero-tagline-text">Posts that match summer</p>
+</section>
+
+<main class="main-container">
+    <div class="layout-grid">
+        <!-- Feed Column -->
+        <div class="feed-posts">
+            {% for dossier in dossiers %}
+                {% set url = contentUrl(dossier) %}
+                <article class="post-card theme-summer">
+                    <div class="post-card-meta">
+                        <span class="post-card-category">SUMMER ☀️</span>
+                        <time datetime="{{ dossier.date }}">{{ dossier.date | date("F d, Y") }}</time>
+                    </div>
+                    
+                    <h2 class="post-card-title">
+                        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                    </h2>
+                    
+                    {% if dossier.deck is not empty %}
+                        <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+                    {% endif %}
+                    
+                    <a href="{{ url }}" class="post-card-link">Read post &rarr;</a>
+                </article>
+            {% else %}
+                <div class="post-card">
+                    <p class="italic text-center">No matching summer posts found.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="sidebar-column">
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

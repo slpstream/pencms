@@ -1,0 +1,16 @@
+<li class="entry-card">
+    <article>
+        {% if dossier.date is defined and dossier.date is not empty %}
+            <time datetime="{{ dossier.date }}">{{ dossier.date | date('F d, Y') }}</time>
+        {% endif %}
+        <h2>
+            {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+            <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a>
+        </h2>
+        {% if dossier.deck is defined and dossier.deck is not empty %}
+            <p>{{ dossier.deck | striptags }}</p>
+        {% elseif dossier.description is defined and dossier.description is not empty %}
+            <p>{{ dossier.description | striptags }}</p>
+        {% endif %}
+    </article>
+</li>

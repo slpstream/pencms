@@ -1,0 +1,8 @@
+# Install-wide taxonomy seed — blank slate for every site (including default).
+# Per-site copies live at content/sites/{id}/taxonomy.yaml; operators build
+# vocabularies in Settings → Structure. Optional sample/demo content is iceboxed.
+primary_vocabulary: ""
+required_fields:
+  - name
+  - status
+vocabularies: {}

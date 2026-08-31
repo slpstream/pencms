@@ -1,0 +1,81 @@
+<footer class="site-footer">
+    <div class="col">
+        <p class="foot-mark">
+            <span lang="ja">茶</span>
+            <canvas id="footSeal" class="ink-canvas foot-seal" data-ink="seal" aria-hidden="true"></canvas>
+        </p>
+        <div class="foot-lines">
+            <p>{{ sitename | default('Chashitsu') }}{% if tagline %} · {{ tagline }}{% endif %}</p>
+        </div>
+    </div>
+
+    {% set footer_items = menu('footer') %}
+    {% if footer_items is not empty %}
+        <nav class="footer-menu" aria-label="Footer">
+            {% for item in footer_items %}
+                <div class="footer-menu-group">
+                    {% if item.target_type == 'label' %}
+                        <span class="footer-menu-label">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" class="footer-menu-label footer-menu-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <ul class="footer-menu-children">
+                            {% for child in item.children %}
+                                <li>
+                                    {% if child.target_type == 'label' %}
+                                        <span>{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" class="ink-link quiet" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </nav>
+    {% endif %}
+
+    <div class="foot-bar">
+        <p class="foot-credit">&copy; {{ "now"|date("Y") }} {{ sitename | default('World Insights') }} · Powered by <a href="https://pencms.org">PenCMS</a>, Chashitsu theme</p>
+        {{ theme.partial('social-links') | raw }}
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/sumi.js') }}"></script>
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+    }
+</script>
+</body>
+</html>

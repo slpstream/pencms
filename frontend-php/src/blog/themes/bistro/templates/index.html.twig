@@ -1,0 +1,51 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="hero">
+        <h1>{{ hero_title | default(sitename) }}</h1>
+        {% if deck is defined and deck is not empty %}
+            <p class="hero-tagline">{{ deck | striptags }}</p>
+        {% elseif tagline is defined and tagline is not empty %}
+            <p class="hero-tagline">{{ tagline }}</p>
+        {% endif %}
+    </section>
+
+    {% if dossiers is defined and dossiers is not empty %}
+        <section class="carte">
+            <header class="menu-header">
+                <p class="eyebrow">What's New</p>
+            </header>
+            <ol class="carte-list">
+                {% for dossier in dossiers %}
+                    <li class="dish">
+                        <p class="dish-line">
+                            {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                            <a class="dish-name" href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                            <span class="dish-leader" aria-hidden="true"></span>
+                            {% if dossier.price is defined and dossier.price is not empty %}
+                                <span class="dish-price">{{ dossier.price }}</span>
+                            {% elseif dossier.date is defined and dossier.date is not empty %}
+                                <span class="dish-price">{{ dossier.date | date("M d") }}</span>
+                            {% endif %}
+                        </p>
+                        {% if dossier.deck is defined and dossier.deck is not empty %}
+                            <p class="dish-desc">{{ dossier.deck | striptags }}</p>
+                        {% elseif dossier.meta_description is defined and dossier.meta_description is not empty %}
+                            <p class="dish-desc">{{ dossier.meta_description }}</p>
+                        {% endif %}
+                        {% if dossier.section is defined and dossier.section is not empty %}
+                            <p class="dish-course">{{ dossier.section }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        </section>
+    {% else %}
+        <p class="empty">The menu is currently being prepared. Please check back soon.</p>
+    {% endif %}
+
+    {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

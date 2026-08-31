@@ -1,0 +1,19 @@
+<div class="dossier-card">
+    <h3 class="sidebar-heading">Related Dossiers</h3>
+    <ul class="sidebar-list">
+        {% for post in related_dossiers %}
+            {% set related_slug = post.slug | default('') %}
+            {% set related_section = post.section | default(post.category | default('blog')) %}
+            {% set url = theme.isStatic()
+                ? (base_path ~ related_slug ~ '/index.html')
+                : (base_path ~ 'post.php?slug=' ~ related_slug ~ '&section=' ~ (related_section | url_encode)) %}
+            <li class="dossier-list-item">
+                <a href="{{ url }}" class="dossier-link">
+                    {{ post.title | default(post.hero_title | default('Untitled Dossier')) }}
+                </a>
+            </li>
+        {% else %}
+            <li class="dossier-list-item related-empty">No related dossiers found</li>
+        {% endfor %}
+    </ul>
+</div>

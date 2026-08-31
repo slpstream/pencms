@@ -1,0 +1,298 @@
+{
+  "type": "native",
+  "name": "Cold War Classic",
+  "version": "1.0.0",
+  "author": "PenCMS Team",
+  "license": "MIT",
+  "description": "A tactical, redacted intelligence dossier layout evoking declassified historical information.",
+  "editor_skin": "cold-war",
+  "color_mode": "light",
+  "editor_skin_base": [],
+  "editor_image_aspect": [
+    {
+      "value": "",
+      "label": "Portrait"
+    },
+    {
+      "value": "landscape",
+      "label": "Landscape"
+    },
+    {
+      "value": "square",
+      "label": "Square"
+    },
+    {
+      "value": "natural",
+      "label": "Original"
+    }
+  ],
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "is_composite": {
+      "type": "bool",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "page_content": {
+      "type": "html",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "paper-aged",
+            "label": "Page Paper",
+            "type": "color",
+            "var": "--paper-aged",
+            "default": "#f4f1e8"
+          },
+          {
+            "id": "paper-base",
+            "label": "Card Paper",
+            "type": "color",
+            "var": "--paper-base",
+            "default": "#fdfbf8"
+          },
+          {
+            "id": "paper-dark",
+            "label": "Aged Paper",
+            "type": "color",
+            "var": "--paper-dark",
+            "default": "#e8e4d9"
+          },
+          {
+            "id": "desk",
+            "label": "Desk / Frame",
+            "type": "color",
+            "var": "--desk-dark",
+            "default": "#121518"
+          },
+          {
+            "id": "ink",
+            "label": "Ink",
+            "type": "color",
+            "var": "--dark-ink",
+            "default": "#1b2228"
+          },
+          {
+            "id": "olive",
+            "label": "Olive / Muted",
+            "type": "color",
+            "var": "--dark-olive",
+            "default": "#4a4e40"
+          },
+          {
+            "id": "olive-light",
+            "label": "Light Olive",
+            "type": "color",
+            "var": "--olive-light",
+            "default": "#8a8e7c"
+          },
+          {
+            "id": "red",
+            "label": "Stamp Red",
+            "type": "color",
+            "var": "--primary-red",
+            "default": "#c12929"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--border-color",
+            "default": "#a8b29e"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Typewriter / Display",
+            "type": "select",
+            "var": "--font-display",
+            "default": "\"Courier Prime\", \"Courier New\", Courier, ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "\"Courier Prime\", \"Courier New\", Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "\"M PLUS 1 Code\", \"Courier Prime\", ui-monospace, monospace",
+                "label": "M PLUS 1 Code"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Serif",
+            "type": "select",
+            "var": "--font-body",
+            "default": "\"Main Serif\", Georgia, \"Times New Roman\", serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "\"Main Serif\", Georgia, \"Times New Roman\", serif",
+                "label": "Main Serif"
+              },
+              { "value": "Georgia, \"Times New Roman\", serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono / Code",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "\"Courier Prime\", \"Courier New\", Courier, ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "\"Courier Prime\", \"Courier New\", Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "\"M PLUS 1 Code\", \"Courier Prime\", ui-monospace, monospace",
+                "label": "M PLUS 1 Code"
+              }
+            ]
+          },
+          {
+            "id": "font-label",
+            "label": "Label Caps",
+            "type": "select",
+            "var": "--font-label",
+            "default": "\"Main Serif Caps\", \"Main Serif\", Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "\"Main Serif Caps\", \"Main Serif\", Georgia, serif",
+                "label": "Main Serif Caps"
+              },
+              {
+                "value": "\"Main Serif\", Georgia, \"Times New Roman\", serif",
+                "label": "Main Serif"
+              }
+            ]
+          },
+          {
+            "id": "font-archive",
+            "label": "Archive UI",
+            "type": "select",
+            "var": "--font-archive",
+            "default": "\"M PLUS 1 Code\", \"Courier Prime\", ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "\"M PLUS 1 Code\", \"Courier Prime\", ui-monospace, monospace",
+                "label": "M PLUS 1 Code"
+              },
+              {
+                "value": "\"Courier Prime\", \"Courier New\", Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#C12929",
+    "og_vignette_color": "#FF8000",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#000000",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {
+      "CourierPrime-Bold": "assets/fonts/CourierPrime-Bold.ttf",
+      "CourierPrime": "assets/fonts/CourierPrime.ttf",
+      "MPLUS1Code-Bold": "assets/fonts/MPLUS1Code-Bold.ttf"
+    },
+    "og_headline_style": "redacted",
+    "og_text_case": "upper",
+    "og_grade_preset": "noir",
+    "og_accent_bar": true,
+    "og_watermark": "assets/images/watermark.png",
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "ARCHIVAL RECORD",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  },
+  "slug": "cold-war-classic"
+}

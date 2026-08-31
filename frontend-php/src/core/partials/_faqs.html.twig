@@ -1,0 +1,42 @@
+{% if faqs is defined and faqs|length > 0 %}
+<section class="pen-qa" data-pen-qa>
+  <style>
+    /* Structure + pair spacing — themes style .pen-qa / .pen-qa-heading / dt|dd in CSS (see theme-dev docs). */
+    .pen-qa {
+      font: inherit;
+      --pen-qa-pair-gap: 1.25rem;
+      --pen-qa-heading-weight: 700;
+    }
+    section.pen-qa[data-pen-qa] > .pen-qa-heading {
+      font-weight: var(--pen-qa-heading-weight);
+    }
+    section.pen-qa[data-pen-qa] > dl {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+    }
+    section.pen-qa[data-pen-qa] > dl > dt,
+    section.pen-qa[data-pen-qa] > dl > dd {
+      margin: 0;
+    }
+    section.pen-qa[data-pen-qa] > dl > dd {
+      margin-top: 0.25rem;
+      margin-bottom: var(--pen-qa-pair-gap);
+    }
+    section.pen-qa[data-pen-qa] > dl > dd:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+  {% if heading is defined and heading %}
+  <h2 class="pen-qa-heading">{{ heading|e }}</h2>
+  {% endif %}
+  <dl>
+    {% for item in faqs %}
+    <dt>{{ item.q|e }}</dt>
+    <dd>{{ item.a|e }}</dd>
+    {% endfor %}
+  </dl>
+</section>
+{% endif %}

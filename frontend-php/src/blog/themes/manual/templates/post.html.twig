@@ -1,0 +1,39 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+<main id="main" class="container manual-post">
+  <div class="doc-layout">
+    {{ theme.partial('sidebar-secondary') | raw }}
+    <article class="doc">
+      <header class="page-header">
+        {% set cat = category | default(section | default('')) %}
+        {% if cat is not empty %}<p class="eyebrow eyebrow-category">{{ cat }}</p>{% endif %}
+        {% if trumpet is not empty %}<p class="eyebrow eyebrow-trumpet">{{ trumpet }}</p>{% endif %}
+        <h1>{{ hero_title }}</h1>
+        {% if deck is not empty %}<p class="lede">{{ deck | raw }}</p>{% endif %}
+        <p class="meta">
+          {% if author is not empty %}By {{ author }}{% endif %}
+          {% if date is not empty %}{% if author is not empty %} · {% endif %}<time datetime="{{ date }}">{{ date|date('F d, Y') }}</time>{% endif %}
+        </p>
+      </header>
+      {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+      <figure class="hero-figure">
+        <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+      </figure>
+      {% endif %}
+      {% for post in posts %}
+      <div class="article-content traven-preview">{{ post.content_html | raw }}</div>
+      {% endfor %}
+      {% if posts is empty %}
+      <div class="article-content traven-preview">{{ page_content | default('') | raw }}</div>
+      {% endif %}
+
+      {{ theme.partial('faqs') | raw }}
+
+      <section class="manual-discussion">
+        {{ theme.partial('comment-thread') | raw }}
+        {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+      </section>
+    </article>
+  </div>
+</main>
+{{ theme.partial('footer') | raw }}

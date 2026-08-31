@@ -1,0 +1,48 @@
+{% if dossiers is not defined %}
+    {% set dossiers = [] %}
+{% endif %}
+{% set highlights = dossiers|slice(4, 3) %}
+{% set featured = dossiers|slice(7, 1)|first %}
+
+<aside class="sidebar">
+    {% if highlights is not empty %}
+    <section class="latest">
+        <h2>Highlights</h2>
+        <ul>
+            {% for item in highlights %}
+                {% set url = contentUrl(item) %}
+                {% set has_thumb = item.hero_image is defined and item.hero_image is not empty and item.hero_image != 'images/defaulthero.jpg' %}
+                <li>
+                    <a href="{{ url }}">
+                        {% if has_thumb %}
+                            <img src="{{ theme.contentAsset(item.hero_image) }}" alt="" loading="lazy">
+                        {% endif %}
+                        <span>{% if item.hero_title is defined and item.hero_title %}{{ item.hero_title }}{% elseif item.title is defined and item.title %}{{ item.title }}{% else %}Untitled{% endif %}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if featured %}
+        {% set featured_url = contentUrl(featured) %}
+        {% set has_hero = featured.hero_image is defined and featured.hero_image is not empty and featured.hero_image != 'images/defaulthero.jpg' %}
+        {% if featured.hero_title is defined and featured.hero_title %}
+            {% set featured_title = featured.hero_title %}
+        {% elseif featured.title is defined and featured.title %}
+            {% set featured_title = featured.title %}
+        {% else %}
+            {% set featured_title = 'Untitled' %}
+        {% endif %}
+        <section class="branded">
+            <h2>Featured</h2>
+            {% if has_hero %}
+                <a class="branded-card" href="{{ featured_url }}">
+                    <img src="{{ theme.contentAsset(featured.hero_image) }}" alt="{{ featured_title }}">
+                </a>
+            {% endif %}
+            <a class="branded-title" href="{{ featured_url }}">{{ featured_title }}</a>
+        </section>
+    {% endif %}
+</aside>

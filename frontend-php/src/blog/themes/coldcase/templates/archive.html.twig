@@ -1,0 +1,36 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="cc-room page-archive">
+    <section class="cc-inventory">
+        <div class="cc-section-head">
+            <div class="cc-section-title-row">
+                <h1 class="cc-stamp cc-stamp-header">{{ hero_title | default('Archive') | upper }}</h1>
+                <div class="cc-stamp-round cc-section-stamp" aria-hidden="true">
+                    <span>RECEIVED</span>
+                    <span class="cc-stamp-round-date">{{ "now"|date("M j Y")|upper }}</span>
+                </div>
+            </div>
+            <p class="cc-section-sub">Contents sheet only. The board is on the front page.</p>
+        </div>
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% if post_list is not empty %}
+            <div class="cc-inv-sheet" style="--tilt: 0.5deg">
+                <div class="cc-paperclip cc-inv-sheet-clip" aria-hidden="true"></div>
+                <div class="cc-coffee-ring cc-inv-sheet-stain" aria-hidden="true"></div>
+                <div class="cc-coffee-ring cc-inv-sheet-stain cc-inv-sheet-stain--sm" aria-hidden="true"></div>
+                <p class="cc-inv-caption">{{ sitename | default('COLDCASE')|upper }} — ARCHIVE REGISTER</p>
+                <ol class="cc-inv-list">
+                    {% for dossier in post_list %}
+                        {{ theme.partial('inv-row', { dossier: dossier, doc_index: loop.index }) | raw }}
+                    {% endfor %}
+                </ol>
+                <p class="cc-hand cc-inv-footnote">amended in pencil. look twice. — the desk</p>
+            </div>
+        {% else %}
+            <p class="cc-empty">No matching files in this jacket.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

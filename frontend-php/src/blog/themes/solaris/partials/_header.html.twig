@@ -1,0 +1,15 @@
+<header class="site-header">
+    <div class="header-container">
+        <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="brand-wrapper">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+            {% else %}
+                <span class="site-logo-emoji">&#127758;</span>
+            {% endif %}
+            <span class="site-title">{{ sitename }}</span>
+        </a>
+
+        {{ theme.partial('navbar') | raw }}
+    </div>
+</header>

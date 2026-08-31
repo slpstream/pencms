@@ -1,0 +1,28 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="main-container">
+    <section class="page-header">
+        <p class="eyebrow">{{ (sitename is defined and sitename is not empty) ? sitename : 'PenCMS' }}</p>
+        <h1 class="page-title">{{ (hero_title is defined and hero_title is not empty) ? hero_title : ((tagline is defined and tagline is not empty) ? tagline : '') }}</h1>
+        {% if tagline is defined and tagline is not empty %}
+            <p class="lede">{{ tagline }}</p>
+        {% endif %}
+    </section>
+
+    {% set listings_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+    {% if listings_list is not empty %}
+        <section class="listings-section">
+            <ul class="listing-grid">
+                {% for item in listings_list %}
+                    {{ theme.partial('listing_card', {'item': item}) | raw }}
+                {% endfor %}
+            </ul>
+        </section>
+    {% else %}
+        <p class="empty">No content yet.</p>
+    {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

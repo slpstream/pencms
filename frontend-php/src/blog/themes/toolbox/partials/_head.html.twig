@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+
+    {# Prevent theme flash on load #}
+    <script>
+        (function() {
+            let scheme = null;
+            try {
+                scheme = localStorage.getItem('color-scheme') || localStorage.getItem('theme');
+            } catch (e) {}
+            if (!scheme) {
+                try {
+                    const match = document.cookie.match(/(^|;)\s*(?:color-scheme|theme)\s*=\s*([^;]+)/);
+                    scheme = match ? match[2] : null;
+                } catch (e) {}
+            }
+            if (scheme === 'dark' || (!scheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('cm-wysiwym-dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else if (scheme === 'light') {
+                document.documentElement.classList.remove('cm-wysiwym-dark');
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <title>{{ page_title | default(sitename | default('Toolbox')) }}</title>
+<link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+{{ theme.linkCss('css/skin-toolbox.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+
+    <script src="{{ theme.asset('js/theme.js') }}" defer></script>
+</head>
+<body class="traven-preview has-call-bar {{ body_class | default('') }}">
+<a class="skip-link" href="#main">Skip to content</a>

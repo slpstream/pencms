@@ -1,0 +1,157 @@
+{
+  "type": "native",
+  "name": "Velo",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Light-only Futurist litho theme: cream/rosso/cobalto poster bands, italic Archivo slam type, Chivo Mono HUD chrome, skewed night-cards, and diagonal-cut images.",
+  "editor_skin": "velo",
+  "editor_skin_base": [],
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Crema / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#E9D6AE"
+          },
+          {
+            "id": "text",
+            "label": "Nero / Ink",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#1A1208"
+          },
+          {
+            "id": "muted",
+            "label": "Inchiostro / Muted",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#52422A"
+          },
+          {
+            "id": "accent",
+            "label": "Rosso / Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#BC2A16"
+          },
+          {
+            "id": "border",
+            "label": "Rules / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#1A1208"
+          },
+          {
+            "id": "panel",
+            "label": "Crema scura / Panel",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#D9BE8C"
+          },
+          {
+            "id": "club",
+            "label": "Cobalto / Club",
+            "type": "color",
+            "var": "--color-club",
+            "default": "#20509E"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', 'Helvetica Neue', Arial, sans-serif", "label": "Archivo" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', 'Helvetica Neue', Arial, sans-serif", "label": "Archivo" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Chivo Mono', 'Courier New', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Chivo Mono', 'Courier New', ui-monospace, monospace", "label": "Chivo Mono" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#BC2A16",
+    "og_vignette_color": "#20509E",
+    "og_text_color": "#1A1208",
+    "og_bar_color": "#E9D6AE",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "poster",
+    "og_text_case": "upper",
+    "og_grade_preset": "paper",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

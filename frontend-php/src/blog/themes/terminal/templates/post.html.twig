@@ -1,0 +1,74 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main-content" class="main-container">
+    <div class="layout-grid layout-with-sidebar">
+        <div class="content-column">
+            <article class="post">
+                <header class="page-header post-header">
+                    <h1>{{ hero_title | default(title | default('Untitled')) }}</h1>
+                    <p class="meta">
+                        {% if date is defined and date is not empty %}
+                            <time datetime="{{ date | date('Y-m-d') }}">{{ date | date('F d, Y') }}</time>
+                        {% endif %}
+                        {% if author is defined and author is not empty %}
+                            <span class="meta-sep">·</span>
+                            <span>{{ author }}</span>
+                        {% endif %}
+                        {% if reading_time is defined and reading_time is not empty %}
+                            <span class="meta-sep">·</span>
+                            <span>{{ reading_time }} min read</span>
+                        {% endif %}
+                    </p>
+                    {% if deck is defined and deck is not empty %}
+                        <p class="lede">{{ deck | raw }}</p>
+                    {% endif %}
+                    {% if tags is defined and tags is not empty %}
+                        <div class="tags">
+                            {% for tag in tags %}
+                                <span class="tag"><span class="tag-name">{{ tag }}</span></span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </header>
+
+                {% if hero_image is defined and hero_image is not empty %}
+                    <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title | striptags }}" class="cover">
+                {% endif %}
+
+                {% if posts is defined and posts is not empty %}
+                    {% for post_item in posts %}
+                        <div class="prose article-content traven-preview">{{ post_item.content_html | raw }}</div>
+                    {% endfor %}
+                {% elseif post is defined and post.content_html is defined %}
+                    <div class="prose article-content traven-preview">{{ post.content_html | raw }}</div>
+                {% endif %}
+
+                {{ theme.partial('faqs') | raw }}
+
+                {% if prev_post is defined or next_post is defined %}
+                    <nav class="pagination" aria-label="Post Navigation">
+                        {% if prev_post is defined and prev_post is not empty %}
+                            <a href="{{ prev_post.url }}" rel="prev">&larr; {{ prev_post.title }}</a>
+                        {% endif %}
+                        {% if next_post is defined and next_post is not empty %}
+                            <a href="{{ next_post.url }}" rel="next">{{ next_post.title }} &rarr;</a>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+
+                <section class="terminal-discussion">
+                    {{ theme.partial('comment-thread') | raw }}
+                    {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+                </section>
+            </article>
+        </div>
+
+        <aside class="sidebar-column" aria-label="Sidebar">
+            {{ theme.partial('sidebar-toc') | raw }}
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

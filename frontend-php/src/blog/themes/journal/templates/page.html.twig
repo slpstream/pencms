@@ -1,0 +1,33 @@
+{{ theme.partial('head', { is_content: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set page_h1 = hero_title is defined and hero_title ? hero_title : (title is defined and title ? title : 'Page') %}
+{% set page_deck = deck is defined and deck ? deck : (dossier is defined and dossier.deck ? dossier.deck : (meta_description is defined and meta_description ? meta_description : '')) %}
+{% set page_deck = page_deck | striptags %}
+
+<main id="main">
+    <article class="page journal-post-detail">
+        <header class="page-header journal-post-header">
+            <h1>{{ page_h1 }}</h1>
+            {% if page_deck is not empty %}
+                <p class="summary">{{ page_deck }}</p>
+            {% endif %}
+        </header>
+
+        <div class="article-content traven-preview prose">
+            {% if page_content is defined and page_content is not empty %}
+                {{ page_content | raw }}
+            {% elseif content is defined and content is not empty %}
+                {{ content | raw }}
+            {% elseif posts is defined and posts is not empty %}
+                {% for post_item in posts %}
+                    {{ post_item.content_html | raw }}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

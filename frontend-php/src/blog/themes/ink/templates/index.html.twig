@@ -1,0 +1,102 @@
+{{ theme.partial('head') | raw }}
+
+<main class="main-content index-layout">
+  <header class="index-hero">
+    {% set index_hero_img = hero_image | default(null) %}
+    {% if index_hero_img is not empty and index_hero_img != 'images/defaulthero.jpg' %}
+      <div class="index-hero-media">
+        <div class="index-hero-media-gradient"></div>
+        <img src="{{ theme.contentAsset(index_hero_img) }}" alt="" class="index-hero-image" loading="eager" decoding="async">
+      </div>
+    {% endif %}
+
+    <div class="index-hero-content">
+      <a class="index-hero-brand" href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}">
+        {% set site_logo = theme.getLogoUrl() %}
+        {% if site_logo is not empty %}
+          <img src="{{ site_logo }}" alt="" class="index-hero-logo">
+        {% endif %}
+        {% if hero_title is not empty and hero_title != sitename|default('') %}
+          <span class="index-hero-sitename">{{ sitename | default('Site Name') }}</span>
+        {% else %}
+          <h1 class="index-hero-sitename">{{ sitename | default('Site Name') }}</h1>
+        {% endif %}
+      </a>
+
+      {% if hero_title is not empty and hero_title != sitename|default('') %}
+        <h1 class="index-hero-title">{{ hero_title }}</h1>
+      {% endif %}
+
+      {% if tagline is not empty %}
+        <p class="index-hero-tagline">{{ tagline }}</p>
+      {% endif %}
+    </div>
+  </header>
+
+  {{ theme.partial('header') | raw }}
+
+  <div class="index-feed-container">
+    {% set lead = dossiers|first %}
+    {% set rest = dossiers|slice(1) %}
+
+    {% if lead is not empty %}
+      {% set lead_url = theme.isStatic() ? (base_path ~ lead.slug ~ '/index.html') : (base_path ~ 'post.php?slug=' ~ lead.slug) %}
+      <article class="post-card lead-article">
+        {% set lead_hero = lead.hero_image | default(null) %}
+        {% if lead_hero is not empty %}
+          <a href="{{ lead_url }}" class="card-image-wrapper">
+            <div class="card-image-gradient"></div>
+            <img src="{{ theme.contentAsset(lead_hero) }}" alt="" class="card-image" loading="lazy">
+          </a>
+        {% endif %}
+        <div class="post-card-content">
+          {% if lead.date is not empty %}
+            <p class="post-card-date">{{ lead.date | date("F d, Y") }}</p>
+          {% endif %}
+          <h2 class="post-card-title">
+            <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+          </h2>
+          {% if lead.deck is not empty %}
+            <p class="post-card-deck">{{ lead.deck | striptags }}</p>
+          {% endif %}
+        </div>
+      </article>
+    {% endif %}
+
+    {% if rest is not empty %}
+      <div class="index-grid">
+        {% for dossier in rest %}
+          {% set post_url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : (base_path ~ 'post.php?slug=' ~ dossier.slug) %}
+          <article class="post-card">
+            {% set card_hero = dossier.hero_image | default(null) %}
+            {% if card_hero is not empty %}
+              <a href="{{ post_url }}" class="card-image-wrapper">
+                <div class="card-image-gradient"></div>
+                <img src="{{ theme.contentAsset(card_hero) }}" alt="" class="card-image" loading="lazy">
+              </a>
+            {% endif %}
+            <div class="post-card-content">
+              {% if dossier.date is not empty %}
+                <p class="post-card-date">{{ dossier.date | date("F d, Y") }}</p>
+              {% endif %}
+              <h2 class="post-card-title">
+                <a href="{{ post_url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+              </h2>
+              {% if dossier.deck is not empty %}
+                <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% elseif lead is empty %}
+      <div class="index-grid">
+        <p>No posts found.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

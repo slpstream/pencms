@@ -1,0 +1,76 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-wrapper">
+    <div class="docs-layout">
+        <!-- Left Sidebar: Secondary Navigation -->
+        <aside class="docs-sidebar">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+
+        <!-- Center Lane: Page Body -->
+        <div class="docs-content-container">
+            <article class="marut-page-detail marut-article-card">
+                <header class="marut-post-header" style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+                    <h1>{{ hero_title | default(page_title | default('Page')) }}</h1>
+                    {% if deck is defined and deck is not empty %}
+                        <div class="marut-deck">{{ deck | raw }}</div>
+                    {% endif %}
+                </header>
+
+                <div class="article-content traven-preview">
+                    {{ page_content | raw }}
+                </div>
+
+                {{ theme.partial('faqs') | raw }}
+            </article>
+        </div>
+
+        <!-- Right Sidebar: Table of Contents -->
+        {% set show_toc = (toc is not defined or (toc is defined and toc is not empty)) %}
+        {% if show_toc %}
+        <aside class="docs-toc-container" {% if toc is not defined %}style="display: none;"{% endif %}>
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list" id="dynamic-toc">
+                {% if toc is defined and toc is not empty %}
+                    {% for item in toc %}
+                        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </aside>
+        {% endif %}
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tocList = document.getElementById('dynamic-toc');
+    const content = document.querySelector('.docs-content-container');
+    const container = document.querySelector('.docs-toc-container');
+    if (tocList && content) {
+        const headings = Array.from(content.querySelectorAll('h2, h3')).filter(function(h) {
+            return h.textContent && h.textContent.trim().length > 0;
+        });
+        if (headings.length > 0) {
+            headings.forEach(function(h, idx) {
+                if (!h.id) h.id = 'heading-' + idx;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + h.id;
+                a.textContent = h.textContent;
+                if (h.tagName.toLowerCase() === 'h3') {
+                    li.style.paddingLeft = '0.75rem';
+                }
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+            if (container) {
+                container.style.display = '';
+            }
+        }
+    }
+});
+</script>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,21 @@
+<header class="site-header">
+    <div class="header-container">
+        <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="brand-wrapper">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+            {% endif %}
+            <span class="brand-text">
+                <span class="site-title">{{ sitename }}</span>
+                {% if body_class|default('') == 'page-front' and tagline is not empty %}
+                    <span class="site-tagline">{{ tagline }}</span>
+                {% endif %}
+            </span>
+        </a>
+
+        <div class="header-actions">
+            {{ theme.partial('navbar') | raw }}
+        </div>
+    </div>
+    {{ theme.partial('secondary-rail') | raw }}
+</header>

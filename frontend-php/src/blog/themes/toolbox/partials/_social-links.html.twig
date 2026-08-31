@@ -1,0 +1,54 @@
+{# Site-scoped social profile links (social_links global from ThemeEngine) #}
+{% if social_links is defined and social_links is not empty %}
+<aside class="sidebar-social-widget secondary-nav-widget" aria-label="Social media">
+    <h3 class="secondary-nav-title">Connect</h3>
+    <ul class="secondary-nav-list">
+        {% for link in social_links %}
+            {% if link.url|default('') is not empty %}
+                {% set platform = link.platform|default('custom') %}
+                {% if platform == 'custom' %}
+                    {% set label = link.label|default('Link') %}
+                {% elseif platform == 'twitter' %}
+                    {% set label = 'X (Twitter)' %}
+                {% elseif platform == 'bluesky' %}
+                    {% set label = 'Bluesky' %}
+                {% elseif platform == 'mastodon' %}
+                    {% set label = 'Mastodon' %}
+                {% elseif platform == 'instagram' %}
+                    {% set label = 'Instagram' %}
+                {% elseif platform == 'facebook' %}
+                    {% set label = 'Facebook' %}
+                {% elseif platform == 'vk' %}
+                    {% set label = 'VK' %}
+                {% elseif platform == 'linkedin' %}
+                    {% set label = 'LinkedIn' %}
+                {% elseif platform == 'github' %}
+                    {% set label = 'GitHub' %}
+                {% elseif platform == 'telegram' %}
+                    {% set label = 'Telegram' %}
+                {% elseif platform == 'youtube' %}
+                    {% set label = 'YouTube' %}
+                {% elseif platform == 'tiktok' %}
+                    {% set label = 'TikTok' %}
+                {% elseif platform == 'reddit' %}
+                    {% set label = 'Reddit' %}
+                {% elseif platform == 'discord' %}
+                    {% set label = 'Discord' %}
+                {% elseif platform == 'slack' %}
+                    {% set label = 'Slack' %}
+                {% elseif platform == 'whatsapp' %}
+                    {% set label = 'WhatsApp' %}
+                {% else %}
+                    {% set label = platform|title %}
+                {% endif %}
+                <li class="secondary-nav-item">
+                    <a href="{{ link.url }}"
+                       class="secondary-nav-link"
+                       target="_blank"
+                       rel="noopener noreferrer">{{ label }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</aside>
+{% endif %}

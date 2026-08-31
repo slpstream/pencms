@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="{{ site_language | default('en') }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if seo_title is defined and seo_title %}{{ seo_title }}{% elseif hero_title is defined and sitename is defined and hero_title and sitename and hero_title != sitename %}{{ hero_title }} | {{ sitename }}{% elseif hero_title is defined and hero_title %}{{ hero_title }}{% elseif page_title is defined and page_title %}{{ page_title }}{% elseif sitename is defined %}{{ sitename }}{% else %}Daily{% endif %}</title>
+
+    {% if seo_description is defined and seo_description %}
+    <meta name="description" content="{{ seo_description }}">
+    {% elseif meta_description is defined and meta_description %}
+    <meta name="description" content="{{ meta_description }}">
+    {% endif %}
+
+    <meta property="og:title" content="{% if og_title is defined and og_title %}{{ og_title }}{% elseif seo_title is defined and seo_title %}{{ seo_title }}{% elseif page_title is defined and page_title %}{{ page_title }}{% elseif sitename is defined %}{{ sitename }}{% else %}Daily{% endif %}">
+    {% if og_description is defined and og_description %}
+    <meta property="og:description" content="{{ og_description }}">
+    {% elseif seo_description is defined and seo_description %}
+    <meta property="og:description" content="{{ seo_description }}">
+    {% endif %}
+    <meta property="og:type" content="{% if post is defined and post %}article{% else %}website{% endif %}">
+    {% if hero_image is defined and hero_image %}
+    <meta property="og:image" content="{{ theme.contentAsset(hero_image) }}">
+    <meta name="twitter:card" content="summary_large_image">
+    {% endif %}
+
+    <meta name="color-scheme" content="light dark">
+
+    <script>
+        (function() {
+            let scheme = null;
+            try {
+                scheme = localStorage.getItem('color-scheme') || localStorage.getItem('theme');
+            } catch (e) {}
+            if (!scheme) {
+                try {
+                    const match = document.cookie.match(/(^|;)\s*(?:color-scheme|theme)\s*=\s*([^;]+)/);
+                    scheme = match ? match[2] : null;
+                } catch (e) {}
+            }
+            if (scheme === 'dark' || (!scheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('cm-wysiwym-dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else if (scheme === 'light') {
+                document.documentElement.classList.remove('cm-wysiwym-dark');
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+    {{ theme.linkCss('css/styles.css') | raw }}
+    {{ theme.linkCss('css/skin-daily.css') | raw }}
+
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+</head>
+<body class="{% if is_content is defined and is_content %}traven-preview{% endif %}{% if is_index is defined and is_index %} page-front{% endif %}">
+    <a class="skip-link" href="#main">Skip to content</a>

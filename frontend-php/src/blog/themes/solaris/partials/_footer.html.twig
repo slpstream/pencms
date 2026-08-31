@@ -1,0 +1,84 @@
+<footer class="site-footer">
+    <div class="footer-container">
+        {# ── Separator ── #}
+        <div class="footer-separator" role="separator">
+            <div class="footer-separator-line"></div>
+        </div>
+
+        {# ── Footer nav ── #}
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="footer-nav-columns" aria-label="Footer Navigation">
+                {% for item in footer_items %}
+                    {% if item.target_type == 'label' and item.children is empty %}
+                        {# Skip empty label-only groups #}
+                    {% else %}
+                        <div class="footer-menu-group">
+                            {% if item.target_type == 'label' %}
+                                <span class="footer-menu-label">{{ item.label }}</span>
+                            {% else %}
+                                <a href="{{ item.url }}" class="footer-menu-label footer-menu-label-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                            {% endif %}
+                            {% if item.children is not empty %}
+                                <ul class="footer-menu-children">
+                                    {% for child in item.children %}
+                                        <li>
+                                            {% if child.target_type == 'label' %}
+                                                <span class="footer-menu-child-label">{{ child.label }}</span>
+                                            {% else %}
+                                                <a href="{{ child.url }}" class="footer-menu-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        {# ── Bottom: social + copyright ── #}
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                {{ theme.partial('social-links') | raw }}
+                <p class="footer-copy">&copy; {{ "now"|date("Y") }} {{ sitename }}. All rights reserved.</p>
+            </div>
+            <p class="footer-made-with">Powered by <a href="https://pencms.org/">PenCMS</a> &bull; Solaris Theme</p>
+        </div>
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        var pre = codeBlock.parentNode;
+        var div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
+</body>
+</html>

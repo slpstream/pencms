@@ -1,0 +1,40 @@
+    <nav class="navbar">
+        <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="nav-logo">
+            {% set logo_url = theme.getLogoUrl() %}
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="{{ sitename | default('') }}">
+            {% endif %}
+            <span>{{ sitename | default('Archive') }}</span>
+            {% if body_class|default('') == 'page-front' and tagline is not empty %}
+                <span class="nav-tagline">{{ tagline }}</span>
+            {% endif %}
+        </a>
+        <button class="nav-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg class="nav-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
+        <div class="nav-menu" id="nav-menu">
+            {% set nav_items = menu('primary') %}
+            {% for item in nav_items %}
+                <div class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+                    {% if item.target_type == 'label' %}
+                        <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" class="nav-link{% if item.children is not empty %} nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <div class="nav-dropdown" role="menu">
+                            {% for child in item.children %}
+                                {% if child.target_type == 'label' %}
+                                    <span class="nav-label">{{ child.label }}</span>
+                                {% else %}
+                                    <a href="{{ child.url }}" class="nav-link" role="menuitem" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </nav>

@@ -1,0 +1,227 @@
+{
+  "type": "native",
+  "name": "Marut",
+  "version": "1.0.0",
+  "author": "PenCMS Team",
+  "license": "MIT",
+  "description": "High-contrast industrial editorial & magazine theme with blood-rust accents and light-mode/dark-mode toggle.",
+  "editor_skin": "marut",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.theme-dark"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "canvas",
+            "label": "Page Canvas",
+            "type": "color",
+            "var": "--bg-canvas",
+            "default": "#f7f6f7",
+            "dark_default": "#090d16"
+          },
+          {
+            "id": "card",
+            "label": "Card / Surface",
+            "type": "color",
+            "var": "--bg-card",
+            "default": "#ffffff",
+            "dark_default": "#0f172a"
+          },
+          {
+            "id": "nav",
+            "label": "Navigation",
+            "type": "color",
+            "var": "--bg-nav",
+            "default": "#ffffff",
+            "dark_default": "#0f172a"
+          },
+          {
+            "id": "footer",
+            "label": "Footer Band",
+            "type": "color",
+            "var": "--bg-footer",
+            "default": "#0f172a",
+            "dark_default": "#0f172a"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--text-primary",
+            "default": "#0f172a",
+            "dark_default": "#f8fafc"
+          },
+          {
+            "id": "secondary",
+            "label": "Secondary Text",
+            "type": "color",
+            "var": "--text-secondary",
+            "default": "#475569",
+            "dark_default": "#cbd5e1"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--text-muted",
+            "default": "#64748b",
+            "dark_default": "#94a3b8"
+          },
+          {
+            "id": "accent",
+            "label": "Blood Rust Accent",
+            "type": "color",
+            "var": "--accent-color",
+            "default": "#cc4a0a",
+            "dark_default": "#e0561b"
+          },
+          {
+            "id": "accent-hover",
+            "label": "Accent Hover",
+            "type": "color",
+            "var": "--accent-hover",
+            "default": "#a83808",
+            "dark_default": "#f97316"
+          },
+          {
+            "id": "accent-tint",
+            "label": "Accent Tint",
+            "type": "color",
+            "var": "--accent-light",
+            "default": "#fff0e8",
+            "dark_default": "#1e1b18"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--border-color",
+            "default": "#e2e8f0",
+            "dark_default": "#1e293b"
+          },
+          {
+            "id": "border-strong",
+            "label": "Strong Borders",
+            "type": "color",
+            "var": "--border-strong",
+            "default": "#0f172a",
+            "dark_default": "#f8fafc"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Mozilla Headline', system-ui, -apple-system, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "'Mozilla Headline', system-ui, -apple-system, sans-serif",
+                "label": "Mozilla Headline"
+              },
+              {
+                "value": "'Hubot Sans', system-ui, -apple-system, sans-serif",
+                "label": "Hubot Sans"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Hubot Sans', system-ui, -apple-system, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "'Hubot Sans', system-ui, -apple-system, sans-serif",
+                "label": "Hubot Sans"
+              },
+              {
+                "value": "'Mozilla Headline', system-ui, -apple-system, sans-serif",
+                "label": "Mozilla Headline"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#CC4A0A",
+    "og_vignette_color": "#1E293B",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#0F172A",
+    "og_font": "MozillaHeadline-Bold",
+    "og_fonts": {
+      "MozillaHeadline-Bold": "assets/fonts/MozillaHeadline-Bold.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Marut Editorial",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

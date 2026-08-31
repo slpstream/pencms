@@ -1,0 +1,12 @@
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/venv
+**/.venv
+**/.git
+**/.cursor
+backend-python/data/**
+backend-python/tests
+backend-python/venv
+deploy/.env
+frontend-php/vendor

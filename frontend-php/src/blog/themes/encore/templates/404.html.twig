@@ -1,0 +1,14 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<main id="main" class="main-container">
+  <section class="page-header">
+    <h1>404 — Page Not Found</h1>
+    <p class="lede">The page you were looking for doesn't exist or has moved off the setlist.</p>
+    <nav class="backlink">
+      <a href="{{ base_path is defined and base_path ? base_path : '/' }}" class="btn-tickets">Return to Home</a>
+    </nav>
+  </section>
+</main>
+
+{{ theme.partial('_footer') | raw }}

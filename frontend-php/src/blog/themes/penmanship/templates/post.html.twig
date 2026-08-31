@@ -1,0 +1,149 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-content">
+
+  {% set secondary_items = menu('secondary') %}
+  {% set has_hero = hero_image is defined and hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+
+  {% if has_hero %}
+  <!-- Post Header with Hero Image -->
+  <header class="post-header-outer">
+    <div class="hero-image-wrapper">
+      <div class="hero-image-container">
+        <div class="hero-image-gradient"></div>
+        <img alt="" loading="lazy" class="hero-image" src="{{ contentAsset(hero_image) }}">
+      </div>
+    </div>
+  </header>
+  {% endif %}
+
+  {% if has_hero %}
+  <!-- With hero image: sidebar left, content center -->
+  <div class="layout-grid{% if secondary_items is not empty %} layout-grid-with-nav{% endif %}" style="max-width:1120px;margin:0 auto;padding:0 24px 48px;">
+    {% if secondary_items is not empty %}
+    <aside class="sidebar-column sidebar-column-nav">
+      {{ theme.partial('sidebar-secondary') | raw }}
+      {{ theme.partial('sidebar-profile') | raw }}
+      {% if is_composite | default(false) %}
+        {{ theme.partial('sidebar-toc') | raw }}
+      {% endif %}
+      {{ theme.partial('sidebar-related') | raw }}
+    </aside>
+    {% endif %}
+
+    <div class="post-main-column">
+      <!-- Post meta overlaying the hero (align with body text, no indent) -->
+      <header class="penmanship-post-header">
+      <div class="post-header-inner" style="margin-top:-80px;position:relative;z-index:2;">
+        <div class="post-meta">
+          {% if trumpet is defined and trumpet is not empty %}
+            <p class="post-detail-trumpet">{{ trumpet }}</p>
+          {% endif %}
+          <h1 class="post-title">{{ hero_title | default(title | default('')) }}</h1>
+          {% if deck is defined and deck is not empty %}
+            <p class="post-deck">{{ deck | raw }}</p>
+          {% endif %}
+          {% if (author is defined and author is not empty) or (date is defined and date is not empty) %}
+          <div class="post-detail-meta" style="margin-top:16px;">
+            {% if author is defined and author is not empty %}
+              <span class="post-detail-byline">By {{ author }}</span>
+            {% endif %}
+            {% if dateline is defined and dateline is not empty %}
+              {% if author is defined and author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+              <time datetime="{{ date | default('') }}">{{ dateline }}</time>
+            {% elseif date is defined and date is not empty %}
+              {% if author is defined and author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+              <time datetime="{{ date }}">{{ date | date("F d, Y") }}</time>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      </header>
+
+      <div class="post-content-wrapper" style="padding-top:24px;" id="post-content">
+        {% for post in posts | default([]) %}
+          <article class="post-body" id="{{ post.id | default('') }}">
+            {% if post.title is defined and post.title is not empty and posts|length > 1 %}
+              <h2 style="margin-top: 1.5em; margin-bottom: 0.8em; font-family: var(--traven-font-display);">{{ post.title }}</h2>
+            {% endif %}
+            <div class="article-content traven-preview">
+              {{ post.content_html | default('') | raw }}
+            </div>
+          </article>
+        {% endfor %}
+
+        {{ theme.partial('faqs') | raw }}
+
+        <section class="penmanship-discussion">
+          {{ theme.partial('comment-thread') | raw }}
+          {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+        </section>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- No hero image: sidebar left, content center -->
+  <div class="{% if secondary_items is not empty %}layout-grid layout-grid-with-nav" style="max-width:1120px;margin:0 auto;padding:0 24px 48px;"{% else %}post-body-container"{% endif %}>
+    {% if secondary_items is not empty %}
+    <aside class="sidebar-column sidebar-column-nav">
+      {{ theme.partial('sidebar-secondary') | raw }}
+      {{ theme.partial('sidebar-profile') | raw }}
+      {% if is_composite | default(false) %}
+        {{ theme.partial('sidebar-toc') | raw }}
+      {% endif %}
+      {{ theme.partial('sidebar-related') | raw }}
+    </aside>
+    {% endif %}
+
+    <div class="post-main-column">
+      <header class="penmanship-post-header">
+        {% if trumpet is defined and trumpet is not empty %}
+          <div class="post-detail-eyebrow">
+            <span class="post-detail-trumpet">{{ trumpet }}</span>
+          </div>
+        {% endif %}
+        <h1 class="post-detail-title">{{ hero_title | default(title | default('')) }}</h1>
+        {% if deck is defined and deck is not empty %}
+          <div class="post-detail-deck">{{ deck | raw }}</div>
+        {% endif %}
+        <div class="post-detail-meta">
+          {% if author is defined and author is not empty %}
+            <span class="post-detail-byline">By {{ author }}</span>
+          {% endif %}
+          {% if dateline is defined and dateline is not empty %}
+            {% if author is defined and author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+            <time datetime="{{ date | default('') }}">{{ dateline }}</time>
+          {% elseif date is defined and date is not empty %}
+            {% if author is defined and author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+            <time datetime="{{ date }}">{{ date | date("F d, Y") }}</time>
+          {% endif %}
+        </div>
+      </header>
+
+      {% for post in posts | default([]) %}
+        <article class="post-body" id="{{ post.id | default('') }}">
+          {% if post.title is defined and post.title is not empty and posts|length > 1 %}
+            <h2 style="margin-top: 1.5em; margin-bottom: 0.8em; font-family: var(--traven-font-display);">{{ post.title }}</h2>
+          {% endif %}
+          <div class="article-content traven-preview">
+            {{ post.content_html | default('') | raw }}
+          </div>
+        </article>
+        {% endfor %}
+
+        {{ theme.partial('faqs') | raw }}
+
+        <section class="penmanship-discussion">
+        {{ theme.partial('comment-thread') | raw }}
+        {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+      </section>
+    </div>
+  </div>
+  {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

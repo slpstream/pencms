@@ -1,0 +1,41 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+
+<main id="main" class="ochre-wall page-page">
+
+    <header class="ochre-plaque">
+        {% if trumpet is not empty %}
+            <p class="cat">{{ trumpet }}</p>
+        {% endif %}
+        <h1 class="post-detail-title page-heading ochre-panel-title">{{ hero_title | default(page_title | default('Untitled')) }}</h1>
+        {% if deck is not empty %}
+            <div class="post-detail-deck ochre-deck">{{ deck | raw }}</div>
+        {% endif %}
+        {% if has_hero %}
+            <figure class="ochre-painted-panel">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+            </figure>
+        {% endif %}
+    </header>
+
+    <div class="ochre-chamber">
+        <div class="ochre-void">
+            <div class="ochre-survey-rail" aria-hidden="true">
+                <i class="survey-st lit"></i>
+                <i class="survey-st"></i>
+            </div>
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </div>
+        <div class="ochre-prose">
+            <div class="article-content traven-preview">
+                {{ page_content | raw }}
+            </div>
+
+            {{ theme.partial('faqs') | raw }}
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

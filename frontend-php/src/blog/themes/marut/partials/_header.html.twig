@@ -1,0 +1,20 @@
+<header class="site-header">
+    <div class="header-container">
+        <a href="{{ base_path }}" class="brand-wrapper">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+            {% else %}
+                <div class="brand-logo">{{ (sitename | default('Marut')) | first | upper }}</div>
+            {% endif %}
+            <span class="site-title">{{ sitename | default('Marut Editorial') }}</span>
+            {% if tagline is defined and tagline is not empty %}
+                <span class="site-tagline">{{ tagline }}</span>
+            {% endif %}
+        </a>
+        <div class="nav-container">
+            {{ theme.partial('navbar') | raw }}
+        </div>
+    </div>
+    {{ theme.partial('category-rail') | raw }}
+</header>

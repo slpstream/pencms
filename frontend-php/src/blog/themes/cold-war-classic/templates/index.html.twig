@@ -1,0 +1,55 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+<section class="archive-header">
+    <div class="archive-header-content">
+        <h1 class="archive-title">
+            {{ hero_title | default('The Archive') }}
+        </h1>
+        <p class="archive-tagline">
+            {{ tagline | default('DEPARTMENT OF STRATEGIC RECORDING') }}
+        </p>
+    </div>
+</section>
+
+<main class="cabinet-container">
+    <div class="dossier-grid">
+        {% for dossier in dossiers %}
+            {% set dossier_slug = dossier.slug | default('') %}
+            {% set section = dossier.section | default(dossier.category | default('blog')) %}
+            {% set url = theme.isStatic()
+                ? (base_path ~ dossier_slug ~ '/index.html')
+                : (base_path ~ 'post.php?slug=' ~ dossier_slug ~ '&section=' ~ (section | url_encode)) %}
+            {% set dossier_image = dossier.hero_image | default('images/defaulthero.jpg') %}
+            <article class="dossier-folder">
+                <a href="{{ url }}" class="dossier-link-overlay" aria-label="{{ dossier.hero_title | default(dossier.title | default('Open dossier')) }}"></a>
+
+                <img src="{{ contentAsset(dossier_image) }}" alt="{{ dossier.title | default(dossier.hero_title | default('Dossier')) }}" class="folder-image-preview">
+
+                <div class="folder-content">
+                    <span class="folder-badge">{{ section }}</span>
+                    <h2 class="folder-title">{{ dossier.hero_title | default(dossier.title | default('Untitled Dossier')) }}</h2>
+                    <p class="folder-deck">{{ dossier.deck | default('') | striptags }}</p>
+
+                    <div class="folder-access-line">
+                        <div class="folder-access-rule"></div>
+                        <span class="folder-access-label">Access Record</span>
+                    </div>
+                </div>
+
+                <div class="stamp-access">UNAUTHORIZED ACCESS PROHIBITED</div>
+            </article>
+        {% else %}
+            <p class="folder-deck">No dossiers are currently available in the archive.</p>
+        {% endfor %}
+    </div>
+
+    {% if secondary_items is not empty %}
+        <aside class="secondary-navigation-rail">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

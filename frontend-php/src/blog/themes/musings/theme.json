@@ -1,0 +1,328 @@
+{
+  "type": "native",
+  "name": "Musings",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A dark retro field-journal theme with sidebar nav and bottom-left site logo placement.",
+  "editor_skin": "musings",
+  "color_mode": "dark",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": false,
+    "sidebars": true,
+    "logo": true,
+    "tagline": true,
+    "menus": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--traven-bg",
+            "default": "#0d1117"
+          },
+          {
+            "id": "sidebar-bg",
+            "label": "Sidebar Background",
+            "type": "color",
+            "var": "--traven-sidebar-bg",
+            "default": "#080a09"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--traven-text",
+            "default": "#dad4c7"
+          },
+          {
+            "id": "headings",
+            "label": "Headings",
+            "type": "color",
+            "var": "--traven-h-color",
+            "default": "#dad4c7"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--traven-accent",
+            "default": "#85e89d"
+          },
+          {
+            "id": "accent-bright",
+            "label": "Bright Accent",
+            "type": "color",
+            "var": "--traven-accent-bright",
+            "default": "#a6e22e"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--traven-muted",
+            "default": "#8b949e"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--traven-border",
+            "default": "#30363d"
+          },
+          {
+            "id": "border-light",
+            "label": "Light Borders",
+            "type": "color",
+            "var": "--traven-border-light",
+            "default": "#21262d"
+          },
+          {
+            "id": "code-bg",
+            "label": "Code Background",
+            "type": "color",
+            "var": "--traven-code-bg",
+            "default": "#161b22"
+          },
+          {
+            "id": "code-text",
+            "label": "Code Text",
+            "type": "color",
+            "var": "--traven-code-text",
+            "default": "#85e89d"
+          },
+          {
+            "id": "code-border",
+            "label": "Code Border",
+            "type": "color",
+            "var": "--traven-code-border",
+            "default": "#30363d"
+          },
+          {
+            "id": "blockquote-border",
+            "label": "Blockquote Border",
+            "type": "color",
+            "var": "--traven-blockquote-border",
+            "default": "#85e89d"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--traven-font-display",
+            "default": "\"Fira Code\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Courier New\", monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--traven-font-body",
+            "default": "\"Fira Code\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Courier New\", monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--traven-font-mono",
+            "default": "\"Fira Code\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Courier New\", monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#85e89d",
+    "og_vignette_color": "#1b221e",
+    "og_text_color": "#dad4c7",
+    "og_bar_color": "#0d1117",
+    "og_font": "FiraCode-Bold",
+    "og_fonts": {
+      "FiraCode-Bold": "assets/fonts/FiraCode-Bold.ttf",
+      "FiraCode-Regular": "assets/fonts/FiraCode-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

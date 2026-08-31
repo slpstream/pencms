@@ -1,0 +1,43 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<section class="hero-banner">
+    <h1 class="hero-title-text">Category: {{ hero_title | title }}</h1>
+    <p class="hero-tagline-text">Posts matching the category.</p>
+</section>
+
+{% set secondary_items = menu('secondary') %}
+<main class="main-container{% if secondary_items is empty %} main-container-narrow{% endif %}">
+    <div class="{% if secondary_items is not empty %}layout-grid layout-grid-with-nav{% else %}feed-posts-wrap{% endif %}">
+        {% if secondary_items is not empty %}
+            <aside class="sidebar-column sidebar-column-nav">
+                {{ theme.partial('sidebar-secondary') | raw }}
+            </aside>
+        {% endif %}
+
+        <div class="feed-posts">
+            {% for dossier in dossiers %}
+                {% set url = contentUrl(dossier) %}
+                <article class="post-card {% if dossier.category is not empty %}theme-{{ dossier.category }}{% endif %}">
+                    <div class="post-card-meta">
+                        <time datetime="{{ dossier.date }}">{{ dossier.date | date("F d, Y") }}</time>
+                    </div>
+                    
+                    <h2 class="post-card-title">
+                        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                    </h2>
+                    
+                    {% if dossier.deck is not empty %}
+                        <p class="post-card-deck"><a href="{{ url }}">{{ dossier.deck | striptags }}</a></p>
+                    {% endif %}
+                </article>
+            {% else %}
+                <div class="post-card">
+                    <p class="italic text-center">No matching posts found.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,76 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+<main class="main-container">
+    <div class="layout-grid{% if secondary_items is not empty %} layout-grid-with-nav layout-grid-post{% endif %}">
+        {% if secondary_items is not empty %}
+            <aside class="sidebar-column sidebar-column-nav">
+                {{ theme.partial('sidebar-secondary') | raw }}
+            </aside>
+        {% endif %}
+
+        <div>
+            <header class="post-detail-header">
+                {% if trumpet is not empty %}
+                    <div class="post-detail-eyebrow">
+                        <span class="post-detail-trumpet">{{ trumpet }}</span>
+                    </div>
+                {% endif %}
+                <h1 class="post-detail-title">{{ hero_title }}</h1>
+                {% if deck is not empty %}
+                    <div class="post-detail-deck">{{ deck | raw }}</div>
+                {% endif %}
+                <div class="post-detail-meta">
+                    {% if author is not empty %}
+                        <span class="post-detail-byline">{{ strings.by }} {{ author }}</span>
+                    {% endif %}
+                    {% if dateline is not empty %}
+                        {% if author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+                        <time datetime="{{ date }}">{{ dateline }}</time>
+                    {% elseif date is not empty %}
+                        {% if author is not empty %}<span class="meta-separator">&bull;</span>{% endif %}
+                        <time datetime="{{ date }}">{{ date | date("F d, Y") }}</time>
+                    {% endif %}
+                </div>
+            </header>
+
+            {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-detail-hero-image">
+            {% endif %}
+
+            <div class="post-content-wrapper">
+                {% for post in posts %}
+                    <article class="post-body" id="{{ post.id }}">
+                        {% if post.title is not empty and posts|length > 1 %}
+                            <h2 style="margin-top: 1.5em; margin-bottom: 0.8em; font-family: var(--traven-font-display);">{{ post.title }}</h2>
+                        {% endif %}
+                        <div class="article-content traven-preview">
+                            {{ post.content_html | raw }}
+                        </div>
+                    </article>
+                {% endfor %}
+
+                {{ theme.partial('faqs') | raw }}
+            </div>
+
+            <section class="editorial-discussion">
+                {{ theme.partial('comment-thread') | raw }}
+                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+            </section>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="sidebar-column">
+            {{ theme.partial('sidebar-profile') | raw }}
+            
+            {% if is_composite %}
+                {{ theme.partial('sidebar-toc') | raw }}
+            {% endif %}
+            
+            {{ theme.partial('sidebar-related') | raw }}
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

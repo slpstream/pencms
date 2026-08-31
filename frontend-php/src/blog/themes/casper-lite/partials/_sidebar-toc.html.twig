@@ -1,0 +1,20 @@
+    <div class="sidebar-widget sidebar-card sidebar-toc">
+        <h3 class="sidebar-title">Contents</h3>
+        <ul class="sidebar-list toc-list">
+            {% for fragment in posts %}
+                {% if fragment.id != 'index' %}
+                    {% set label = fragment.title | default('') %}
+                    {% if label is empty %}
+                        {% if fragment.id == 'intro' or fragment.id == 'main' %}
+                            {% set label = 'Introduction' %}
+                        {% else %}
+                            {% set label = fragment.id | replace({'-': ' ', '_': ' '}) | title %}
+                        {% endif %}
+                    {% endif %}
+                    <li class="sidebar-list-item">
+                        <a href="#{{ fragment.id }}" class="sidebar-link">{{ label }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>

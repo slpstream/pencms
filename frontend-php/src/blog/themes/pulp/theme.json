@@ -1,0 +1,144 @@
+{
+  "type": "native",
+  "name": "Pulp",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A light-only risograph zine theme: two-drum inks, woodcut titles, scrapbook tilts, and typewriter prose.",
+  "editor_skin": "pulp",
+  "editor_skin_base": [],
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Paper",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#EFEBE3"
+          },
+          {
+            "id": "text",
+            "label": "Body Ink",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#3255A4"
+          },
+          {
+            "id": "muted",
+            "label": "Overprint / Violet",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#321871"
+          },
+          {
+            "id": "accent",
+            "label": "Pink Drum",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#FF48B0"
+          },
+          {
+            "id": "border",
+            "label": "Borders / Stamps",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#321871"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Alfa Slab One', 'Rockwell', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Alfa Slab One', 'Rockwell', Georgia, serif", "label": "Alfa Slab One" },
+              { "value": "'Big Shoulders Display', 'Arial Narrow', sans-serif", "label": "Big Shoulders Display" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Special Elite', 'Courier New', monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Special Elite', 'Courier New', monospace", "label": "Special Elite" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Special Elite', 'Courier New', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Special Elite', 'Courier New', ui-monospace, monospace", "label": "Special Elite" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#FF48B0",
+    "og_vignette_color": "#321871",
+    "og_text_color": "#3255A4",
+    "og_bar_color": "#EFEBE3",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "poster",
+    "og_text_case": "upper",
+    "og_grade_preset": "paper",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

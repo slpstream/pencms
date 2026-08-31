@@ -1,0 +1,290 @@
+{
+  "type": "native",
+  "name": "Folio",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "An image-heavy portfolio theme with a torn-paper diagonal aesthetic and inset hero titles on image cards. Light/dark mode toggle.",
+  "editor_skin": "folio",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, .cm-wysiwym-dark"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--folio-canvas",
+            "default": "#f3f4f6",
+            "dark_default": "#0f172a"
+          },
+          {
+            "id": "surface",
+            "label": "Surface / Cards",
+            "type": "color",
+            "var": "--folio-block",
+            "default": "#ffffff",
+            "dark_default": "#1e293b"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--folio-text",
+            "default": "#19212c",
+            "dark_default": "#f1f5f9"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--folio-muted",
+            "default": "#1f2937",
+            "dark_default": "#94a3b8"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--folio-accent",
+            "default": "#C8102E",
+            "dark_default": "#f87171"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--folio-border",
+            "default": "#e5e7eb",
+            "dark_default": "#334155"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--folio-font-display",
+            "default": "\"Bebas Neue\", \"Arial Narrow\", Impact, sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "\"Bebas Neue\", \"Arial Narrow\", Impact, sans-serif",
+                "label": "Bebas Neue"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--folio-font-body",
+            "default": "Blinker, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "Blinker, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+                "label": "Blinker"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--folio-font-mono",
+            "default": "Datatype, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "Datatype, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+                "label": "Datatype"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#C8102E",
+    "og_vignette_color": "#1F2937",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#19212C",
+    "og_font": "BebasNeue",
+    "og_fonts": {
+      "BebasNeue": "assets/fonts/bebasneue-1.ttf",
+      "Blinker": "assets/fonts/blinker-1.ttf",
+      "Blinker-Bold": "assets/fonts/blinker-0.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": "assets/images/watermark.png",
+    "og_default_hero": "assets/images/defaulthero.png",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

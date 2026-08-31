@@ -1,0 +1,20 @@
+<header class="masthead" id="masthead">
+    <div class="masthead-inner">
+        <div class="masthead-brand">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="site-branding">
+                {% set logo = theme.getLogoUrl() %}
+                {% if logo is not empty %}
+                    <span class="site-logo-wrapper">
+                        <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+                    </span>
+                {% endif %}
+                <span class="site-title">{{ sitename }}</span>
+            </a>
+        </div>
+
+        <div class="masthead-nav-wrapper">
+            {{ theme.partial('navbar') | raw }}
+        </div>
+    </div>
+</header>
+

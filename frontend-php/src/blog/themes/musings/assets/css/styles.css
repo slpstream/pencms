@@ -1,0 +1,1106 @@
+/* Musings Theme - Layer A Site Chrome Stylesheet */
+
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/source-serif-4-latin-400-italic.woff2') format('woff2');
+}
+
+/* CSS Variables */
+:root {
+  --musings-sidebar-width: 260px;
+  --musings-bg: var(--traven-bg, #0d1117);
+  --musings-sidebar-bg: var(--traven-sidebar-bg, #080a09);
+  --musings-text: var(--traven-text, #dad4c7);
+  --musings-muted: var(--traven-muted, #8b949e);
+  --musings-accent: var(--traven-accent, #85e89d);
+  --musings-accent-bright: var(--traven-accent-bright, #a6e22e);
+  --musings-border: var(--traven-border-light, #21262d);
+  --musings-font: var(--traven-font-body, "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace);
+  --musings-font-display: var(--traven-font-display, "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace);
+  --musings-font-lead-deck: var(--traven-font-body, 'Source Serif 4', Georgia, Garamond, serif);
+}
+
+/* Reset & Global Canvas */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--musings-bg);
+  color: var(--musings-text);
+  font-family: var(--musings-font);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  color: var(--musings-accent);
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: var(--musings-accent-bright);
+  text-decoration: none !important;
+}
+
+/* Main Layout Wrapper */
+.musings-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  align-items: stretch;
+  background-color: var(--musings-bg);
+}
+
+/* Vertical Left Sidebar */
+.musings-sidebar {
+  width: var(--musings-sidebar-width);
+  min-width: var(--musings-sidebar-width);
+  background-color: var(--musings-sidebar-bg);
+  border-right: 1px solid var(--musings-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  align-self: flex-start;
+  z-index: 10;
+}
+
+/* Content Wrapper (Main Column + Footer) */
+.musings-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 100vh;
+  background-color: var(--musings-bg);
+}
+
+/* Main Content Area */
+.musings-main {
+  flex: 1;
+  padding: 3rem 4rem;
+  max-width: 860px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Top Section of Sidebar: Title, Tagline, Navigation */
+.musings-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.musings-menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--musings-border);
+  color: var(--musings-text);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.musings-menu-toggle:hover,
+.musings-menu-toggle:focus {
+  border-color: var(--musings-accent);
+  outline: none;
+}
+
+.musings-hamburger-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: var(--musings-text);
+  transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.musings-menu-toggle.is-active .musings-hamburger-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+  background-color: var(--musings-accent);
+}
+
+.musings-menu-toggle.is-active .musings-hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.musings-menu-toggle.is-active .musings-hamburger-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+  background-color: var(--musings-accent);
+}
+
+.musings-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  width: 100%;
+}
+
+.musings-sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sitename in Upper Left Top */
+.musings-site-header .site-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #dad4c7;
+  margin: 0 0 0.2rem 0;
+  letter-spacing: -0.01em;
+}
+
+.musings-site-header .site-title a {
+  color: #dad4c7;
+  text-decoration: none;
+}
+
+.musings-site-header .site-title a:hover {
+  color: var(--musings-accent);
+}
+
+/* Site Tagline Directly Below Sitename */
+.musings-site-header .site-tagline {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--musings-muted);
+  margin: 0;
+}
+
+/* Specificity overrides for Nav UL/LI elements against .traven-preview body rules */
+.musings-sidebar nav ul,
+.musings-sidebar ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.musings-sidebar nav li,
+.musings-sidebar li {
+  margin: 0 0 0.5rem 0 !important;
+  padding: 0 !important;
+  font-size: 0.9rem;
+}
+
+.musings-sidebar nav a,
+.musings-sidebar li a {
+  color: var(--musings-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.15s ease;
+}
+
+.musings-sidebar nav a:hover,
+.musings-sidebar li a:hover,
+.musings-sidebar nav .active a {
+  color: var(--musings-accent);
+}
+
+.musings-sidebar .nav-prefix,
+.musings-primary-nav .nav-prefix {
+  color: #545d68 !important;
+  font-size: 0.82rem;
+  margin-right: 0.5rem;
+  font-weight: 400;
+}
+
+.musings-sidebar nav a:hover .nav-prefix,
+.musings-sidebar li a:hover .nav-prefix,
+.musings-sidebar nav .active a .nav-prefix {
+  color: #545d68 !important;
+}
+
+/* Indent nested child menu items with left-padding for sidebar and secondary nav */
+.musings-sidebar ul.sub-menu,
+.musings-secondary-nav ul.sub-menu {
+  list-style: none !important;
+  margin: 0.4rem 0 0.5rem 0 !important;
+  padding: 0 0 0 1.85rem !important;
+}
+
+.musings-sidebar ul.sub-menu li,
+.musings-secondary-nav ul.sub-menu li {
+  margin-bottom: 0.35rem !important;
+  padding-left: 0.3rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* Primary Navigation Dropdown Menu (Hover Reveal) */
+.musings-primary-nav li {
+  position: relative;
+}
+
+.musings-primary-nav ul.sub-menu {
+  display: none !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--musings-bg, #ffffff);
+  border: 1px solid var(--musings-border, #e2e8f0);
+  border-radius: 4px;
+  padding: 0.5rem 1rem !important;
+  margin: 0 !important;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  list-style: none !important;
+}
+
+.musings-primary-nav ul.sub-menu li {
+  margin-bottom: 0.35rem !important;
+  font-size: 0.85rem !important;
+  padding-left: 0 !important;
+}
+
+.musings-primary-nav li:hover > ul.sub-menu,
+.musings-primary-nav li:focus-within > ul.sub-menu,
+.musings-primary-nav li.open > ul.sub-menu {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.musings-divider {
+  height: 1px;
+  background-color: var(--musings-border);
+  margin: 1rem 0;
+  width: 100%;
+}
+
+/* Secondary Navigation in Sidebar - Right Aligned */
+.musings-secondary-nav {
+  text-align: right !important;
+  width: 100%;
+}
+
+.musings-secondary-nav ul {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  text-align: right !important;
+}
+
+.musings-sidebar .musings-secondary-nav li,
+.musings-secondary-nav li {
+  text-align: right !important;
+  width: 100%;
+}
+
+.musings-sidebar .musings-secondary-nav a,
+.musings-secondary-nav a,
+.musings-secondary-nav .nav-label {
+  display: flex !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+  width: 100%;
+}
+
+/* Lower Section of Sidebar: Music Widget, Logo, Footer Meta */
+.musings-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+/* Author Avatar Card in Sidebar */
+.musings-author-card {
+  font-size: 0.75rem;
+  color: var(--musings-muted);
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed var(--musings-border);
+  padding: 0.6rem 0.75rem;
+  border-radius: 4px;
+}
+
+.musings-author-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.musings-author-avatar {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--musings-border);
+}
+
+.musings-author-avatar-fallback {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  background: var(--musings-border);
+  color: var(--musings-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.musings-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  overflow: hidden;
+}
+
+.musings-author-name {
+  color: #dad4c7;
+  font-size: 0.85rem;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.musings-author-bio {
+  color: var(--musings-muted);
+  font-size: 0.7rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Logo Container in Lower Left Corner */
+.musings-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+.musings-logo-container img {
+  max-width: 120px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+/* Fallback Sunflower Logo SVG */
+.musings-sunflower-svg {
+  width: 100px;
+  height: 70px;
+  color: #facc15;
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.4));
+}
+
+.musings-sidebar-meta {
+  font-size: 0.75rem;
+  color: var(--musings-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* Header Breadcrumb / Section Tagline */
+.musings-header-meta {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--musings-muted);
+  margin-bottom: 1.5rem;
+}
+
+/* Index Hero Title Card (Green Tinted & Styled Diamond Corners) */
+.musings-hero-card {
+  position: relative;
+  background: rgba(133, 232, 157, 0.035);
+  border: 1px solid rgba(133, 232, 157, 0.35);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 3rem;
+  border-radius: 1px;
+}
+
+.musings-hero-card .corner-star {
+  position: absolute;
+  color: var(--musings-accent);
+  font-size: 11px;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.musings-hero-card .corner-star.top-left {
+  top: -6px;
+  left: -6px;
+}
+
+.musings-hero-card .corner-star.top-right {
+  top: -6px;
+  right: -6px;
+}
+
+.musings-hero-card .corner-star.bottom-left {
+  bottom: -6px;
+  left: -6px;
+}
+
+.musings-hero-card .corner-star.bottom-right {
+  bottom: -6px;
+  right: -6px;
+}
+
+.musings-hero-title {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #dad4c7;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.25;
+}
+
+.musings-hero-deck {
+  font-size: 0.95rem;
+  color: var(--musings-muted);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 680px;
+}
+
+/* Article / Post Header */
+.musings-post-header {
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--musings-border);
+}
+
+.musings-post-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.musings-post-eyebrow .meta-tag {
+  color: var(--musings-accent);
+  background: rgba(133, 232, 157, 0.1);
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Trumpet / title / deck typography lives in skin-musings.css (dual-duty). */
+.musings-post-eyebrow .musings-post-trumpet {
+  margin-bottom: 0;
+}
+
+body.traven-preview .musings-post-header h1,
+body.traven-preview .musings-post-detail h1,
+.musings-post-header h1,
+.musings-post-detail h1 {
+  margin: 1.5rem 0 1.75rem 0 !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.musings-post-deck {
+  margin-top: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.musings-post-meta .musings-byline {
+  color: #dad4c7;
+  font-weight: 400;
+}
+
+.musings-post-meta {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--musings-muted);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  letter-spacing: 0.05em;
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Hero Image 16:9 Aspect Ratio */
+.musings-post-hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-top: 1.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.musings-post-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.musings-post-meta .meta-tag {
+  color: var(--musings-accent);
+  background: rgba(133, 232, 157, 0.1);
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+}
+
+/* Index Feed List */
+.musings-feed-section {
+  margin-bottom: 3rem;
+}
+
+.musings-feed-section h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--musings-muted);
+  border-bottom: 1px solid var(--musings-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.musings-post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.musings-post-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.musings-post-item .item-date {
+  font-size: 0.75rem;
+  color: var(--musings-muted);
+}
+
+.musings-post-item .item-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #dad4c7;
+}
+
+.musings-post-item .item-title a {
+  color: #dad4c7;
+}
+
+.musings-post-item .item-title a:hover {
+  color: var(--musings-accent);
+}
+
+.musings-post-item .item-excerpt {
+  font-size: 0.9rem;
+  color: var(--musings-muted);
+}
+
+.musings-post-item .musings-latest-title,
+.musings-latest-title {
+  font-size: 1.75rem !important;
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+
+.musings-lead-deck {
+  font-family: var(--musings-font-lead-deck) !important;
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: #dad4c7;
+  opacity: 0.78;
+  margin-top: 0.4rem;
+}
+
+/* --- Q&A / FAQ (before discussion) --- */
+.musings-post-detail .pen-qa,
+.musings-page-detail .pen-qa {
+  width: 100%;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--musings-border);
+  color: inherit;
+}
+
+.musings-post-detail .pen-qa .pen-qa-heading,
+.musings-page-detail .pen-qa .pen-qa-heading {
+  font-family: var(--traven-font-display, var(--font-display, inherit));
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+
+.musings-post-detail .pen-qa dt,
+.musings-page-detail .pen-qa dt {
+  color: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.musings-post-detail .pen-qa dd,
+.musings-page-detail .pen-qa dd {
+  color: inherit;
+  line-height: 1.6;
+}
+
+/* --- Comments + feedback (musings discussion) --- */
+.musings-discussion {
+  width: 100%;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--musings-border);
+}
+
+.musings-discussion .pen-comments:not(:has(.pen-comments__list)) {
+  display: none;
+}
+
+.musings-discussion .pen-comments,
+.musings-discussion .pen-feedback,
+.musings-discussion .pen-comments:has(.pen-comments__list) + .pen-feedback {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+  color: var(--musings-text);
+}
+
+.musings-discussion .pen-comments:has(.pen-comments__list) {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--musings-border);
+}
+
+body.traven-preview .musings-discussion .pen-comments__title,
+body.traven-preview .musings-discussion .pen-feedback__title,
+.musings-discussion .pen-comments__title,
+.musings-discussion .pen-feedback__title {
+  font-family: var(--musings-font-display) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+  color: var(--musings-muted) !important;
+  line-height: 1.3 !important;
+  margin: 0 0 1.25rem !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.musings-discussion .pen-comments__list {
+  gap: 0;
+}
+
+.musings-discussion .pen-comment {
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--musings-border);
+  gap: 0.35rem;
+}
+
+.musings-discussion .pen-comment:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.musings-discussion .pen-comment--reply {
+  margin-left: 0;
+  padding-left: 1.15rem;
+  border-left: 2px solid var(--musings-border);
+}
+
+.musings-discussion .pen-comment__author {
+  font-family: var(--musings-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--musings-text);
+}
+
+.musings-discussion .pen-comment__body {
+  font-family: var(--musings-font);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--musings-text);
+}
+
+.musings-discussion .pen-feedback__form {
+  gap: 1.1rem;
+}
+
+.musings-discussion .pen-feedback__label {
+  font-family: var(--musings-font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--musings-text);
+}
+
+.musings-discussion .pen-feedback__label span {
+  color: var(--musings-muted);
+  font-weight: 400;
+  opacity: 1;
+}
+
+.musings-discussion .pen-feedback__input,
+.musings-discussion .pen-feedback__textarea {
+  font-family: var(--musings-font);
+  font-size: 0.95rem;
+  color: var(--musings-text);
+  background: var(--musings-sidebar-bg);
+  border: 1px solid var(--musings-border);
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+}
+
+.musings-discussion .pen-feedback__input:focus,
+.musings-discussion .pen-feedback__textarea:focus {
+  outline: none;
+  border-color: var(--musings-accent);
+  box-shadow: 0 0 0 2px rgba(133, 232, 157, 0.2);
+}
+
+.musings-discussion .pen-feedback__submit {
+  justify-self: end;
+  font-family: var(--musings-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0;
+  border: 1px solid var(--musings-accent);
+  background: var(--musings-accent);
+  color: var(--musings-bg);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.musings-discussion .pen-feedback__submit:hover {
+  background: var(--musings-accent-bright);
+  border-color: var(--musings-accent-bright);
+}
+
+.musings-discussion .pen-feedback__submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.musings-discussion .pen-feedback__status--error {
+  color: #ff7b72;
+  font-family: var(--musings-font);
+  font-size: 0.9rem;
+}
+
+.musings-discussion .pen-feedback__status--ok {
+  color: var(--musings-accent);
+  font-family: var(--musings-font);
+  font-size: 0.9rem;
+}
+
+.musings-discussion .pen-feedback__noscript a {
+  color: var(--musings-accent);
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/* 100% Full-Width Hairline Border Grid Footer                   */
+/* ═════════════════════════════════════════════════════════════ */
+.musings-footer-wrapper {
+  width: 100%;
+  margin-top: 4rem;
+  border-top: 1px solid var(--musings-border);
+  background-color: var(--musings-sidebar-bg);
+  box-sizing: border-box;
+}
+
+.musings-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  width: 100%;
+  border-bottom: 1px solid var(--musings-border);
+  box-sizing: border-box;
+}
+
+.musings-footer-col {
+  border-right: 1px solid var(--musings-border);
+  border-bottom: 1px solid var(--musings-border);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.005);
+}
+
+.musings-footer-col-header {
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #dad4c7;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--musings-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.musings-footer-col-header a {
+  color: #dad4c7;
+}
+
+.musings-footer-col-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.musings-footer-col-item {
+  margin: 0 !important;
+  padding: 0.6rem 1rem !important;
+  border-bottom: 1px solid var(--musings-border);
+  font-size: 0.85rem;
+}
+
+.musings-footer-col-item:last-child {
+  border-bottom: none;
+}
+
+.musings-footer-col-item a {
+  color: var(--musings-muted);
+  transition: color 0.15s ease;
+}
+
+.musings-footer-col-item a:hover {
+  color: var(--musings-accent);
+}
+
+.musings-footer-bar-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--musings-muted);
+  background-color: var(--musings-sidebar-bg);
+}
+
+/* PenCMS PHP [image] / .gallery-single CSS Rules */
+.gallery-single,
+.classic-markdown-figure {
+  margin: 1.5rem 0;
+  text-align: center;
+  clear: both;
+}
+
+.gallery-single img,
+.photo-wrapper img,
+img.classic-markdown {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Percentage Image Sizes */
+.gallery-single.img-30 img,
+img.img-30 {
+  width: 30%;
+}
+
+.gallery-single.img-50 img,
+img.img-50 {
+  width: 50%;
+}
+
+.gallery-single.img-70 img,
+img.img-70 {
+  width: 70%;
+}
+
+.gallery-single.img-fullbleed img,
+img.img-fullbleed {
+  width: 100%;
+}
+
+/* Mobile Drawer & Responsiveness */
+@media (max-width: 768px) {
+  .musings-layout {
+    flex-direction: column;
+  }
+
+  .musings-sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1.25rem 1.5rem;
+    align-self: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--musings-border);
+    background-color: var(--musings-sidebar-bg);
+  }
+
+  .musings-menu-toggle {
+    display: flex;
+  }
+
+  .musings-sidebar-content {
+    display: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--musings-border);
+  }
+
+  .musings-sidebar-content.is-open {
+    display: flex;
+  }
+
+  .musings-main {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .musings-footer-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Search Page & MiniSearch Results
+   ========================================================================== */
+
+.musings-search-page .pencms-search {
+  max-width: 720px;
+  margin: 1.5rem 0 3.5rem;
+}
+
+.search-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--musings-muted);
+  margin-bottom: 0.5rem;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--musings-font);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--musings-border);
+  background: var(--musings-sidebar-bg);
+  color: var(--musings-text);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--musings-accent);
+}
+
+.search-results {
+  margin-top: 1.5rem;
+}
+
+.search-status {
+  font-size: 0.9rem;
+  color: var(--musings-muted);
+  font-style: italic;
+  padding: 0.5rem 0;
+}
+
+.search-status-error {
+  color: #ff7b72;
+}
+
+.search-results-list,
+body.traven-preview .search-results-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.search-result-item {
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--musings-border);
+}
+
+.search-result-item:first-child {
+  padding-top: 0.25rem;
+}
+
+.search-result-type,
+body.traven-preview .search-result-type {
+  display: none !important;
+}
+
+.search-result-title,
+body.traven-preview .search-result-title {
+  font-family: var(--musings-font-display) !important;
+  font-size: clamp(1.2rem, 2.2vw, 1.45rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin: 0 0 0.35rem !important;
+  padding: 0 !important;
+}
+
+.search-result-title a,
+body.traven-preview .search-result-title a {
+  color: var(--musings-accent) !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease;
+}
+
+.search-result-title a:visited,
+body.traven-preview .search-result-title a:visited {
+  color: var(--musings-accent) !important;
+}
+
+.search-result-title a:hover,
+.search-result-title a:focus-visible,
+body.traven-preview .search-result-title a:hover,
+body.traven-preview .search-result-title a:focus-visible {
+  color: var(--musings-accent-bright) !important;
+}
+
+.search-result-excerpt,
+body.traven-preview .search-result-excerpt {
+  font-family: var(--musings-font) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55 !important;
+  color: var(--musings-muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

@@ -1,0 +1,171 @@
+{
+  "type": "native",
+  "name": "Ochre",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Dark-only long-form: Old Standard TT prose, Archivo labels, and a quiet artisan shell for blogs and publications.",
+  "editor_skin": "ochre",
+  "editor_skin_base": [],
+  "color_mode": "dark",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "page_content": { "type": "html", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Void / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#080605"
+          },
+          {
+            "id": "surface",
+            "label": "Char / Surface",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#231b14"
+          },
+          {
+            "id": "text",
+            "label": "Bone / Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#e8dfce"
+          },
+          {
+            "id": "muted",
+            "label": "Earth / Muted",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#c9913c"
+          },
+          {
+            "id": "accent",
+            "label": "Torch / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#ffc178"
+          },
+          {
+            "id": "hematite",
+            "label": "Hematite / Bars",
+            "type": "color",
+            "var": "--color-hematite",
+            "default": "#a8432b"
+          },
+          {
+            "id": "border",
+            "label": "Rule / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#3a2818"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Old Standard TT', 'Iowan Old Style', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Old Standard TT', 'Iowan Old Style', Georgia, serif", "label": "Old Standard TT" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Old Standard TT', 'Iowan Old Style', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Old Standard TT', 'Iowan Old Style', Georgia, serif", "label": "Old Standard TT" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-grotesk",
+            "label": "Label Font",
+            "type": "select",
+            "var": "--font-grotesk",
+            "default": "'Archivo', 'Helvetica Neue', Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', 'Helvetica Neue', Arial, sans-serif", "label": "Archivo" },
+              { "value": "system-ui, -apple-system, 'Segoe UI', sans-serif", "label": "System Sans" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#a8432b",
+    "og_vignette_color": "#080605",
+    "og_text_color": "#e8dfce",
+    "og_bar_color": "#231b14",
+    "og_font": "OldStandardTT-Bold",
+    "og_fonts": {
+      "OldStandardTT-Bold": "assets/fonts/OldStandardTT-Bold.ttf"
+    },
+    "og_headline_style": "caption",
+    "og_text_case": "as_is",
+    "og_grade_preset": "dusk",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

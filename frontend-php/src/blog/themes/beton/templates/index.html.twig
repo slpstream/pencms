@@ -1,0 +1,55 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set pour_title = (hero_title is defined and hero_title is not empty) ? hero_title : (sitename | default('Beton')) %}
+{% set pour_words = pour_title|split(' ') %}
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set latest = post_list|first %}
+
+<main id="main" class="site-main page-front">
+    <section class="hero" aria-label="{{ sitename | default('Beton') }}">
+        <div class="wrap hero-grid">
+            <h1 class="hero-title cast-type">
+                {% if pour_words|length > 1 %}
+                    <span class="crane-clip"><span class="crane c1">{{ pour_words|first }}</span></span>
+                    <span class="crane-clip"><span class="crane c2">{{ pour_words|slice(1)|join(' ') }}</span></span>
+                {% else %}
+                    <span class="crane-clip"><span class="crane c1">{{ pour_title }}</span></span>
+                {% endif %}
+            </h1>
+            {% if tagline is not empty %}
+                <p class="hero-sub">
+                    <span class="crane-clip"><span class="crane c3">{{ tagline }}</span></span>
+                </p>
+            {% endif %}
+            <div class="hero-annot mono stamp" aria-hidden="true">
+                <span>{{ post_list|length }} {% if post_list|length == 1 %}fiche{% else %}fiches{% endif %}</span>
+                {% if latest and (latest.dateline is defined or latest.date is defined) %}
+                    <span>Dernière levée — {{ latest.dateline | default(latest.date) }}</span>
+                {% endif %}
+                <span class="rust">Chantier en cours</span>
+            </div>
+            <div class="tie-field" aria-hidden="true">
+                <i class="tie"></i><i class="tie"></i><i class="tie"></i>
+                <i class="tie"></i><i class="tie"></i><i class="tie"></i>
+            </div>
+        </div>
+        <div class="mesure mono stamp" aria-hidden="true">
+            <i class="tick tl"></i>
+            <span class="mesure-label">Largeur hors-tout — <b data-vw>0 PX</b></span>
+            <i class="tick tr"></i>
+        </div>
+    </section>
+
+    <div class="joint" role="separator" aria-hidden="true"><span class="mono">Reprise de bétonnage</span></div>
+
+    {% if post_list is not empty %}
+        {% for dossier in post_list %}
+            {{ theme.partial('post-fiche', { dossier: dossier, fiche_index: loop.index }) | raw }}
+        {% endfor %}
+    {% else %}
+        <p class="wrap empty-slab">Nothing poured yet — the first fiche will appear here.</p>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

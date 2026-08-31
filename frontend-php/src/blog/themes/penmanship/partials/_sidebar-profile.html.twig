@@ -1,0 +1,21 @@
+{% set has_extra = false %}
+{% if author is defined and author is iterable %}
+    {% if author.avatar|default('') is not empty or author.bio|default('') is not empty or author.website|default('') is not empty or author.social|default('') is not empty %}
+        {% set has_extra = true %}
+    {% endif %}
+{% endif %}
+
+{% if has_extra %}
+<div class="sidebar-widget profile-card">
+    {% if author.avatar|default('') is not empty %}
+        <img src="{{ author.avatar }}" alt="{{ (author.display_name|default(author.name|default(author)))|e }}" class="profile-avatar">
+    {% endif %}
+    <h3 class="profile-name">{{ (author.display_name|default(author.name|default(author)))|e }}</h3>
+    {% if author.bio|default('') is not empty %}
+        <p class="profile-bio">{{ author.bio|e }}</p>
+    {% endif %}
+    {% if author.website|default('') is not empty %}
+        <a href="{{ author.website }}" class="profile-link" target="_blank" rel="noopener noreferrer">Visit Website &rarr;</a>
+    {% endif %}
+</div>
+{% endif %}

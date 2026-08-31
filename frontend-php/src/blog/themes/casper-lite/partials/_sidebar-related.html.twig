@@ -1,0 +1,13 @@
+    <div class="sidebar-widget sidebar-card sidebar-related">
+        <h3 class="sidebar-title">{{ strings.related }}</h3>
+        <ul class="sidebar-list related-list">
+            {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+                <li class="sidebar-list-item">
+                    <a href="{{ url }}" class="sidebar-link">{{ post.hero_title }}</a>
+                </li>
+            {% else %}
+                <li class="sidebar-list-item related-empty">{{ strings.noRelatedDossiers }}</li>
+            {% endfor %}
+        </ul>
+    </div>

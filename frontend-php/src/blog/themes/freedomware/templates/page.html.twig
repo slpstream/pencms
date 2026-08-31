@@ -1,0 +1,25 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+<main class="main-container">
+    {{ theme.partial('sidebar-secondary') | raw }}
+
+    <article class="page-detail{% if secondary_items is empty %} page-detail--no-secondary-nav{% endif %}">
+        <h1 class="page-heading">{{ hero_title }}</h1>
+
+        {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <div class="post-hero-image-wrapper">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-detail-hero-image">
+            </div>
+        {% endif %}
+
+        <div class="article-content traven-preview">
+            {{ page_content | raw }}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,43 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="terminal-window page-window">
+    <div class="terminal-window-bar">
+        <span class="terminal-window-dots"><span></span><span></span><span></span></span>
+        <span class="terminal-window-title">cat &mdash; {{ hero_title | default('page') }}</span>
+        <span>sh</span>
+    </div>
+    <div class="terminal-window-body">
+
+        <p class="post-breadcrumb">
+            /usr/share/pages<span class="post-breadcrumb-sep">/</span>{{ slug | default('untitled') }}
+        </p>
+
+        <h1 class="post-title">{{ hero_title }}</h1>
+
+        {% if deck is not empty %}
+            <div class="post-deck">{{ deck | raw }}</div>
+        {% endif %}
+
+        {# `cat` viewport — page body (no byline, no frags) #}
+        <div class="post-viewport">
+            <div class="post-viewport-body">
+                <div class="article-content traven-preview">
+                    {{ page_content | raw }}
+                </div>
+
+                {{ theme.partial('faqs') | raw }}
+            </div>
+            <div class="post-viewport-footer">
+                <span class="less-mode">EOF</span>
+                <span>{{ hero_title | length }}B</span>
+                <span>END</span>
+            </div>
+        </div>
+
+        {{ theme.partial('sidebar-related') | raw }}
+
+    </div>
+</div>
+
+{{ theme.partial('footer') | raw }}

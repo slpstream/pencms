@@ -1,0 +1,19 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <article class="page">
+        <header class="page-header">
+            <h1>{{ hero_title | default(page_title | default('')) }}</h1>
+            {% if deck is defined and deck %}
+                <p class="lede">{{ deck | striptags }}</p>
+            {% endif %}
+        </header>
+
+        <div class="article-content traven-preview">{{ page_content | default(content_html | default('')) | raw }}</div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

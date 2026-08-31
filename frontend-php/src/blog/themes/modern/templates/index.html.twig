@@ -1,0 +1,130 @@
+{{ theme.partial('head') | raw }}
+<div class="index-hero-header">
+    {% set logo = theme.getLogoUrl() %}
+    <header class="site-header">
+        <div class="header-container">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="brand-wrapper">
+                {% if logo is not empty %}
+                    <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+                {% endif %}
+                <span class="site-title">{{ sitename }}</span>
+            </a>
+
+            <div class="index-header-right">
+                {% if tagline is not empty %}
+                    <p class="index-header-tagline">{{ tagline }}</p>
+                {% endif %}
+                <div class="header-actions">
+                    {{ theme.partial('navbar') | raw }}
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
+{% set lead = dossiers|first %}
+{% set secondary = dossiers|slice(1, 4) %}
+{% set rest = dossiers|slice(5, 12) %}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+<main class="main-container" aria-label="{{ sitename | default('Latest') }}">
+
+    {# ── Mastband: institutional identifier (h1 = Index Hero when set) ── #}
+    <header class="index-mastband">
+        <h1 class="index-mastband-title">{{ edition_title | default(sitename | default('Latest')) }}</h1>
+    </header>
+
+    {% if lead is empty %}
+        <div class="post-card">
+            <p class="empty-feed">No posts found.</p>
+        </div>
+    {% else %}
+        <div class="index-layout">
+            <div class="index-main">
+
+                {# ── Lead story ── #}
+                {% set lead_url = contentUrl(lead) %}
+                {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+                <article class="index-lead">
+                    <div class="post-detail-eyebrow">
+                        <span class="post-card-category">{{ lead.category | default(lead.section | default('Post')) | upper }}</span>
+                        {% if lead.trumpet is not empty %}
+                            <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+                        {% endif %}
+                    </div>
+                    <h2 class="index-lead-title">
+                        <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                    </h2>
+                    {% if lead.deck is not empty %}
+                        <p class="index-lead-deck">{{ lead.deck | striptags }}</p>
+                    {% endif %}
+                    <div class="index-lead-meta">
+                        <time datetime="{{ lead.date }}">{{ lead.date | default('') | date("F d, Y") }}</time>
+                        <span class="meta-separator">&bull;</span>
+                        <a href="{{ lead_url }}" class="post-card-link">Read article &rarr;</a>
+                    </div>
+                    {% if lead_has_hero %}
+                        <a href="{{ lead_url }}" class="index-lead-image-link" tabindex="-1" aria-hidden="true">
+                            <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="index-lead-image">
+                        </a>
+                    {% endif %}
+                </article>
+
+                {# ── Secondary grid ── #}
+                {% if secondary is not empty %}
+                    <div class="index-rule" role="presentation"></div>
+
+                    <section class="index-secondary" aria-label="Recent stories">
+                        {% for dossier in secondary %}
+                            {% set url = contentUrl(dossier) %}
+                            <article class="index-card">
+                                <div class="post-card-meta">
+                                    <span class="post-card-category">{{ dossier.category | default(dossier.section | default('Post')) | upper }}</span>
+                                    <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date("M d, Y") }}</time>
+                                </div>
+                                <h3 class="index-card-title">
+                                    <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                </h3>
+                                {% if dossier.deck is not empty %}
+                                    <p class="index-card-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </section>
+                {% endif %}
+
+            </div>
+
+            <div class="sidebar-column">
+                {{ theme.partial('sidebar-secondary') | raw }}
+
+                {# ── Below-fold inventory (moved to sidebar) ── #}
+                {% if rest is not empty %}
+                    <div class="sidebar-widget index-more-widget">
+                        <h3 class="sidebar-title index-more-heading">Read More</h3>
+                        <ul class="sidebar-list index-more-list">
+                            {% for dossier in rest %}
+                                {% set url = contentUrl(dossier) %}
+                                <li class="sidebar-list-item index-more-item">
+                                    <a href="{{ url }}" class="sidebar-list-link index-more-link">
+                                        <span class="index-more-title">{{ dossier.hero_title | default(dossier.title) }}</span>
+                                        <time class="index-more-date" datetime="{{ dossier.date }}">{{ dossier.date | default('') | date("M d, Y") }}</time>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

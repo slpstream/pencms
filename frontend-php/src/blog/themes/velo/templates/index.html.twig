@@ -1,0 +1,119 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+{% set brand = index_hero_title | default(hero_title) | default(sitename) | default('Velo') %}
+{% set brand_words = brand|split(' ') %}
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set nights = post_list|slice(1, 6) %}
+{% set riders = post_list|slice(7) %}
+{% set lead = post_list|first %}
+
+<main id="main" class="site-main page-front">
+    <section class="hero" id="top">
+        <div class="hero-canvas-wrap" aria-hidden="true">
+            <div class="speedlines"></div>
+        </div>
+        <div class="hero-type">
+            <p class="eyebrow mono">{% if lead and lead.date is not empty %}{{ lead.date | date('Y') }}{% else %}{{ "now"|date('Y') }}{% endif %}</p>
+            <h1 class="masthead">
+                {% if brand_words|length > 1 %}
+                    <span class="mast-line mast-1">{{ brand_words|first }}</span>
+                    <span class="mast-line mast-2">{{ brand_words|slice(1)|join(' ') }}</span>
+                {% else %}
+                    <span class="mast-line mast-1">{{ brand }}</span>
+                {% endif %}
+            </h1>
+        </div>
+    </section>
+
+    {% if lead is not empty %}
+        {% set lead_url = contentUrl(lead) %}
+        {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+        <section class="band band-oak plane{% if lead_has_hero %} band-oak--break{% endif %}" aria-labelledby="inno-h">
+            <div class="wrap hymn-split{% if lead_has_hero %} hymn-split--photo{% endif %}">
+                <div class="hymn">
+                    <h2 class="sec-title shade-cream" id="inno-h">
+                        <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                    </h2>
+                    {% if lead.deck is not empty %}
+                        <p class="hymn-lead">{{ lead.deck | striptags }}</p>
+                    {% endif %}
+                    <p class="hymn-motto">
+                        <a href="{{ lead_url }}">
+                            {% if lead.trumpet is not empty %}
+                                {{ lead.trumpet | striptags }}
+                            {% else %}
+                                Read More
+                            {% endif %}
+                        </a>
+                    </p>
+                </div>
+                {% if lead_has_hero %}
+                    <a href="{{ lead_url }}" class="hymn-plate">
+                        <img src="{{ contentAsset(lead.hero_image) }}" alt="" loading="eager" decoding="async">
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+    {% else %}
+        <section class="band band-oak plane" aria-labelledby="inno-h">
+            <div class="wrap">
+                <h2 class="sec-title shade-cream" id="inno-h">INNO ALLE TAVOLE</h2>
+                <div class="hymn">
+                    <p class="hymn-lead">The city outside is fog and tram-bells. In here the type leans into the banking.</p>
+                    <p class="hymn-motto">«CHI NON OSA IN CURVA, NON VINCE IN RETTILINEO.»</p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="band band-cream band-wedges plane" aria-labelledby="serate-h">
+        <div class="wrap">
+            <p class="sec-eyebrow mono"></p>
+            <h2 class="sec-title shade-blue" id="serate-h">{{ tagline | default('SEI SERATE') }}</h2>
+            {% if nights is not empty %}
+                <ol class="nights">
+                    {% for dossier in nights %}
+                        {{ theme.partial('night-card', { dossier: dossier, card_index: loop.index }) | raw }}
+                    {% endfor %}
+                </ol>
+            {% else %}
+                <p class="empty-boards mono">NESSUNA SERATA — THE BOARDS ARE EMPTY.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if riders is not empty %}
+    <section class="band band-cream band-wedges band-riders plane" aria-labelledby="corridori-h">
+        <div class="wrap">
+            <p class="sec-eyebrow mono">CONTENT</p>
+            <h2 class="sec-title shade-red" id="corridori-h">THERE'S MORE</h2>
+            <ul class="riders">
+                {% for dossier in riders %}
+                    {% set url = contentUrl(dossier) %}
+                    {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                    <li class="rider">
+                        {% if has_hero %}
+                            <a href="{{ url }}" class="rider-mark">
+                                <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="lazy" decoding="async">
+                            </a>
+                        {% endif %}
+                        <p class="rider-no mono">Nº {{ loop.index + 7 }}</p>
+                        <h3 class="rider-name"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></h3>
+                        {% if dossier.trumpet is not empty %}
+                            <p class="rider-club mono">{{ dossier.trumpet | striptags }}</p>
+                        {% elseif dossier.date is not empty %}
+                            <p class="rider-club mono"><time datetime="{{ dossier.date }}">{{ dossier.date | date('d M Y') }}</time></p>
+                        {% endif %}
+                        {% if dossier.deck is not empty %}
+                            <p class="rider-note">{{ dossier.deck | striptags }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

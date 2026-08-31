@@ -1,0 +1,48 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="ochre-inventory page-search">
+    <header class="ochre-inv-head">
+        <p class="ochre-zonemark">Search</p>
+        <h1 class="ochre-inv-title">{{ hero_title | default(strings.search | default('Search')) }}</h1>
+    </header>
+
+    <div class="ochre-card ochre-search-card">
+        <div
+            id="pencms-search"
+            class="pencms-search"
+            data-search-index-url="{{ search_index_url | default('') }}"
+            data-static="{{ theme.isStatic() ? '1' : '0' }}"
+            data-base-path="{{ base_path }}"
+            data-web-root="{{ base_path }}"
+            data-loading-text="{{ strings.loadingSearchIndex | default('Loading…') }}"
+            data-no-results-text="{{ strings.noSearchResults | default('Nothing found.') }}"
+            data-hint-text="{{ strings.searchHint | default('') }}"
+            data-unavailable-text="{{ strings.searchUnavailable | default('Search unavailable.') }}"
+            data-page-text="{{ strings.page | default('Page') }}"
+            data-post-text="{{ strings.post | default('Post') }}"
+        >
+            <label class="search-label" for="search-input">{{ strings.search | default('Search') }}</label>
+            <input
+                type="search"
+                id="search-input"
+                class="search-input"
+                name="q"
+                placeholder="{{ strings.searchPlaceholder | default('Search…') }}"
+                autocomplete="off"
+                enterkeyhint="search"
+            >
+
+            {% if search_index_json is defined and search_index_json is not null %}
+            <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+            {% endif %}
+
+            <div id="search-results" class="search-results" aria-live="polite"></div>
+        </div>
+    </div>
+</main>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,12 @@
+{% set url = contentUrl(dossier) %}
+{% set hero = dossier.hero_image | default('') %}
+{% set is_lead = is_lead | default(false) %}
+{% set tilt = is_lead ? -1.1 : (((card_index|default(1) % 5) - 2) * 1.4) %}
+<article class="cc-polaroid{% if is_lead %} cc-polaroid--lead{% endif %}" style="--tilt: {{ tilt }}deg">
+    <a href="{{ url }}" class="cc-polaroid-skin">
+        <span class="cc-pin" aria-hidden="true"></span>
+        <img src="{{ contentAsset(hero) }}" alt="" loading="{{ is_lead or card_index|default(1) == 1 ? 'eager' : 'lazy' }}" decoding="async">
+        <span class="cc-polaroid-cap">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</span>
+    </a>
+    <span class="cc-etag">{% if is_lead %}LEAD{% else %}E-{{ '%02d'|format(card_index|default(1)) }}{% endif %}</span>
+</article>

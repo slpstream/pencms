@@ -1,0 +1,35 @@
+<li class="cv-entry">
+  <div class="cv-when">
+    <p class="cv-period">
+      {% if entry.period is defined and entry.period is not empty %}
+        {{ entry.period }}
+      {% elseif entry.date is defined and entry.date is not empty %}
+        <time datetime="{{ entry.date }}">{{ entry.date | date("Y — M") }}</time>
+      {% endif %}
+    </p>
+    {% if entry.location is defined and entry.location is not empty %}
+      <p class="cv-location">{{ entry.location }}</p>
+    {% endif %}
+  </div>
+  <div class="cv-what">
+    {% set url = theme.isStatic() ? (base_path ~ entry.slug ~ '/index.html') : ('post.php?slug=' ~ entry.slug ~ '&section=' ~ (entry.section | default('blog'))) %}
+    <h2 class="cv-entry-title">
+      <a href="{{ url }}">{{ entry.hero_title | default(entry.title) }}</a>
+      {% if entry.organization is defined and entry.organization is not empty %}
+        <span class="cv-org">· {{ entry.organization }}</span>
+      {% endif %}
+    </h2>
+    {% if entry.summary is defined and entry.summary is not empty %}
+      <p class="cv-summary">{{ entry.summary }}</p>
+    {% elseif entry.deck is defined and entry.deck is not empty %}
+      <p class="cv-summary">{{ entry.deck | striptags }}</p>
+    {% endif %}
+    {% if entry.highlights is defined and entry.highlights is iterable and entry.highlights is not empty %}
+      <ul class="cv-highlights">
+        {% for point in entry.highlights %}
+          <li>{{ point }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</li>

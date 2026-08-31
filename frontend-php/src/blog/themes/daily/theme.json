@@ -1,0 +1,164 @@
+{
+  "type": "native",
+  "name": "Daily",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A modern magazine theme for publications with daily updates across several categories.",
+  "editor_skin": "daily",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "page_content": { "type": "html", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#f7f7f7",
+            "dark_default": "#141414"
+          },
+          {
+            "id": "surface",
+            "label": "Surface",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#ffffff",
+            "dark_default": "#1c1c1c"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#111111",
+            "dark_default": "#f3f3f3"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#9a9a9a",
+            "dark_default": "#8e8e8e"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#b40a30",
+            "dark_default": "#d0123a"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#e6e6e6",
+            "dark_default": "#3a3a3a"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'League Gothic', Impact, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'League Gothic', Impact, sans-serif", "label": "League Gothic" },
+              { "value": "'Barlow Condensed', 'Arial Narrow', sans-serif", "label": "Barlow Condensed" },
+              { "value": "'Source Serif 4', Georgia, serif", "label": "Source Serif 4" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Source Serif 4', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Source Serif 4', Georgia, serif", "label": "Source Serif 4" },
+              { "value": "'Inter', Helvetica, Arial, sans-serif", "label": "Inter" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, 'Liberation Mono', monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Fira Code', monospace", "label": "Fira Code" },
+              { "value": "ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, 'Liberation Mono', monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#b40a30",
+    "og_vignette_color": "#9a9a9a",
+    "og_text_color": "#111111",
+    "og_bar_color": "#f7f7f7",
+    "og_font": "LeagueGothic-Regular",
+    "og_fonts": {
+      "LeagueGothic-Regular": "assets/fonts/LeagueGothic-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

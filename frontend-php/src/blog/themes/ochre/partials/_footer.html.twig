@@ -1,0 +1,80 @@
+<footer class="ochre-colophon">
+    {% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+    <p class="ochre-colo-mark">
+        <span class="ochre-colo-site">{{ sitename | default('Ochre') }}</span>
+        {% if tagline is not empty %}
+            <span class="ochre-colo-tag">{{ tagline }}</span>
+        {% endif %}
+    </p>
+
+    {% set footer_items = menu('footer') %}
+    {% if footer_items is not empty %}
+        <nav class="ochre-colo-nav" aria-label="Footer">
+            {% for item in footer_items %}
+                {% if item.target_type == 'label' and item.children is empty %}
+                {% else %}
+                    <div class="ochre-colo-group">
+                        {% if item.target_type == 'label' %}
+                            <span class="ochre-colo-label">{{ item.label }}</span>
+                        {% else %}
+                            <a href="{{ item.url }}" class="ochre-colo-label" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                        {% endif %}
+                        {% if item.children is not empty %}
+                            <ul class="footer-menu-children">
+                                {% for child in item.children %}
+                                    <li>
+                                        {% if child.target_type == 'label' %}
+                                            <span>{{ child.label }}</span>
+                                        {% else %}
+                                            <a href="{{ child.url }}" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </nav>
+    {% endif %}
+
+    {{ theme.partial('social-links') | raw }}
+    <p class="ochre-colo-copy">&copy; {{ "now"|date("Y") }} <a href="{{ home_url }}">{{ sitename | default('Ochre') }}</a> · Powered by <a href="https://pencms.org/">PenCMS</a> - (Ochre theme)</p>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark'
+    });
+</script>
+</body>
+</html>

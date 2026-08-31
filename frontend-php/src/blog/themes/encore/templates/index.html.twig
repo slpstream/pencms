@@ -1,0 +1,57 @@
+{% set body_class = 'page-front' %}
+{% set is_index = true %}
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<main id="main" class="main-container">
+  <section class="tour">
+    <header class="page-header">
+      <h1>{{ hero_title | default(title | default('Tour & Shows')) }}</h1>
+      {% if tagline is defined and tagline %}
+        <p class="lede">{{ tagline }}</p>
+      {% endif %}
+    </header>
+
+    {% if dossiers is defined and dossiers is not empty %}
+      <ol class="show-list">
+        {% for dossier in dossiers %}
+          {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+          <li class="show-row" {% if dossier.status is defined and dossier.status %}data-status="{{ dossier.status }}"{% endif %}>
+            <time class="show-date" datetime="{{ dossier.date | default('now') | date('Y-m-d') }}">
+              {{ dossier.date | default('now') | date('F d, Y') }}
+            </time>
+            <div class="show-where">
+              <span class="show-city">
+                <a href="{{ url }}" style="color: inherit; text-decoration: none;">
+                  {{ dossier.city | default(dossier.hero_title | default(dossier.title | default(''))) }}
+                </a>
+              </span>
+              {% if dossier.venue is defined and dossier.venue %}
+                <span class="show-venue">{{ dossier.venue }}</span>
+              {% elseif dossier.deck is defined and dossier.deck %}
+                <span class="show-venue">{{ dossier.deck | striptags | slice(0, 80) }}</span>
+              {% endif %}
+              {% if dossier.support is defined and dossier.support %}
+                <span class="show-support">with {{ dossier.support }}</span>
+              {% endif %}
+            </div>
+            <div class="show-action">
+              {% if dossier.tickets_url is defined and dossier.tickets_url %}
+                <a class="btn-tickets" href="{{ dossier.tickets_url }}" target="_blank" rel="noopener">Read</a>
+              {% elseif dossier.status is defined and dossier.status %}
+                <span class="status-chip">{{ dossier.status }}</span>
+              {% else %}
+                <a class="btn-tickets" href="{{ url }}">Read</a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p class="empty">No upcoming shows posted yet. Check back soon!</p>
+    {% endif %}
+  </section>
+
+</main>
+
+{{ theme.partial('_footer') | raw }}

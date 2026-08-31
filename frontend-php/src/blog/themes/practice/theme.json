@@ -1,0 +1,239 @@
+{
+  "type": "native",
+  "name": "Practice",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A calm theme for a medical or dental clinic: soft clinical white, blue-green accent.",
+  "editor_skin": "practice",
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": false,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--traven-bg",
+            "default": "#fafcfc"
+          },
+          {
+            "id": "panel",
+            "label": "Panel Background",
+            "type": "color",
+            "var": "--traven-panel",
+            "default": "#f0f6f6"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--traven-text",
+            "default": "#1f2e30"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--traven-muted",
+            "default": "#4c6164"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--traven-accent",
+            "default": "#137a7f"
+          },
+          {
+            "id": "accent-deep",
+            "label": "Deep Accent",
+            "type": "color",
+            "var": "--traven-accent-deep",
+            "default": "#0d5559"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--traven-border",
+            "default": "#d5e2e2"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--traven-font-display",
+            "default": "'Nunito', sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Nunito', sans-serif",
+                "label": "Nunito"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--traven-font-body",
+            "default": "'Nunito', sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Nunito', sans-serif",
+                "label": "Nunito"
+              },
+              {
+                "value": "'Roboto', sans-serif",
+                "label": "Roboto"
+              },
+              {
+                "value": "'Inter', sans-serif",
+                "label": "Inter"
+              },
+              {
+                "value": "'Outfit', sans-serif",
+                "label": "Outfit"
+              },
+              {
+                "value": "'Atkinson Hyperlegible Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                "label": "Atkinson Hyperlegible Next"
+              },
+              {
+                "value": "'Playfair Display', serif",
+                "label": "Playfair Display"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--traven-font-mono",
+            "default": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "'Courier Prime', 'Courier New', Courier, ui-monospace, monospace",
+                "label": "Courier Prime"
+              },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#137a7f",
+    "og_vignette_color": "#4c6164",
+    "og_text_color": "#ffffff",
+    "og_bar_color": "#0d5559",
+    "og_font": "Nunito-Bold",
+    "og_fonts": {
+      "Nunito-Bold": "assets/fonts/Nunito-Bold.ttf",
+      "Nunito-Regular": "assets/fonts/Nunito-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Practice",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

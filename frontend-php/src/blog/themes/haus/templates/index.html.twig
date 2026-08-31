@@ -1,0 +1,85 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set releases = post_list|slice(0, 3) %}
+{% set mast = sitename | default('Haus') %}
+{% if hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set mast = hero_title %}
+{% endif %}
+{% set mast_words = mast|split(' ') %}
+
+<main id="main" class="site-main page-front">
+    <section class="hero" id="hero" aria-label="{{ mast }}">
+        <h1 class="hero-title" id="heroTitle">
+            {% if mast_words|length >= 2 %}
+                {% for word in mast_words %}
+                    <span class="hero-line">{{ word }}</span>
+                {% endfor %}
+            {% else %}
+                <span class="hero-line">{{ mast }}</span>
+            {% endif %}
+        </h1>
+        <div class="hero-lens" id="heroLens" aria-hidden="true">
+            <span class="lens-h"></span><span class="lens-v"></span>
+            <span class="lens-read" id="lensRead">wght 100<br>wdth 62</span>
+        </div>
+        <div class="hero-foot">
+            {% if tagline is not empty %}
+                <p class="hero-sub">{{ tagline }}<br>
+                <em id="heroHint">move your pointer across the line</em></p>
+            {% else %}
+                <p class="hero-sub">A working specimen. The title is live:<br>
+                <em id="heroHint">move your pointer across the line</em></p>
+            {% endif %}
+            <a class="hero-cue" href="#catalog">Catalog<span class="cue-arrow">↓</span></a>
+        </div>
+    </section>
+
+    <section class="catalog" id="catalog" aria-labelledby="catalogHead">
+        <div class="sect-head">
+            <h2 id="catalogHead">Catalog</h2>
+            <p class="sect-note">{% if post_list is not empty %}{{ post_list|length }} {% if post_list|length == 1 %}release{% else %}releases{% endif %}. Variable-first. Static instances are exports.{% else %}The catalogue is empty.{% endif %}</p>
+        </div>
+        {{ theme.partial('catalog-table', { catalog_rows: post_list }) | raw }}
+    </section>
+
+    {% if releases is not empty %}
+        {% for dossier in releases %}
+            {% set url = contentUrl(dossier) %}
+            {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+            {% set face_i = loop.index0 % 3 %}
+            {% set face = face_i == 0 ? 'kolosse' : (face_i == 1 ? 'falter' : 'betrieb') %}
+            <section class="release rel-{{ face }}{% if loop.index is even %} release--vellum{% endif %}" aria-labelledby="rel-{{ loop.index }}">
+                <header class="mast-wrap">
+                    <p class="cat-id">HA·{{ '%02d'|format(loop.index) }}{% if dossier.trumpet is not empty %} — {{ dossier.trumpet | striptags }}{% elseif dossier.category is not empty %} — {{ dossier.category }}{% endif %}</p>
+                    <h2 class="mast mast-{{ face }}" id="rel-{{ loop.index }}"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></h2>
+                    <ul class="meta-row">
+                        {% if dossier.date is not empty %}
+                            <li><span>Released</span><strong><time datetime="{{ dossier.date }}">{{ dossier.date | date('F Y') }}</time></strong></li>
+                        {% endif %}
+                        {% if dossier.author is not empty %}
+                            {% set byline = dossier.author is iterable ? (dossier.author.name | default('')) : dossier.author %}
+                            {% if byline is not empty %}
+                                <li><span>Creator</span><strong>{{ byline }}</strong></li>
+                            {% endif %}
+                        {% endif %}
+                        <li><span>ID</span><strong>HA·{{ '%02d'|format(loop.index) }}</strong></li>
+                    </ul>
+                </header>
+                {% if has_hero %}
+                    <a href="{{ url }}" class="plate">
+                        <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async">
+                    </a>
+                {% else %}
+                    <a href="{{ url }}" class="plate plate--letter" aria-hidden="true"><span class="plate-glyph">{{ (dossier.hero_title | default('H'))|slice(0, 1)|upper }}</span></a>
+                {% endif %}
+                {% if dossier.deck is not empty %}
+                    <p class="story-lead lead-{{ face }}">{{ dossier.deck | striptags }}</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

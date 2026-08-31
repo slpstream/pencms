@@ -1,0 +1,32 @@
+{{ theme.partial('head', { is_content: false }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<section class="front">
+  <header class="front-head">
+    <h1 class="front-label">{{ (page_title | default(sitename)) | title }}</h1>
+  </header>
+  
+  {% if dossiers is not empty %}
+  <ol class="front-grid" reversed>
+    {% for dossier in dossiers %}
+      {{ theme.partial('story-card', { dossier: dossier, index: loop.index0 }) | raw }}
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">Nothing here yet.</p>
+  {% endif %}
+  
+  {% if pagination is defined and pagination.total_pages > 1 %}
+  <nav class="pagination" aria-label="Pages">
+    {% if pagination.current_page > 1 %}
+      <a href="{{ base_path }}{{ current_path }}?page={{ pagination.current_page - 1 }}">← Newer</a>
+    {% endif %}
+    <span>Page {{ pagination.current_page }} of {{ pagination.total_pages }}</span>
+    {% if pagination.current_page < pagination.total_pages %}
+      <a href="{{ base_path }}{{ current_path }}?page={{ pagination.current_page + 1 }}">Older →</a>
+    {% endif %}
+  </nav>
+  {% endif %}
+</section>
+
+{{ theme.partial('footer') | raw }}

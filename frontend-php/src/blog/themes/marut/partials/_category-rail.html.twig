@@ -1,0 +1,44 @@
+{% set category_counts = {} %}
+{% set category_labels = {} %}
+
+{% set all_docs = theme.getAllDossiers() %}
+{% for d in all_docs %}
+    {% if d.category is defined and d.category is not empty %}
+        {% set cat_slug = d.category | lower | trim %}
+        {% set cat_label = (d.term_labels[cat_slug] | default(d.category)) | upper %}
+        
+        {% if category_counts[cat_slug] is defined %}
+            {% set category_counts = category_counts | merge({ (cat_slug): category_counts[cat_slug] + 1 }) %}
+        {% else %}
+            {% set category_counts = category_counts | merge({ (cat_slug): 1 }) %}
+            {% set category_labels = category_labels | merge({ (cat_slug): cat_label }) %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+{% set category_items = [] %}
+{% for slug, count in category_counts %}
+    {% set label = category_labels[slug] %}
+    {% set url = theme.isStatic() ? (base_path ~ 'category/' ~ slug ~ '/index.html') : (base_path ~ 'category.php?category=' ~ slug) %}
+    {% set category_items = category_items | merge([{ 'slug': slug, 'label': label, 'count': count, 'url': url }]) %}
+{% endfor %}
+
+{# Sort by article count descending and take top 10 #}
+{% set category_items = category_items | sort((a, b) => b.count <=> a.count) | slice(0, 10) %}
+
+{% if category_items | length > 1 %}
+<nav class="category-rail" aria-label="Category Navigation">
+    <div class="category-rail-container">
+        <ul class="category-rail-list">
+            {% for item in category_items %}
+                {% set is_active = (category is defined and category|lower == item.slug) %}
+                <li>
+                    <a href="{{ item.url }}" class="category-rail-link {% if is_active %}active{% endif %}">
+                        {{ item.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+{% endif %}

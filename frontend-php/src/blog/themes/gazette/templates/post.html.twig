@@ -1,0 +1,69 @@
+{{ theme.partial('head', { is_content: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_title = hero_title is defined and hero_title ? hero_title : (dossier is defined and dossier.hero_title ? dossier.hero_title : (dossier is defined and dossier.title ? dossier.title : (title is defined and title ? title : 'Untitled'))) %}
+{% set standfirst = deck is defined and deck ? deck : (dossier is defined and dossier.deck ? dossier.deck : '') %}
+{% set standfirst = standfirst | striptags %}
+{% set post_author = author is defined and author ? author : (dossier is defined and dossier.author ? dossier.author : '') %}
+{% set post_date = date is defined and date ? date : (dossier is defined and dossier.date ? dossier.date : '') %}
+{% set post_section = section is defined and section ? section : (dossier is defined and dossier.section ? dossier.section : '') %}
+{% set post_trumpet = trumpet is defined and trumpet ? trumpet : (dossier is defined and dossier.trumpet ? dossier.trumpet : '') %}
+{% set post_hero = hero_image is defined and hero_image ? hero_image : (dossier is defined and dossier.hero_image ? dossier.hero_image : false) %}
+
+<div class="story-layout">
+  <article class="story story-main">
+    <header class="story-head">
+      {% if post_section or post_trumpet %}
+      <p class="kicker kicker-tags">
+        {% if post_section %}
+        <span class="kicker-section">{{ post_section }}</span>
+        {% endif %}
+        {% if post_section and post_trumpet %}
+        <span class="kicker-separator">&bull;</span>
+        {% endif %}
+        {% if post_trumpet %}
+        <span class="kicker-trumpet">{{ post_trumpet }}</span>
+        {% endif %}
+      </p>
+      {% endif %}
+      <h1>{{ post_title }}</h1>
+      {% if standfirst %}
+      <p class="standfirst">{{ standfirst }}</p>
+      {% endif %}
+      <p class="dateline">
+        {% if post_author %}
+        <span class="byline">{{ post_author }}</span> &middot; 
+        {% endif %}
+        <time datetime="{{ post_date | date('Y-m-d') }}">{{ post_date | date("F d, Y") }}</time>
+      </p>
+    </header>
+    {% if post_hero %}
+    <figure class="story-cover">
+      <img src="{{ theme.contentAsset(post_hero) }}" alt="" decoding="async">
+    </figure>
+    {% endif %}
+    <div class="article-content traven-preview story-body">
+      {% if posts is defined and posts is not empty %}
+        {% for post_item in posts %}
+          {{ post_item.content_html | raw }}
+        {% endfor %}
+      {% elseif page_content is defined and page_content is not empty %}
+        {{ page_content | raw }}
+      {% endif %}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="gazette-discussion">
+      {{ theme.partial('comment-thread') | raw }}
+      {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+  </article>
+
+  <aside class="story-sidebar">
+    {{ theme.partial('sidebar-profile') | raw }}
+    {{ theme.partial('sidebar-related') | raw }}
+  </aside>
+</div>
+
+{{ theme.partial('footer') | raw }}

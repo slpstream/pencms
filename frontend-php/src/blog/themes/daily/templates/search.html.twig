@@ -1,0 +1,41 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="page page--list">
+    <h1 class="list-heading">{% if hero_title is defined and hero_title %}{{ hero_title }}{% elseif strings.search is defined %}{{ strings.search }}{% else %}Search{% endif %}</h1>
+    <div
+        id="pencms-search"
+        class="pencms-search"
+        data-search-index-url="{{ search_index_url | default('') }}"
+        data-static="{{ theme.isStatic() ? '1' : '0' }}"
+        data-base-path="{{ base_path }}"
+        data-web-root="{{ base_path }}"
+        data-loading-text="{{ strings.loadingSearchIndex | default('Loading…') }}"
+        data-no-results-text="{{ strings.noSearchResults | default('No results') }}"
+        data-hint-text="{{ strings.searchHint | default('Type to search') }}"
+        data-unavailable-text="{{ strings.searchUnavailable | default('Search unavailable') }}"
+        data-page-text="{{ strings.page | default('Page') }}"
+        data-post-text="{{ strings.post | default('Post') }}"
+    >
+        <label class="search-label" for="search-input">{{ strings.search | default('Search') }}</label>
+        <input
+            type="search"
+            id="search-input"
+            class="search-input"
+            name="q"
+            placeholder="{{ strings.searchPlaceholder | default('Search') }}"
+            autocomplete="off"
+            enterkeyhint="search"
+            aria-label="{{ strings.search | default('Search') }}"
+        >
+        {% if search_index_json is defined and search_index_json is not null %}
+        <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+        {% endif %}
+        <div id="search-results" class="search-results" aria-live="polite"></div>
+    </div>
+</div>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{{ theme.partial('footer') | raw }}

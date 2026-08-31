@@ -1,0 +1,15 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <section class="catalog catalog--page" aria-labelledby="archiveHead">
+        <div class="sect-head">
+            <h1 class="page-heading" id="archiveHead">{{ hero_title | default('Archive') }}</h1>
+            <p class="sect-note">Inventory only. Specimens live on the front.</p>
+        </div>
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {{ theme.partial('catalog-table', { catalog_rows: post_list }) | raw }}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

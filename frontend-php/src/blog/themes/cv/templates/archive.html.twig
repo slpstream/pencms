@@ -1,0 +1,38 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="layout has-rail">
+  {{ theme.partial('sidebar-profile') | raw }}
+
+  <main id="main">
+    <section class="list">
+      <header class="page-header">
+        <h1>{{ tag is defined and tag is not empty ? 'Tagged "' ~ tag ~ '"' : (hero_title | default('Archive')) | title }}</h1>
+      </header>
+
+      {% set items = dossiers | default(posts | default([])) %}
+      {% if items is not empty %}
+        <ul class="post-list">
+          {% for item in items %}
+            {% set url = theme.isStatic() ? (base_path ~ item.slug ~ '/index.html') : ('post.php?slug=' ~ item.slug ~ '&section=' ~ (item.section | default('blog'))) %}
+            <li class="post-card">
+              <h2><a href="{{ url }}">{{ item.hero_title | default(item.title) }}</a></h2>
+              {% if item.date is defined and item.date is not empty %}
+                <p class="meta"><time datetime="{{ item.date }}">{{ item.date | date("F d, Y") }}</time></p>
+              {% endif %}
+              {% if item.summary is defined and item.summary is not empty %}
+                <p class="summary">{{ item.summary }}</p>
+              {% elseif item.deck is defined and item.deck is not empty %}
+                <p class="summary">{{ item.deck | striptags }}</p>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">Nothing here yet.</p>
+      {% endif %}
+    </section>
+  </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

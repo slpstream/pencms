@@ -1,0 +1,33 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<aside class="sidebar-secondary">
+    <nav class="secondary-menu" aria-label="Secondary Navigation">
+        <ul class="nav-menu-list">
+            {% for item in secondary_items %}
+                {% set is_item_active = item.is_active|default(false) %}
+                <li class="nav-item{% if item.children is not empty %} has-children{% endif %}{% if is_item_active %} active{% endif %}">
+                    {% if item.target_type == 'label' %}
+                        <span class="nav-label">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" {% if is_item_active %}aria-current="page"{% endif %} {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <ul class="sub-menu">
+                            {% for child in item.children %}
+                                {% set is_child_active = child.is_active|default(false) %}
+                                <li class="{% if is_child_active %}active{% endif %}">
+                                    {% if child.target_type == 'label' %}
+                                        <span class="nav-label">{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" {% if is_child_active %}aria-current="page"{% endif %} {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>
+{% endif %}

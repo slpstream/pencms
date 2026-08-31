@@ -1,0 +1,21 @@
+/* Glyphaus release faces — variable, self-hosted, full OpenType feature sets */
+@font-face {
+  font-family: 'Kolosse VF';
+  src: url('./Kolosse-VF.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 50% 150%;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Falter VF';
+  src: url('./Falter-VF.woff2') format('woff2');
+  font-weight: 300 900;
+  font-stretch: 87.5% 112.5%;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Betrieb VF';
+  src: url('./Betrieb-VF.woff2') format('woff2');
+  font-weight: 300 1000;
+  font-display: block;
+}

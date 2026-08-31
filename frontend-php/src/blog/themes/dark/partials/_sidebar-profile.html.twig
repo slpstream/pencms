@@ -1,0 +1,15 @@
+{% if author.avatar|default('') is not empty or author.bio|default('') is not empty or author.website|default('') is not empty or author.social|default('') is not empty %}
+<div class="sidebar-widget profile-card">
+    {% if author.avatar is not empty %}
+        <img src="{{ author.avatar }}" alt="{{ author.display_name|e }}" class="profile-avatar">
+    {% endif %}
+    <h3 class="profile-name">{{ author.display_name|e }}</h3>
+    {% if author.bio is not empty %}
+        <p class="profile-bio">{{ author.bio|e }}</p>
+    {% endif %}
+    {% if author.website is not empty %}
+        <a href="{{ author.website }}" class="profile-link" target="_blank" rel="noopener noreferrer">Visit Website &rarr;</a>
+    {% endif %}
+</div>
+{% endif %}
+

@@ -1,0 +1,53 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="hero" aria-label="Mission Hero">
+        <figure class="hero-photo">
+            {% if hero_image is defined and hero_image is not empty %}
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title | default('Hero Image') }}" decoding="async">
+            {% else %}
+                <img src="{{ theme.asset('images/defaulthero.jpg') }}" alt="" decoding="async">
+            {% endif %}
+        </figure>
+
+        <div class="hero-mission">
+            <h1>{{ hero_title | default(sitename | default('Every adult deserves to read with confidence.')) }}</h1>
+            {% set mission_text = deck | default(tagline | default('')) | striptags %}
+            {% if mission_text is not empty %}
+                <p class="mission">{{ mission_text }}</p>
+            {% endif %}
+
+        </div>
+    </section>
+
+    {% if posts is defined and posts is not empty %}
+        {% for item in posts %}
+            {% if item.content_html is defined and item.content_html is not empty %}
+                <div class="article-content traven-preview prose" style="margin-bottom: var(--space-5);">
+                    {{ item.content_html | raw }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% elseif post is defined and post.content_html is defined and post.content_html is not empty %}
+        <div class="article-content traven-preview prose" style="margin-bottom: var(--space-5);">
+            {{ post.content_html | raw }}
+        </div>
+    {% endif %}
+
+    {% set dossiers_list = dossiers | default(posts | default([])) %}
+    {% if dossiers_list is not empty %}
+        <section class="latest-entries" aria-label="Latest Updates">
+            <header class="page-header" style="margin-top: var(--space-4);">
+                <h2>Latest Updates</h2>
+            </header>
+            <ul class="entry-list">
+                {% for dossier in dossiers_list %}
+                    {{ theme.partial('entry-card', { 'dossier': dossier }) | raw }}
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

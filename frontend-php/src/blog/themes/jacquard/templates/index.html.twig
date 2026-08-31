@@ -1,0 +1,56 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set lead = post_list|first %}
+{% set rest = post_list|slice(1) %}
+{% set edition_title = '' %}
+{% if hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+<main id="main" class="site-main page-front">
+    {% if edition_title is not empty or tagline is not empty %}
+        <header class="index-banner">
+            {% if tagline is not empty %}
+                <p class="index-banner-kicker">{{ tagline }}</p>
+            {% endif %}
+            <h1 class="index-banner-title">{{ edition_title|default(sitename | default('Jacquard')) }}</h1>
+        </header>
+    {% endif %}
+
+    {% if lead is not empty %}
+        {{ theme.partial('story-card', { dossier: lead, featured: true, ticket_index: 0 }) | raw }}
+    {% else %}
+        <p class="empty-beam index-empty">No posts yet.</p>
+    {% endif %}
+
+    {% if rest is not empty %}
+        <section class="latest" id="posts" aria-labelledby="latestHead">
+            <h2 id="latestHead" class="latest-label">Latest</h2>
+            <div class="story-grid">
+                {% for dossier in rest %}
+                    {{ theme.partial('story-card', { dossier: dossier, ticket_index: loop.index }) | raw }}
+                {% endfor %}
+            </div>
+
+            {% if pagination is defined and pagination.multiple %}
+                <nav class="pagination" aria-label="Pages">
+                    {% if pagination.newer is defined and pagination.newer is not empty %}<a href="{{ pagination.newer }}">← Newer</a>{% else %}<span></span>{% endif %}
+                    <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                    {% if pagination.older is defined and pagination.older is not empty %}<a href="{{ pagination.older }}">Older →</a>{% else %}<span></span>{% endif %}
+                </nav>
+            {% endif %}
+        </section>
+    {% elseif pagination is defined and pagination.multiple %}
+        <section class="latest" id="posts" aria-label="Posts">
+            <nav class="pagination" aria-label="Pages">
+                {% if pagination.newer is defined and pagination.newer is not empty %}<a href="{{ pagination.newer }}">← Newer</a>{% else %}<span></span>{% endif %}
+                <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                {% if pagination.older is defined and pagination.older is not empty %}<a href="{{ pagination.older }}">Older →</a>{% else %}<span></span>{% endif %}
+            </nav>
+        </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

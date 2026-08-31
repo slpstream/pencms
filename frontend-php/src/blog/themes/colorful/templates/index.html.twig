@@ -1,0 +1,158 @@
+{% set body_class = 'page-front' %}
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set lead = dossiers|first %}
+{% set secondary = dossiers|slice(1, 4) %}
+{% set inventory = dossiers|slice(5) %}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+{# ═══ HERO AMBIENT STAGE ═══ #}
+<section class="colorful-hero-stage">
+    <div class="colorful-hero-container">
+        {% if lead is not empty %}
+            {% set lead_url = contentUrl(lead) %}
+            {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+            <article class="colorful-lead-card{% if not lead_has_hero %} colorful-lead-card--no-image{% endif %}">
+                {% if lead_has_hero %}
+                    <div class="colorful-lead-media">
+                        <a href="{{ lead_url }}" tabindex="-1" aria-hidden="true">
+                            <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="colorful-lead-img">
+                        </a>
+                    </div>
+                {% endif %}
+                
+                <div class="colorful-lead-content">
+                    <div class="colorful-card-eyebrow">
+                        <span class="post-card-category">{{ lead.category | default(lead.section | default('FEATURED')) | upper }}</span>
+                        {% if lead.trumpet is not empty %}
+                            <span class="colorful-trumpet">{{ lead.trumpet | striptags }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="colorful-lead-title">
+                        <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                    </h1>
+
+                    {% if lead.deck is not empty %}
+                        <div class="colorful-lead-deck">{{ lead.deck | striptags }}</div>
+                    {% endif %}
+
+                    <div class="colorful-lead-meta">
+                        {% if lead.author|default('') is not empty %}
+                            <span class="colorful-byline">By {{ lead.author|default('') }}</span>
+                            <span class="meta-separator">&bull;</span>
+                        {% endif %}
+                        <time datetime="{{ lead.date }}">{{ lead.date | default('') | date("F j, Y") }}</time>
+                        <a href="{{ lead_url }}" class="colorful-action-btn">
+                            Explore Story <span class="btn-arrow">&rarr;</span>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        {% else %}
+            <div class="colorful-lead-card colorful-lead-card--empty">
+                <p class="empty-feed">No published dispatches yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{# ═══ MAIN LANDING SECTION ═══ #}
+<main class="main-container colorful-main-container">
+    {% if edition_title is not empty or tagline is not empty %}
+        <div class="colorful-section-header">
+            <header class="colorful-mastband">
+                {% if edition_title is not empty %}
+                    <span class="colorful-mastband-badge">{{ edition_title }}</span>
+                {% endif %}
+                {% if tagline is not empty %}
+                    <span class="colorful-mastband-title">{{ tagline }}</span>
+                {% endif %}
+            </header>
+            <div class="colorful-section-rule" role="presentation"></div>
+        </div>
+    {% endif %}
+
+    <div class="layout-grid colorful-layout-grid">
+        <div class="colorful-feed-column">
+            
+            {# Secondary 2-Up Grid Feature Section #}
+            {% if secondary is not empty %}
+                <div class="colorful-secondary-grid">
+                    {% for dossier in secondary %}
+                        {% set url = contentUrl(dossier) %}
+                        {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+
+                        <article class="colorful-secondary-card {% if loop.index is odd %}card-rust-accent{% else %}card-indigo-accent{% endif %}">
+                            {% if has_hero %}
+                                <a href="{{ url }}" class="colorful-card-media-link" tabindex="-1" aria-hidden="true">
+                                    <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="colorful-card-img">
+                                </a>
+                            {% endif %}
+                            <div class="colorful-card-body">
+                                <div class="colorful-card-eyebrow">
+                                    <span class="post-card-category">{{ dossier.category | default(dossier.section | default('Post')) | upper }}</span>
+                                    {% if dossier.trumpet is not empty %}
+                                        <span class="colorful-trumpet">{{ dossier.trumpet | striptags }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <h3 class="colorful-card-title">
+                                    <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                </h3>
+
+                                {% if dossier.deck is not empty %}
+                                    <p class="colorful-card-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+
+                                <div class="colorful-card-footer">
+                                    <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date("M j, Y") }}</time>
+                                    <a href="{{ url }}" class="colorful-card-link">Read <span class="btn-arrow">&rarr;</span></a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Below-Fold Inventory List #}
+            {% if inventory is not empty %}
+                <div class="colorful-inventory-section">
+                    <h3 class="colorful-inventory-heading">MORE STORIES</h3>
+                    <div class="colorful-inventory-list">
+                        {% for dossier in inventory %}
+                            {% set url = contentUrl(dossier) %}
+                            <article class="colorful-inventory-item">
+                                <span class="post-card-category">{{ dossier.category | default('Post') | upper }}</span>
+                                <div class="colorful-inventory-main">
+                                    <h4 class="colorful-inventory-title">
+                                        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                    </h4>
+                                    {% if dossier.deck is not empty %}
+                                        <p class="colorful-inventory-deck">{{ dossier.deck | striptags }}</p>
+                                    {% endif %}
+                                </div>
+                                <time datetime="{{ dossier.date }}" class="colorful-inventory-date">{{ dossier.date | default('') | date("M j") }}</time>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="sidebar-column">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

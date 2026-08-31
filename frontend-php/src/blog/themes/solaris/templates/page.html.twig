@@ -1,0 +1,20 @@
+{{ theme.partial('head') | raw }}
+
+{{ theme.partial('header') | raw }}
+
+<main class="main-container page-container">
+    <article class="post-wrapper">
+        <h1 class="post-title">{{ hero_title }}</h1>
+        {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-hero-image">
+        {% endif %}
+        <div class="article-content traven-preview">
+            {{ page_content | raw }}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+        {{ theme.partial('sidebar-secondary') | raw }}
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

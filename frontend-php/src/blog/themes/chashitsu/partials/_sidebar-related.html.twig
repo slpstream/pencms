@@ -1,0 +1,11 @@
+{% if related_dossiers is not empty %}
+<aside class="related-after" aria-label="Related">
+    <p class="label">Also in the room</p>
+    <ul class="related-list">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            <li><a href="{{ url }}" class="ink-link">{{ post.hero_title }}</a></li>
+        {% endfor %}
+    </ul>
+</aside>
+{% endif %}

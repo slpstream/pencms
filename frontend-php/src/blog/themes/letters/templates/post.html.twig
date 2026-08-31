@@ -1,0 +1,67 @@
+{% set home_href = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set computed_time = read_time | default(reading_time | default('')) %}
+{% if computed_time is empty %}
+    {% set full_text = content_html | default(body | default('')) %}
+    {% if posts is defined and posts is not empty %}
+        {% for p in posts %}
+            {% set full_text = full_text ~ ' ' ~ (p.content_html | default('')) %}
+        {% endfor %}
+    {% endif %}
+    {% set words = full_text | striptags | split(' ') | length %}
+    {% set mins = words // 220 %}
+    {% if words % 220 > 0 %}{% set mins = mins + 1 %}{% endif %}
+    {% set computed_time = (mins > 0 ? mins : 1) ~ ' min read' %}
+{% endif %}
+
+<main id="main" class="letters-main">
+    <article class="essay">
+        <header class="essay-header">
+            {% set cat = category | default(section | default('')) %}
+            {% if cat is not empty %}<p class="essay-kicker-line"><span class="essay-category">{{ cat }}</span></p>{% endif %}
+            {% if cat is not empty and trumpet is defined and trumpet is not empty %}<hr />{% endif %}
+            {% if trumpet is defined and trumpet is not empty %}<p class="essay-kicker-line"><span class="essay-trumpet">{{ trumpet }}</span></p>{% endif %}
+            <h1 class="essay-title">{{ hero_title | default(title | default('Untitled')) }}</h1>
+            {% if deck is defined and deck is not empty %}
+                <p class="essay-subtitle">{{ deck | striptags }}</p>
+            {% endif %}
+            <p class="essay-meta">
+                {% if author is not empty %}<span class="essay-author">{{ author }}</span>{% endif %}
+                {% if date is not empty %}
+                    {% if author is not empty %}<span class="essay-meta-sep">&#183;</span>{% endif %}
+                    <time datetime="{{ date }}">{{ date | date("F j, Y") }}</time>
+                {% endif %}
+                {% if computed_time is not empty %}<span class="essay-meta-sep">&#183;</span><span class="essay-read-time">{{ computed_time }}</span>{% endif %}
+            </p>
+        </header>
+
+        {% if hero_image is defined and hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <div class="essay-cover">
+                <img class="cover" src="{{ contentAsset(hero_image) }}" alt="{{ hero_title | default('') }}" loading="lazy" decoding="async">
+            </div>
+        {% endif %}
+
+        <div class="prose essay-body article-content traven-preview">
+            {% if posts is defined and posts is not empty %}
+                {% for p in posts %}
+                    {% if p.title is not empty and posts|length > 1 %}<h2>{{ p.title }}</h2>{% endif %}
+                    <div class="essay-part">{{ p.content_html | default('') | raw }}</div>
+                {% endfor %}
+            {% else %}
+                {{ content_html | default(body | default('')) | raw }}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+
+        <section class="letters-discussion">
+            {{ theme.partial('comment-thread') | raw }}
+            {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+        </section>
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

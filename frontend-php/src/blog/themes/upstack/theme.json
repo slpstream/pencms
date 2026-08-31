@@ -1,0 +1,249 @@
+{
+  "type": "native",
+  "name": "Upstack",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A Substack-inspired theme featuring light and dark modes, clean display typography, and serif prose body ideal for long-form posts.",
+  "editor_skin": "upstack",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": false,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, [data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Canvas Background",
+            "type": "color",
+            "var": "--canvas-bg",
+            "default": "#ffffff",
+            "dark_default": "#121212"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--text-color",
+            "default": "#334155",
+            "dark_default": "#cbd5e1"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--muted-color",
+            "default": "#64748b",
+            "dark_default": "#94a3b8"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--border-color",
+            "default": "#eeeeee",
+            "dark_default": "#2e2e2e"
+          },
+          {
+            "id": "accent",
+            "label": "Brand Orange",
+            "type": "color",
+            "var": "--brand-orange",
+            "default": "#ff6719",
+            "dark_default": "#ff6719"
+          },
+          {
+            "id": "accent-hover",
+            "label": "Brand Orange Hover",
+            "type": "color",
+            "var": "--brand-orange-hover",
+            "default": "#e5560d",
+            "dark_default": "#ff7a38"
+          },
+          {
+            "id": "card",
+            "label": "Card Background",
+            "type": "color",
+            "var": "--card-bg",
+            "default": "#ffffff",
+            "dark_default": "#1e1e1e"
+          },
+          {
+            "id": "hover",
+            "label": "Hover Background",
+            "type": "color",
+            "var": "--hover-bg",
+            "default": "#f7f7f7",
+            "dark_default": "#262626"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display / UI Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "label": "System Sans"
+              },
+              {
+                "value": "'Source Serif 4', Georgia, serif",
+                "label": "Source Serif 4"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "Georgia, Cambria, \"Times New Roman\", Times, serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "Georgia, Cambria, \"Times New Roman\", Times, serif",
+                "label": "Georgia"
+              },
+              {
+                "value": "'Source Serif 4', Georgia, serif",
+                "label": "Source Serif 4"
+              },
+              {
+                "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+                "label": "System Sans"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "SFMono-Regular, Consolas, \"Liberation Mono\", Menlo, Courier, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "SFMono-Regular, Consolas, \"Liberation Mono\", Menlo, Courier, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#FF6719",
+    "og_vignette_color": "#404040",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#121212",
+    "og_font": "SourceSerif4-Bold",
+    "og_fonts": {
+      "SourceSerif4-Bold": "assets/fonts/SourceSerif4-Bold.ttf",
+      "SourceSerif4-Regular": "assets/fonts/SourceSerif4-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": "assets/images/watermark.png",
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

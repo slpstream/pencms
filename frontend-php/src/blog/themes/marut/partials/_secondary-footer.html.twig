@@ -1,0 +1,31 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<nav class="secondary-footer" aria-label="Secondary Navigation">
+    <div class="secondary-footer-container">
+        <ul class="secondary-footer-list">
+            {% for item in secondary_items %}
+                <li class="secondary-footer-item{% if item.children is not empty %} has-children{% endif %}">
+                    {% if item.target_type == 'label' %}
+                        <span class="secondary-footer-label">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" class="secondary-footer-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <ul class="secondary-footer-children">
+                            {% for child in item.children %}
+                                <li class="secondary-footer-child-item">
+                                    {% if child.target_type == 'label' %}
+                                        <span class="secondary-footer-child-label">{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" class="secondary-footer-child-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
+{% endif %}

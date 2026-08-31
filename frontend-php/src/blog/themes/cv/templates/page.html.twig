@@ -1,0 +1,22 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="layout has-rail">
+  {{ theme.partial('sidebar-profile') | raw }}
+
+  <main id="main">
+    <article class="page">
+      <header class="page-header">
+        <h1>{{ hero_title | default(page_title | default('Page')) }}</h1>
+      </header>
+
+      <div class="prose article-content traven-preview">
+        {{ page_content | raw }}
+      </div>
+
+      {{ theme.partial('faqs') | raw }}
+    </article>
+  </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

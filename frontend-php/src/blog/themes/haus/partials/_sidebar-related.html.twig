@@ -1,0 +1,14 @@
+{% if related_dossiers is not empty %}
+<aside class="rule-related" aria-label="Related">
+    <p class="mod-label">Related</p>
+    <ul class="rule-related-list">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            <li>
+                <span class="rule-related-id">{{ '%02d'|format(loop.index) }}</span>
+                <a href="{{ url }}">{{ post.hero_title | default(post.title) }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</aside>
+{% endif %}

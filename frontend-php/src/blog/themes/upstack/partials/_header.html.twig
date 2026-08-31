@@ -1,0 +1,41 @@
+<header class="upstack-header">
+    <div class="upstack-header-inner">
+        <div class="upstack-brand">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="upstack-brand-link" aria-label="{{ sitename }}">
+                {% set site_logo = theme.getLogoUrl() %}
+                {% if site_logo is not empty %}
+                    <img src="{{ site_logo }}" alt="{{ sitename }}" class="upstack-logo-img">
+                {% else %}
+                    <img src="{{ theme.asset('images/pencms-512x512.png') }}" alt="{{ sitename }}" class="upstack-logo-img pencms-placeholder-logo">
+                {% endif %}
+            </a>
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="upstack-sitename">{{ sitename | default('Substack') }}</a>
+        </div>
+
+        <div class="upstack-header-actions">
+            {% include 'partials/_navbar.html.twig' %}
+
+            <a href="{{ base_path ~ (theme.isStatic() ? 'search.html' : 'search') }}" class="header-action-icon" aria-label="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+            </a>
+
+            <button class="theme-toggle-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21m8.966-8.966h-2.25m-13.5 0H3m15.364 6.364-1.591-1.591M6.758 6.758 5.167 5.167m12.728 0-1.591 1.591M6.758 17.242l-1.591 1.591M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z" />
+                </svg>
+            </button>
+
+            <button class="mobile-menu-btn" id="mobile-menu-toggle" type="button" aria-label="Toggle navigation menu" title="Toggle navigation menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    {{ theme.partial('sidebar-secondary') | raw }}
+</header>

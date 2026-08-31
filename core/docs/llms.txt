@@ -1,0 +1,110 @@
+# PenCMS MCP
+
+Concise agent discovery for PenCMS. Prefer live docs over stale skill text when they disagree: core/docs/mcp_guide.md
+
+## MCP gateway
+- Transport: Streamable HTTP
+- Endpoint: /api/mcp (one connector URL per install)
+- Scopes: `read` (monolithic); granular `write:*` / `delete:*` / `publish:content` / `write:menus|authors|seo|theme|taxonomy`; host `publish`
+- Legacy `write` expands one-way to all write/delete/publish:content — never host `publish`. `write:posts` does not imply `write` or `write:theme`
+- Agent keys are named + site-bound (`site_id`); JWT carries site_id; content is under content/sites/{id}/
+- One operator, many agents; an agent’s own site is a normal site + key (core/docs/agent-owned-site.md)
+- publish = static host deploy (publish_site); publish:content = content review; write's commit_and_push = git only — not the same
+
+## OAuth discovery (Custom Connectors)
+- PRM: /.well-known/oauth-protected-resource
+- PRM (path): /.well-known/oauth-protected-resource/api/mcp
+- AS metadata: /.well-known/oauth-authorization-server
+- Authorize: /oauth/authorize
+- Token: /oauth/token (PKCE S256 only; resource → JWT aud)
+- Consent: admin picks existing key (label: site · name)
+- Authorize redirects include RFC 9207 iss=JWT_ISSUER (success and error)
+- No DCR (/oauth/register → 404); CIMD (HTTPS client_id) primary; static allowlist fallback (pencms-dev / OAUTH_STATIC_CLIENTS)
+
+## Automation (scripts / CI)
+- POST /api/auth/token  JSON {"agent_key":"pen-sk-…"} → short-lived Bearer JWT (iss/aud/site_id/agent_key_name/agent_key_id)
+- Then Authorization: Bearer <JWT> on /api/mcp
+- Start with GET /llms.txt. One shell: mint token once, initialize once, echo Mcp-Session-Id on every later JSON-RPC call. Do not re-initialize per tool.
+- initialize JSON result includes sessionId (same value as the Mcp-Session-Id header). Omitted or */* Accept is treated as application/json + text/event-stream (no 406).
+- Streamable HTTP: echo Mcp-Session-Id from initialize on later JSON-RPC POSTs (tools/list, tools/call). Missing header + credentials → 400 mcp_session_required. REST /api/v1/mcp/* needs no session
+- uvicorn --reload (LAN) drops in-memory MCP sessions; remint initialize after API restart
+- YAML field-only edits: update_frontmatter_field (key, value). write_content_file may omit body on an existing page (keeps on-disk Markdown); omitted frontmatter keys still merge.
+
+## Translation automation (external only)
+- Read: get_translation_config, list_translation_gaps, list_translation_runs
+- Write: create_translation_sibling, write_content_file(language=...), delete_translation_sibling, report_translation_run
+- Optional automation_policy selects one ordered operation/model/named-key/review rule per target; provider credentials are never returned or stored in policy
+- When automation_policy is enabled, agent sibling creates/updates require its active bound run_id; runless or unbound writes are rejected, and deletes require the target's bound key
+- Agent writes honor `ai_publish_autonomy` (default language and siblings). `require_review` is default for the `needs_review` flag; `allow_unreviewed_draft` only clears the flag and never grants publish. Agents cannot self-review. Human Approve publishes.
+- translation_automation_paused blocks agent sibling writes/deletes and new run starts; human/manual writes continue; key revocation also blocks already-minted JWTs from new translation work
+- Run telemetry: bounded data/i18n-runs/{site}.jsonl; IDs/actor/mode/targets/non-secret policy snapshot/timestamps/counts/status/sanitized errors only, never translated bodies or credentials
+- PenCMS does not execute a model, schedule translation, run a queue, or orchestrate the loop; external cron/MCP clients do that
+
+## Feedback (public → files on this site)
+- Loop: visitor form → Markdown on the **bound site** → you `read` / reply. Not a second database. Operator: core/docs/agent-owned-site.md
+- Contact: `content/sites/{site_id}/fb-{YYYYMMDDHHMMSS}-{slug}/index.md` — `status: stub`, `kind: contact`. Human inbox is these stubs only.
+- Comments: opt-in (Site Settings → Reader comments, default off). When on: `content/sites/{site_id}/{post}/comments/c-*.md` beside the article (not `fb-*`, not a nested `feedback/` collection). Public ingest is `visibility: pending` and is refused while the knob is off. List/create/moderate with MCP `list_comments` / `create_comment` / `set_comment_visibility` / `delete_comment`. Agent `create_comment` is immediately visible (`author_kind: agent`) even if the public knob is off. Do **not** `create_post` a thread reply.
+- Live `/blog/` POSTs `/api/v1/feedback` on this origin. Static `dist/` (comments on) POSTs `{feedback_relay_url or https://feedback.pencms.org}/submit`; drain with `sync_remote_feedback`. Keys are minted on site create and backfilled on `GET /api/sites`. Off: no comment chrome in live or baked HTML; static HTML does not phone home for comments.
+- Contact read (`read`): `search_content` query `fb-` or message text / `kind:` ; then `read_page_content` / `read_page_metadata` with the slug. JWT `site_id` scopes the search — you only see that site. Comment files are not posts; do not search them as articles.
+- Drain relay (`write`): MCP `sync_remote_feedback` (REST `POST /api/v1/feedback/sync`). Returns `{written, slugs}` or `written: 0` with `no_relay_configured` / `relay_unreachable` (not 500). Live comments do not need sync
+- Human inbox is admin Feedback (`fb-*` only); Comments admin lists comment files. Agents do not depend on either UI
+
+## Agent key bootstrap (approve-code)
+- POST /api/auth/agent/request-code  JSON {"name":"blog-cursor","scopes":["read","write"],"site_id":"default"} → user_code
+- Admin approves in Settings → AI → Agent Keys (or POST /api/auth/agent/approve)
+- POST /api/auth/agent/verify-code  JSON {"user_code":"…"} → pen-sk-… once (202 if still pending)
+- Store key locally with restrictive perms; then use /api/auth/token as above
+
+## Sites
+- GET /api/sites  (membership-filtered; admin: all)  PATCH /api/sites/{id}  (SEO / i18n / OG / comments / feedback)
+- Registry: data/sites.yaml; default site id "default"
+
+## Humans (admin JWT)
+- GET /api/auth/me — session: user, vault, must_change_password, memberships (stored), accessible_sites, active_site_id, capabilities (expanded)
+- Agent key mint/list/patch/revoke and bootstrap approve stay admin-only (not self-mint)
+
+## Production env
+- JWT_ISSUER — absolute AS issuer (HTTPS), e.g. https://cms.example
+- MCP_RESOURCE_URL — absolute MCP URL, e.g. https://cms.example/api/mcp
+- AGENT_TOKEN_EXPIRE_MINUTES — default 15
+- CORS_ALLOW_ORIGINS — admin UI origin(s); non-browser agents omit Origin
+
+## Publish to host (static dist/)
+- Human How-To: core/docs/publish-howto.md
+- Agent + hybrid (Deploy Grant, publish_site): core/docs/publish-agents.md
+- Tools: publish_site + get_publish_site_status (scope publish; Deploy Grant required)
+- Distinct from commit_and_push / get_publish_status (git content push)
+
+## Human docs
+- core/docs/mcp_guide.md
+- Skill stub: core/docs/mcp_skill.md
+- Zero-to-Hero draft: core/docs/zero-to-hero-skill.md
+- Publish: core/docs/publish-howto.md · core/docs/publish-agents.md
+- Users + agent keys (operators): core/docs/users-and-access.md
+- SEO Settings (operators): core/docs/seo-settings.md
+- Theme Social / OG contract: core/docs/dev/theme-social-preview.md
+- Themes (blueprint): core/docs/pencms-theme-development.md
+- Themes (scaffold / switch / validate): core/docs/theme-adding.md
+- Editor host features (link suggest, expand/embed): core/docs/editor-link-suggest-and-expand.md
+- Developer sticky gotchas (host/admin/MCP): core/docs/dev/knowledgebase.md
+- Agent-owned site + feedback loop: core/docs/agent-owned-site.md
+
+## Presentation / SEO (MCP)
+- list_themes | get_site_presentation | update_site_presentation (bound site; sparse Tier-1 Social)
+- Branding files: write_media_file → images/logo.* · favicon.* · hero · og-* ; path fields via update_site_presentation
+- Empty Social inherits theme social_preview — read effective defaults before writing overrides
+
+## Theme Customize (MCP)
+- Read (`read`): get_theme_context · list_theme_files · read_theme_file · validate_theme · describe_element · get_layout_boxes · get_accessible_snapshot · get_render_fingerprint · capture_theme_screenshot
+- Write (`write:theme`): fork_site_theme · write_theme_file · patch_theme_file · revert_theme_file · reset_theme_file · reset_site_theme
+- Site-private fork under content/sites/{id}/theme/. Never write install themes/. How-to: core/docs/mcp_guide.md#related-theme-customize
+
+## Persona & AI Prompts (MCP)
+- Read (`read`): get_site_prompts · get_site_config (includes `prompts` bundle: text_generation_prompt / image_generation_prompt / post_quality_checklist, plus read-only `extractive_prompts.summary` / `.faqs`)
+- Write (`write`): update_site_prompts (sparse update of persona, image guidance, and checklist for the bound site). extractive_prompts are not operator-editable.
+- Extractive fill (persist immediately): read_page_content → follow extractive_prompts → update_frontmatter_field key=summary or key=faqs. How-to: core/docs/mcp_guide.md#extractive-summary-and-faqs
+
+## Taxonomy (MCP)
+- Read (`read`): get_taxonomy
+- Write (`write:taxonomy`): replace_taxonomy · upsert_vocabulary · delete_vocabulary · add_taxonomy_term · remove_taxonomy_term · set_primary_vocabulary
+- Bootstrap vocabs+terms before first posts. Preserves required_fields. Key `category` is reserved. Human Structure UI stays admin-only.

@@ -1,0 +1,41 @@
+{{ theme.partial('head', { is_archive: true, velo_oak_head: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <section class="band band-night plane">
+        <div class="wrap">
+            <p class="sec-eyebrow mono sec-eyebrow-night"></p>
+            <h1 class="sec-title shade-night">{{ hero_title | default('Archive') }}</h1>
+
+            {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+            {% if post_list is not empty %}
+                <div class="board" role="list">
+                    {% for dossier in post_list %}
+                        {% set url = contentUrl(dossier) %}
+                        <a href="{{ url }}" class="board-row" role="listitem" style="--r:{{ loop.index0 }}">
+                            <span class="board-pos mono">{{ '%02d'|format(loop.index) }}</span>
+                            <span class="board-name">
+                                {{ dossier.hero_title | default(dossier.title) }}
+                                {% if dossier.trumpet is not empty %}
+                                    <span class="board-club">{{ dossier.trumpet | striptags }}</span>
+                                {% endif %}
+                            </span>
+                            <span class="board-lead" aria-hidden="true"></span>
+                            <span class="board-res mono">
+                                {% if dossier.date is not empty %}
+                                    <time datetime="{{ dossier.date }}">{{ dossier.date | date('d.m.Y') }}</time>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-boards empty-boards--night mono">NO CONTENT YET — BUT STAY TUNED: COMING SOON</p>
+            {% endif %}
+        </div>
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,90 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<main id="main" class="main-container">
+  <article class="post show" {% if status is defined and status %}data-status="{{ status }}"{% endif %}>
+    <header class="page-header">
+      <p class="show-meta">
+        {% if date is defined and date %}
+          <time datetime="{{ date }}">{{ date | date('F d, Y') }}</time>
+        {% endif %}
+        {% if status is defined and status %}
+          <span class="status-chip">{{ status }}</span>
+        {% endif %}
+        {% if author is defined and author is not empty %}
+          {% set author_name = '' %}
+          {% if author is iterable %}
+            {% if author.name is defined %}
+              {% set author_name = author.name %}
+            {% elseif author|length > 0 %}
+              {% set first_author = author|first %}
+              {% if first_author is iterable and first_author.name is defined %}
+                {% set author_name = first_author.name %}
+              {% elseif first_author is not iterable %}
+                {% set author_name = first_author %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            {% set author_name = author %}
+          {% endif %}
+          {% if author_name is not empty %}
+            <span class="author-byline">By {{ author_name }}</span>
+          {% endif %}
+        {% endif %}
+      </p>
+
+      <h1 class="hero-title">{{ hero_title is defined and hero_title ? hero_title : (title is defined and title ? title : 'Untitled') }}</h1>
+
+      {% if (venue is defined and venue) or (city is defined and city) %}
+        <p class="show-line">
+          {% if venue is defined and venue %}<span class="show-venue">{{ venue }}</span>{% endif %}
+          {% if city is defined and city %}{% if venue is defined and venue %} — {% endif %}<span class="show-city-sub">{{ city }}</span>{% endif %}
+        </p>
+      {% endif %}
+
+      {% if support is defined and support %}
+        <p class="show-support">with {{ support }}</p>
+      {% endif %}
+
+      {% if deck is defined and deck %}
+        <div class="lede">{{ deck | raw }}</div>
+      {% endif %}
+
+      {% if tickets_url is defined and tickets_url %}
+        <p class="show-cta"><a class="btn-tickets btn-big" href="{{ tickets_url }}" target="_blank" rel="noopener">Get Tickets</a></p>
+      {% endif %}
+    </header>
+
+    {% if hero_image is defined and hero_image %}
+      <img class="cover hero-image" src="{{ contentAsset(hero_image) }}" alt="{{ hero_title is defined and hero_title ? hero_title : (title is defined and title ? title : '') }}" loading="lazy" decoding="async" style="aspect-ratio: 21 / 9; object-fit: cover;">
+    {% endif %}
+
+    <div class="article-content traven-preview">
+      {% if posts is defined and posts is not empty %}
+        {% for post_item in posts %}
+          <div class="post-section" {% if post_item.id is defined and post_item.id %}id="{{ post_item.id }}"{% endif %}>
+            {% if post_item.title is defined and post_item.title and posts|length > 1 %}
+              <h2>{{ post_item.title }}</h2>
+            {% endif %}
+            {% if post_item.content_html is defined %}
+              {{ post_item.content_html | raw }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% elseif content_html is defined and content_html %}
+        {{ content_html | raw }}
+      {% elseif page_content is defined and page_content %}
+        {{ page_content | raw }}
+      {% endif %}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="encore-discussion">
+      {{ theme.partial('comment-thread') | raw }}
+      {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+  </article>
+</main>
+
+{{ theme.partial('_footer') | raw }}

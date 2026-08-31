@@ -1,0 +1,144 @@
+{% set home_url = base_path | default('/') ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set logo = theme.getLogoUrl() %}
+<style>
+  .site-footer a,
+  .site-footer a:hover,
+  .site-footer a:focus,
+  .site-footer a:active {
+    text-decoration: none !important;
+  }
+  .site-footer .footer-menu-group > a.footer-menu-link {
+    font-weight: 700;
+  }
+  .site-footer .footer-menu-label,
+  .site-footer .footer-menu-link {
+    font-size: var(--text-m, 1rem) !important;
+  }
+  .footer-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4, 2rem);
+    margin-bottom: var(--space-4, 1.5rem);
+  }
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 320px;
+  }
+  .footer-brand-logo {
+    max-height: 40px;
+    width: auto;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .footer-brand-name {
+    font-size: calc(var(--text-l, 1.1875rem) * 1.15);
+    font-weight: 700;
+    color: var(--color-text, inherit);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .footer-brand-tagline {
+    font-style: italic;
+    color: var(--color-muted, #5b6069);
+    font-size: var(--text-m, 1rem);
+    margin: 0;
+  }
+  .site-footer .colophon-note {
+    text-align: right !important;
+    margin-top: 1.5rem;
+    font-size: 0.78rem !important;
+    opacity: 0.85;
+  }
+</style>
+<footer class="colophon site-footer">
+  <div class="colophon-container">
+    <div class="footer-layout">
+      <div class="footer-brand">
+        {% if logo is not empty %}
+          <a href="{{ home_url }}" class="footer-logo-link">
+            <img src="{{ logo }}" alt="{{ sitename }}" class="footer-brand-logo">
+          </a>
+        {% endif %}
+        <a href="{{ home_url }}" class="footer-brand-name">{{ sitename }}</a>
+        {% if tagline is defined and tagline is not empty %}
+          <p class="footer-brand-tagline">{{ tagline }}</p>
+        {% endif %}
+      </div>
+
+      {% set footer_items = menu('footer') %}
+      {% if footer_items is not empty %}
+          <nav class="footer-menu" aria-label="Footer Navigation">
+              {% for item in footer_items %}
+                  <div class="footer-menu-group">
+                      {% if item.target_type == 'label' %}
+                          <span class="footer-menu-label">{{ item.label }}</span>
+                      {% else %}
+                          <a href="{{ item.url }}" class="footer-menu-link" style="text-decoration: none; font-weight: 700;" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                      {% endif %}
+                      {% if item.children is not empty %}
+                          <ul class="footer-menu-children">
+                              {% for child in item.children %}
+                                  <li>
+                                      {% if child.target_type == 'label' %}
+                                          <span class="footer-menu-label footer-menu-label-child">{{ child.label }}</span>
+                                      {% else %}
+                                          <a href="{{ child.url }}" class="footer-menu-link" style="text-decoration: none;" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                      {% endif %}
+                                  </li>
+                              {% endfor %}
+                          </ul>
+                      {% endif %}
+                  </div>
+              {% endfor %}
+          </nav>
+      {% endif %}
+    </div>
+    <p class="colophon-note">&copy; {{ "now"|date("Y") }} <a href="{{ home_url }}">{{ sitename }}</a>. Powered by <a href="https://pencms.org" target="_blank" rel="noopener">PenCMS</a> and the Launch theme.</p>
+  </div>
+</footer>
+
+{# Theme Enhancement JS #}
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts #}
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'default'
+    });
+</script>
+</body>
+</html>

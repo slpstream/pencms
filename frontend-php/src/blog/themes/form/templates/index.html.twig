@@ -1,0 +1,30 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<section class="list">
+  <header class="page-header">
+    <h1>{{ hero_title is defined and hero_title ? hero_title : (page_title is defined and page_title ? page_title : sitename) }}</h1>
+    {% if (meta_description is defined and meta_description) or (tagline is defined and tagline) %}
+      <p class="lede">{{ meta_description is defined and meta_description ? meta_description : tagline }}</p>
+    {% endif %}
+  </header>
+
+  {% set items = dossiers is defined and dossiers ? dossiers : (posts is defined and posts ? posts : []) %}
+  {% if items is not empty %}
+    <ul class="card-list">
+      {% for item in items %}
+        {{ theme.partial('_card', { item: item }) | raw }}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% set body_content = page_content is defined and page_content ? page_content : (content_html is defined and content_html ? content_html : (post is defined and post is not null and post.content_html is defined ? post.content_html : null)) %}
+  {% if body_content is not null and body_content is not empty %}
+    <article class="article-content traven-preview prose">
+      {{ body_content | raw }}
+    </article>
+  {% endif %}
+
+</section>
+
+{{ theme.partial('_footer') | raw }}

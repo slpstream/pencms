@@ -1,0 +1,50 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <article class="program">
+        <header class="page-header">
+            <p class="eyebrow">Program</p>
+            <h1>{{ hero_title | default(title | default('Program')) }}</h1>
+            {% set deck_text = deck | default('') | striptags %}
+            {% if deck_text is not empty %}
+                <p class="lede">{{ deck_text }}</p>
+            {% endif %}
+        </header>
+
+        {% if hero_image is defined and hero_image is not empty %}
+            <img class="cover" src="{{ contentAsset(hero_image) }}" alt="" loading="lazy" decoding="async">
+        {% endif %}
+
+        {% if page_content is defined and page_content is not empty %}
+            <div class="article-content traven-preview prose">
+                {{ page_content | raw }}
+            </div>
+        {% elseif posts is defined and posts is not empty %}
+            {% for item in posts %}
+                <div class="article-content traven-preview prose">
+                    {{ item.content_html | raw }}
+                </div>
+            {% endfor %}
+        {% elseif post is defined and post.content_html is defined %}
+            <div class="article-content traven-preview prose">
+                {{ post.content_html | raw }}
+            </div>
+        {% endif %}
+
+        <aside class="get-involved" aria-label="Get involved">
+            <h2>Get involved</h2>
+            <p>Programs like this run on volunteers who give a couple of hours a week. No teaching background needed — we train you. Write to <a href="mailto:{{ volunteer_email | default('volunteer@example.org') }}">{{ volunteer_email | default('volunteer@example.org') }}</a> and we'll find you a seat at the table.</p>
+            <p class="give-line">
+                <a class="btn-donate" href="{{ donate_url | default('/donate/') }}">Donate</a>
+                <span class="donate-prompt">{{ donate_prompt | default("£10 buys a learner's first three books.") }}</span>
+            </p>
+        </aside>
+
+        <nav class="back-link" aria-label="Back to all programs">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'programs/index.html' : 'programs.php') }}">← All programs</a>
+        </nav>
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,49 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set cards = post_list|slice(0, 5) %}
+{% set rest = post_list|slice(5) %}
+
+<main id="main" class="site-main page-front">
+    {% if cards is not empty %}
+    <section class="profiles" id="profiles" aria-labelledby="profiles-h">
+        <div class="sec-head reveal">
+            <p class="sec-eyebrow">INSIDE THE ISSUE · CLOCKED IN</p>
+            <h2 class="mr sec-title" id="profiles-h" data-t="CLOCKED IN"><span>CLOCKED IN</span></h2>
+            <p class="sec-intro">Stories taped to the light table. Everything below came off the duplicator slightly crooked — <em>rest a hand on a page to pull it into register.</em></p>
+        </div>
+        <div class="cards">
+            {% for dossier in cards %}
+                {{ theme.partial('scrap-card', { dossier: dossier, card_index: loop.index }) | raw }}
+            {% endfor %}
+        </div>
+    </section>
+    {% else %}
+        <p class="empty-zine">Nothing printed yet — the first sheet will appear here.</p>
+    {% endif %}
+
+    {% if rest is not empty %}
+    <section class="spreads" id="spreads" aria-labelledby="spreads-h">
+        <div class="sec-head reveal">
+            <p class="sec-eyebrow">FLIP THROUGH · INTERIOR SPREADS</p>
+            <h2 class="mr sec-title" id="spreads-h" data-t="INTERIOR SPREADS"><span>INTERIOR SPREADS</span></h2>
+            <p class="sec-intro">The rest of the issue, laid flat. Drag the shelf, or use the arrows. Ink smells included at no extra charge.</p>
+        </div>
+        <div class="shelf-wrap reveal">
+            <div class="shelf" id="shelf" tabindex="0" role="region" aria-label="Interior spreads — scroll horizontally">
+                {% for dossier in rest %}
+                    {{ theme.partial('spread', { dossier: dossier, spread_index: loop.index, spread_total: rest|length }) | raw }}
+                {% endfor %}
+            </div>
+            <div class="shelf-nav">
+                <button class="shelf-btn" id="shelfPrev" type="button" aria-label="Previous spread">←</button>
+                <p class="shelf-pos" id="shelfPos" aria-live="polite">SPREAD 1</p>
+                <button class="shelf-btn" id="shelfNext" type="button" aria-label="Next spread">→</button>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

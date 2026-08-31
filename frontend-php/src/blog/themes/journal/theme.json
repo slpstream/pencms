@@ -1,0 +1,181 @@
+{
+  "type": "native",
+  "name": "Journal",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A quiet, typography-first personal blog theme. The signature is the type itself: a bookish display face over a humanist body and a deep-cobalt accent.",
+  "editor_skin": "journal",
+  "color_mode": "both",
+  "editor_skin_base": "journal",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#fdfdfb",
+            "dark_default": "#17181b"
+          },
+          {
+            "id": "header-bg",
+            "label": "Header / Footer",
+            "type": "color",
+            "var": "--color-header-bg",
+            "default": "#f2f1eb",
+            "dark_default": "#22242a"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#1c1e21",
+            "dark_default": "#e8e6e1"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#595f69",
+            "dark_default": "#a3a49e"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#1c1e21",
+            "dark_default": "#f0ede6"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#e3e2dc",
+            "dark_default": "#2e3036"
+          },
+          {
+            "id": "code-bg",
+            "label": "Code Background",
+            "type": "color",
+            "var": "--color-code-bg",
+            "default": "#f3f2ee",
+            "dark_default": "#202126"
+          },
+          {
+            "id": "mark",
+            "label": "Highlight / Selection",
+            "type": "color",
+            "var": "--color-mark",
+            "default": "#ffe9a8",
+            "dark_default": "#4a3f14"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Lora', serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Lora', serif", "label": "Lora" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Lora', serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Lora', serif", "label": "Lora" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#1743c7",
+    "og_vignette_color": "#595f69",
+    "og_text_color": "#1c1e21",
+    "og_bar_color": "#fdfdfb",
+    "og_font": "Lora-Bold",
+    "og_fonts": {
+      "Lora-Bold": "assets/fonts/Lora-Bold.ttf",
+      "Lora-Regular": "assets/fonts/Lora-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

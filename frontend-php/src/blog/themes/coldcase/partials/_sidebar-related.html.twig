@@ -1,0 +1,14 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+{% set further = related_dossiers|slice(0, 6) %}
+<section class="cc-related" aria-label="{{ strings.relatedPosts | default('Related') }}">
+    <div class="cc-section-head">
+        <h2 class="cc-stamp cc-stamp-header">READ MORE</h2>
+        <p class="cc-section-sub">Related articles. Not evidence.</p>
+    </div>
+    <ol class="cc-inv-list">
+        {% for post in further %}
+            {{ theme.partial('inv-row', { dossier: post, doc_index: loop.index }) | raw }}
+        {% endfor %}
+    </ol>
+</section>
+{% endif %}

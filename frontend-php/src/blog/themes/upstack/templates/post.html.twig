@@ -1,0 +1,106 @@
+{% include 'partials/_head.html.twig' %}
+{% include 'partials/_header.html.twig' %}
+
+<main class="upstack-container">
+    <article class="upstack-post-detail">
+        <header class="upstack-post-header">
+            <h1>{{ hero_title | default(title | default('Untitled')) }}</h1>
+
+            {% if deck is defined and deck is not empty %}
+                <div class="upstack-post-deck">{{ deck | raw }}</div>
+            {% endif %}
+
+            {% set computed_read_time = read_time | default(reading_time | default('')) %}
+            {% if computed_read_time is empty %}
+                {% set full_text = content_html | default(content | default(body | default(''))) %}
+                {% if posts is defined and posts is not empty %}
+                    {% for p in posts %}
+                        {% set full_text = full_text ~ ' ' ~ (p.content_html | default(p.content | default(''))) %}
+                    {% endfor %}
+                {% endif %}
+                {% set plain_text = full_text | striptags | trim %}
+                {% set words = plain_text is not empty ? (plain_text | split(' ') | length) : 0 %}
+                {% set mins = (words // 200) + (words % 200 > 0 ? 1 : 0) %}
+                {% set computed_read_time = (mins > 0 ? mins : 1) ~ ' MIN READ' %}
+            {% endif %}
+
+            <div class="upstack-post-meta-bar">
+                <div class="upstack-author-row">
+                    {% if author is defined and author.avatar is defined and author.avatar is not empty %}
+                        <img src="{{ contentAsset(author.avatar) }}" alt="{{ author.name | default(author.display_name | default('Author')) }}" class="upstack-author-avatar-large">
+                    {% elseif author_avatar is defined and author_avatar is not empty %}
+                        <img src="{{ contentAsset(author_avatar) }}" alt="{{ author | default('Author') }}" class="upstack-author-avatar-large">
+                    {% else %}
+                        <div class="upstack-author-avatar-large" style="background-color: var(--brand-orange); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                            {{ (author is iterable ? (author.name | default(sitename)) : (author | default(sitename))) | default('S') | slice(0, 1) | upper }}
+                        </div>
+                    {% endif %}
+                    <div class="upstack-author-details">
+                        <span class="upstack-author-name-bold">{{ author is iterable ? author.name | default(author.display_name | default(sitename)) : author | default(sitename) }}</span>
+                        <span class="upstack-post-date">{{ date | default(published_at | default('now')) | date('M j, Y') }}</span>
+                    </div>
+                </div>
+
+                <div class="upstack-card-actions" style="display: flex; align-items: center; gap: 16px;">
+                    <span class="upstack-post-read-time">{{ computed_read_time | upper }}</span>
+                    <button type="button" class="upstack-share-btn" onclick="handleUpstackShare(this)">Share</button>
+                </div>
+            </div>
+
+            {% set hero_img = hero_image | default(main_image | default('')) %}
+            {% if hero_img is not empty %}
+                <div class="upstack-post-hero">
+                    <img src="{{ contentAsset(hero_img) }}" alt="{{ hero_title | default(title | default('Hero Image')) }}">
+                </div>
+            {% endif %}
+        </header>
+
+        <div class="article-content traven-preview">
+            {% if posts is defined and posts is not empty %}
+                {% for post_item in posts %}
+                    {% if post_item.title is not empty and posts|length > 1 %}
+                        <h2>{{ post_item.title }}</h2>
+                    {% endif %}
+                    {{ post_item.content_html | default(post_item.content | default('')) | raw }}
+                {% endfor %}
+            {% else %}
+                {{ content_html | default(content | default(body | default(''))) | raw }}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+
+        <section class="upstack-discussion">
+            {{ theme.partial('comment-thread') | raw }}
+            {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+        </section>
+    </article>
+</main>
+
+<script>
+function handleUpstackShare(btn) {
+    const shareData = {
+        title: document.title,
+        url: window.location.href
+    };
+    if (navigator.share) {
+        navigator.share(shareData).catch(function() {});
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.style.backgroundColor = 'var(--brand-orange, #ff6b00)';
+            btn.style.color = '#ffffff';
+            btn.style.borderColor = 'transparent';
+            setTimeout(function() {
+                btn.textContent = originalText;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }, 2000);
+        }).catch(function() {});
+    }
+}
+</script>
+
+{% include 'partials/_footer.html.twig' %}

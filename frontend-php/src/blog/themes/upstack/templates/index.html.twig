@@ -1,0 +1,52 @@
+{% include 'partials/_head.html.twig' %}
+{% include 'partials/_header.html.twig' %}
+
+<main class="upstack-container upstack-index-page">
+    <div class="upstack-post-list">
+        {% set post_list = dossiers | default(posts | default([])) %}
+        {% if post_list is not empty %}
+            {% for post in post_list %}
+                {% set post_url = theme.isStatic() ? ((base_path | default('')) ~ (post.slug | default('')) ~ '/index.html') : ('post.php?slug=' ~ (post.slug | default('')) ~ '&section=' ~ (post.section | default('blog'))) %}
+                <article class="upstack-card">
+                    <div class="upstack-card-main">
+                        <div class="upstack-card-header">
+                            <div class="upstack-card-author-meta">
+                                {% if post.author_avatar is defined and post.author_avatar is not empty %}
+                                    <img src="{{ contentAsset(post.author_avatar) }}" alt="{{ post.author | default('Author') }}" class="upstack-card-author-avatar">
+                                {% else %}
+                                    <div class="upstack-card-author-avatar" style="background-color: var(--brand-orange);"></div>
+                                {% endif %}
+                                <span class="upstack-card-author-name">{{ post.author | default(author.name | default(sitename)) }}</span>
+                            </div>
+                            <span class="upstack-card-date">{{ post.date | default(post.published_at | default('now')) | date('M j') }}</span>
+                        </div>
+
+                        <h2 class="upstack-card-title">
+                            <a href="{{ post_url }}">{{ post.hero_title | default(post.name | default(post.title | default('Untitled'))) }}</a>
+                        </h2>
+
+                        {% if post.deck is defined and post.deck is not empty %}
+                            <p class="upstack-card-deck">{{ post.deck | striptags }}</p>
+                        {% elseif post.excerpt is defined and post.excerpt is not empty %}
+                            <p class="upstack-card-deck">{{ post.excerpt | striptags }}</p>
+                        {% endif %}
+                        <div class="upstack-card-submeta">
+                            {{ post.author | default(author.name | default(sitename)) }} &middot; {{ post.reading_time | default('1 MIN READ') }}
+                        </div>
+                    </div>
+
+                    {% set post_thumb = post.hero_image | default(post.main_image | default('')) %}
+                    {% if post_thumb is not empty %}
+                        <a href="{{ post_url }}">
+                            <img src="{{ contentAsset(post_thumb) }}" alt="{{ post.hero_title | default(post.name | default('Post image')) }}" class="upstack-card-thumbnail">
+                        </a>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center; color: var(--muted-color); padding: 40px 0;">No published posts yet.</p>
+        {% endif %}
+    </div>
+</main>
+
+{% include 'partials/_footer.html.twig' %}

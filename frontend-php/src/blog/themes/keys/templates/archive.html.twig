@@ -1,0 +1,26 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="main-container">
+    <section class="page-header">
+        <p class="eyebrow">Archive</p>
+        <h1 class="page-title">{{ ((archive_title is defined and archive_title is not empty) ? archive_title : ((category is defined and category is not empty) ? category : ((tag is defined and tag is not empty) ? tag : 'Listings Archive'))) | title }}</h1>
+        {% if archive_description is defined and archive_description is not empty %}
+            <p class="lede">{{ archive_description }}</p>
+        {% endif %}
+    </section>
+
+    {% set archive_items = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+    {% if archive_items is not empty %}
+        <ul class="listing-grid">
+            {% for item in archive_items %}
+                {{ theme.partial('listing_card', {'item': item}) | raw }}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty">No content matching this selection.</p>
+    {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

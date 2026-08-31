@@ -1,0 +1,35 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+
+<main id="main" class="site-main page-archive">
+    <section class="cloth" aria-labelledby="archiveHead">
+        <header class="sec-head">
+            <h1 id="archiveHead" class="post-detail-title">{{ hero_title | default('Archive') | title }}</h1>
+            {% if tagline is not empty %}
+                <p class="intro">{{ tagline }}</p>
+            {% endif %}
+        </header>
+
+        {% if post_list is not empty %}
+            <div class="ticket-stack">
+                {% for dossier in post_list %}
+                    {{ theme.partial('cloth-ticket', { dossier: dossier, ticket_index: loop.index0 }) | raw }}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-beam">No posts yet.</p>
+        {% endif %}
+
+        {% if pagination is defined and pagination.multiple %}
+            <nav class="pagination" aria-label="Pages">
+                {% if pagination.newer is defined and pagination.newer is not empty %}<a href="{{ pagination.newer }}">← Newer</a>{% else %}<span></span>{% endif %}
+                <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                {% if pagination.older is defined and pagination.older is not empty %}<a href="{{ pagination.older }}">Older →</a>{% else %}<span></span>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

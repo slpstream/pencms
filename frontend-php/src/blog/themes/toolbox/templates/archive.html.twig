@@ -1,0 +1,56 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="list">
+        <header class="page-header">
+            <h1>{{ (page_title | default('Archive')) | title }}</h1>
+        </header>
+
+        {% if dossiers is defined and dossiers is not empty %}
+            <ul class="service-list">
+                {% for dossier in dossiers %}
+                    {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                    <li class="service-card">
+                        <h2>
+                            <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('')) }}</a>
+                        </h2>
+                        {% if dossier.date is defined and dossier.date %}
+                            <p class="meta"><time datetime="{{ dossier.date }}">{{ dossier.date | date("F d, Y") }}</time></p>
+                        {% endif %}
+                        {% if dossier.deck is defined and dossier.deck %}
+                            <p class="summary">{{ dossier.deck | striptags }}</p>
+                        {% endif %}
+                        {% if dossier.price_from is defined and dossier.price_from %}
+                            <p class="price"><span>from</span> <strong>{{ dossier.price_from }}</strong></p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elseif posts is defined and posts is not empty %}
+            <ul class="service-list">
+                {% for post in posts %}
+                    {% set url = theme.isStatic() ? (base_path ~ post.slug ~ '/index.html') : ('post.php?slug=' ~ post.slug ~ '&section=' ~ (post.section | default('blog'))) %}
+                    <li class="service-card">
+                        <h2>
+                            <a href="{{ url }}">{{ post.hero_title | default(post.name | default('')) }}</a>
+                        </h2>
+                        {% if post.date is defined and post.date %}
+                            <p class="meta"><time datetime="{{ post.date }}">{{ post.date | date("F d, Y") }}</time></p>
+                        {% endif %}
+                        {% if post.deck is defined and post.deck %}
+                            <p class="summary">{{ post.deck | striptags }}</p>
+                        {% endif %}
+                        {% if post.price_from is defined and post.price_from %}
+                            <p class="price"><span>from</span> <strong>{{ post.price_from }}</strong></p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty">Nothing here yet.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

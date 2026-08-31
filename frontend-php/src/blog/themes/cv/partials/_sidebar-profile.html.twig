@@ -1,0 +1,60 @@
+{% set profile_name = '' %}
+{% set profile_role = '' %}
+{% set profile_email = '' %}
+{% set profile_avatar = '' %}
+{% set profile_links = [] %}
+{% set profile_skills = [] %}
+
+{% if author is defined %}
+  {% if author is iterable %}
+    {% set profile_name = author.name | default(author.display_name | default('')) %}
+    {% set profile_role = author.role | default(author.bio | default('')) %}
+    {% set profile_email = author.email | default('') %}
+    {% set profile_avatar = author.avatar | default('') %}
+    {% if author.links is defined and author.links is iterable %}{% set profile_links = author.links %}{% endif %}
+    {% if author.skills is defined and author.skills is iterable %}{% set profile_skills = author.skills %}{% endif %}
+  {% else %}
+    {% set profile_name = author %}
+  {% endif %}
+{% endif %}
+
+{% if profile_name is empty %}{% set profile_name = sitename %}{% endif %}
+
+{% set has_extra_details = profile_avatar is not empty or profile_role is not empty or profile_email is not empty or profile_links is not empty or profile_skills is not empty %}
+
+<aside class="rail" aria-label="Profile">
+  {% if has_extra_details %}
+    {% if profile_avatar is not empty %}
+      <img src="{{ profile_avatar }}" alt="{{ profile_name }}" class="rail-avatar">
+    {% endif %}
+
+    <p class="rail-name">{{ profile_name }}</p>
+    {% if profile_role is not empty %}
+      <p class="rail-role">{{ profile_role }}</p>
+    {% endif %}
+
+    {% if profile_email is not empty or profile_links is not empty %}
+      <ul class="rail-contact">
+        {% if profile_email is not empty %}
+          <li><a href="mailto:{{ profile_email }}">{{ profile_email }}</a></li>
+        {% endif %}
+        {% if profile_links is not empty %}
+          {% for link in profile_links %}
+            <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a></li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    {% endif %}
+
+    {% if profile_skills is not empty %}
+      <p class="rail-label" id="rail-skills-label">Skills</p>
+      <ul class="rail-skills" aria-labelledby="rail-skills-label">
+        {% for skill in profile_skills %}
+          <li>{{ skill }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+
+  {{ theme.partial('sidebar-secondary') | raw }}
+</aside>

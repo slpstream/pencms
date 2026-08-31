@@ -1,0 +1,78 @@
+<footer class="colophon">
+    <p><strong>{{ sitename | default('Cause') }}</strong>{% if tagline is defined and tagline is not empty %} — {{ tagline }}{% endif %}</p>
+    <p class="colophon-prompt">
+        {{ donate_prompt | default("Your support directly funds local education and outreach programs.") }}
+        <a href="{{ donate_url | default('/donate/') }}">Donate online</a>.
+    </p>
+    {{ theme.partial('sidebar-secondary') | raw }}
+    {% set footer_items = menu('footer') %}
+    {% if footer_items is defined and footer_items is not empty %}
+        <nav class="footer-nav" aria-label="Footer">
+            <ul class="footer-menu">
+                {% for item in footer_items %}
+                    <li class="footer-menu-group">
+                        {% if item.target_type == 'label' %}
+                            <span class="footer-menu-label">{{ item.label }}</span>
+                        {% else %}
+                            <a href="{{ item.url }}" class="footer-menu-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                        {% endif %}
+                        {% if item.children is not empty %}
+                            <ul class="footer-menu-children">
+                                {% for child in item.children %}
+                                    <li>
+                                        {% if child.target_type == 'label' %}
+                                            <span class="footer-menu-child-label">{{ child.label }}</span>
+                                        {% else %}
+                                            <a href="{{ child.url }}" class="footer-menu-child-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+</footer>
+
+{# Progressive enhancement JS script #}
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts (GOTCHAS §9 & KB A17) #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'default'
+    });
+</script>
+</body>
+</html>

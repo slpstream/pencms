@@ -1,0 +1,19 @@
+{% if related_dossiers is not empty %}
+<aside class="peer-related" aria-label="Related">
+    <p class="peer-kicker">Related</p>
+    <ul class="peer-related-list">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            {% set has_hero = post.hero_image is not empty and post.hero_image != 'images/defaulthero.jpg' %}
+            <li>
+                {% if has_hero %}
+                    <a href="{{ url }}" class="plate plate--thumb" tabindex="-1" aria-hidden="true">
+                        <img src="{{ contentAsset(post.hero_image) }}" alt="" loading="lazy" decoding="async" style="aspect-ratio: 4 / 3; object-fit: cover;">
+                    </a>
+                {% endif %}
+                <a href="{{ url }}" class="peer-related-title">{{ post.hero_title | default(post.title) }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</aside>
+{% endif %}

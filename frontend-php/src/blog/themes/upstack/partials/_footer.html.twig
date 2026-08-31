@@ -1,0 +1,81 @@
+<footer class="upstack-footer">
+    <div class="upstack-footer-inner">
+        {% set footer_items = menu('footer') %}
+        {% set items_list = footer_items.items is defined ? footer_items.items : footer_items %}
+        {% if items_list is not empty %}
+            <nav class="upstack-footer-nav" aria-label="Footer Navigation">
+                {% for item in items_list %}
+                    {% set item_label = item.label is defined ? item.label : (item.title is defined ? item.title : '') %}
+                    <div class="upstack-footer-menu-group">
+                        {% if item.target_type is defined and item.target_type == 'label' %}
+                            <span class="upstack-footer-menu-label">{{ item_label }}</span>
+                        {% else %}
+                            <a href="{{ item.url }}" class="upstack-footer-menu-main" {% if item.open_in_new_tab is defined and item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item_label }}</a>
+                        {% endif %}
+
+                        {% if item.children is defined and item.children is not empty %}
+                            <ul class="upstack-footer-subnav">
+                                {% for child in item.children %}
+                                    {% set child_label = child.label is defined ? child.label : (child.title is defined ? child.title : '') %}
+                                    <li>
+                                        {% if child.target_type is defined and child.target_type == 'label' %}
+                                            <span class="upstack-footer-subnav-label">{{ child_label }}</span>
+                                        {% else %}
+                                            <a href="{{ child.url }}" {% if child.open_in_new_tab is defined and child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child_label }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        <div class="upstack-copyright">
+            &copy; {{ "now" | date("Y") }} <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}"><strong>{{ sitename | default('Substack') }}</strong></a> &bull; Powered by <a href="https://pencms.org/" target="_blank" rel="noopener">PenCMS.org</a> &bull; Upstack Theme
+        </div>
+    </div>
+</footer>
+
+{# KaTeX Auto-Render Math Scripts (Gotcha §9) #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+{# Mermaid Diagram Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+            const pre = codeBlock.parentNode;
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = codeBlock.textContent;
+            pre.replaceWith(div);
+        });
+
+        if (window.mermaid) {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default'
+            });
+        }
+    });
+</script>
+</body>
+</html>

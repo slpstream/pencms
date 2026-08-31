@@ -1,0 +1,27 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<main id="main" class="main-container">
+  <article class="page">
+    <header class="page-header">
+      <h1>{{ page_title is defined and page_title ? page_title : (hero_title is defined and hero_title ? hero_title : (title is defined and title ? title : 'Page')) }}</h1>
+      {% if deck is defined and deck %}
+        <div class="lede">{{ deck | raw }}</div>
+      {% elseif meta_description is defined and meta_description %}
+        <p class="lede">{{ meta_description }}</p>
+      {% endif %}
+    </header>
+
+    {% if hero_image is defined and hero_image %}
+      <img class="cover hero-image" src="{{ contentAsset(hero_image) }}" alt="{{ hero_title is defined and hero_title ? hero_title : (title is defined and title ? title : '') }}" loading="lazy" decoding="async" style="aspect-ratio: 21 / 9; object-fit: cover;">
+    {% endif %}
+
+    <div class="article-content traven-preview">
+      {{ (page_content is defined and page_content ? page_content : (content_html is defined and content_html ? content_html : (post is defined and post.content_html is defined ? post.content_html : ''))) | raw }}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+  </article>
+</main>
+
+{{ theme.partial('_footer') | raw }}

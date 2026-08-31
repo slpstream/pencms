@@ -1,0 +1,35 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-content">
+  <header class="post-header-outer">
+    {% set current_hero = hero_image | default(null) %}
+    {% if current_hero is not empty %}
+      <div class="hero-image-wrapper">
+        <div class="hero-image-container">
+          <div class="hero-image-gradient"></div>
+          <img alt="" loading="lazy" decoding="async" class="hero-image" src="{{ theme.contentAsset(current_hero) }}">
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="post-header-inner">
+      <div class="post-meta">
+        <h1 class="post-title">{{ page_title | default('Page') }}</h1>
+      </div>
+    </div>
+  </header>
+
+  <div class="post-body-container">
+    <div class="post-body article-content traven-preview">
+      {{ page_content | raw }}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+  </div>
+
+  {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

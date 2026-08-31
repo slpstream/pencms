@@ -1,0 +1,27 @@
+<nav class="upstack-nav-wrapper" id="nav-menu" aria-label="Primary Navigation">
+    <ul class="upstack-nav">
+        {% set nav_items = menu('primary') %}
+        {% for item in nav_items %}
+            <li class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type == 'label' %}
+                    <span class="nav-label nav-link">{{ item.label }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="nav-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+                {% if item.children is not empty %}
+                    <ul class="dropdown-menu">
+                        {% for child in item.children %}
+                            <li>
+                                {% if child.target_type == 'label' %}
+                                    <span class="nav-label dropdown-item">{{ child.label }}</span>
+                                {% else %}
+                                    <a href="{{ child.url }}" class="dropdown-item" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>

@@ -1,0 +1,52 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div id="content-wrapper">
+    <main id="main">
+        <header class="magazine-header" style="margin-bottom: 2rem;">
+            <div class="header-text-content" style="flex: 1 1 100%;">
+                <span class="trumpet">Search</span>
+                <h1 class="headline">{{ hero_title | default(strings.search | default('Search')) }}</h1>
+            </div>
+        </header>
+
+        <div class="pencms-search-wrapper" style="max-width: var(--reading-max-width); margin: 0 auto 4rem auto;">
+            <div
+                id="pencms-search"
+                class="pencms-search"
+                data-search-index-url="{{ search_index_url | default('') }}"
+                data-static="{{ theme.isStatic() ? '1' : '0' }}"
+                data-base-path="{{ base_path }}"
+                data-web-root="{{ base_path }}"
+                data-loading-text="{{ strings.loadingSearchIndex | default('Loading index…') }}"
+                data-no-results-text="{{ strings.noSearchResults | default('No articles found matching your query.') }}"
+                data-hint-text="{{ strings.searchHint | default('Search by title, topic, or content.') }}"
+                data-unavailable-text="{{ strings.searchUnavailable | default('Search index is unavailable.') }}"
+                data-page-text="{{ strings.page | default('Page') }}"
+                data-post-text="{{ strings.post | default('Article') }}"
+            >
+                <label class="search-label" for="search-input">{{ strings.searchQuery | default('Search Articles') }}</label>
+                <input
+                    type="search"
+                    id="search-input"
+                    class="search-input"
+                    name="q"
+                    placeholder="{{ strings.searchPlaceholder | default('Type keywords to search…') }}"
+                    autocomplete="off"
+                    enterkeyhint="search"
+                >
+
+                {% if search_index_json is defined and search_index_json is not null %}
+                    <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+                {% endif %}
+
+                <div id="search-results" class="search-results" aria-live="polite"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{{ theme.partial('footer') | raw }}

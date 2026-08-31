@@ -1,0 +1,158 @@
+{
+  "type": "native",
+  "name": "Grafik",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Swiss-poster catalogue theme: equal-column slabs, graphic Instrument Sans titles, square grayscale plates, and inverse red/black/white accents. Light default with a published light/dark toggle.",
+  "editor_skin": "grafik",
+  "editor_skin_base": [],
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Paper / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#FFFFFF",
+            "dark_default": "#141414"
+          },
+          {
+            "id": "text",
+            "label": "Ink / Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#141414",
+            "dark_default": "#EDEFF1"
+          },
+          {
+            "id": "muted",
+            "label": "Steel / Muted",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#565D66",
+            "dark_default": "#9AA1AA"
+          },
+          {
+            "id": "accent",
+            "label": "Rot / Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#DA291C",
+            "dark_default": "#FF5C4A"
+          },
+          {
+            "id": "border",
+            "label": "Hairline / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#E2E5E9",
+            "dark_default": "#3F444B"
+          },
+          {
+            "id": "panel",
+            "label": "Nebel / Panel",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#EDEFF1",
+            "dark_default": "#1C1C1C"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Instrument Sans" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif", "label": "Instrument Sans" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#DA291C",
+    "og_vignette_color": "#141414",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#141414",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

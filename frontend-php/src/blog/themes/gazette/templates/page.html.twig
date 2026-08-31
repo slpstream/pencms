@@ -1,0 +1,24 @@
+{{ theme.partial('head', { is_content: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<article class="story">
+  <header class="story-head">
+    <h1>{{ page_title }}</h1>
+    {% set standfirst = deck | default('') | striptags %}
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </header>
+  {% if hero_image | default(false) %}
+  <figure class="story-cover">
+    <img src="{{ theme.contentAsset(hero_image) }}" alt="" decoding="async">
+  </figure>
+  {% endif %}
+  <div class="article-content traven-preview story-body">
+    {{ page_content | raw }}
+  </div>
+
+  {{ theme.partial('faqs') | raw }}
+</article>
+
+{{ theme.partial('footer') | raw }}

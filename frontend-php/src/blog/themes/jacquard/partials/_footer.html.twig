@@ -1,0 +1,93 @@
+<footer class="site-foot" id="colophon">
+    <div class="foot-cols">
+        <div class="foot-brand">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="foot-brand-link">
+                {% set logo = theme.getLogoUrl() %}
+                {% if logo is not empty %}
+                    <img src="{{ logo }}" alt="{{ sitename | default('Jacquard') }}" class="foot-logo">
+                {% endif %}
+                <span class="foot-mark">{{ sitename | default('Jacquard') }}</span>
+            </a>
+            {% set index_hero = index_hero_title|default('') %}
+            {% if index_hero is not empty
+                and index_hero != sitename|default('')
+                and index_hero != tagline|default('') %}
+                <p class="foot-hero">{{ index_hero }}</p>
+            {% endif %}
+            {% if tagline is not empty %}
+                <p class="foot-tagline">{{ tagline }}</p>
+            {% endif %}
+            {{ theme.partial('social-links') | raw }}
+        </div>
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="footer-menu" aria-label="Footer">
+                {% for item in footer_items %}
+                    <div class="footer-menu-group">
+                        {% if item.target_type == 'label' %}
+                            <span class="footer-menu-label">{{ item.label }}</span>
+                        {% else %}
+                            <a href="{{ item.url }}" class="footer-menu-label footer-menu-label-link"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                        {% endif %}
+                        {% if item.children is not empty %}
+                            <ul class="footer-menu-children">
+                                {% for child in item.children %}
+                                    <li>
+                                        {% if child.target_type == 'label' %}
+                                            <span>{{ child.label }}</span>
+                                        {% else %}
+                                            <a href="{{ child.url }}" class="footer-menu-link"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </nav>
+        {% endif %}
+    </div>
+    <div class="foot-line">
+        <span>&copy; {{ "now"|date("Y") }} {{ sitename | default('Jacquard') }}</span>
+        <span class="foot-credit">Powered by <a href="https://pencms.org">PenCMS</a>, Jacquard theme</span>
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'neutral'
+        });
+    }
+</script>
+</body>
+</html>

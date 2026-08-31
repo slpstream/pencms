@@ -1,0 +1,31 @@
+<aside class="doc-sidebar">
+  {% set secondary = menu('secondary') %}
+  {% if secondary is not empty %}
+  <nav aria-label="Secondary">
+    <ul class="doc-tree">
+      {% for item in secondary %}
+      <li>
+        {% if item.target_type == 'label' %}
+          <span class="doc-tree-label">{{ item.label }}</span>
+        {% else %}
+          <a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+        {% endif %}
+        {% if item.children is not empty %}
+        <ul>
+          {% for child in item.children %}
+          <li>
+            {% if child.target_type == 'label' %}
+              <span class="doc-tree-label">{{ child.label }}</span>
+            {% else %}
+              <a href="{{ child.url }}"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+</aside>

@@ -1,0 +1,28 @@
+{{ theme.partial('head', { is_content: false }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="search-page">
+    <header class="front-head">
+        <h1 class="front-label">{{ hero_title | default('Search') }}</h1>
+    </header>
+    <div
+        id="pencms-search"
+        class="pencms-search"
+        data-search-index-url="{{ search_index_url | default('') }}"
+        data-static="{{ theme.isStatic() ? '1' : '0' }}"
+        data-base-path="{{ base_path }}"
+        data-web-root="{{ base_path }}"
+    >
+        <label class="search-label" for="search-input">Search</label>
+        <input type="search" id="search-input" class="search-input" name="q" placeholder="Search posts and pages…" autocomplete="off" enterkeyhint="search">
+        {% if search_index_json is defined and search_index_json is not null %}
+        <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+        {% endif %}
+        <div id="search-results" class="search-results" aria-live="polite"></div>
+    </div>
+</div>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{{ theme.partial('footer') | raw }}

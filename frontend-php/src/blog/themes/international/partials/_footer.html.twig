@@ -1,0 +1,92 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set footer_items = menu('footer') %}
+{% set secondary_items = menu('secondary') %}
+<footer class="site-foot">
+    <div class="foot-wrap wrap">
+        <div class="foot-main">
+            <div class="foot-brand">
+                <a class="foot-brand-link" href="{{ home_url }}">
+                    {% set logo = theme.getLogoUrl() %}
+                    {% if logo is not empty %}
+                        <img src="{{ logo }}" alt="" class="foot-logo">
+                    {% endif %}
+                    <h2 class="foot-title">{{ sitename }}</h2>
+                </a>
+                {% if tagline is not empty %}
+                    <p class="foot-tagline">{{ tagline }}</p>
+                {% endif %}
+            </div>
+
+            {% if footer_items is not empty %}
+                <div class="foot-col foot-col--menu">
+                    <nav class="footer-menu" aria-label="Footer">
+                        <ul class="footer-menu-list">
+                            {% for item in footer_items %}
+                                <li class="footer-menu-item{% if item.children is not empty %} has-children{% endif %}">
+                                    {% if item.target_type == 'label' %}
+                                        <span class="footer-menu-label">{{ item.label }}</span>
+                                    {% else %}
+                                        <a href="{{ item.url }}" class="footer-menu-link"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                                    {% endif %}
+                                    {% if item.children is not empty %}
+                                        <ul class="footer-menu-children">
+                                            {% for child in item.children %}
+                                                <li>
+                                                    {% if child.target_type == 'label' %}
+                                                        <span>{{ child.label }}</span>
+                                                    {% else %}
+                                                        <a href="{{ child.url }}"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+
+            {% if secondary_items is not empty %}
+                <div class="foot-col foot-col--secondary">
+                    {{ theme.partial('sidebar-secondary') | raw }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="foot-bar">
+            <p class="foot-fine">&copy; {{ "now"|date("Y") }} {{ sitename | default('') }} <span class="foot-sep">·</span> Powered by <a href="https://pencms.org" target="_blank" rel="noopener">PenCMS</a></p>
+            {{ theme.partial('social-links') | raw }}
+        </div>
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    if (typeof window.bootGlobalMermaid === 'function') {
+        window.bootGlobalMermaid();
+    }
+</script>
+</body>
+</html>

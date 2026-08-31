@@ -1,0 +1,30 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty and (secondary_items.items is not defined or secondary_items.items is not empty) %}
+{% set items = secondary_items.items is defined ? secondary_items.items : secondary_items %}
+<nav class="secondary-nav-rail" aria-label="Secondary Navigation">
+    <ul class="secondary-rail-list">
+        {% for item in items %}
+            <li class="secondary-rail-item{% if item.children is defined and item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type is defined and item.target_type == 'label' %}
+                    <span class="secondary-rail-label">{{ item.label | default(item.title | default('')) }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="secondary-rail-link" style="text-decoration: none;" {% if item.open_in_new_tab is defined and item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label | default(item.title | default('')) }}</a>
+                {% endif %}
+                {% if item.children is defined and item.children is not empty %}
+                    <ul class="secondary-rail-children">
+                        {% for child in item.children %}
+                            <li class="secondary-rail-child-item">
+                                {% if child.target_type is defined and child.target_type == 'label' %}
+                                    <span class="secondary-rail-label">{{ child.label | default(child.title | default('')) }}</span>
+                                {% else %}
+                                    <a href="{{ child.url }}" class="secondary-rail-link" style="text-decoration: none;" {% if child.open_in_new_tab is defined and child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label | default(child.title | default('')) }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

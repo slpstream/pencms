@@ -1,0 +1,47 @@
+{{ theme.partial('head') | raw }}
+
+{{ theme.partial('header') | raw }}
+
+<main class="main-container" aria-label="{{ sitename | default('Latest') }}">
+    {% set edition_title = '' %}
+    {% if hero_title is not empty
+        and hero_title != sitename|default('')
+        and hero_title != tagline|default('') %}
+        {% set edition_title = hero_title %}
+    {% endif %}
+
+    {% if edition_title is not empty %}
+    <h1 class="index-heading">{{ edition_title | raw }}</h1>
+    {% endif %}
+
+    <div class="solaris-divider" role="presentation">
+        <span class="divider-line"></span>
+        <span class="divider-stars">&#10022;</span>
+        <span class="divider-line"></span>
+    </div>
+
+    {% if dossiers is empty %}
+        <p class="empty-feed">There are no posts available.</p>
+    {% else %}
+        <ul class="index-cards">
+            {% for dossier in dossiers %}
+                {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                <li class="index-card group">
+                    <a href="{{ url }}" class="index-card-link">
+                        {% if dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                            <div class="index-card-image-wrap">
+                                <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="index-card-image">
+                            </div>
+                        {% endif %}
+                        <h3 class="index-card-title">{{ dossier.hero_title | default(dossier.title) }}</h3>
+                        {% if dossier.deck is not empty %}
+                            <p class="index-card-summary">{{ dossier.deck | striptags }}</p>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

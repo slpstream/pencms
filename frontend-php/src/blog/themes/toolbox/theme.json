@@ -1,0 +1,230 @@
+{
+  "type": "native",
+  "name": "Toolbox",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A trades and local-services theme: workwear navy and hi-vis yellow, condensed signage headings, job-sheet mono prices. Signature sticky call-now bar on mobile.",
+  "editor_skin": "toolbox",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "trumpet": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "price_from": {
+      "type": "string",
+      "required": false
+    },
+    "included": {
+      "type": "array",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#f3f5f4",
+            "dark_default": "#141a1f"
+          },
+          {
+            "id": "panel",
+            "label": "Panel",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#ffffff",
+            "dark_default": "#1d2630"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#16232d",
+            "dark_default": "#e7ecef"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#4c5a66",
+            "dark_default": "#9db0bc"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#0b57a4",
+            "dark_default": "#7cb8ef"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#d3dad6",
+            "dark_default": "#313d47"
+          },
+          {
+            "id": "hivis",
+            "label": "Hi-Vis Yellow",
+            "type": "color",
+            "var": "--color-hivis",
+            "default": "#ffd60a",
+            "dark_default": "#ffd60a"
+          },
+          {
+            "id": "on-hivis",
+            "label": "On Hi-Vis Text",
+            "type": "color",
+            "var": "--color-on-hivis",
+            "default": "#16232d",
+            "dark_default": "#16232d"
+          },
+          {
+            "id": "stripe",
+            "label": "Caution Stripe",
+            "type": "color",
+            "var": "--color-stripe",
+            "default": "#16232d",
+            "dark_default": "#16232d"
+          },
+          {
+            "id": "mark",
+            "label": "Highlight Mark",
+            "type": "color",
+            "var": "--color-mark",
+            "default": "#ffefa3",
+            "dark_default": "#5c4d00"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Barlow Condensed', sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Barlow Condensed', sans-serif",
+                "label": "Barlow Condensed"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Barlow Condensed', sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Barlow Condensed', sans-serif",
+                "label": "Barlow Condensed"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#ffd60a",
+    "og_vignette_color": "#16232d",
+    "og_text_color": "#ffffff",
+    "og_bar_color": "#16232d",
+    "og_font": "BarlowCondensed-Bold",
+    "og_fonts": {
+      "BarlowCondensed-Bold": "assets/fonts/BarlowCondensed-Bold.ttf",
+      "BarlowCondensed-Regular": "assets/fonts/BarlowCondensed-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Toolbox",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

@@ -1,0 +1,195 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+<main class="main-content">
+
+{% set dossiers_list = dossiers | default([]) %}
+{% set lead = dossiers_list|first %}
+{% set secondary = dossiers_list|slice(1, 4) %}
+{% set rest = dossiers_list|slice(5) %}
+
+{% set category_map = {} %}
+{% for d in dossiers_list %}
+    {% set cat = d.category|default(d.section|default('')) %}
+    {% if cat is not empty and attribute(category_map, cat) is not defined %}
+        {% set label = (d.term_labels[cat]|default(cat)) | title %}
+        {% set category_map = category_map|merge({ (cat): label }) %}
+    {% endif %}
+{% endfor %}
+
+{% set secondary_items = menu('secondary') %}
+
+{% if lead is defined and lead is not empty %}
+  {% set lead_url = theme.isStatic() ? ((base_path | default('')) ~ lead.slug ~ '/index.html') : ('post.php?slug=' ~ lead.slug ~ '&section=' ~ (lead.section | default('blog'))) %}
+  {% set lead_has_hero = lead.hero_image is defined and lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+  {% if lead_has_hero %}
+  <!-- Lead/Spotlight Post Fullbleed Hero Image -->
+  <header class="post-header-outer">
+    <div class="hero-image-wrapper">
+      <div class="hero-image-container">
+        <div class="hero-image-gradient"></div>
+        <img alt="" loading="lazy" class="hero-image" src="{{ contentAsset(lead.hero_image) }}">
+      </div>
+    </div>
+  </header>
+  {% endif %}
+{% endif %}
+
+<div class="issue-shell">
+  {% if lead is defined and lead is not empty %}
+  <!-- Lead/Spotlight Post with Hero -->
+  <article class="spotlight-card">
+    {% if lead_has_hero %}
+    <header class="penmanship-post-header">
+      <div class="post-header-inner" style="margin-top:-80px;position:relative;z-index:2;">
+        <div class="post-meta">
+          {% if lead.trumpet is defined and lead.trumpet is not empty %}
+            <p class="post-date">
+              <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+            </p>
+          {% endif %}
+          <h1 class="post-title" style="font-size:clamp(2.6rem, 4.8vw, 3.6rem) !important;font-weight:800 !important;line-height:1.15 !important;margin-bottom:12px;">
+            <a href="{{ lead_url }}" style="color:inherit;text-decoration:none;">{{ lead.hero_title | default(lead.title | default('')) }}</a>
+          </h1>
+          {% if lead.deck is defined and lead.deck is not empty %}
+            <p class="post-deck" style="font-size:clamp(1.15rem, 2vw, 1.4rem);line-height:1.35;">{{ lead.deck | striptags }}</p>
+          {% endif %}
+          <p style="margin-top:16px;text-align:right;"><a href="{{ lead_url }}" style="font-size:0.95rem;font-weight:600;text-decoration:none;">Continue reading &rarr;</a></p>
+        </div>
+      </div>
+    </header>
+    {% else %}
+    <div class="post-card" style="border:none;padding-top:0;">
+      {% if lead.trumpet is defined and lead.trumpet is not empty %}
+        <div class="post-card-meta">
+          <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+        </div>
+      {% endif %}
+      <h2 class="post-card-title" style="font-size:clamp(1.6rem, 2.8vw, 2.0rem);font-weight:800;">
+        <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title | default('')) }}</a>
+      </h2>
+      {% if lead.deck is defined and lead.deck is not empty %}
+        <p class="post-card-deck"><a href="{{ lead_url }}">{{ lead.deck | striptags }}</a></p>
+      {% endif %}
+      <p style="margin-top:12px;text-align:right;"><a href="{{ lead_url }}" style="font-size:0.95rem;font-weight:600;text-decoration:none;">Continue reading &rarr;</a></p>
+    </div>
+    {% endif %}
+  </article>
+
+  {% if secondary is defined and secondary is not empty %}
+  <div class="handdrawn-divider"></div>
+
+  <!-- Secondary Posts -->
+  <section>
+    <h2 style="font-family:var(--traven-font-display);font-size:0.82rem;font-weight:700;color:var(--traven-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;">More Posts</h2>
+    <div class="secondary-grid">
+      {% for dossier in secondary %}
+        {% set url = theme.isStatic() ? ((base_path | default('')) ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+        {% set has_hero = dossier.hero_image is defined and dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+        <article class="post-card">
+          {% if has_hero %}
+          <div class="hero-image-wrapper" style="max-height:200px;border-radius:6px;margin-bottom:12px;">
+            <div class="hero-image-container" style="height:200px;border-radius:6px;">
+              <div class="hero-image-gradient" style="border-radius:6px;"></div>
+              <img alt="" loading="lazy" class="hero-image" src="{{ contentAsset(dossier.hero_image) }}" style="border-radius:6px;">
+            </div>
+          </div>
+          {% endif %}
+          <div class="post-card-meta">
+            {% if dossier.trumpet is defined and dossier.trumpet is not empty %}
+              <span class="post-detail-trumpet" style="margin-right:8px;">{{ dossier.trumpet | striptags }}</span>
+            {% endif %}
+            <time datetime="{{ dossier.date | default('') }}">{{ dossier.date | default('') | date('M d, Y') }}</time>
+          </div>
+          <h2 class="post-card-title">
+            <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('')) }}</a>
+          </h2>
+          {% if dossier.deck is defined and dossier.deck is not empty %}
+            <p class="post-card-deck"><a href="{{ url }}">{{ dossier.deck | striptags }}</a></p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if (rest is defined and rest is not empty) or (category_map is defined and category_map is not empty) %}
+  <div style="display:flex;flex-wrap:wrap;gap:48px;margin-top:32px;">
+    {% if rest is defined and rest is not empty %}
+    <div style="flex:1;min-width:260px;">
+      <h3 style="font-family:var(--traven-font-display);font-size:0.82rem;font-weight:700;color:var(--traven-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;">Further Reading</h3>
+      <ul style="list-style:none;padding:0;">
+        {% for dossier in rest %}
+          {% set url = theme.isStatic() ? ((base_path | default('')) ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+          <li style="padding:8px 0;border-bottom:1px solid var(--traven-border-light);">
+            <a href="{{ url }}" style="color:var(--traven-text);text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+              <span style="font-size:0.92rem;">{{ dossier.hero_title | default(dossier.title | default('')) }}</span>
+              <time datetime="{{ dossier.date | default('') }}" style="font-size:0.78rem;color:var(--traven-muted);white-space:nowrap;">{{ dossier.date | default('') | date('M d, Y') }}</time>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if category_map is defined and category_map is not empty %}
+    <aside style="min-width:200px;text-align:right;">
+      <nav aria-label="Topics" style="margin-bottom:24px;text-align:right;">
+        <h3 style="font-family:var(--traven-font-display);font-size:0.82rem;font-weight:700;color:var(--traven-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;text-align:right;">Topics</h3>
+        <ul style="list-style:none;padding:0;text-align:right;">
+          {% for slug, label in category_map %}
+            {% set cat_url = theme.isStatic()
+                ? ((base_path | default('')) ~ 'category/' ~ slug ~ '/index.html')
+                : ('category.php?category=' ~ slug|url_encode) %}
+            <li style="padding:4px 0;text-align:right;">
+              <a href="{{ cat_url }}" style="color:var(--traven-muted);text-decoration:none;font-size:0.92rem;font-weight:400;">{{ label | title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <p style="text-align:center;padding:48px 0;color:var(--traven-muted);">No posts yet.</p>
+  {% endif %}
+</div>
+
+{% if secondary_items is defined and secondary_items is not empty %}
+<!-- Horizontal Secondary Navigation Rail -->
+<nav class="secondary-nav-rail" aria-label="Secondary Navigation">
+  <div class="secondary-nav-rail-inner">
+    <ul class="secondary-nav-rail-list">
+      {% for item in secondary_items %}
+        <li class="secondary-nav-rail-item{% if item.children is defined and item.children is not empty %} has-children{% endif %}">
+          {% if item.target_type == 'label' %}
+            <span class="secondary-nav-rail-label">{{ item.label }}</span>
+          {% else %}
+            <a href="{{ item.url }}" class="secondary-nav-rail-link" style="text-decoration:none;" {% if item.open_in_new_tab | default(false) %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+          {% endif %}
+          {% if item.children is defined and item.children is not empty %}
+            <ul class="secondary-nav-rail-dropdown">
+              {% for child in item.children %}
+                <li>
+                  {% if child.target_type == 'label' %}
+                    <span class="secondary-nav-rail-label">{{ child.label }}</span>
+                  {% else %}
+                    <a href="{{ child.url }}" class="secondary-nav-rail-link" style="text-decoration:none;" {% if child.open_in_new_tab | default(false) %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+{% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

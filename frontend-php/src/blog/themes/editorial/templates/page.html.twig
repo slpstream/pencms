@@ -1,0 +1,45 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<main class="main-container">
+    <div class="layout-grid layout-grid-with-nav">
+        <aside class="sidebar-column sidebar-column-nav">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+
+        <article class="post-detail-header">
+            <h1 class="post-detail-title" style="text-align: center; margin-bottom: 24px;">{{ hero_title }}</h1>
+            
+            {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-detail-hero-image" style="margin-bottom: 32px;">
+            {% endif %}
+            
+            <div class="article-content traven-preview">
+                {{ page_content | raw }}
+            </div>
+
+            {{ theme.partial('faqs') | raw }}
+        </article>
+    </div>
+</main>
+{% else %}
+<main class="main-container main-container-narrow">
+    <article class="post-detail-header">
+        <h1 class="post-detail-title" style="text-align: center; margin-bottom: 24px;">{{ hero_title }}</h1>
+        
+        {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-detail-hero-image" style="margin-bottom: 32px;">
+        {% endif %}
+        
+        <div class="article-content traven-preview">
+            {{ page_content | raw }}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+{% endif %}
+
+{{ theme.partial('footer') | raw }}

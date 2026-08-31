@@ -1,0 +1,86 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set lead = post_list|first %}
+{% set rest = post_list|slice(1) %}
+
+<main id="main" class="site-main page-front">
+    <section class="mast wrap" aria-label="{{ hero_title | default(sitename | default('Grafik')) }}">
+        <div class="rule" aria-hidden="true"></div>
+        <div class="split mast-split">
+            <div class="mast-type">
+                <h1 class="grafik-title">{{ hero_title | default(sitename | default('Grafik')) }}<i class="dot" aria-hidden="true"></i></h1>
+                {% if tagline is not empty %}
+                    <p class="mast-tag">{{ tagline }}</p>
+                {% endif %}
+            </div>
+            <div class="mast-plate">
+                {% if lead is not empty %}
+                    {% set lead_url = contentUrl(lead) %}
+                    {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+                    <a href="{{ lead_url }}" class="plate">
+                        {% if lead_has_hero %}
+                            <img src="{{ contentAsset(lead.hero_image) }}" alt="" loading="eager" decoding="async">
+                        {% else %}
+                            <span class="plate-fallback" aria-hidden="true"></span>
+                        {% endif %}
+                    </a>
+                    <div class="cap">
+                        {% if lead.date is not empty or lead.trumpet is not empty %}
+                            <p class="cap-cat">
+                                {% if lead.date is not empty %}
+                                    <time datetime="{{ lead.date }}">{{ lead.date | date('Y.m.d') }}</time>
+                                {% endif %}
+                                {% if lead.trumpet is not empty %}
+                                    <span>{{ lead.trumpet | striptags }}</span>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                        <h2 class="cap-ttl"><a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a></h2>
+                        {% if lead.deck is not empty %}
+                            <p class="cap-who">{{ lead.deck | striptags }}</p>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="plate"><span class="plate-fallback" aria-hidden="true"></span></div>
+                    <div class="cap"><h2 class="cap-ttl"><span>Nothing published yet</span></h2></div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    {% if rest is not empty %}
+        <section class="catalogue wrap" aria-label="Catalogue">
+            {% for dossier in rest %}
+                {% set url = contentUrl(dossier) %}
+                {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                <article class="sheet-row{% if loop.index is even %} sheet-row--flip{% endif %}">
+                    <a href="{{ url }}" class="plate">
+                        {% if has_hero %}
+                            <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="lazy" decoding="async">
+                        {% else %}
+                            <span class="plate-fallback" aria-hidden="true"></span>
+                        {% endif %}
+                    </a>
+                    <div class="sheet-copy">
+                        <p class="cap-cat">
+                            {% if dossier.date is not empty %}
+                                <time datetime="{{ dossier.date }}">{{ dossier.date | date('Y.m.d') }}</time>
+                            {% endif %}
+                            {% if dossier.trumpet is not empty %}
+                                <span>{{ dossier.trumpet | striptags }}</span>
+                            {% endif %}
+                        </p>
+                        <h2 class="sheet-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></h2>
+                        {% if dossier.deck is not empty %}
+                            <p class="sheet-deck">{{ dossier.deck | striptags }}</p>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

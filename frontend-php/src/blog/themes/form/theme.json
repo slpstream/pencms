@@ -1,0 +1,176 @@
+{
+  "type": "native",
+  "name": "Form",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A fitness & yoga studio theme: chalk-white ground, charcoal ink, one coral-red accent with gym-signage energy.",
+  "editor_skin": "form",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "page_content": {
+      "type": "html",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#faf7f2",
+            "dark_default": "#211d1a"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#26221f",
+            "dark_default": "#ece5dc"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#665e55",
+            "dark_default": "#b5aa9d"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#b53318",
+            "dark_default": "#ff8f75"
+          },
+          {
+            "id": "accent-tint",
+            "label": "Accent Tint",
+            "type": "color",
+            "var": "--color-accent-tint",
+            "default": "#f7e3dd",
+            "dark_default": "#3a2b24"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#e2dbd1",
+            "dark_default": "#443c34"
+          },
+          {
+            "id": "panel",
+            "label": "Panel Background",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#ffffff",
+            "dark_default": "#2c2620"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Barlow Semi Condensed', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Barlow Semi Condensed', sans-serif", "label": "Barlow Semi Condensed" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Barlow Semi Condensed', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Barlow Semi Condensed', sans-serif", "label": "Barlow Semi Condensed" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#b53318",
+    "og_vignette_color": "#665e55",
+    "og_text_color": "#faf7f2",
+    "og_bar_color": "#26221f",
+    "og_font": "BarlowSemiCondensed-Bold",
+    "og_fonts": {
+      "BarlowSemiCondensed-Bold": "assets/fonts/BarlowSemiCondensed-Bold.ttf",
+      "BarlowSemiCondensed-Regular": "assets/fonts/BarlowSemiCondensed-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

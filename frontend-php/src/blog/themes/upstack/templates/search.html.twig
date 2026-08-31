@@ -1,0 +1,40 @@
+{% include 'partials/_head.html.twig' %}
+{% include 'partials/_header.html.twig' %}
+
+<main class="upstack-container">
+    <header class="upstack-post-header" style="margin-bottom: 32px;">
+        <h1>Search Articles</h1>
+        <p class="upstack-post-deck">Find posts and pages on this publication.</p>
+    </header>
+
+    <div
+        id="pencms-search"
+        class="pencms-search"
+        data-search-index-url="{{ search_index_url | default('') }}"
+        data-static="{{ theme.isStatic() ? '1' : '0' }}"
+        data-base-path="{{ base_path }}"
+        data-web-root="{{ base_path }}"
+    >
+        <label class="search-label" for="search-input">Search query</label>
+        <input
+            type="search"
+            id="search-input"
+            class="search-input"
+            name="q"
+            placeholder="Search articles, topics, and authors..."
+            autocomplete="off"
+            enterkeyhint="search"
+        >
+
+        {% if search_index_json is defined and search_index_json is not null %}
+            <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+        {% endif %}
+
+        <div id="search-results" class="search-results" aria-live="polite"></div>
+    </div>
+</main>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{% include 'partials/_footer.html.twig' %}

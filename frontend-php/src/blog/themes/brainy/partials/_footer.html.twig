@@ -1,0 +1,89 @@
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    {% set footer_items = menu('footer') %}
+    {% if footer_items is not empty %}
+      <nav class="footer-menu-grid" aria-label="Footer Navigation">
+        {% for item in footer_items %}
+          <div class="footer-column">
+            {% if item.target_type == 'label' %}
+              <div class="footer-column-heading">{{ item.label }}</div>
+            {% else %}
+              <a href="{{ item.url }}" class="footer-column-heading-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+            {% endif %}
+
+            {% if item.children is defined and item.children is not empty %}
+              <ul class="footer-column-list">
+                {% for child in item.children %}
+                  <li class="footer-column-item">
+                    {% if child.target_type == 'label' %}
+                      <span class="footer-column-child-label">{{ child.label }}</span>
+                    {% else %}
+                      <a href="{{ child.url }}" class="footer-column-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        &copy; {{ "now"|date("Y") }} <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}">{{ sitename | default('Brainy') }}</a> &bull; Powered by <a href="https://pencms.org/" target="_blank" rel="noopener">PenCMS</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (typeof renderMathInElement === "function") {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false},
+          {left: "\\[", right: "\\]", display: true}
+        ],
+        throwOnError: false
+      });
+    }
+  });
+</script>
+
+{# Mermaid Diagram Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (typeof mermaid === "undefined") return;
+
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+      const pre = codeBlock.parentNode;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.setAttribute('data-src', codeBlock.textContent);
+      div.textContent = codeBlock.textContent;
+      pre.replaceWith(div);
+    });
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+                   document.documentElement.classList.contains('cm-wysiwym-dark') ||
+                   document.documentElement.classList.contains('dark-mode');
+
+    try {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: isDark ? 'dark' : 'neutral'
+      });
+    } catch (e) {}
+  });
+</script>
+</body>
+</html>

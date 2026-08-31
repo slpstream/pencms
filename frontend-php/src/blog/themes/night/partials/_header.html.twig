@@ -1,0 +1,19 @@
+<header class="night-topbar{% if is_index|default(false) %} night-topbar--nav-only{% endif %}">
+    {% if not is_index|default(false) %}
+        <div class="night-hours-rail">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="night-hours-brand">
+                {% set logo = theme.getLogoUrl() %}
+                {% if logo is not empty %}
+                    <img src="{{ logo }}" alt="" class="night-hours-logo">
+                {% endif %}
+                <span class="night-wordmark">{{ sitename | default('NIGHT') }}</span>
+            </a>
+            {% if tagline is not empty %}
+                <span class="night-hours-item night-hours-open">{{ tagline }}</span>
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="night-nav-rail">
+        {{ theme.partial('navbar') | raw }}
+    </div>
+</header>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+
+    {# SEO metadata #}
+    {% set current_hero_title = hero_title | default('') %}
+    {% set current_sitename = sitename | default('Brainy') %}
+    <title>{% if current_hero_title is not empty and current_sitename is not empty and current_hero_title != current_sitename %}{{ current_hero_title }} | {{ current_sitename }}{% else %}{{ current_hero_title | default(current_sitename) }}{% endif %}</title>
+    <meta name="description" content="{{ meta_description | default(tagline | default('A magazine publication on PenCMS.')) }}">
+    {% if keywords is defined and keywords is not empty %}
+    <meta name="keywords" content="{{ keywords }}">
+    {% endif %}
+
+    {# Open Graph / Twitter #}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url | default('') }}">
+    <meta property="og:title" content="{{ og_title | default(og_title_fallback | default(current_hero_title | default(page_title | default(current_sitename)))) }}">
+    <meta property="og:description" content="{{ og_description | default(og_description_fallback | default(meta_description | default(''))) }}">
+    
+    {% set current_slug = slug | default('') %}
+    {% set abs_og_image = og_image | default(og_default_image | default('images/defaulthero.jpg')) %}
+    {% if theme.isStatic() and current_slug is not empty %}
+        {% set abs_og_image = (site_url | default('') | trim('/', 'right')) ~ '/images/og/' ~ current_slug ~ '.jpg' %}
+    {% elseif not (abs_og_image matches '/^https?:\\/\\//') %}
+        {% set abs_og_image = contentAsset(abs_og_image) %}
+    {% endif %}
+    <meta property="og:image" content="{{ abs_og_image }}">
+    <meta name="twitter:card" content="{{ twitter_card | default('summary_large_image') }}">
+    <meta name="twitter:title" content="{{ og_title | default(og_title_fallback | default(current_hero_title | default(page_title | default(current_sitename)))) }}">
+    <meta name="twitter:description" content="{{ og_description | default(og_description_fallback | default(meta_description | default(''))) }}">
+    <meta name="twitter:image" content="{{ abs_og_image }}">
+
+    {# FOUC Prevention Script #}
+    <script>
+        (function() {
+            let savedTheme = null;
+            try {
+                savedTheme = localStorage.getItem('theme') || localStorage.getItem('color-scheme');
+            } catch (e) {}
+            if (!savedTheme) {
+                try {
+                    const match = document.cookie.match(/(^|;)\s*color-scheme\s*=\s*([^;]+)/);
+                    savedTheme = match ? match[2] : null;
+                } catch (e) {}
+            }
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.classList.add('cm-wysiwym-dark');
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                document.documentElement.classList.remove('cm-wysiwym-dark');
+                document.documentElement.classList.remove('dark-mode');
+            }
+        })();
+    </script>
+
+    {# Shared font registry (Style Settings + identity faces) #}
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+
+    {# CSS Assets #}
+    {{ theme.linkCss('css/skin-brainy.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    {# KaTeX & Expand-Embed #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+
+    <link rel="alternate" type="application/rss+xml" title="{{ current_sitename }}" href="{{ base_path | default('/') }}feed.xml">
+    {% if theme.isStatic() %}
+    <link rel="alternate" type="text/markdown" href="index.md">
+    {% endif %}
+</head>
+<body class="{{ body_class|default('') }}{% if is_index|default(false) %} page-front{% endif %}{% set cur_cat = category|default('') %}{% if cur_cat is not empty %} theme-{{ cur_cat }}{% endif %}">
+    <div class="reading-progress-bar" aria-hidden="true"></div>

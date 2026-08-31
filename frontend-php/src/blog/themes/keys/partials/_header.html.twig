@@ -1,0 +1,21 @@
+<header class="masthead">
+    <div class="masthead-inner">
+        <a class="site-title" href="{{ base_path }}">
+            {% if theme.getLogoUrl() %}
+                <img src="{{ theme.getLogoUrl() }}" alt="{{ sitename }}" class="site-logo">
+            {% else %}
+                <span class="site-name">{{ sitename | default('Keys Estate Agency') }}</span>
+            {% endif %}
+        </a>
+
+        <div class="masthead-right">
+            {{ theme.partial('navbar') | raw }}
+
+            {% if agency_phone is defined and agency_phone is not empty %}
+                <a class="masthead-phone" href="tel:{{ agency_phone }}">{{ agency_phone }}</a>
+            {% elseif phone is defined and phone is not empty %}
+                <a class="masthead-phone" href="tel:{{ phone }}">{{ phone }}</a>
+            {% endif %}
+        </div>
+    </div>
+</header>

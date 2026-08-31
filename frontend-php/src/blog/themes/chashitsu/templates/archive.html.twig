@@ -1,0 +1,29 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <p class="ma-mark" lang="ja" aria-hidden="true">間</p>
+    <section class="col archive-sheet">
+        <p class="label">The shelf</p>
+        <h1 class="chashitsu-title">{{ hero_title | default('Archive') | title }}</h1>
+
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% if post_list is not empty %}
+            <ol class="archive-list">
+                {% for dossier in post_list %}
+                    {% set url = contentUrl(dossier) %}
+                    <li class="archive-item">
+                        {% if dossier.date is not empty %}
+                            <time datetime="{{ dossier.date }}">{{ dossier.date | date('Y.m.d') }}</time>
+                        {% endif %}
+                        <a href="{{ url }}" class="ink-link">{{ dossier.hero_title | default(dossier.title) }}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty-room">Nothing on the shelf yet.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

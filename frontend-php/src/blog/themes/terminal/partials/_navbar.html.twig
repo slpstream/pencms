@@ -1,0 +1,29 @@
+<nav aria-label="Main Navigation">
+    {% set nav_items = menu('primary') %}
+    {% if nav_items is not empty %}
+        <ul>
+            {% for item in nav_items %}
+                <li class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+                    {% if item.target_type == 'label' %}
+                        <span class="nav-label">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" class="nav-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <ul class="nav-dropdown">
+                            {% for child in item.children %}
+                                <li>
+                                    {% if child.target_type == 'label' %}
+                                        <span class="nav-label">{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" class="nav-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</nav>

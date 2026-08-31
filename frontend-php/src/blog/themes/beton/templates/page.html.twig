@@ -1,0 +1,43 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set title_words = (hero_title | default('Untitled'))|split(' ') %}
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+
+<main id="main" class="site-main page-page">
+    <section class="post-hero post-hero--quiet">
+        <div class="wrap hero-grid">
+            <h1 class="hero-title page-heading cast-type">
+                {% if title_words|length > 1 %}
+                    <span class="crane-clip"><span class="crane c1">{{ title_words|first }}</span></span>
+                    <span class="crane-clip"><span class="crane c2">{{ title_words|slice(1)|join(' ') }}</span></span>
+                {% else %}
+                    <span class="crane-clip"><span class="crane c1">{{ hero_title }}</span></span>
+                {% endif %}
+            </h1>
+            {% if deck is not empty %}
+                <div class="hero-sub">{{ deck | raw }}</div>
+            {% endif %}
+        </div>
+    </section>
+
+    <div class="joint" role="separator" aria-hidden="true"><span class="mono">Reprise de bétonnage</span></div>
+
+    <div class="wrap post-slab">
+        <div class="post-prose">
+            {% if has_hero %}
+                <figure class="post-hero-plate">
+                    <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+                </figure>
+            {% endif %}
+            <div class="article-content traven-preview">
+                {{ page_content | raw }}
+            </div>
+
+            {{ theme.partial('faqs') | raw }}
+        </div>
+        <aside class="spec-rail" aria-hidden="true"></aside>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

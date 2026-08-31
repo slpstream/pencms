@@ -1,0 +1,95 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+{# ── Journal masthead: Index Hero when set; else sitename (site identity lives in the navbar) ── #}
+<section class="hero-banner{% if edition_title is not empty %} hero-banner--issue{% endif %}">
+    <h1 class="hero-title-text">{{ edition_title is not empty ? edition_title : (sitename | default('Blog Archive')) }}</h1>
+    {% if tagline is not empty %}
+        <p class="hero-tagline-text">{{ tagline }}</p>
+    {% endif %}
+</section>
+
+{% set lead = dossiers|first %}
+{% set rest = dossiers|slice(1) %}
+
+<main class="main-container">
+    {% if lead is empty %}
+        <div class="post-card">
+            <p class="empty-feed">No posts found.</p>
+        </div>
+    {% else %}
+    <div class="layout-grid">
+        <div class="index-main">
+
+            {# ── Lead article ── #}
+            {% set lead_url = contentUrl(lead) %}
+            {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+            <article class="index-lead">
+                <div class="post-detail-eyebrow">
+                    <span class="post-card-category">{{ lead.category | default(lead.section | default('Article')) | upper }}</span>
+                    {% if lead.trumpet is not empty %}
+                        <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+                    {% endif %}
+                </div>
+                <h2 class="index-lead-title">
+                    <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                </h2>
+                {% if lead.deck is not empty %}
+                    <p class="index-lead-deck">{{ lead.deck | striptags }}</p>
+                {% endif %}
+                <div class="index-lead-meta">
+                    <time datetime="{{ lead.date }}">{{ lead.date | default('') | date("F d, Y") }}</time>
+                    <span class="meta-separator">&bull;</span>
+                    <a href="{{ lead_url }}" class="post-card-link">Read article &rarr;</a>
+                </div>
+                {% if lead_has_hero %}
+                    <a href="{{ lead_url }}" class="index-lead-image-link" tabindex="-1" aria-hidden="true">
+                        <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="index-lead-image">
+                    </a>
+                {% endif %}
+            </article>
+
+            {# ── Table of contents ── #}
+            {% if rest is not empty %}
+            <section class="index-toc" aria-label="Articles in this issue">
+                <h2 class="index-toc-heading">Articles</h2>
+                <ol class="index-toc-list">
+                    {% for dossier in rest %}
+                        {% set url = contentUrl(dossier) %}
+                        <li class="index-toc-entry">
+                            <div class="index-toc-meta">
+                                <span class="post-card-category">{{ dossier.category | default(dossier.section | default('Article')) | upper }}</span>
+                                <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date("M d, Y") }}</time>
+                            </div>
+                            <div class="index-toc-body">
+                                <h3 class="index-toc-title">
+                                    <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                </h3>
+                                {% if dossier.deck is not empty %}
+                                    <p class="index-toc-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </section>
+            {% endif %}
+
+        </div>
+
+        <div class="sidebar-column">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </div>
+    </div>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

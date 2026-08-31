@@ -1,0 +1,107 @@
+{{ theme.partial('head', { is_content: false, is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+{% set lead = dossiers|first %}
+{% set mains = dossiers|slice(1, 3) %}
+{% set rest = dossiers|slice(8, 10) %}
+
+<div class="page page--home">
+    {% if lead is empty %}
+        <p class="empty">Nothing on the wire yet — the first story you publish leads this page.</p>
+    {% else %}
+        <div class="home-main">
+            <div class="home-grid">
+                {% set lead_url = contentUrl(lead) %}
+                {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+                <article class="lead">
+                    {% if lead_has_hero %}
+                        <a href="{{ lead_url }}">
+                            <img src="{{ theme.contentAsset(lead.hero_image) }}" alt="">
+                        </a>
+                    {% endif %}
+                    <h2><a href="{{ lead_url }}">{% if lead.hero_title is defined and lead.hero_title %}{{ lead.hero_title }}{% elseif lead.title is defined and lead.title %}{{ lead.title }}{% else %}Untitled{% endif %}</a></h2>
+                    <p class="lead-meta">
+                        {% if lead.category is defined and lead.category %}
+                            <span class="lead-cat">{% if lead.term_labels is defined and lead.term_labels[lead.category] is defined %}{{ lead.term_labels[lead.category] }}{% else %}{{ lead.category }}{% endif %}</span>
+                        {% elseif lead.section is defined and lead.section %}
+                            <span class="lead-cat">{{ lead.section }}</span>
+                        {% endif %}
+                        {% if lead.author is defined and lead.author %}
+                            <span>By {% if lead.author.display_name is defined %}{{ lead.author.display_name }}{% elseif lead.author.name is defined %}{{ lead.author.name }}{% else %}{{ lead.author }}{% endif %}</span>
+                        {% endif %}
+                        {% if lead.date is defined and lead.date %}
+                            <span>{{ lead.date | date('M j') }}</span>
+                        {% endif %}
+                    </p>
+                    {% if lead.deck is defined and lead.deck %}
+                        <p class="lead-excerpt">{{ lead.deck | striptags }}</p>
+                    {% endif %}
+                    <a class="read-story" href="{{ lead_url }}">Read Full Story &gt;</a>
+                </article>
+
+                <div class="mains">
+                    {% for item in mains %}
+                        {% set url = contentUrl(item) %}
+                        {% set has_thumb = item.hero_image is not empty and item.hero_image != 'images/defaulthero.jpg' %}
+                        <article>
+                            {% if has_thumb %}
+                                <a href="{{ url }}"><img src="{{ theme.contentAsset(item.hero_image) }}" alt=""></a>
+                            {% endif %}
+                            <div>
+                                <h3><a href="{{ url }}">{% if item.hero_title is defined and item.hero_title %}{{ item.hero_title }}{% elseif item.title is defined and item.title %}{{ item.title }}{% else %}Untitled{% endif %}</a></h3>
+                                {% if item.author is defined and item.author %}
+                                    <p class="card-by">By {% if item.author.display_name is defined %}{{ item.author.display_name }}{% elseif item.author.name is defined %}{{ item.author.name }}{% else %}{{ item.author }}{% endif %}</p>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if rest is not empty %}
+                <div class="home-wire">
+                    <div class="home-wire-grid">
+                        {% for item in rest %}
+                            {% set url = contentUrl(item) %}
+                            <article class="home-wire-item">
+                                <p class="lead-meta">
+                                    {% if item.category is defined and item.category %}
+                                        <span class="lead-cat">{% if item.term_labels is defined and item.term_labels[item.category] is defined %}{{ item.term_labels[item.category] }}{% else %}{{ item.category }}{% endif %}</span>
+                                    {% elseif item.section is defined and item.section %}
+                                        <span class="lead-cat">{{ item.section }}</span>
+                                    {% endif %}
+                                    {% if item.author is defined and item.author %}
+                                        <span>By {% if item.author.display_name is defined %}{{ item.author.display_name }}{% elseif item.author.name is defined %}{{ item.author.name }}{% else %}{{ item.author }}{% endif %}</span>
+                                    {% endif %}
+                                    {% if item.date is defined and item.date %}
+                                        <span>{{ item.date | date('M j') }}</span>
+                                    {% endif %}
+                                </p>
+                                <h3><a href="{{ url }}">{% if item.hero_title is defined and item.hero_title %}{{ item.hero_title }}{% elseif item.title is defined and item.title %}{{ item.title }}{% else %}Untitled{% endif %}</a></h3>
+                                {% if item.deck is defined and item.deck %}
+                                    <p class="lead-excerpt">{{ item.deck | striptags }}</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {{ theme.partial('index-sidebar') | raw }}
+</div>
+
+{% if pagination is defined and pagination.total_pages > 1 %}
+<nav class="pagination" aria-label="Pages">
+    {% if pagination.current_page > 1 %}
+        <a href="{{ base_path }}?page={{ pagination.current_page - 1 }}">← Newer</a>
+    {% endif %}
+    <span>Page {{ pagination.current_page }} of {{ pagination.total_pages }}</span>
+    {% if pagination.current_page < pagination.total_pages %}
+        <a href="{{ base_path }}?page={{ pagination.current_page + 1 }}">Older →</a>
+    {% endif %}
+</nav>
+{% endif %}
+
+{{ theme.partial('footer') | raw }}

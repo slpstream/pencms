@@ -1,0 +1,88 @@
+    <footer class="footer">
+        <div class="container-wide">
+            {% set footer_items = menu('footer') %}
+            {% if footer_items is not empty %}
+                <nav class="footer-menu" aria-label="Footer">
+                    {% for item in footer_items %}
+                        <div class="footer-menu-group">
+                            {% if item.target_type == 'label' %}
+                                <span class="footer-menu-label">{{ item.label }}</span>
+                            {% else %}
+                                <a href="{{ item.url }}" class="footer-menu-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                            {% endif %}
+                            {% if item.children is not empty %}
+                                <ul class="footer-menu-children">
+                                    {% for child in item.children %}
+                                        <li>
+                                            {% if child.target_type == 'label' %}
+                                                <span class="footer-menu-label footer-menu-label-child">{{ child.label }}</span>
+                                            {% else %}
+                                                <a href="{{ child.url }}" class="footer-menu-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </nav>
+            {% endif %}
+            <p class="footer-brand">{{ sitename | default('Archive') }}</p>
+            <p class="footer-credit">{{ strings.publishedBy }} {{ sitename | default('') }} &copy; {{ "now" | date("Y") }}</p>
+            {{ theme.partial('social-links') | raw }}
+        </div>
+    </footer>
+
+    {# Image Modal (opens when an article image is clicked) #}
+    <div class="image-modal" id="image-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Image viewer">
+        <div class="image-modal-inner">
+            <button type="button" class="image-modal-close" id="modal-close" aria-label="Close image">&times;</button>
+            <img id="modal-img" src="" alt="">
+            <p id="modal-caption" class="modal-caption"></p>
+        </div>
+    </div>
+
+    <script src="{{ theme.asset('js/theme.js') }}"></script>
+    <script src="{{ theme.asset('js/modal.js') }}"></script>
+
+    {# KaTeX Auto-Render Math Scripts #}
+    <script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+    <script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    </script>
+
+    {# Mermaid Diagram Renderer #}
+    <script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+                const pre = codeBlock.parentNode;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = codeBlock.textContent;
+                pre.replaceWith(div);
+            });
+
+            if (window.mermaid) {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'default'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

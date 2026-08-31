@@ -1,0 +1,4 @@
+{# Site-specific search promo — not included by stock templates.
+   Opt in with: {{ theme.partial('search-manual') | raw }} #}
+{% set search_href = theme.isStatic() ? (base_path ~ 'search/index.html') : (base_path ~ 'search.php') %}
+<a class="doc-search" href="{{ search_href }}"><span>Search the manual</span><span aria-hidden="true">→</span></a>

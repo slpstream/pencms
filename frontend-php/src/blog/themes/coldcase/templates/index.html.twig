@@ -1,0 +1,90 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set index_kicker = '' %}
+{% if hero_title is defined and hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set index_kicker = hero_title %}
+{% endif %}
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set cover_title = hero_title | default(sitename | default('Coldcase')) %}
+{% set polaroids = [] %}
+{% for dossier in post_list %}
+    {% set panel_hero = dossier.hero_image | default('') %}
+    {% if panel_hero is not empty and panel_hero != 'images/defaulthero.jpg' %}
+        {% set polaroids = polaroids|merge([dossier]) %}
+    {% endif %}
+{% endfor %}
+
+<main id="main" class="cc-room">
+
+    <header class="cc-cover">
+        <div class="cc-cover-inner">
+            <div class="cc-punchholes" aria-hidden="true"><span></span><span></span></div>
+            <p class="cc-cover-eyebrow">READING ROOM · ARCHIVE COPY · DO NOT REMOVE FROM FILE</p>
+            {% if index_kicker is not empty and index_kicker != cover_title %}
+                <div class="cc-cover-tab">{{ index_kicker }}</div>
+            {% endif %}
+            {% set logo_url = theme.getLogoUrl() %}
+            {% if logo_url is not empty %}
+                <a href="{{ home_url }}" class="cc-cover-logo-link">
+                    <img src="{{ logo_url }}" alt="{{ sitename | default('') }}" class="cc-cover-logo">
+                </a>
+            {% endif %}
+            <h1 class="cc-cover-title">
+                <span class="cc-cover-file">{{ cover_title | upper }}</span>
+                {% if tagline is not empty %}
+                    <span class="cc-cover-matter">{{ tagline }}</span>
+                {% endif %}
+            </h1>
+            <p class="cc-cover-meta">{{ post_list|length }} {% if post_list|length == 1 %}file{% else %}files{% endif %} in the jacket · {{ "now"|date("F Y") }}</p>
+            <div class="cc-cover-stamps" aria-hidden="true">
+                <div class="cc-stamp cc-stamp-unresolved">{{ sitename | default('Coldcase') | upper }}</div>
+                <div class="cc-stamp-round">
+                    <span>RECEIVED</span>
+                    <span class="cc-stamp-round-date">{{ "now"|date("M j Y")|upper }}</span>
+                    <span>READING ROOM</span>
+                </div>
+                <p class="cc-hand cc-hand-note">look twice. — the desk</p>
+            </div>
+            <div class="cc-coffee-ring" aria-hidden="true"></div>
+            <div class="cc-paperclip" aria-hidden="true"></div>
+        </div>
+    </header>
+
+    {% if polaroids is not empty %}
+    <section class="cc-board" aria-label="The board">
+        <div class="cc-cork">
+            {% for dossier in polaroids %}
+                {{ theme.partial('polaroid-card', { dossier: dossier, card_index: loop.index, is_lead: loop.first }) | raw }}
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if post_list is not empty %}
+    <section class="cc-inventory" aria-label="Document inventory">
+        <div class="cc-inv-sheet" style="--tilt: -0.7deg">
+            <p class="cc-inv-caption">{{ sitename | default('COLDCASE')|upper }} — CONTENTS OF FILE</p>
+            <ol class="cc-inv-list">
+                {% for dossier in post_list %}
+                    {{ theme.partial('inv-row', { dossier: dossier, doc_index: loop.index }) | raw }}
+                {% endfor %}
+            </ol>
+            <p class="cc-hand cc-inv-footnote">photo records are pinned to the board. where else would they be.</p>
+        </div>
+        {% if pagination is defined and pagination.multiple %}
+            <nav class="cc-pagination" aria-label="Pages">
+                {% if pagination.newer is defined and pagination.newer is not empty %}<a href="{{ pagination.newer }}">← Newer</a>{% else %}<span></span>{% endif %}
+                <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                {% if pagination.older is defined and pagination.older is not empty %}<a href="{{ pagination.older }}">Older →</a>{% else %}<span></span>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+    {% else %}
+        <p class="cc-empty">The jacket is empty. The first file will appear here.</p>
+    {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

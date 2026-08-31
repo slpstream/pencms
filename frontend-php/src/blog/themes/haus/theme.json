@@ -1,0 +1,162 @@
+{
+  "type": "native",
+  "name": "Haus",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Type-foundry blog: bone/ink/ultramarine, variable letterform heroes, catalog table inventory, stacked release bands, and hard-ruled chrome. Light default with a published light/dark toggle.",
+  "editor_skin": "haus",
+  "editor_skin_base": [],
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Bone / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#F3EFE5",
+            "dark_default": "#16140E"
+          },
+          {
+            "id": "text",
+            "label": "Ink / Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#16140E",
+            "dark_default": "#F3EFE5"
+          },
+          {
+            "id": "muted",
+            "label": "Putty / Muted",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#655E4E",
+            "dark_default": "#A39B88"
+          },
+          {
+            "id": "accent",
+            "label": "Ultra / Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#2B1FE0",
+            "dark_default": "#958FEF"
+          },
+          {
+            "id": "border",
+            "label": "Rules / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#16140E",
+            "dark_default": "#F3EFE5"
+          },
+          {
+            "id": "panel",
+            "label": "Vellum / Panel",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#E9E4D3",
+            "dark_default": "#1E1B14"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Kolosse VF', 'Arial Black', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Kolosse VF', 'Arial Black', sans-serif", "label": "Kolosse" },
+              { "value": "'Falter VF', Georgia, serif", "label": "Falter" },
+              { "value": "'Instrument Sans', 'Helvetica Neue', Arial, sans-serif", "label": "Instrument Sans" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Instrument Sans', 'Helvetica Neue', Arial, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Instrument Sans', 'Helvetica Neue', Arial, sans-serif", "label": "Instrument Sans" },
+              { "value": "'Falter VF', Georgia, serif", "label": "Falter" },
+              { "value": "Helvetica, 'Helvetica Neue', Arial, sans-serif", "label": "Helvetica" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Betrieb VF', 'Courier New', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Betrieb VF', 'Courier New', ui-monospace, monospace", "label": "Betrieb" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#2B1FE0",
+    "og_vignette_color": "#16140E",
+    "og_text_color": "#F3EFE5",
+    "og_bar_color": "#16140E",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "poster",
+    "og_text_case": "upper",
+    "og_grade_preset": "high_contrast",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

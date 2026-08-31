@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>{{ page_title | default(hero_title | default('Marut')) }} - {{ sitename | default('Blog') }}</title>
+
+    {# Shared font registry (Style Settings + identity faces) #}
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+
+    {{ theme.linkCss('css/skin-marut.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    {# KaTeX Math Stylesheet #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+
+    {# Expand / Embed Nutshell Runtime #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+    {# Fast FOUC-prevention — marut dark mode is html.theme-dark (Stahl & Feuer), not cm-wysiwym-dark #}
+    <script>
+        (function() {
+            if (localStorage.getItem('marut_theme_preference') === 'dark') {
+                document.documentElement.classList.add('theme-dark');
+            }
+        })();
+    </script>
+</head>
+<body class="traven-preview {{ body_class | default('') }}">

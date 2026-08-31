@@ -1,0 +1,1775 @@
+/* ==========================================================================
+   Brainy Dual-Duty Skin — PenCMS Content Stylesheet
+   Scopes: .cm-editor (WYSIWYM Admin) & .traven-preview (Published HTML)
+   ========================================================================== */
+
+/* ── 1. Local Identity Fonts (@font-face) ── */
+
+/* Archivo */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Archivo-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Archivo-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Archivo-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Archivo-MediumItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/Archivo-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/Archivo-SemiBoldItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Archivo-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Archivo-BoldItalic.woff2') format('woff2');
+}
+
+/* Gentium Book Plus */
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/GentiumBookPlus-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/GentiumBookPlus-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/GentiumBookPlus-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/GentiumBookPlus-BoldItalic.woff2') format('woff2');
+}
+
+/* Alegreya */
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Alegreya-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Alegreya-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Alegreya-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/Alegreya-MediumItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/Alegreya-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/Alegreya-SemiBoldItalic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Alegreya-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/Alegreya-BoldItalic.woff2') format('woff2');
+}
+
+/* Calistoga */
+@font-face {
+  font-family: 'Calistoga';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/Calistoga-Regular.woff2') format('woff2');
+}
+
+/* ── 2. Tokens & Variable Matrix ── */
+
+:root {
+  /* Theme Canonical Tokens (Matching Style Settings Knobs) */
+  --font-display: 'Gentium Book Plus', 'Times New Roman', Georgia, serif;
+  --font-body: 'Alegreya', Georgia, serif;
+  --font-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-dropcap: 'Calistoga', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Theme-Private Typography Aliases */
+  --font-serif-condensed: var(--font-display);
+  --font-serif: var(--font-body);
+  --font-sans-compressed: var(--font-dropcap);
+
+  --color-bg: #f6f4ef;
+  --color-surface: #f9f9f7;
+  --color-text: #161613;
+  --color-muted: #666666;
+  --color-accent: #f2312c;
+  --color-border: #bebdb8;
+  --color-border-light: #e5e5e0;
+  --color-hr: #bebdb8;
+  --color-subtle-border: #e0e0e0;
+  --color-subtle-bg: #f9f9f7;
+
+  /* Utility Colors from Mockup */
+  --color-sky-700: #0369a1;
+  --color-slate-600: #475569;
+  --color-red-700: #b91c1c;
+  --color-amber-700: #b45309;
+  --color-red-600: #dc2626;
+  --color-yellow-200: #fef08a;
+  --color-amber-200: #fde68a;
+  --color-red-200: #fecaca;
+  --color-violet-500: #8b5cf6;
+  --color-white: #ffffff;
+  --color-red-800: #991b1b;
+  --gradient-indigo-from: #6366f1;
+  --gradient-purple-via: #a855f7;
+  --gradient-pink-to: #ec4899;
+
+  /* Complete Traven Editor Core Aliases */
+  --traven-font-display: var(--font-display);
+  --traven-font-body: var(--font-body);
+  --traven-font-mono: var(--font-mono);
+  --traven-bg: var(--color-bg);
+  --traven-text: var(--color-text);
+  --traven-muted: var(--color-muted);
+  --traven-border: var(--color-border);
+  --traven-border-light: var(--color-border-light);
+  --traven-caret: var(--color-accent);
+  --traven-h-color: var(--color-text);
+  --traven-bold-color: var(--color-text);
+  --traven-italic-color: inherit;
+  --traven-panel: var(--color-surface);
+
+  /* Traven Interactive & Widget Aliases */
+  --traven-active-line: color-mix(in srgb, var(--color-surface) 50%, var(--color-bg));
+  --traven-selection: color-mix(in srgb, var(--color-accent) 25%, var(--color-bg));
+  --traven-selection-focused: color-mix(in srgb, var(--color-accent) 35%, var(--color-bg));
+  --traven-highlight-bg: color-mix(in srgb, var(--color-accent) 25%, transparent);
+  --traven-code-bg: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+  --traven-code-text: var(--color-accent);
+  --traven-code-border: var(--color-border-light);
+  --traven-blockquote-border: var(--color-accent);
+  --traven-blockquote-text: var(--color-text);
+  --traven-widget-bg: var(--color-surface);
+  --traven-widget-border: var(--color-border);
+  --traven-widget-shadow: 0 4px 16px color-mix(in srgb, black 15%, transparent);
+  --traven-widget-hover-shadow: 0 8px 24px color-mix(in srgb, black 25%, transparent);
+
+  /* Frontmatter & Alert Token Contract on :root */
+  --traven-frontmatter-bg: color-mix(in srgb, var(--color-surface) 80%, var(--color-bg));
+  --traven-frontmatter-border: var(--color-border);
+  --traven-frontmatter-active-bg: var(--color-surface);
+  --traven-frontmatter-active-text: var(--color-text);
+  --traven-info-bg: color-mix(in srgb, var(--color-sky-700) 8%, var(--color-bg));
+  --traven-info-border: color-mix(in srgb, var(--color-sky-700) 25%, transparent);
+  --traven-info-text: var(--color-sky-700);
+  --traven-warning-bg: color-mix(in srgb, var(--color-amber-700) 8%, var(--color-bg));
+  --traven-warning-border: color-mix(in srgb, var(--color-amber-700) 25%, transparent);
+  --traven-warning-text: var(--color-amber-700);
+  --traven-alert-note-border: var(--color-sky-700);
+  --traven-alert-note-bg: color-mix(in srgb, var(--color-sky-700) 10%, var(--color-bg));
+  --traven-alert-note-text: var(--color-text);
+  --traven-alert-tip-border: #16a34a;
+  --traven-alert-tip-bg: color-mix(in srgb, #16a34a 10%, var(--color-bg));
+  --traven-alert-tip-text: var(--color-text);
+  --traven-alert-important-border: var(--color-violet-500);
+  --traven-alert-important-bg: color-mix(in srgb, var(--color-violet-500) 10%, var(--color-bg));
+  --traven-alert-important-text: var(--color-text);
+  --traven-alert-warning-border: var(--color-amber-700);
+  --traven-alert-warning-bg: color-mix(in srgb, var(--color-amber-700) 10%, var(--color-bg));
+  --traven-alert-warning-text: var(--color-text);
+  --traven-alert-caution-border: var(--color-accent);
+  --traven-alert-caution-bg: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg));
+  --traven-alert-caution-text: var(--color-text);
+}
+
+/* ── 3. Dark Mode Scope Overrides ── */
+
+html.cm-wysiwym-dark,
+html[data-theme="dark"],
+html.dark-mode {
+  --color-bg: #0f0f0f;
+  --color-surface: #181818;
+  --color-text: #f0ede6;
+  --color-muted: #a8a6a1;
+  --color-accent: #ff6b6b;
+  --color-border: #2d2d2d;
+  --color-border-light: #252525;
+  --color-hr: #2d2d2d;
+  --color-subtle-border: #1f1f1f;
+  --color-subtle-bg: #181818;
+
+  /* Utility Inversions for Dark */
+  --color-sky-700: #56ccf2;
+  --color-slate-600: #b4bdc8;
+  --color-red-700: #ff8787;
+  --color-amber-700: #ffd93d;
+  --color-red-600: #ff6b6b;
+  --color-yellow-200: #3d3516;
+  --color-amber-200: #403618;
+  --color-red-200: #3d1f1f;
+  --color-violet-500: #b794f6;
+  --color-red-800: #ff8787;
+
+  --traven-bg: var(--color-bg);
+  --traven-text: var(--color-text);
+  --traven-muted: var(--color-muted);
+  --traven-border: var(--color-border);
+  --traven-border-light: var(--color-border-light);
+  --traven-caret: var(--color-accent);
+  --traven-h-color: var(--color-text);
+  --traven-bold-color: var(--color-text);
+  --traven-italic-color: inherit;
+  --traven-panel: var(--color-surface);
+
+  --traven-active-line: color-mix(in srgb, var(--color-surface) 60%, var(--color-bg));
+  --traven-selection: color-mix(in srgb, var(--color-accent) 30%, var(--color-bg));
+  --traven-selection-focused: color-mix(in srgb, var(--color-accent) 45%, var(--color-bg));
+  --traven-highlight-bg: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  --traven-code-bg: rgba(255, 255, 255, 0.08);
+  --traven-code-text: var(--color-text);
+  --traven-code-border: rgba(255, 255, 255, 0.12);
+  --traven-blockquote-border: var(--color-accent);
+  --traven-blockquote-text: var(--color-text);
+  --traven-widget-bg: var(--color-surface);
+  --traven-widget-border: var(--color-border);
+  --traven-widget-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --traven-widget-hover-shadow: 0 8px 24px rgba(255, 107, 107, 0.2);
+
+  --traven-frontmatter-bg: #181818;
+  --traven-frontmatter-border: var(--color-border);
+  --traven-frontmatter-active-bg: #1f1f1f;
+  --traven-frontmatter-active-text: var(--color-text);
+  --traven-info-bg: color-mix(in srgb, var(--color-sky-700) 10%, var(--color-bg));
+  --traven-info-border: color-mix(in srgb, var(--color-sky-700) 25%, transparent);
+  --traven-info-text: var(--color-sky-700);
+  --traven-warning-bg: color-mix(in srgb, var(--color-amber-700) 10%, var(--color-bg));
+  --traven-warning-border: color-mix(in srgb, var(--color-amber-700) 25%, transparent);
+  --traven-warning-text: var(--color-amber-700);
+  --traven-alert-note-border: var(--color-sky-700);
+  --traven-alert-note-bg: color-mix(in srgb, var(--color-sky-700) 10%, var(--color-bg));
+  --traven-alert-note-text: var(--color-text);
+  --traven-alert-tip-border: #16a34a;
+  --traven-alert-tip-bg: color-mix(in srgb, #16a34a 10%, var(--color-bg));
+  --traven-alert-tip-text: var(--color-text);
+  --traven-alert-important-border: var(--color-violet-500);
+  --traven-alert-important-bg: color-mix(in srgb, var(--color-violet-500) 10%, var(--color-bg));
+  --traven-alert-important-text: var(--color-text);
+  --traven-alert-warning-border: var(--color-amber-700);
+  --traven-alert-warning-bg: color-mix(in srgb, var(--color-amber-700) 10%, var(--color-bg));
+  --traven-alert-warning-text: var(--color-text);
+  --traven-alert-caution-border: var(--color-accent);
+  --traven-alert-caution-bg: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg));
+  --traven-alert-caution-text: var(--color-text);
+}
+
+/* ── 4. Base Editor (.cm-editor) & Preview (.traven-preview) Metrics ── */
+
+.cm-editor,
+.traven-preview {
+  font-family: var(--traven-font-body) !important;
+  font-size: 1.25rem !important; /* 20px base body metric */
+  line-height: 1.6 !important;
+  color: var(--traven-text) !important;
+  background-color: var(--traven-bg) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cm-editor:focus,
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-scroller {
+  font-family: inherit !important;
+  line-height: 1.6 !important;
+  padding: 1.5rem 0 !important;
+}
+
+.cm-content {
+  padding: 0 1.5rem !important;
+}
+
+.cm-gutters {
+  background-color: transparent !important;
+  border-right: none !important;
+  color: var(--traven-muted) !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.8rem !important;
+  opacity: 0.6;
+}
+
+.cm-gutterElement {
+  padding: 0 16px 0 8px !important;
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-native-selection,
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background: var(--traven-selection) !important;
+}
+
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background: var(--traven-selection-focused) !important;
+}
+
+.cm-editor .cm-cursor {
+  border-left-color: var(--color-accent) !important;
+}
+
+.cm-editor .cm-fat-cursor {
+  background: var(--color-accent) !important;
+  opacity: 0.6 !important;
+}
+
+.cm-editor .cm-activeLine {
+  background-color: var(--traven-active-line) !important;
+}
+
+.cm-editor .cm-activeLineGutter {
+  background-color: transparent !important;
+  color: var(--color-accent) !important;
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* ── 5. Headings ── */
+
+/* Preview Scope Headings */
+.traven-preview h1,
+.traven-preview h2 {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 400 !important;
+  color: var(--traven-text) !important;
+}
+
+.traven-preview h1 {
+  font-size: clamp(2.5rem, 6vw, 3.75rem) !important;
+  line-height: 0.95 !important;
+  margin: 0.5em 0 0.3em !important;
+  padding: 0 !important;
+}
+
+.traven-preview h2 {
+  font-size: 2rem !important;
+  line-height: 1.1 !important;
+  margin: 1.5em 0 0.5em !important;
+  padding: 0 !important;
+}
+
+.traven-preview h3,
+.traven-preview h4,
+.traven-preview h5,
+.traven-preview h6 {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  color: var(--traven-text) !important;
+  padding: 0 !important;
+}
+
+.traven-preview h3 {
+  font-size: 1.5rem !important;
+  line-height: 1.2 !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.traven-preview h4 {
+  font-size: 1.25rem !important;
+  line-height: 1.25 !important;
+  margin-top: 1.25em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.traven-preview h5 {
+  font-size: 1.125rem !important;
+  line-height: 1.3 !important;
+  margin-top: 1em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.traven-preview h6 {
+  font-size: 1rem !important;
+  line-height: 1.3 !important;
+  margin-top: 1em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.traven-preview > h1:first-child,
+.traven-preview > h2:first-child,
+.traven-preview > h3:first-child {
+  margin-top: 0 !important;
+}
+
+/* Editor Scope Headings (Zero Vertical Margins, Padding-Based Spacing §4.4) */
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2 {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 400 !important;
+  color: var(--traven-text) !important;
+}
+
+.cm-editor .cm-wysiwym-h1 {
+  font-size: clamp(2.5rem, 6vw, 3.75rem) !important;
+  line-height: 0.95 !important;
+  padding-top: 24px !important;
+  padding-bottom: 12px !important;
+}
+
+.cm-editor .cm-wysiwym-h2 {
+  font-size: 2rem !important;
+  line-height: 1.1 !important;
+  padding-top: 20px !important;
+  padding-bottom: 10px !important;
+}
+
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  color: var(--traven-text) !important;
+}
+
+.cm-editor .cm-wysiwym-h3 {
+  font-size: 1.5rem !important;
+  line-height: 1.2 !important;
+  padding-top: 18px !important;
+  padding-bottom: 8px !important;
+}
+
+.cm-editor .cm-wysiwym-h4 {
+  font-size: 1.25rem !important;
+  line-height: 1.25 !important;
+  padding-top: 14px !important;
+  padding-bottom: 6px !important;
+}
+
+.cm-editor .cm-wysiwym-h5 {
+  font-size: 1.125rem !important;
+  line-height: 1.3 !important;
+  padding-top: 12px !important;
+  padding-bottom: 4px !important;
+}
+
+.cm-editor .cm-wysiwym-h6 {
+  font-size: 1rem !important;
+  line-height: 1.3 !important;
+  padding-top: 10px !important;
+  padding-bottom: 4px !important;
+}
+
+/* Empty Line Collapse Before and After Headings */
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h1),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h2),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h3),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h4),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h5),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h6),
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h4 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h5 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h6 + .cm-line:has(br:only-child) {
+  height: 0px !important;
+  min-height: 0px !important;
+  padding: 0 !important;
+}
+
+/* ── 6. Inline Marks & Links ── */
+
+.cm-wysiwym-bold,
+.traven-preview strong,
+.traven-preview b {
+  font-weight: 700 !important;
+  color: inherit !important;
+}
+
+.cm-wysiwym-italic,
+.traven-preview em,
+.traven-preview i {
+  font-style: italic !important;
+  color: inherit !important;
+}
+
+.cm-wysiwym-strikethrough,
+.traven-preview del,
+.traven-preview s {
+  text-decoration: line-through !important;
+  color: var(--traven-muted) !important;
+}
+
+.cm-wysiwym-highlight,
+.traven-preview mark {
+  background: var(--traven-highlight-bg) !important;
+  color: var(--traven-text) !important;
+  padding: 1px 0.2em !important;
+  border-radius: 0 !important;
+}
+
+.cm-wysiwym-inline-code,
+.traven-preview code:not(pre code) {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.86em !important;
+  font-weight: 600 !important;
+  color: var(--color-accent) !important;
+  background: var(--traven-code-bg) !important;
+  border: 1px solid var(--traven-code-border) !important;
+  padding: 0.05em 0.35em !important;
+  border-radius: 0 !important;
+}
+
+.cm-wysiwym-link-anchor,
+.cm-editor a,
+.traven-preview a {
+  color: var(--color-accent) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.cm-editor a:hover,
+.traven-preview a:hover {
+  opacity: 0.85;
+}
+
+.cm-wysiwym-bullet {
+  color: var(--color-accent) !important;
+  font-weight: 700;
+  margin-right: 0.35em;
+}
+
+.cm-editor .cmt-heading,
+.cm-editor .tok-heading,
+.cm-editor [class^="cm-wysiwym-h"] span {
+  text-decoration: none !important;
+}
+
+/* ── 7. Syntax Highlighting Tokens (Lezer / CodeMirror 6) ── */
+
+.cm-editor .tok-markup,
+.cm-editor .cmt-markup,
+.cm-editor .tok-punctuation,
+.cm-editor .cmt-punctuation,
+.cm-editor .tok-meta,
+.cm-editor .cmt-meta {
+  color: color-mix(in srgb, var(--color-muted) 70%, transparent) !important;
+}
+
+.cm-editor .tok-list,
+.cm-editor .cmt-list {
+  color: var(--color-accent) !important;
+}
+
+.cm-editor .tok-comment,
+.cm-editor .cmt-comment {
+  color: var(--color-muted) !important;
+  font-style: italic !important;
+}
+
+.cm-editor .tok-keyword,
+.cm-editor .cmt-keyword {
+  color: var(--color-accent) !important;
+  font-weight: 600;
+}
+
+.cm-editor .tok-string,
+.cm-editor .cmt-string {
+  color: var(--color-text) !important;
+}
+
+.cm-editor .tok-number,
+.cm-editor .cmt-number,
+.cm-editor .tok-boolean,
+.cm-editor .cmt-boolean {
+  color: var(--color-accent) !important;
+}
+
+.cm-editor .tok-variableName,
+.cm-editor .cmt-variableName {
+  color: var(--color-text) !important;
+}
+
+.cm-editor .tok-propertyName,
+.cm-editor .cmt-propertyName {
+  color: var(--color-accent) !important;
+}
+
+.cm-editor .tok-operator,
+.cm-editor .cmt-operator {
+  color: var(--color-text) !important;
+}
+
+.cm-editor .tok-url,
+.cm-editor .cmt-url,
+.cm-editor .tok-link,
+.cm-editor .cmt-link {
+  color: var(--color-accent) !important;
+}
+
+/* ── 8. Paragraphs & Lists ── */
+
+.traven-preview p {
+  margin: 0.75em 0 1.5em 0;
+  line-height: 1.6;
+}
+
+.traven-preview ul,
+.traven-preview ol {
+  margin: 1.5em 0;
+  padding-left: 2em;
+}
+
+.traven-preview li {
+  margin-bottom: 0.75em;
+  line-height: 1.6;
+}
+
+.traven-preview li:last-child {
+  margin-bottom: 0;
+}
+
+.traven-preview li > p {
+  margin: 0;
+}
+
+.traven-preview li > p + p {
+  margin-top: 0.75em;
+}
+
+.traven-preview hr {
+  border: none !important;
+  border-top: 1px solid var(--color-border) !important;
+  margin: 2.5rem 0 !important;
+}
+
+.cm-editor .cm-wysiwym-hr-widget {
+  border: none !important;
+  border-top: 1px solid var(--color-border) !important;
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  display: block;
+  width: 100%;
+}
+
+/* ── 9. Code Blocks & Fences ── */
+
+.traven-preview pre {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.8 !important;
+  color: var(--color-text) !important;
+  background-color: var(--traven-code-bg) !important;
+  border: 1px solid var(--color-border-light) !important;
+  border-left: 3px solid var(--color-border) !important;
+  border-radius: 4px !important;
+  padding: 1.25em 1.5em !important;
+  margin: 2rem auto !important;
+  overflow-x: auto !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.traven-preview pre code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line {
+  margin: 0 !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.8 !important;
+  background-color: var(--traven-code-bg) !important;
+  color: var(--color-text) !important;
+  padding-left: 24px !important;
+  border-left: 3px solid var(--color-border) !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-first {
+  padding-top: 12px !important;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-last {
+  padding-bottom: 12px !important;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* ── 10. Native Blockquotes (`> ...`) & GitHub Alerts ── */
+
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) {
+  margin: 2.5rem auto !important;
+  padding: 1.5rem !important;
+  border-left: 4px solid var(--color-accent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  color: var(--color-text) !important;
+  font-family: var(--traven-font-body) !important;
+  font-style: italic !important;
+  border-radius: 0 !important;
+}
+
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) p {
+  font-size: 1.25rem !important;
+  margin: 0 !important;
+}
+
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) p + p {
+  margin-top: 1em !important;
+}
+
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) footer,
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) cite {
+  display: block !important;
+  margin-top: 1.25rem !important;
+  text-align: right !important;
+  font-style: normal !important;
+  font-size: 0.9em !important;
+  font-family: var(--font-sans) !important;
+  color: color-mix(in srgb, var(--color-muted) 85%, transparent) !important;
+}
+
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) footer::before {
+  content: "— " !important;
+}
+
+/* CodeMirror Blockquote Sibling Continuous Line Stacking */
+.cm-editor .cm-wysiwym-blockquote {
+  margin: 0 !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  border-left: 4px solid var(--color-accent) !important;
+  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  font-family: var(--traven-font-body) !important;
+  font-size: 1.25rem !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote,
+.cm-editor .cm-wysiwym-blockquote * {
+  color: var(--color-text) !important;
+}
+
+/* Sibling Line Stacking: Top Line */
+.cm-editor .cm-wysiwym-blockquote:first-child,
+.cm-editor .cm-line:not(.cm-wysiwym-blockquote) + .cm-wysiwym-blockquote {
+  padding-top: 10px !important;
+}
+
+/* Sibling Line Stacking: Middle Lines */
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote {
+  padding-top: 2px !important;
+  border-radius: 0 !important;
+}
+
+/* Sibling Line Stacking: Bottom Line */
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) {
+  padding-bottom: 14px !important;
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)):not(.cm-wysiwym-blockquote + .cm-wysiwym-blockquote) {
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote strong,
+.cm-editor .cm-wysiwym-blockquote .cm-wysiwym-bold {
+  font-weight: 700 !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote cite,
+.cm-editor .cm-wysiwym-blockquote .attribution {
+  display: block !important;
+  margin: 0 !important;
+  padding-top: 10px !important;
+  font-family: var(--font-sans) !important;
+  font-style: normal !important;
+  font-size: 0.9em !important;
+  text-align: right !important;
+  color: color-mix(in srgb, var(--color-muted) 85%, transparent) !important;
+}
+
+/* Collapse blank lines around blockquotes */
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-blockquote) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* GitHub Alerts in Preview */
+.traven-preview .traven-alert,
+.traven-preview .markdown-alert {
+  margin: 1.5em 0 !important;
+  padding: 16px 24px !important;
+  border-left: 4px solid var(--color-accent) !important;
+  border-radius: 4px;
+  font-style: normal !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1rem !important;
+  line-height: 1.6;
+}
+
+.traven-preview .traven-alert p,
+.traven-preview .markdown-alert p {
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  font-family: inherit !important;
+  font-style: normal !important;
+}
+
+.traven-preview .traven-alert p:last-child,
+.traven-preview .markdown-alert p:last-child {
+  margin-bottom: 0;
+}
+
+.traven-preview .traven-alert-note,
+.traven-preview .markdown-alert-note {
+  border-left-color: var(--color-sky-700, #0369a1) !important;
+  background-color: color-mix(in srgb, var(--color-sky-700, #0369a1) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.traven-preview .traven-alert-tip,
+.traven-preview .markdown-alert-tip {
+  border-left-color: #16a34a !important;
+  background-color: color-mix(in srgb, #16a34a 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.traven-preview .traven-alert-important,
+.traven-preview .markdown-alert-important {
+  border-left-color: var(--color-violet-500, #8b5cf6) !important;
+  background-color: color-mix(in srgb, var(--color-violet-500, #8b5cf6) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.traven-preview .traven-alert-warning,
+.traven-preview .markdown-alert-warning {
+  border-left-color: var(--color-amber-700, #b45309) !important;
+  background-color: color-mix(in srgb, var(--color-amber-700, #b45309) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.traven-preview .traven-alert-caution,
+.traven-preview .markdown-alert-caution {
+  border-left-color: var(--color-accent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+/* GitHub Alerts in CodeMirror Editor (§4.1 Zero Margins) */
+.cm-editor .cm-wysiwym-alert {
+  margin: 0 !important;
+  font-style: normal !important;
+  font-family: var(--font-sans) !important;
+  line-height: 1.6 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  border-left: 4px solid var(--color-accent) !important;
+}
+
+.cm-editor .cm-wysiwym-alert:not(.cm-line + .cm-wysiwym-alert),
+.cm-editor .cm-line:not(.cm-wysiwym-alert) + .cm-wysiwym-alert {
+  padding-top: 16px !important;
+  border-top-right-radius: 4px !important;
+}
+
+.cm-editor .cm-wysiwym-alert:not(:has(+ .cm-wysiwym-alert)) {
+  padding-bottom: 16px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.cm-editor .cm-wysiwym-alert-note {
+  border-left-color: var(--color-sky-700, #0369a1) !important;
+  background-color: color-mix(in srgb, var(--color-sky-700, #0369a1) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-alert-tip {
+  border-left-color: #16a34a !important;
+  background-color: color-mix(in srgb, #16a34a 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-alert-important {
+  border-left-color: var(--color-violet-500, #8b5cf6) !important;
+  background-color: color-mix(in srgb, var(--color-violet-500, #8b5cf6) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-alert-warning {
+  border-left-color: var(--color-amber-700, #b45309) !important;
+  background-color: color-mix(in srgb, var(--color-amber-700, #b45309) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-alert-caution {
+  border-left-color: var(--color-accent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 10%, var(--traven-bg)) !important;
+  color: var(--color-text) !important;
+}
+
+/* ── 11. Pullquote Component Parity (`[component name="pullquote"]`) ── */
+
+.traven-preview .traven-component-pullquote,
+.traven-preview blockquote.pullquote {
+  margin: 2.5rem auto !important;
+  padding: 1.4rem 0 1.8rem 0 !important;
+  border-top: 2px solid var(--color-border) !important;
+  border-bottom: 2px solid var(--color-border) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: transparent !important;
+}
+
+.traven-preview .traven-component-pullquote p,
+.traven-preview blockquote.pullquote p {
+  font-family: var(--font-dropcap, var(--font-display)) !important;
+  font-size: clamp(1.8rem, 3.5vw, 2.2rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.15 !important;
+  color: var(--color-text) !important;
+  margin: 0 !important;
+}
+
+.traven-preview .traven-component-pullquote footer,
+.traven-preview .traven-component-pullquote cite,
+.traven-preview blockquote.pullquote footer {
+  display: block !important;
+  margin-top: 1.25rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1.1rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  letter-spacing: 0.05em !important;
+  color: var(--color-accent) !important;
+}
+
+.traven-preview .traven-component-pullquote footer::before,
+.traven-preview blockquote.pullquote footer::before {
+  display: none !important;
+}
+
+/* Pullquote Widget in CodeMirror 6 (Zero Vertical Margins) */
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote {
+  margin: 0 auto !important; /* CRITICAL: Never use vertical margin in editor */
+  padding: 1.4rem 1.4rem 1.6rem !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border-top: 2px solid var(--color-border) !important;
+  border-bottom: 2px solid var(--color-border) !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote * {
+  font-family: var(--font-dropcap, var(--font-display)) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote p,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote blockquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .component-body p {
+  font-family: var(--font-dropcap, var(--font-display)) !important;
+  font-size: clamp(1.8rem, 3.5vw, 2.2rem) !important;
+  line-height: 1.15 !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  color: var(--color-text) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote cite,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .attribution,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .author,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote footer {
+  display: block !important;
+  margin: 0 !important;
+  padding-top: 1.25rem !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1.1rem !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-align: center !important;
+  color: var(--color-accent) !important;
+}
+
+/* ── 12. Component Shortcodes (Blockquote, Info, Warning, Figures) ── */
+
+/* Generic component card base */
+.traven-preview .traven-component,
+.cm-editor .cm-wysiwym-component-shortcode,
+.cm-editor .cm-wysiwym-figure-shortcode {
+  box-sizing: border-box !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode,
+.cm-editor .cm-wysiwym-figure-shortcode {
+  margin: 0 !important;
+}
+
+/* Inner paragraph resets inside CM components */
+.cm-wysiwym-component-shortcode blockquote,
+.cm-wysiwym-component-shortcode p,
+.cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cm-wysiwym-component-shortcode p + p,
+.cm-wysiwym-figure-shortcode p + p {
+  margin-top: 0.8em !important;
+}
+
+/* Blockquote component shortcode */
+.traven-preview .traven-component-blockquote {
+  margin: 2.5rem auto !important;
+  padding: 1.5rem !important;
+  border-left: 4px solid var(--color-accent) !important;
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  font-style: italic !important;
+  border-radius: 0 !important;
+}
+
+.traven-preview .traven-component-blockquote,
+.traven-preview .traven-component-blockquote * {
+  color: var(--color-text) !important;
+}
+
+.traven-preview .traven-component-blockquote p {
+  font-size: 1.25rem !important;
+  line-height: 1.6 !important;
+  font-style: italic !important;
+}
+
+.traven-preview .traven-component-blockquote cite,
+.traven-preview .traven-component-blockquote .attribution,
+.traven-preview .traven-component-blockquote footer {
+  display: block !important;
+  margin-top: 1.25rem !important;
+  text-align: right !important;
+  font-style: normal !important;
+  font-size: 0.9em !important;
+  font-family: var(--font-sans) !important;
+  color: color-mix(in srgb, var(--color-muted) 85%, transparent) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote {
+  margin: 0 !important;
+  padding: 0 0 1.5em 24px !important;
+  border-left: 4px solid var(--color-accent) !important;
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  background-color: color-mix(in srgb, var(--color-accent) 5%, transparent) !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden; /* prevent child margin collapse */
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote * {
+  font-family: var(--traven-font-body) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote p {
+  font-size: 1.25rem !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote cite,
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote .attribution,
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote footer {
+  display: block !important;
+  margin-top: 12px !important;
+  text-align: right !important;
+  font-family: var(--font-sans) !important;
+  font-style: normal !important;
+  font-size: 0.9em !important;
+  color: color-mix(in srgb, var(--color-muted) 85%, transparent) !important;
+}
+
+/* Info Alert Box (`[info]`) */
+.traven-preview .traven-component-info {
+  margin: 2rem 0 !important;
+  padding: 1.25rem !important;
+  border-radius: 4px !important;
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-info {
+  margin: 0 !important;
+  padding: 1.25rem !important;
+  border-radius: 4px !important;
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+
+/* Warning Box (`[warning]`) */
+.traven-preview .traven-component-warning {
+  margin: 2rem 0 !important;
+  padding: 1.25rem !important;
+  border-radius: 4px !important;
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-warning {
+  margin: 0 !important;
+  padding: 1.25rem !important;
+  border-radius: 4px !important;
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+
+/* Component Headers (GOTCHAS §10) */
+.traven-component .component-header,
+.cm-wysiwym-component-shortcode .component-header {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.traven-component .component-header {
+  margin-bottom: 12px;
+}
+
+.cm-wysiwym-component-shortcode .component-header {
+  padding-bottom: 12px;
+  margin-bottom: 0 !important;
+}
+
+details:not([open]) .traven-component .component-header,
+details:not([open]) .component-header {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Blank-Line Collapse Around Components and Figures */
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* Special CTA */
+.traven-preview .special-cta {
+  background-color: color-mix(in srgb, var(--color-accent) 5%, transparent);
+  border: 2px solid var(--color-accent);
+  color: var(--color-text);
+  padding: 2rem;
+  border-radius: 4px;
+  text-align: center;
+  margin: 2.5rem auto;
+}
+.traven-preview .special-cta h3 {
+  margin: 0 0 0.75em;
+  font-family: var(--font-display) !important;
+  color: var(--color-accent) !important;
+}
+.traven-preview .special-cta p {
+  margin: 0 0 1.5em;
+  font-family: var(--font-sans) !important;
+}
+.traven-preview .special-cta a {
+  display: inline-block;
+  background: var(--color-accent) !important;
+  color: #fff !important;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+/* Base Figure / Audio / Gallery Containers */
+.traven-preview figure,
+.traven-preview .gallery-single,
+.traven-preview .figure-full,
+.traven-preview .classic-markdown-figure,
+.traven-preview .traven-audio-container,
+.traven-preview figure.traven-audio-figure {
+  display: block;
+  margin: 2.5rem 0;
+  clear: both;
+  width: 100%;
+}
+
+.traven-preview img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.traven-preview .photo-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: var(--color-surface);
+}
+
+.traven-preview .photo-wrapper img,
+.traven-preview .classic-markdown-figure img,
+.traven-preview img.classic-markdown {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Audio Player Elements */
+.traven-preview figure.traven-audio-figure .traven-audio-container {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.traven-preview .traven-audio-container audio,
+.traven-preview figure.traven-audio-figure audio,
+.traven-preview audio.traven-audio-shortcode,
+.traven-preview audio {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+.traven-preview figcaption,
+.traven-preview .caption,
+.traven-preview span.caption,
+.traven-preview .traven-audio-caption,
+.traven-preview figcaption.traven-audio-caption,
+.traven-preview figure.traven-audio-figure figcaption,
+.cm-editor .cm-wysiwym-image-caption,
+.cm-editor .figure-caption {
+  padding-top: 0.35rem !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: var(--color-muted) !important;
+  text-align: center;
+  display: block;
+}
+
+/* Media Sizes: Images, Videos & Audio */
+.traven-preview .gallery-single.img--small,
+.traven-preview .gallery-single.size-small,
+.traven-preview .traven-audio-container.size-small,
+.traven-preview .traven-audio-container.img--small,
+.traven-preview figure.traven-audio-figure.size-small,
+.traven-preview figure.traven-audio-figure.img--small,
+.traven-preview .img--small,
+.traven-preview .size-small,
+.traven-preview .audio--small {
+  width: 33.333% !important;
+  max-width: 100% !important;
+}
+
+.traven-preview .gallery-single.img--medium,
+.traven-preview .gallery-single.size-medium,
+.traven-preview .traven-audio-container.size-medium,
+.traven-preview .traven-audio-container.img--medium,
+.traven-preview figure.traven-audio-figure.size-medium,
+.traven-preview figure.traven-audio-figure.img--medium,
+.traven-preview .img--medium,
+.traven-preview .size-medium,
+.traven-preview .audio--medium {
+  width: 50% !important;
+  max-width: 100% !important;
+}
+
+.traven-preview .gallery-single.img--large,
+.traven-preview .gallery-single.size-large,
+.traven-preview .traven-audio-container.size-large,
+.traven-preview .traven-audio-container.img--large,
+.traven-preview figure.traven-audio-figure.size-large,
+.traven-preview figure.traven-audio-figure.img--large,
+.traven-preview .img--large,
+.traven-preview .size-large,
+.traven-preview .audio--large {
+  width: 75% !important;
+  max-width: 100% !important;
+}
+
+.traven-preview .gallery-single.img--full,
+.traven-preview .gallery-single.size-full,
+.traven-preview .traven-audio-container.size-full,
+.traven-preview .traven-audio-container.img--full,
+.traven-preview figure.traven-audio-figure.size-full,
+.traven-preview figure.traven-audio-figure.img--full,
+.traven-preview .img--full,
+.traven-preview .size-full,
+.traven-preview .audio--full {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ── 13. Media Alignments: Images, Videos & Audio ── */
+
+/* Editor alignment helpers — auto-margins only (§4.4); never float CM widgets */
+.align-left,
+.cm-wysiwym-image-shortcode-container.align-left,
+.cm-wysiwym-image-widget-container.align-left,
+.cm-wysiwym-video-shortcode-container.align-left,
+.cm-wysiwym-audio-shortcode-container.align-left,
+.cm-wysiwym-figure-shortcode.align-left {
+  margin: 0 auto 0 0 !important;
+  float: none !important;
+}
+.align-right,
+.cm-wysiwym-image-shortcode-container.align-right,
+.cm-wysiwym-image-widget-container.align-right,
+.cm-wysiwym-video-shortcode-container.align-right,
+.cm-wysiwym-audio-shortcode-container.align-right,
+.cm-wysiwym-figure-shortcode.align-right {
+  margin: 0 0 0 auto !important;
+  float: none !important;
+}
+.align-center,
+.cm-wysiwym-image-shortcode-container.align-center,
+.cm-wysiwym-image-widget-container.align-center,
+.cm-wysiwym-video-shortcode-container.align-center,
+.cm-wysiwym-audio-shortcode-container.align-center,
+.cm-wysiwym-figure-shortcode.align-center {
+  display: block !important;
+  margin: 0 auto !important;
+  float: none !important;
+}
+.align-fullbleed,
+.cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-wysiwym-image-widget-container.align-fullbleed,
+.cm-wysiwym-video-shortcode-container.align-fullbleed,
+.cm-wysiwym-audio-shortcode-container.align-fullbleed,
+.cm-wysiwym-figure-shortcode.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: both !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-image-shortcode-container,
+.cm-editor .cm-wysiwym-image-widget-container,
+.cm-editor .cm-wysiwym-video-shortcode-container,
+.cm-editor .cm-wysiwym-audio-shortcode-container {
+  margin: 0 !important;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+
+/* Blank-line collapse around media widgets */
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* Preview / Published Media Alignments (Floats OK) */
+.traven-preview .align-left,
+.traven-preview .inline-image-left,
+.traven-preview .inline-audio-left,
+.traven-preview .gallery-single.align-left,
+.traven-preview .gallery-single.inline-image-left,
+.traven-preview .traven-audio-container.align-left,
+.traven-preview figure.traven-audio-figure.align-left {
+  float: left !important;
+  margin: 0.5rem 2rem 1.75rem 0 !important;
+  clear: left;
+}
+
+.traven-preview .align-right,
+.traven-preview .inline-image-right,
+.traven-preview .inline-audio-right,
+.traven-preview .gallery-single.align-right,
+.traven-preview .gallery-single.inline-image-right,
+.traven-preview .traven-audio-container.align-right,
+.traven-preview figure.traven-audio-figure.align-right {
+  float: right !important;
+  margin: 0.5rem 0 1.75rem 2rem !important;
+  clear: right;
+}
+
+.traven-preview .align-center,
+.traven-preview .inline-image-center,
+.traven-preview .inline-audio-center,
+.traven-preview .gallery-single.align-center,
+.traven-preview .gallery-single.inline-image-center,
+.traven-preview .traven-audio-container.align-center,
+.traven-preview figure.traven-audio-figure.align-center,
+.traven-preview figure.traven-audio-figure:not(.align-left):not(.align-right):not(.inline-audio-left):not(.inline-audio-right):not(.align-fullbleed),
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+.traven-preview .traven-audio-container:not(.align-left):not(.align-right):not(.inline-audio-left):not(.inline-audio-right):not(.align-fullbleed) {
+  display: block !important;
+  float: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Fullbleed Images, Videos & Audio in Preview */
+.traven-preview .align-fullbleed,
+.traven-preview .inline-image-fullbleed,
+.traven-preview .inline-audio-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview .gallery-single.inline-image-fullbleed,
+.traven-preview .figure-full.align-fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview img.align-fullbleed,
+.traven-preview .traven-figure.align-fullbleed,
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed,
+.traven-preview .traven-video-shortcode.align-fullbleed,
+.traven-preview .traven-audio-container.align-fullbleed,
+.traven-preview figure.traven-audio-figure.align-fullbleed,
+.traven-preview .traven-audio-shortcode.align-fullbleed {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  float: none !important;
+  clear: both !important;
+  margin-top: 3.5rem !important;
+  margin-bottom: 3.5rem !important;
+}
+
+/* Fullbleed Images: 21:9 */
+.traven-preview .align-fullbleed .photo-wrapper,
+.traven-preview .gallery-single.align-fullbleed .photo-wrapper,
+.traven-preview .figure-full.align-fullbleed .photo-wrapper,
+.traven-preview .traven-figure.align-fullbleed .photo-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  aspect-ratio: 21 / 9 !important;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.traven-preview .align-fullbleed .photo-wrapper img,
+.traven-preview .gallery-single.align-fullbleed img,
+.traven-preview .gallery-single.align-fullbleed .photo-wrapper img,
+.traven-preview .figure-full.align-fullbleed img,
+.traven-preview figure.align-fullbleed img,
+.traven-preview .traven-figure.align-fullbleed img {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 21 / 9 !important;
+  object-fit: cover !important;
+  border-radius: 0;
+}
+
+/* Fullbleed Videos: 16:9 */
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed .traven-video-container,
+.traven-preview .traven-video-shortcode.align-fullbleed {
+  aspect-ratio: 16 / 9 !important;
+  overflow: hidden !important;
+  border-radius: 0;
+}
+
+.traven-preview .traven-video-container.align-fullbleed iframe,
+.traven-preview .traven-video-container.align-fullbleed video,
+.traven-preview figure.traven-video-figure.align-fullbleed iframe,
+.traven-preview figure.traven-video-figure.align-fullbleed video,
+.traven-preview .traven-video-shortcode.align-fullbleed iframe,
+.traven-preview .traven-video-shortcode.align-fullbleed video {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: cover !important;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Fullbleed Audio Players */
+.traven-preview .traven-audio-container.align-fullbleed,
+.traven-preview figure.traven-audio-figure.align-fullbleed .traven-audio-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 2rem calc(50vw - min(var(--reading-max-width), calc(100vw - 4rem)) / 2) !important;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
+  box-sizing: border-box;
+}
+
+/* ── 14. Mermaid, Math & Tables ── */
+
+/* Mermaid in Preview */
+.traven-preview .mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 2.5rem auto;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 0.5rem 0;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.traven-preview .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Mermaid in CodeMirror Editor (§4.4 Padding-based, Zero Vertical Margins) */
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+  background: transparent !important;
+  border: 0 !important;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* Display math + KaTeX fallback (CodeMirror §4.4) */
+.cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* Tables in Preview & Editor */
+.traven-preview table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 2rem 0 !important;
+  font-size: 0.95rem !important;
+}
+
+.traven-preview th,
+.traven-preview td {
+  padding: 0.75rem 1rem !important;
+  border: 1px solid var(--color-border-light) !important;
+  text-align: left !important;
+}
+
+.traven-preview th {
+  background-color: var(--color-surface) !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 600 !important;
+  color: var(--color-text) !important;
+}
+
+/* Tables Editing Mode (§4.1 / §4.4) */
+.cm-editor .cm-wysiwym-table-row {
+  margin: 0 !important;
+}
+
+.cm-wysiwym-table-widget {
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-table-widget table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+}
+
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* ── 15. Raw Editor Mount (.raw-editor-mount) ── */
+
+.raw-editor-mount .cm-editor,
+.raw-editor-mount .cm-content,
+.raw-editor-mount .cm-scroller,
+.raw-editor-mount .cm-line {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.7 !important;
+  background-color: transparent !important;
+  color: var(--traven-text) !important;
+}

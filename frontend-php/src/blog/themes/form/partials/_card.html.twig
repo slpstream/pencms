@@ -1,0 +1,23 @@
+<li class="card">
+  {% set item_photo = item.photo is defined ? item.photo : (item.cover is defined ? item.cover : (item.hero_image is defined ? item.hero_image : null)) %}
+  {% set item_url = item.url is defined and item.url is not empty ? item.url : (theme.isStatic() ? (base_path ~ item.slug ~ '/index.html') : ('post.php?slug=' ~ item.slug ~ '&section=' ~ (item.section | default('blog')))) %}
+  {% if item_photo %}
+    <a class="card-photo-link" href="{{ item_url }}" tabindex="-1" aria-hidden="true">
+      <img class="card-photo" src="{{ contentAsset(item_photo) }}" alt="" loading="lazy" decoding="async">
+    </a>
+  {% endif %}
+  <h2>
+    <a href="{{ item_url }}">
+      {{ item.hero_title is defined and item.hero_title ? item.hero_title : (item.title is defined and item.title ? item.title : (item.name is defined and item.name ? item.name : 'Untitled')) }}
+    </a>
+  </h2>
+  {% if item.discipline is defined and item.discipline %}
+    <p class="discipline">{{ item.discipline }}</p>
+  {% endif %}
+  {% if item.date is defined and item.date %}
+    <p class="meta"><time datetime="{{ item.date }}">{{ item.date | date("F d, Y") }}</time></p>
+  {% endif %}
+  {% if (item.description is defined and item.description) or (item.deck is defined and item.deck) %}
+    <p class="summary">{{ item.description is defined and item.description ? item.description : item.deck | striptags }}</p>
+  {% endif %}
+</li>

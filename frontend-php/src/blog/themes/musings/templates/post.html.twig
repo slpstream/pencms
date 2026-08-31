@@ -1,0 +1,102 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="musings-header-meta">
+    POSTS / {% if date is defined and date is not empty %}{{ date | date("Y . m") }}{% else %}{{ "now" | date("Y . m") }}{% endif %}
+</div>
+
+<article class="musings-post-detail">
+    <header class="musings-post-header">
+        {% set cat = category | default(section | default('')) %}
+        {% if cat is not empty or (trumpet is defined and trumpet is not empty) %}
+            <div class="musings-post-eyebrow">
+                {% if cat is not empty %}
+                    <span class="meta-tag">{{ cat | upper }}</span>
+                {% endif %}
+                {% if trumpet is defined and trumpet is not empty %}
+                    <span class="musings-post-trumpet">{{ trumpet | upper }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <h1>{{ hero_title | default(title | default('Untitled')) }}</h1>
+
+        {% if deck is defined and deck is not empty %}
+            <div class="musings-post-deck">{{ deck | striptags }}</div>
+        {% endif %}
+
+        <div class="musings-post-meta">
+            {% set byline_name = '' %}
+            {% if byline is defined and byline is not empty %}
+                {% set byline_name = byline %}
+            {% elseif author is defined %}
+                {% if author.display_name is defined and author.display_name is not empty %}
+                    {% set byline_name = author.display_name %}
+                {% elseif author is iterable and author.name is defined and author.name is not empty %}
+                    {% set byline_name = author.name %}
+                {% elseif author is not iterable and author is not empty %}
+                    {% set byline_name = author %}
+                {% endif %}
+            {% endif %}
+            {% if byline_name is not empty %}
+                <span class="musings-byline">BY {{ byline_name | upper }}</span>
+                <span>&middot;</span>
+            {% endif %}
+            {% if dateline is defined and dateline is not empty %}
+                <time datetime="{{ date | default('') }}">{{ dateline | upper }}</time>
+            {% elseif date is defined and date is not empty %}
+                <time datetime="{{ date }}">{{ date | date("d M Y") | upper }}</time>
+            {% else %}
+                <time datetime="">{{ "now" | date("d M Y") | upper }}</time>
+            {% endif %}
+            {% set computed_read_time = read_time | default(reading_time | default('')) %}
+            {% if computed_read_time is empty %}
+                {% set full_text = content_html | default(body | default('')) %}
+                {% if posts is defined and posts is not empty %}
+                    {% for p in posts %}
+                        {% set full_text = full_text ~ ' ' ~ (p.content_html | default('')) %}
+                    {% endfor %}
+                {% endif %}
+                {% set words = full_text | striptags | split(' ') | length %}
+                {% set mins = words // 200 %}
+                {% if words % 200 > 0 %}
+                    {% set mins = mins + 1 %}
+                {% endif %}
+                {% set computed_read_time = (mins > 0 ? mins : 1) ~ ' MIN READ' %}
+            {% endif %}
+            {% if computed_read_time is not empty %}
+                <span>&middot;</span>
+                <span>{{ computed_read_time | upper }}</span>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if hero_image is defined and hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+        <div class="musings-post-hero-image">
+            <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title | default('') }}">
+        </div>
+    {% endif %}
+
+    <div class="post-content-wrapper" style="margin-bottom: 3rem;">
+        {% if posts is defined and posts is not empty %}
+            {% for p in posts %}
+                <div class="article-content traven-preview" id="{{ p.id | default('') }}">
+                    {{ p.content_html | default('') | raw }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="article-content traven-preview">
+                {{ content_html | default(body | default('')) | raw }}
+            </div>
+        {% endif %}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="musings-discussion">
+        {{ theme.partial('comment-thread') | raw }}
+        {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+</article>
+
+{{ theme.partial('footer') | raw }}

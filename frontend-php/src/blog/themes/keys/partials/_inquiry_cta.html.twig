@@ -1,0 +1,27 @@
+<aside class="inquiry">
+    <h2>Ask about this property</h2>
+    {% if agency_hours is defined and agency_hours is not empty %}
+        <p class="inquiry-meta">{% if agency_name is defined and agency_name is not empty %}{{ agency_name }} · {% endif %}{{ agency_hours }}</p>
+    {% endif %}
+
+    {% if agency_phone is defined and agency_phone is not empty %}
+        <div class="inquiry-actions">
+            <a class="btn" href="tel:{{ agency_phone }}">Call {{ agency_phone }}</a>
+            {% if agency_email is defined and agency_email is not empty %}
+                <a class="btn btn-quiet" href="mailto:{{ agency_email }}">Email us</a>
+            {% endif %}
+        </div>
+        <p class="inquiry-note">Mention the street name and we'll have the file open before you finish the sentence.</p>
+    {% elseif agency_email is defined and agency_email is not empty %}
+        <div class="inquiry-actions">
+            <a class="btn" href="mailto:{{ agency_email }}">Email us</a>
+        </div>
+        <p class="inquiry-note">Mention the street name and we'll have the file open before you finish the sentence.</p>
+    {% else %}
+        <div class="inquiry-actions">
+            <a class="btn" href="tel:+18005550199">Call +1 (800) 555-0199</a>
+            <a class="btn btn-quiet" href="mailto:info@keysestateagency.com">Email us</a>
+        </div>
+        <p class="inquiry-note">Tell us which property and when you'd like to arrange a viewing.</p>
+    {% endif %}
+</aside>

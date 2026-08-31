@@ -1,0 +1,67 @@
+{{ theme.partial('footer-nav') | raw }}
+
+<!-- Image Modal Viewer -->
+<div id="image-modal" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="modal-content">
+        <button id="modal-close" class="modal-close" type="button" aria-label="Close modal">
+            <svg class="modal-close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div class="modal-image-wrapper">
+            <img id="modal-img" src="" alt="">
+        </div>
+        <div id="modal-caption" class="modal-caption"></div>
+    </div>
+</div>
+
+{# SVG filter defs + document-scoped filter CSS live in _head.html.twig. #}
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+<script src="{{ theme.asset('js/modal.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof renderMathInElement !== 'function') {
+            return;
+        }
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof mermaid === 'undefined') {
+            return;
+        }
+
+        document.querySelectorAll('pre code.language-mermaid').forEach(function (codeBlock) {
+            var preBlock = codeBlock.parentNode;
+            var mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = codeBlock.textContent;
+            preBlock.parentNode.replaceChild(mermaidDiv, preBlock);
+        });
+
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'neutral',
+            securityLevel: 'loose'
+        });
+    });
+</script>
+</body>
+</html>

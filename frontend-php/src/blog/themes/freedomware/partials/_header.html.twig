@@ -1,0 +1,60 @@
+<header class="site-header">
+    <table class="header-meta-table">
+        <tbody>
+            <tr>
+                <td colspan="2" rowspan="2" class="header-brand-cell width-auto">
+                    <a href="{{ base_path }}" class="header-brand-link">
+                        {% set logo = theme.getLogoUrl() %}
+                        {% if logo is not empty %}
+                            <img src="{{ logo }}" alt="" class="site-logo" aria-hidden="true">
+                        {% endif %}
+                        <span class="site-title">{{ sitename | default('FREEDOMWARE') }}</span>
+                    </a>
+                    {% if tagline is not empty %}
+                        <span class="site-tagline">{{ tagline }}</span>
+                    {% endif %}
+                </td>
+                <th>Mode</th>
+                <td class="header-toggle-cell width-min">
+                    <button type="button" class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle dark mode">
+                        <span class="toggle-label-light">&#9680; DARK</span>
+                        <span class="toggle-label-dark">&#9681; LIGHT</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td class="header-nav-cell width-min">
+                    <time class="header-date" datetime="{{ 'now'|date('Y-m-d') }}">{{ 'now'|date('Y-m-d') }}</time>
+                    <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-controls="nav-menu">
+                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+        {% set nav_items = menu('primary') %}
+        {% for item in nav_items %}
+            <div class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type == 'label' %}
+                    <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="nav-link{% if item.children is not empty %} nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+                {% if item.children is not empty %}
+                    <div class="nav-dropdown" role="menu">
+                        {% for child in item.children %}
+                            {% if child.target_type == 'label' %}
+                                <span class="nav-label">{{ child.label }}</span>
+                            {% else %}
+                                <a href="{{ child.url }}" class="nav-link" role="menuitem" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </nav>
+</header>

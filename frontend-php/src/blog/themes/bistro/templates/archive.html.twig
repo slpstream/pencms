@@ -1,0 +1,35 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="list">
+        <header class="page-header">
+            <h1>{{ hero_title | default('Menu & Journal Archive') }}</h1>
+        </header>
+
+        {% if dossiers is defined and dossiers is not empty %}
+            <ol class="post-list" reversed>
+                {% for item in dossiers %}
+                    {% set url = theme.isStatic() ? (base_path ~ item.slug ~ '/index.html') : ('post.php?slug=' ~ item.slug ~ '&section=' ~ (item.section | default('blog'))) %}
+                    <li class="post-card">
+                        <h2><a href="{{ url }}">{{ item.hero_title | default(item.title) }}</a></h2>
+                        {% if item.date is defined and item.date is not empty %}
+                            <p class="meta"><time datetime="{{ item.date }}">{{ item.date | date("F d, Y") }}</time></p>
+                        {% endif %}
+                        {% if item.deck is defined and item.deck is not empty %}
+                            <p class="summary">{{ item.deck | striptags }}</p>
+                        {% elseif item.meta_description is defined and item.meta_description is not empty %}
+                            <p class="summary">{{ item.meta_description }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty">Nothing here yet.</p>
+        {% endif %}
+    </section>
+
+    {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

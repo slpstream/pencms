@@ -1,0 +1,22 @@
+[Unit]
+Description=PenCMS FastAPI brain
+After=network.target
+
+[Service]
+User=user
+Group=user
+WorkingDirectory=/home/user/pencms/backend-python
+EnvironmentFile=/home/user/pencms/deploy/lan/pencms.env
+# systemd replaces PATH (does not prepend). Keep venv first, then system
+# dirs so publish can find bash/php/python3/ssh/git.
+Environment=PATH=/home/user/pencms/backend-python/.venv/bin:/usr/local/bin:/usr/bin:/bin
+# --reload: this LAN recipe is for a box that git-pulls / edits the tree.
+# StatReload drops in-memory MCP Streamable HTTP sessions (clients must
+# initialize again). Omit --reload on a hands-off VPS, or when agents
+# keep long /api/mcp sessions. REST /api/v1/mcp/* is unaffected.
+ExecStart=/home/user/pencms/backend-python/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8008 --reload
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

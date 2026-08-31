@@ -1,0 +1,73 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+{% set byline = author is iterable ? (author.name | default('')) : author %}
+
+<main id="main" class="night-chamber-page page-post">
+    <div class="night-beam" aria-hidden="true"></div>
+
+    <header class="night-post-head">
+        <div class="night-kicker-row">
+            <p class="night-cjk-lantern night-cjk-lantern--inline tc" lang="zh-Hant" aria-hidden="true">雨</p>
+            {% if trumpet is not empty %}
+                <p class="post-detail-trumpet night-trumpet">{{ trumpet }}</p>
+            {% elseif category is not empty %}
+                <p class="post-detail-trumpet night-trumpet">{{ category }}</p>
+            {% endif %}
+        </div>
+
+        <h1 class="post-detail-title night-tube-title">{{ hero_title | default(title | default('Untitled')) }}</h1>
+
+        <aside class="night-thermal" aria-label="Meta">
+            <p class="night-thermal-kicker">CHIT</p>
+            {% if byline is not empty %}<p><span>BY</span><span>{{ byline }}</span></p>{% endif %}
+            {% if dateline is not empty %}
+                <p><span>DATE</span><span>{{ dateline }}</span></p>
+            {% elseif date is not empty %}
+                <p><span>DATE</span><span>{{ date | date("Y.m.d") }}</span></p>
+            {% endif %}
+            {% if category is not empty %}<p><span>STALL</span><span>{{ category }}</span></p>{% endif %}
+        </aside>
+
+        {% if deck is not empty %}
+            <div class="post-detail-deck night-deck">{{ deck | raw }}</div>
+        {% endif %}
+
+        {% if has_hero %}
+            <figure class="night-shopwindow">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+            </figure>
+        {% endif %}
+    </header>
+
+    <div class="night-chamber">
+        {{ theme.partial('sidebar-secondary') | raw }}
+
+        <div class="night-prose">
+            {{ theme.partial('sidebar-toc') | raw }}
+
+            {% for post in posts %}
+                <article class="night-fragment" id="{{ post.id }}">
+                    {% if post.title is not empty and posts|length > 1 %}
+                        <h2 class="night-fragment-title">{{ post.title }}</h2>
+                    {% endif %}
+                    <div class="article-content traven-preview">
+                        {{ post.content_html | raw }}
+                    </div>
+                </article>
+            {% endfor %}
+
+            {{ theme.partial('faqs') | raw }}
+
+            <section class="night-discussion">
+                {{ theme.partial('comment-thread') | raw }}
+                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+            </section>
+        </div>
+    </div>
+
+    {{ theme.partial('sidebar-related') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

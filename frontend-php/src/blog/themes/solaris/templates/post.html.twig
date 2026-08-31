@@ -1,0 +1,59 @@
+{{ theme.partial('head') | raw }}
+
+{{ theme.partial('header') | raw }}
+
+<main class="post-wrapper">
+    {# ── Author line ── #}
+    {% if author is not empty %}
+    <div class="post-author-line">
+        <p class="post-author-name">{{ author }}</p>
+    </div>
+    {% endif %}
+
+    {# ── Date line ── #}
+    {% if date is not empty or dateline is not empty %}
+    <div class="post-date-line">
+        {% if dateline is not empty %}
+            <time datetime="{{ date }}">{{ dateline }}</time>
+        {% elseif date is not empty %}
+            <time datetime="{{ date }}">{{ date | date("j M Y") }}</time>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {# ── Title ── #}
+    <h1 class="post-title">{{ hero_title }}</h1>
+
+    {# ── Summary / Deck ── #}
+    {% if deck is not empty %}
+        <p class="post-summary">{{ deck | striptags }}</p>
+    {% endif %}
+
+    {# ── Hero Image ── #}
+    {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+        <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-hero-image">
+    {% endif %}
+
+    {# ── Article Content ── #}
+    <div class="article-content traven-preview">
+        {% for post in posts %}
+            <article id="{{ post.id }}">
+                {% if post.title is not empty and posts|length > 1 %}
+                    <h2>{{ post.title }}</h2>
+                {% endif %}
+                {{ post.content_html | raw }}
+            </article>
+        {% endfor %}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="solaris-discussion">
+        {{ theme.partial('comment-thread') | raw }}
+        {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+
+    {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

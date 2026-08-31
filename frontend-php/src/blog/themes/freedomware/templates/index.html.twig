@@ -1,0 +1,171 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set lead = dossiers|first %}
+{% set secondary = dossiers|slice(1, 4) %}
+{% set rest = dossiers|slice(5) %}
+
+{% set category_map = {} %}
+{% for d in dossiers %}
+    {% set cat = d.category|default(d.section|default('')) %}
+    {% if cat is not empty and attribute(category_map, cat) is not defined %}
+        {% set label = (d.term_labels[cat]|default(cat))|upper %}
+        {% set category_map = category_map|merge({ (cat): label }) %}
+    {% endif %}
+{% endfor %}
+
+<main class="main-container front-page" aria-label="{{ sitename | default('FREEDOMWARE') }}">
+
+    {% if lead is empty %}
+        <div class="post-card">
+            <p class="post-card-empty">NO POSTS FOUND</p>
+        </div>
+    {% else %}
+        <div class="front-grid">
+            <div class="front-main">
+                {# ── Lead story ── #}
+                {% set lead_url = theme.isStatic() ? (base_path ~ lead.slug ~ '/index.html') : ('post.php?slug=' ~ lead.slug ~ '&section=' ~ (lead.section | default('blog'))) %}
+                {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+                <article class="front-lead">
+                    {% if lead_has_hero %}
+                        <a href="{{ lead_url }}" class="front-lead-media" tabindex="-1" aria-hidden="true">
+                            <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="front-lead-image">
+                        </a>
+                    {% endif %}
+                    <div class="front-lead-body">
+                        <div class="post-detail-eyebrow">
+                            <span class="post-card-badge">{{ lead.category | default(lead.section | default('POST')) | upper }}</span>
+                            {% if lead.trumpet is not empty %}
+                                <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+                            {% endif %}
+                            <span class="post-card-meta">{{ lead.date | default('') | date('Y-m-d') }}</span>
+                        </div>
+                        <h2 class="front-lead-title">
+                            <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                        </h2>
+                        {% if lead.deck is not empty %}
+                            <p class="front-lead-deck">{{ lead.deck | striptags }}</p>
+                        {% endif %}
+                        <div class="post-card-footer">
+                            <a href="{{ lead_url }}" class="post-card-link">READ &rarr;</a>
+                        </div>
+                    </div>
+                </article>
+
+                {# ── Secondary cards ── #}
+                {% if secondary is not empty %}
+                    <div class="front-secondary">
+                        {% for dossier in secondary %}
+                            {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                            {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                            <article class="front-card">
+                                {% if has_hero %}
+                                    <a href="{{ url }}" class="front-card-media" tabindex="-1" aria-hidden="true">
+                                        <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="front-card-image">
+                                    </a>
+                                {% endif %}
+                                <div class="front-card-body">
+                                    <div class="post-card-header">
+                                        <span class="post-card-badge">{{ dossier.category | default(dossier.section | default('POST')) | upper }}</span>
+                                        {% if dossier.trumpet is not empty %}
+                                            <span class="post-detail-trumpet">{{ dossier.trumpet | striptags }}</span>
+                                        {% endif %}
+                                        <span class="post-card-meta">{{ dossier.date | default('') | date('Y-m-d') }}</span>
+                                    </div>
+                                    <h3 class="front-card-title">
+                                        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                    </h3>
+                                    {% if dossier.deck is not empty %}
+                                        <p class="front-card-deck">{{ dossier.deck | striptags }}</p>
+                                    {% endif %}
+                                    <div class="post-card-footer">
+                                        <a href="{{ url }}" class="post-card-link">READ &rarr;</a>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {# ── Rail ── #}
+            {% set secondary_items = menu('secondary') %}
+            {% if category_map is not empty or rest is not empty or secondary_items is not empty %}
+            <aside class="front-rail" aria-label="Sections and archive">
+                {% if category_map is not empty %}
+                    <nav class="front-rail-block" aria-label="Sections">
+                        <h2 class="section-heading">Sections</h2>
+                        <ul class="front-rail-list">
+                            {% for slug, label in category_map %}
+                                {% set cat_url = theme.isStatic()
+                                    ? (base_path ~ 'category/' ~ slug ~ '/index.html')
+                                    : ('category.php?category=' ~ slug|url_encode) %}
+                                <li>
+                                    <a href="{{ cat_url }}" class="front-rail-link">
+                                        <span class="post-card-badge post-card-badge--alt">{{ label }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+
+                {% if rest is not empty %}
+                    <nav class="front-rail-block" aria-label="More from the archive">
+                        <h2 class="section-heading">Archive</h2>
+                        <ul class="front-rail-list">
+                            {% for dossier in rest|slice(0, 8) %}
+                                {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                                <li>
+                                    <a href="{{ url }}" class="front-rail-story">
+                                        <span class="front-rail-story-meta">{{ dossier.date | default('') | date('Y-m-d') }}</span>
+                                        <span class="front-rail-story-title">{{ dossier.hero_title | default(dossier.title) }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+
+                {% if secondary_items is not empty %}
+                <div class="front-rail-secondary">
+                    {{ theme.partial('sidebar-secondary') | raw }}
+                </div>
+                {% endif %}
+            </aside>
+            {% endif %}
+        </div>
+
+        {# ── Below the fold: Index Hero Title as newspaper section / department ── #}
+        {% set edition_title = '' %}
+        {% if hero_title is not empty
+            and hero_title != sitename|default('')
+            and hero_title != tagline|default('') %}
+            {% set edition_title = hero_title %}
+        {% endif %}
+
+        {% if rest is not empty %}
+            <section class="front-more" aria-label="{{ edition_title|default('More stories') }}">
+                <h2 class="section-heading">{{ edition_title|default('More stories') }}</h2>
+                <ul class="front-more-list">
+                    {% for dossier in rest %}
+                        {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                        <li class="front-more-item">
+                            <a href="{{ url }}" class="front-more-link">
+                                <span class="post-card-badge">{{ dossier.category | default(dossier.section | default('POST')) | upper }}</span>
+                                <span class="front-more-title">{{ dossier.hero_title | default(dossier.title) }}</span>
+                                <span class="post-card-meta">{{ dossier.date | default('') | date('Y-m-d') }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% elseif edition_title is not empty %}
+            <section class="front-edition" aria-label="Edition">
+                <h2 class="section-heading">{{ edition_title }}</h2>
+            </section>
+        {% endif %}
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

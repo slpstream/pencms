@@ -1,0 +1,1348 @@
+/* Global dual-duty skin — .cm-editor + .traven-preview
+   Chrome knobs on :root; --traven-* aliases follow. Skin must work alone. */
+
+:root {
+  /* Chrome & Typography Knobs */
+  --font-display: 'Epunda Slab', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hubot Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: #f6f5f4;
+  --color-surface: #FFFFFF;
+  --color-text: #1A1A1A;
+  --color-muted: #6B6560;
+  --color-accent: #C44B3F;
+  --color-border: #D1C8BC;
+  --color-panel: #F2EDE4;
+
+  /* Traven Editor Core Aliases */
+  --traven-font-display: var(--font-display);
+  --traven-font-body: var(--font-body);
+  --traven-font-mono: var(--font-mono);
+  --traven-bg: var(--color-bg);
+  --traven-text: var(--color-text);
+  --traven-muted: var(--color-muted);
+  --traven-accent: var(--color-accent);
+  --traven-border: var(--color-border);
+  --traven-border-light: var(--color-border);
+  --traven-caret: var(--color-accent);
+  --traven-h-color: var(--color-text);
+  --traven-bold-color: var(--color-text);
+  --traven-italic-color: inherit;
+  --traven-panel: var(--color-surface);
+
+  /* Traven Interactive & Widget Aliases */
+  --traven-active-line: color-mix(in srgb, var(--color-surface) 40%, var(--color-bg));
+  --traven-selection: color-mix(in srgb, var(--color-accent) 25%, var(--color-bg));
+  --traven-selection-focused: color-mix(in srgb, var(--color-accent) 35%, var(--color-bg));
+  --traven-highlight-bg: color-mix(in srgb, var(--color-accent) 25%, transparent);
+  --traven-code-bg: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+  --traven-code-text: var(--color-accent);
+  --traven-code-border: var(--color-border);
+  --traven-blockquote-border: var(--color-accent);
+  --traven-blockquote-text: var(--color-text);
+  --traven-widget-bg: var(--color-surface);
+  --traven-widget-border: var(--color-border);
+  --traven-widget-shadow: 0 12px 36px color-mix(in srgb, black 12%, transparent);
+  --traven-widget-hover-shadow: 0 16px 44px color-mix(in srgb, black 20%, transparent);
+
+  /* GitHub-style alert hues (warm, parchment-safe — not icy GitHub defaults) */
+  --alert-note: #3B6EA8;
+  --alert-tip: #3D7A5A;
+  --alert-important: #7A5A8C;
+  --alert-warning: #C4842A;
+  --alert-caution: var(--color-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #161616;
+    --color-surface: #1E1E1E;
+    --color-text: #E8E0D4;
+    --color-muted: #9B9590;
+    --color-accent: #E06B5F;
+    --color-border: #3A3530;
+    --color-panel: #242424;
+  }
+}
+
+.cm-wysiwym-dark,
+.cm-wysiwym-dark:root,
+[data-theme="dark"],
+html[data-theme="dark"],
+html.cm-wysiwym-dark {
+  --color-bg: #161616;
+  --color-surface: #1E1E1E;
+  --color-text: #E8E0D4;
+  --color-muted: #9B9590;
+  --color-accent: #E06B5F;
+  --color-border: #3A3530;
+  --color-panel: #242424;
+}
+
+/* ==========================================================================
+   Admin Hero-Title Contract
+   ========================================================================== */
+
+.post-detail-trumpet {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--color-accent) !important;
+}
+
+.post-detail-title {
+  font-family: var(--traven-font-display) !important;
+  font-weight: 400 !important;
+  color: var(--color-text) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+}
+
+.post-detail-deck {
+  font-family: var(--traven-font-body) !important;
+  font-size: clamp(1.25rem, 2vw, 1.45rem) !important;
+  line-height: 1.6 !important;
+  color: var(--color-muted) !important;
+}
+
+.hero-title-block.traven-preview {
+  color: var(--traven-text) !important;
+  background-color: var(--traven-bg) !important;
+}
+
+.hero-title-block.traven-preview .traven-preview-trumpet {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--color-accent) !important;
+  font-weight: 600 !important;
+}
+
+.hero-title-block.traven-preview h1.post-detail-title,
+.hero-title-block.traven-preview h1.post-detail-title textarea {
+  font-family: var(--traven-font-display) !important;
+  font-size: clamp(2.8rem, 6vw, 4.5rem) !important;
+  font-weight: 400 !important;
+  color: var(--color-text) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.08 !important;
+}
+
+.hero-title-block.traven-preview .post-detail-deck,
+.hero-title-block.traven-preview .traven-preview-deck {
+  font-family: var(--traven-font-body) !important;
+  font-size: clamp(1.25rem, 2vw, 1.45rem) !important;
+  line-height: 1.6 !important;
+  color: var(--color-muted) !important;
+}
+
+/* ==========================================================================
+   Editor Canvas & Preview Base (.cm-editor, .traven-preview)
+   ========================================================================== */
+
+.cm-editor,
+.traven-preview {
+  font-family: var(--traven-font-body) !important;
+  font-size: 16.5px !important;
+  line-height: 1.7 !important;
+  color: var(--traven-text) !important;
+  background-color: var(--traven-bg) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.article-content.traven-preview,
+.traven-preview .article-content {
+  background-color: transparent !important;
+}
+
+.cm-editor:focus,
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-scroller {
+  font-family: inherit !important;
+  line-height: 1.7 !important;
+  padding: 12px 0 !important;
+}
+
+.cm-content {
+  padding: 0 24px !important;
+}
+
+.cm-gutters {
+  background-color: transparent !important;
+  border-right: none !important;
+  color: var(--color-muted) !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.8em !important;
+  opacity: 0.55;
+}
+
+.cm-gutterElement {
+  padding: 0 16px 0 8px !important;
+}
+
+.cm-editor .cm-activeLine {
+  background-color: var(--traven-active-line) !important;
+}
+
+.cm-editor .cm-activeLineGutter {
+  background-color: transparent !important;
+  color: var(--color-accent) !important;
+  font-weight: 600;
+  opacity: 1;
+}
+
+.cm-selectionBackground,
+.cm-native-selection,
+.cm-editor .cm-selectionBackground {
+  background-color: var(--traven-selection) !important;
+}
+
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: var(--traven-selection-focused) !important;
+}
+
+.cm-editor .cm-cursor {
+  border-left-color: var(--color-accent) !important;
+}
+
+.cm-editor .cm-fat-cursor {
+  background-color: var(--color-accent) !important;
+  opacity: 0.6 !important;
+}
+
+.cm-token-hidden {
+  font-size: 0 !important;
+  opacity: 0 !important;
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+}
+
+/* Inline marks in CodeMirror */
+.cm-wysiwym-bold {
+  font-weight: 700 !important;
+  color: inherit !important;
+}
+
+.cm-wysiwym-italic {
+  font-style: italic !important;
+  color: inherit !important;
+}
+
+.cm-wysiwym-strikethrough {
+  text-decoration: line-through !important;
+  color: var(--traven-muted) !important;
+}
+
+.cm-wysiwym-highlight {
+  background-color: var(--traven-highlight-bg) !important;
+  color: var(--traven-text) !important;
+  padding: 1px 0.2em !important;
+  border-radius: 2px !important;
+}
+
+.cm-wysiwym-inline-code {
+  font-family: var(--traven-font-mono) !important;
+  background-color: var(--traven-code-bg) !important;
+  color: var(--traven-code-text) !important;
+  padding: 0.1em 0.35em !important;
+  font-size: 0.88em !important;
+  border: 1px solid var(--traven-code-border) !important;
+  border-radius: 3px !important;
+}
+
+.cm-wysiwym-link-anchor {
+  color: var(--color-accent) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+.cm-wysiwym-link-anchor * {
+  color: inherit !important;
+}
+
+.cm-editor a {
+  color: var(--color-accent) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+.cm-editor a:hover {
+  text-decoration-thickness: 2px !important;
+}
+
+.cm-wysiwym-bullet {
+  color: var(--color-accent) !important;
+  font-weight: bold;
+  margin-right: 0.35em;
+  display: inline-block;
+}
+
+/* Headings in CodeMirror */
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  font-family: var(--traven-font-display) !important;
+  color: var(--traven-h-color) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  margin: 0 !important;
+}
+
+.cm-editor .cmt-heading,
+.cm-editor .tok-heading,
+.cm-editor [class^="cm-wysiwym-h"] span {
+  text-decoration: none !important;
+}
+
+.cm-editor .cm-wysiwym-h1 {
+  font-size: 2.2em !important;
+  line-height: 1.15 !important;
+  padding-top: 28px !important;
+  padding-bottom: 12px !important;
+}
+
+.cm-editor .cm-wysiwym-h2 {
+  font-size: 1.7em !important;
+  line-height: 1.25 !important;
+  padding-top: 26px !important;
+  padding-bottom: 10px !important;
+}
+
+.cm-editor .cm-wysiwym-h3 {
+  font-size: 1.35em !important;
+  line-height: 1.35 !important;
+  padding-top: 22px !important;
+  padding-bottom: 8px !important;
+}
+
+.cm-editor .cm-wysiwym-h4 {
+  font-size: 1.15em !important;
+  line-height: 1.4 !important;
+  padding-top: 18px !important;
+  padding-bottom: 6px !important;
+}
+
+.cm-editor .cm-wysiwym-h5 {
+  font-size: 1em !important;
+  line-height: 1.45 !important;
+  padding-top: 16px !important;
+  padding-bottom: 6px !important;
+}
+
+.cm-editor .cm-wysiwym-h6 {
+  font-size: 0.9em !important;
+  line-height: 1.5 !important;
+  padding-top: 16px !important;
+  padding-bottom: 6px !important;
+  color: var(--color-muted) !important;
+}
+
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h1),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h2),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h3),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h4),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h5),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h6),
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h4 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h5 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h6 + .cm-line:has(br:only-child) {
+  height: 0px !important;
+  min-height: 0px !important;
+  padding: 0 !important;
+}
+
+/* ==========================================================================
+   Native Blockquotes in CodeMirror
+   ========================================================================== */
+
+.cm-editor .cm-wysiwym-blockquote {
+  margin: 0 !important;
+  padding-left: 24px !important;
+  padding-right: 16px !important;
+  padding-top: 10px !important;
+  padding-bottom: 2px !important;
+  border-left: 3px solid var(--color-accent) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  font-family: var(--traven-font-display) !important;
+  font-style: italic !important;
+  font-size: 1.15em !important;
+  line-height: 1.6 !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote,
+.cm-editor .cm-wysiwym-blockquote * {
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote {
+  padding-top: 2px !important;
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) {
+  padding-bottom: 14px !important;
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)):not(.cm-wysiwym-blockquote + .cm-wysiwym-blockquote) {
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote strong,
+.cm-editor .cm-wysiwym-blockquote .cm-wysiwym-bold {
+  font-weight: 700 !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote cite,
+.cm-editor .cm-wysiwym-blockquote .attribution {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--traven-font-mono) !important;
+  font-style: normal !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  text-align: right !important;
+  color: color-mix(in srgb, var(--color-muted) 80%, transparent) !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-blockquote) {
+  height: 0.6em !important;
+  min-height: 0.6em !important;
+}
+
+/* Frontmatter */
+.cm-wysiwym-frontmatter {
+  background-color: var(--color-panel) !important;
+  border-left: 4px solid var(--color-accent) !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.85em !important;
+  padding: 6px 0 6px 16px !important;
+  margin: 0 !important;
+  color: var(--color-muted) !important;
+}
+
+/* Syntax Highlighting Tokens in CodeMirror */
+.cm-editor .tok-markup,
+.cm-editor .cmt-markup,
+.cm-editor .tok-punctuation,
+.cm-editor .cmt-punctuation,
+.cm-editor .tok-meta,
+.cm-editor .cmt-meta {
+  color: color-mix(in srgb, var(--color-muted) 60%, transparent) !important;
+}
+.cm-editor .tok-list,
+.cm-editor .cmt-list {
+  color: var(--color-accent) !important;
+}
+.cm-editor .tok-comment,
+.cm-editor .cmt-comment {
+  color: var(--color-muted) !important;
+  font-style: italic !important;
+}
+.cm-editor .tok-keyword,
+.cm-editor .cmt-keyword {
+  color: var(--color-accent) !important;
+}
+.cm-editor .tok-string,
+.cm-editor .cmt-string {
+  color: var(--color-text) !important;
+}
+.cm-editor .tok-number,
+.cm-editor .cmt-number,
+.cm-editor .tok-boolean,
+.cm-editor .cmt-boolean {
+  color: var(--color-accent) !important;
+}
+.cm-editor .tok-variableName,
+.cm-editor .cmt-variableName {
+  color: var(--color-text) !important;
+}
+.cm-editor .tok-propertyName,
+.cm-editor .cmt-propertyName {
+  color: var(--color-accent) !important;
+}
+.cm-editor .tok-operator,
+.cm-editor .cmt-operator {
+  color: var(--color-text) !important;
+}
+.cm-editor .tok-url,
+.cm-editor .cmt-url,
+.cm-editor .tok-link,
+.cm-editor .cmt-link {
+  color: var(--color-accent) !important;
+}
+
+/* Code Blocks in CodeMirror */
+.cm-editor .cm-wysiwym-codeblock-line {
+  background-color: var(--color-panel) !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.88em !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-first {
+  padding-top: 14px !important;
+  border-top: 1px solid var(--color-border) !important;
+  border-left: 1px solid var(--color-border) !important;
+  border-right: 1px solid var(--color-border) !important;
+  border-radius: 4px 4px 0 0 !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line-last {
+  padding-bottom: 14px !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  border-left: 1px solid var(--color-border) !important;
+  border-right: 1px solid var(--color-border) !important;
+  border-radius: 0 0 4px 4px !important;
+}
+
+.cm-editor .cm-wysiwym-codeblock-line:not(.cm-wysiwym-codeblock-line-first):not(.cm-wysiwym-codeblock-line-last) {
+  border-left: 1px solid var(--color-border) !important;
+  border-right: 1px solid var(--color-border) !important;
+}
+
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child) {
+  height: 0.6em !important;
+  min-height: 0.6em !important;
+}
+
+/* ==========================================================================
+   CM6 block widgets — never vertical margin (offsetHeight ignores it)
+   ========================================================================== */
+
+.cm-editor .cm-wysiwym-hr-widget {
+  border: 0;
+  border-top: 1px solid var(--color-border) !important;
+  margin: 0 !important;
+  padding: 16px 0 !important;
+  display: block;
+  width: 100%;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  background-color: transparent !important;
+  border: none !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-table-row {
+  margin: 0 !important;
+  background-color: var(--color-panel) !important;
+  font-size: 0.88em !important;
+}
+
+.cm-editor .cm-wysiwym-table-widget {
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-table-widget table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.cm-editor .cm-wysiwym-table-widget th,
+.cm-editor .cm-wysiwym-table-widget td {
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  text-align: left;
+  height: 38px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-table-widget th {
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.cm-editor .cm-wysiwym-image-widget-container,
+.cm-editor .cm-wysiwym-image-shortcode-container,
+.cm-editor .cm-wysiwym-video-shortcode-container,
+.cm-editor .cm-wysiwym-audio-shortcode-container,
+.cm-editor .cm-wysiwym-figure-shortcode {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box;
+  float: none !important;
+  border: 1px solid var(--color-border) !important;
+  background-color: var(--color-surface) !important;
+  border-radius: 2px !important;
+  overflow: hidden;
+}
+
+.cm-editor .cm-wysiwym-image-widget-container.align-left,
+.cm-editor .cm-wysiwym-image-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-figure-shortcode.align-left {
+  margin: 0 auto 0 0 !important;
+  float: none !important;
+}
+
+.cm-editor .cm-wysiwym-image-widget-container.align-right,
+.cm-editor .cm-wysiwym-image-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-figure-shortcode.align-right {
+  margin: 0 0 0 auto !important;
+  float: none !important;
+}
+
+.cm-editor .cm-wysiwym-image-widget-container.align-center,
+.cm-editor .cm-wysiwym-image-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-figure-shortcode.align-center {
+  margin: 0 auto !important;
+  float: none !important;
+}
+
+.cm-editor .cm-wysiwym-image-widget-container.align-fullbleed,
+.cm-editor .cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-figure-shortcode.align-fullbleed {
+  width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  border-radius: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.cm-editor .cm-wysiwym-block-math-widget .katex-display,
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode {
+  margin: 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  box-sizing: border-box;
+  overflow: hidden;
+  float: none !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode blockquote,
+.cm-editor .cm-wysiwym-component-shortcode p,
+.cm-editor .cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode p + p,
+.cm-editor .cm-wysiwym-figure-shortcode p + p {
+  margin-top: 0.8em !important;
+}
+
+.cm-editor .cm-wysiwym-alert,
+.cm-editor .cm-wysiwym-alert * {
+  font-style: normal !important;
+  font-family: var(--traven-font-body) !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-alert {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  border-left: 4px solid var(--color-accent) !important;
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-alert-note {
+  border-left-color: var(--alert-note) !important;
+  background-color: color-mix(in srgb, var(--alert-note) 10%, var(--color-surface)) !important;
+}
+.cm-editor .cm-wysiwym-alert-tip {
+  border-left-color: var(--alert-tip) !important;
+  background-color: color-mix(in srgb, var(--alert-tip) 10%, var(--color-surface)) !important;
+}
+.cm-editor .cm-wysiwym-alert-important {
+  border-left-color: var(--alert-important) !important;
+  background-color: color-mix(in srgb, var(--alert-important) 10%, var(--color-surface)) !important;
+}
+.cm-editor .cm-wysiwym-alert-warning {
+  border-left-color: var(--alert-warning) !important;
+  background-color: color-mix(in srgb, var(--alert-warning) 10%, var(--color-surface)) !important;
+}
+.cm-editor .cm-wysiwym-alert-caution {
+  border-left-color: var(--alert-caution) !important;
+  background-color: color-mix(in srgb, var(--alert-caution) 10%, var(--color-surface)) !important;
+}
+
+.cm-editor .cm-wysiwym-alert:not(.cm-line + .cm-wysiwym-alert),
+.cm-editor .cm-line:not(.cm-wysiwym-alert) + .cm-wysiwym-alert {
+  padding-top: 16px !important;
+}
+
+.cm-editor .cm-wysiwym-alert:not(:has(+ .cm-wysiwym-alert)) {
+  padding-bottom: 16px !important;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode),
+.cm-editor .cm-wysiwym-hr-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-hr-widget) {
+  height: 0.6em !important;
+  min-height: 0.6em !important;
+}
+
+/* ==========================================================================
+   Pullquote Widget (.cm-editor & .traven-preview)
+   ========================================================================== */
+
+/* Pullquote in CodeMirror */
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote {
+  margin: 0 !important;
+  padding: 2rem 1.75rem !important;
+  box-sizing: border-box !important;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-top: 3px solid var(--color-accent) !important;
+  box-shadow: var(--traven-widget-shadow) !important;
+  text-align: left !important;
+  border-radius: 2px;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote * {
+  font-family: var(--traven-font-display) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote p,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote blockquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .component-body p {
+  font-size: clamp(20px, 2.5vw, 26px) !important;
+  line-height: 1.4 !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  color: var(--color-text) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote cite,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .attribution,
+.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .author {
+  display: block !important;
+  margin: 0 !important;
+  padding-top: 1.25rem !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.75rem !important;
+  font-style: normal !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--color-accent) !important;
+}
+
+/* Pullquote in Published Preview */
+.article-content.traven-preview .traven-component-pullquote, .traven-preview .article-content .traven-component-pullquote{
+  margin: 3rem 0;
+  padding: 2.25rem 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  box-shadow: var(--traven-widget-shadow);
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .traven-component-pullquote p, .traven-preview .article-content .traven-component-pullquote p{
+  font-family: var(--traven-font-display);
+  font-size: clamp(20px, 2.5vw, 26px);
+  line-height: 1.4;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.article-content.traven-preview .traven-component-pullquote cite, .traven-preview .article-content .traven-component-pullquote cite,
+.article-content.traven-preview .traven-component-pullquote .attribution, .traven-preview .article-content .traven-component-pullquote .attribution,
+.article-content.traven-preview .traven-component-pullquote .author, .traven-preview .article-content .traven-component-pullquote .author{
+  display: block;
+  margin-top: 1.25rem;
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Blockquote Shortcode Widget ([component name="blockquote"])
+   ========================================================================== */
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote{
+  margin: 0 !important;
+  padding: 0 0 1.5em 24px !important;
+  border-left: 3px solid var(--color-accent) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+  overflow: hidden;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote,
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote *{
+  font-family: var(--traven-font-display) !important;
+  color: var(--color-text) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote p{
+  font-size: clamp(19px, 2.4vw, 24px) !important;
+  font-style: italic !important;
+  line-height: 1.55 !important;
+  color: var(--color-text) !important;
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote .attribution,
+.cm-editor .cm-wysiwym-component-shortcode.component-blockquote cite{
+  display: block !important;
+  text-align: right !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 10.5px !important;
+  font-style: normal !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: color-mix(in srgb, var(--color-muted) 80%, transparent) !important;
+}
+
+/* ==========================================================================
+   Published Prose Styling (.traven-preview)
+   ========================================================================== */
+
+.article-content.traven-preview p, .traven-preview .article-content p{
+  margin-top: 0;
+  margin-bottom: 1.65rem;
+}
+
+.article-content.traven-preview h1, .traven-preview .article-content h1,
+.article-content.traven-preview h2, .traven-preview .article-content h2,
+.article-content.traven-preview h3, .traven-preview .article-content h3,
+.article-content.traven-preview h4, .traven-preview .article-content h4,
+.article-content.traven-preview h5, .traven-preview .article-content h5,
+.article-content.traven-preview h6, .traven-preview .article-content h6{
+  font-family: var(--traven-font-display);
+  color: var(--traven-h-color);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+}
+
+.article-content.traven-preview h1, .traven-preview .article-content h1{ font-size: 2.4rem; line-height: 1.15; }
+.article-content.traven-preview h2, .traven-preview .article-content h2{ font-size: 1.85rem; line-height: 1.25; }
+.article-content.traven-preview h3, .traven-preview .article-content h3{ font-size: 1.45rem; line-height: 1.35; }
+.article-content.traven-preview h4, .traven-preview .article-content h4{ font-size: 1.2rem; }
+.article-content.traven-preview h5, .traven-preview .article-content h5{ font-size: 1.05rem; }
+.article-content.traven-preview h6, .traven-preview .article-content h6{ font-size: 0.95rem; color: var(--color-muted); }
+
+.article-content.traven-preview a, .traven-preview .article-content a{
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+
+.article-content.traven-preview a:hover, .traven-preview .article-content a:hover{
+  opacity: 0.85;
+}
+
+.article-content.traven-preview strong, .traven-preview .article-content strong{
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.article-content.traven-preview em, .traven-preview .article-content em{
+  font-style: italic;
+}
+
+.article-content.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert), .traven-preview .article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert){
+  margin: 2.25rem 0;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  border-left: 3px solid var(--color-accent);
+  font-family: var(--traven-font-display);
+  font-size: 1.25rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--color-text);
+}
+
+.article-content.traven-preview blockquote p:last-child, .traven-preview .article-content blockquote p:last-child{
+  margin-bottom: 0;
+}
+
+.article-content.traven-preview .traven-component-blockquote .attribution, .traven-preview .article-content .traven-component-blockquote .attribution,
+.article-content.traven-preview .traven-component-blockquote cite, .traven-preview .article-content .traven-component-blockquote cite{
+  display: block;
+  text-align: right;
+  font-size: 85%;
+}
+
+.article-content.traven-preview hr, .traven-preview .article-content hr{
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 3.5rem auto;
+  width: 100%;
+}
+
+.article-content.traven-preview ul, .traven-preview .article-content ul,
+.article-content.traven-preview ol, .traven-preview .article-content ol{
+  margin: 0 0 1.65rem 1.5rem;
+  padding: 0;
+}
+
+.article-content.traven-preview li, .traven-preview .article-content li{
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.article-content.traven-preview li::marker, .traven-preview .article-content li::marker{
+  color: var(--color-accent);
+}
+
+.article-content.traven-preview code, .traven-preview .article-content code{
+  font-family: var(--traven-font-mono);
+  font-size: 0.88em;
+  background: var(--traven-code-bg);
+  color: var(--traven-code-text);
+  padding: 0.15em 0.4em;
+  border: 1px solid var(--traven-code-border);
+  border-radius: 3px;
+}
+
+.article-content.traven-preview pre, .traven-preview .article-content pre{
+  margin: 2.25rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.article-content.traven-preview pre code, .traven-preview .article-content pre code{
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+/* Tables */
+.article-content.traven-preview table, .traven-preview .article-content table{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2.5rem 0;
+  font-size: 0.95rem;
+}
+
+.article-content.traven-preview th, .traven-preview .article-content th,
+.article-content.traven-preview td, .traven-preview .article-content td{
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.article-content.traven-preview th, .traven-preview .article-content th{
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 600;
+}
+
+.article-content.traven-preview tr:hover td, .traven-preview .article-content tr:hover td{
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+}
+
+/* ==========================================================================
+   Alerts and Shortcode Components
+   ========================================================================== */
+
+.article-content.traven-preview .traven-alert-info, .traven-preview .article-content .traven-alert-info,
+.article-content.traven-preview .traven-component-info, .traven-preview .article-content .traven-component-info{
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: color-mix(in srgb, var(--alert-note) 10%, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: var(--alert-note);
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .traven-alert-warning, .traven-preview .article-content .traven-alert-warning,
+.article-content.traven-preview .traven-component-warning, .traven-preview .article-content .traven-component-warning{
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: color-mix(in srgb, var(--alert-warning) 10%, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: var(--alert-warning);
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .traven-alert-danger, .traven-preview .article-content .traven-alert-danger,
+.article-content.traven-preview .traven-component-danger, .traven-preview .article-content .traven-component-danger{
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: color-mix(in srgb, var(--alert-caution) 10%, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: var(--alert-caution);
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .traven-alert-success, .traven-preview .article-content .traven-alert-success,
+.article-content.traven-preview .traven-component-success, .traven-preview .article-content .traven-component-success{
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: color-mix(in srgb, var(--alert-tip) 10%, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: var(--alert-tip);
+  border-radius: 2px;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-info,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger,
+.cm-editor .cm-wysiwym-component-shortcode.component-success {
+  margin: 0 !important;
+  padding: 1.25rem 1.5rem !important;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-left-width: 4px !important;
+  border-radius: 2px;
+  box-sizing: border-box !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-info {
+  border-left-color: var(--alert-note) !important;
+  background: color-mix(in srgb, var(--alert-note) 10%, var(--color-surface)) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-warning {
+  border-left-color: var(--alert-warning) !important;
+  background: color-mix(in srgb, var(--alert-warning) 10%, var(--color-surface)) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-danger {
+  border-left-color: var(--alert-caution) !important;
+  background: color-mix(in srgb, var(--alert-caution) 10%, var(--color-surface)) !important;
+}
+
+.cm-editor .cm-wysiwym-component-shortcode.component-success {
+  border-left-color: var(--alert-tip) !important;
+  background: color-mix(in srgb, var(--alert-tip) 10%, var(--color-surface)) !important;
+}
+
+.article-content.traven-preview .markdown-alert, .traven-preview .article-content .markdown-alert,
+.article-content.traven-preview .traven-alert, .traven-preview .article-content .traven-alert{
+  margin: 1.5rem 0 !important;
+  padding: 16px 24px !important;
+  font-family: var(--traven-font-body) !important;
+  font-style: normal !important;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: var(--color-accent);
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .markdown-alert-title, .traven-preview .article-content .markdown-alert-title,
+.article-content.traven-preview .traven-alert-title, .traven-preview .article-content .traven-alert-title{
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.article-content.traven-preview .markdown-alert-note, .traven-preview .article-content .markdown-alert-note,
+.article-content.traven-preview .traven-alert-note, .traven-preview .article-content .traven-alert-note{
+  border-left-color: var(--alert-note);
+  background: color-mix(in srgb, var(--alert-note) 10%, var(--color-surface));
+}
+.article-content.traven-preview .markdown-alert-note .markdown-alert-title, .traven-preview .article-content .markdown-alert-note .markdown-alert-title,
+.article-content.traven-preview .traven-alert-note .traven-alert-title, .traven-preview .article-content .traven-alert-note .traven-alert-title,
+.article-content.traven-preview .traven-alert-note .markdown-alert-title, .traven-preview .article-content .traven-alert-note .markdown-alert-title{
+  color: var(--alert-note);
+}
+
+.article-content.traven-preview .markdown-alert-tip, .traven-preview .article-content .markdown-alert-tip,
+.article-content.traven-preview .traven-alert-tip, .traven-preview .article-content .traven-alert-tip{
+  border-left-color: var(--alert-tip);
+  background: color-mix(in srgb, var(--alert-tip) 10%, var(--color-surface));
+}
+.article-content.traven-preview .markdown-alert-tip .markdown-alert-title, .traven-preview .article-content .markdown-alert-tip .markdown-alert-title,
+.article-content.traven-preview .traven-alert-tip .traven-alert-title, .traven-preview .article-content .traven-alert-tip .traven-alert-title,
+.article-content.traven-preview .traven-alert-tip .markdown-alert-title, .traven-preview .article-content .traven-alert-tip .markdown-alert-title{
+  color: var(--alert-tip);
+}
+
+.article-content.traven-preview .markdown-alert-important, .traven-preview .article-content .markdown-alert-important,
+.article-content.traven-preview .traven-alert-important, .traven-preview .article-content .traven-alert-important{
+  border-left-color: var(--alert-important);
+  background: color-mix(in srgb, var(--alert-important) 10%, var(--color-surface));
+}
+.article-content.traven-preview .markdown-alert-important .markdown-alert-title, .traven-preview .article-content .markdown-alert-important .markdown-alert-title,
+.article-content.traven-preview .traven-alert-important .traven-alert-title, .traven-preview .article-content .traven-alert-important .traven-alert-title,
+.article-content.traven-preview .traven-alert-important .markdown-alert-title, .traven-preview .article-content .traven-alert-important .markdown-alert-title{
+  color: var(--alert-important);
+}
+
+.article-content.traven-preview .markdown-alert-warning, .traven-preview .article-content .markdown-alert-warning,
+.article-content.traven-preview .traven-alert-warning, .traven-preview .article-content .traven-alert-warning{
+  border-left-color: var(--alert-warning);
+  background: color-mix(in srgb, var(--alert-warning) 10%, var(--color-surface));
+}
+.article-content.traven-preview .markdown-alert-warning .markdown-alert-title, .traven-preview .article-content .markdown-alert-warning .markdown-alert-title,
+.article-content.traven-preview .traven-alert-warning .traven-alert-title, .traven-preview .article-content .traven-alert-warning .traven-alert-title,
+.article-content.traven-preview .traven-alert-warning .markdown-alert-title, .traven-preview .article-content .traven-alert-warning .markdown-alert-title{
+  color: var(--alert-warning);
+}
+
+.article-content.traven-preview .markdown-alert-caution, .traven-preview .article-content .markdown-alert-caution,
+.article-content.traven-preview .traven-alert-caution, .traven-preview .article-content .traven-alert-caution{
+  border-left-color: var(--alert-caution);
+  background: color-mix(in srgb, var(--alert-caution) 10%, var(--color-surface));
+}
+.article-content.traven-preview .markdown-alert-caution .markdown-alert-title, .traven-preview .article-content .markdown-alert-caution .markdown-alert-title,
+.article-content.traven-preview .traven-alert-caution .traven-alert-title, .traven-preview .article-content .traven-alert-caution .traven-alert-title,
+.article-content.traven-preview .traven-alert-caution .markdown-alert-title, .traven-preview .article-content .traven-alert-caution .markdown-alert-title{
+  color: var(--alert-caution);
+}
+
+.article-content.traven-preview .traven-component-info .component-title, .traven-preview .article-content .traven-component-info .component-title,
+.article-content.traven-preview .traven-component-warning .component-title, .traven-preview .article-content .traven-component-warning .component-title,
+.article-content.traven-preview .traven-component-danger .component-title, .traven-preview .article-content .traven-component-danger .component-title,
+.article-content.traven-preview .traven-component-success .component-title, .traven-preview .article-content .traven-component-success .component-title,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-title,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-title,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-title,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-title {
+  font-family: var(--traven-font-body);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.article-content.traven-preview .traven-component-info .component-header, .traven-preview .article-content .traven-component-info .component-header,
+.article-content.traven-preview .traven-component-warning .component-header, .traven-preview .article-content .traven-component-warning .component-header,
+.article-content.traven-preview .traven-component-danger .component-header, .traven-preview .article-content .traven-component-danger .component-header,
+.article-content.traven-preview .traven-component-success .component-header, .traven-preview .article-content .traven-component-success .component-header,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-header,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-header,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-header,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-header {
+  padding-bottom: 0.75rem;
+}
+
+details.traven-component:not([open]) > summary.component-header,
+.cm-editor details.cm-wysiwym-component-shortcode:not([open]) .component-header{
+  padding-bottom: 0;
+}
+
+.article-content.traven-preview .traven-component-info .component-body, .traven-preview .article-content .traven-component-info .component-body,
+.article-content.traven-preview .traven-component-warning .component-body, .traven-preview .article-content .traven-component-warning .component-body,
+.article-content.traven-preview .traven-component-danger .component-body, .traven-preview .article-content .traven-component-danger .component-body,
+.article-content.traven-preview .traven-component-success .component-body, .traven-preview .article-content .traven-component-success .component-body,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-body,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-body,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-body,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-body {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.article-content.traven-preview .traven-component-info .component-body p, .traven-preview .article-content .traven-component-info .component-body p,
+.article-content.traven-preview .traven-component-warning .component-body p, .traven-preview .article-content .traven-component-warning .component-body p,
+.article-content.traven-preview .traven-component-danger .component-body p, .traven-preview .article-content .traven-component-danger .component-body p,
+.article-content.traven-preview .traven-component-success .component-body p, .traven-preview .article-content .traven-component-success .component-body p,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-body p,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-body p,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-body p,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-body p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.article-content.traven-preview .traven-component-info .component-body p:last-child, .traven-preview .article-content .traven-component-info .component-body p:last-child,
+.article-content.traven-preview .traven-component-warning .component-body p:last-child, .traven-preview .article-content .traven-component-warning .component-body p:last-child,
+.article-content.traven-preview .traven-component-danger .component-body p:last-child, .traven-preview .article-content .traven-component-danger .component-body p:last-child,
+.article-content.traven-preview .traven-component-success .component-body p:last-child, .traven-preview .article-content .traven-component-success .component-body p:last-child,
+.article-content.traven-preview .traven-component-info .component-body li:last-child, .traven-preview .article-content .traven-component-info .component-body li:last-child,
+.article-content.traven-preview .traven-component-warning .component-body li:last-child, .traven-preview .article-content .traven-component-warning .component-body li:last-child,
+.article-content.traven-preview .traven-component-danger .component-body li:last-child, .traven-preview .article-content .traven-component-danger .component-body li:last-child,
+.article-content.traven-preview .traven-component-success .component-body li:last-child, .traven-preview .article-content .traven-component-success .component-body li:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-body p:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-body p:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-body p:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-body p:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-info .component-body li:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-warning .component-body li:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-danger .component-body li:last-child,
+.cm-editor .cm-wysiwym-component-shortcode.component-success .component-body li:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Images and Media (Align × Size Matrix)
+   ========================================================================== */
+
+.article-content.traven-preview figure, .traven-preview .article-content figure{
+  margin: 2.5rem 0;
+}
+
+.article-content.traven-preview img, .traven-preview .article-content img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.article-content.traven-preview figcaption, .traven-preview .article-content figcaption{
+  margin-top: 0.75rem;
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.article-content.traven-preview .align-left, .traven-preview .article-content .align-left{
+  float: left;
+  margin: 0.5rem 2rem 1.5rem 0;
+}
+
+.article-content.traven-preview .align-right, .traven-preview .article-content .align-right{
+  float: right;
+  margin: 0.5rem 0 1.5rem 2rem;
+}
+
+.article-content.traven-preview .align-center, .traven-preview .article-content .align-center{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.article-content.traven-preview .size-30, .traven-preview .article-content .size-30{ width: 30%; }
+.article-content.traven-preview .size-50, .traven-preview .article-content .size-50{ width: 50%; }
+.article-content.traven-preview .size-70, .traven-preview .article-content .size-70{ width: 70%; }
+.article-content.traven-preview .size-100, .traven-preview .article-content .size-100{ width: 100%; }
+
+.article-content.traven-preview .gallery-single, .traven-preview .article-content .gallery-single,
+.article-content.traven-preview .figure-full, .traven-preview .article-content .figure-full{
+  margin: 2rem 0;
+}
+
+.article-content.traven-preview .gallery-single img, .traven-preview .article-content .gallery-single img,
+.article-content.traven-preview .figure-full img, .traven-preview .article-content .figure-full img{
+  max-width: 100%;
+  height: auto;
+}
+
+/* Video Containers */
+.article-content.traven-preview .traven-video-container, .traven-preview .article-content .traven-video-container{
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  margin: 2.5rem 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.article-content.traven-preview .traven-video-container iframe, .traven-preview .article-content .traven-video-container iframe,
+.article-content.traven-preview .traven-video-container video, .traven-preview .article-content .traven-video-container video{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}

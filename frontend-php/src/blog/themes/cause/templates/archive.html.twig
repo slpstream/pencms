@@ -1,0 +1,39 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="list">
+        <header class="page-header">
+            <h1>{{ (page_title | default(archive_title | default(category | default('Programs & Updates')))) | title }}</h1>
+            {% set desc_text = archive_description | default(category_description | default('')) | striptags %}
+            {% if tag is defined and tag is not empty %}
+                <p class="lede">Everything filed under “{{ tag }}”.</p>
+            {% elseif category is defined and category is not empty %}
+                <p class="lede">Everything filed under “{{ category }}”.</p>
+            {% elseif desc_text is not empty %}
+                <p class="lede">{{ desc_text }}</p>
+            {% endif %}
+        </header>
+
+        {% set items = dossiers | default(posts | default([])) %}
+        {% if items is not empty %}
+            <ul class="entry-list">
+                {% for item in items %}
+                    {{ theme.partial('entry-card', { 'dossier': item }) | raw }}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty">Nothing here yet — check back soon.</p>
+        {% endif %}
+
+        {% if pagination is defined and pagination.multiple is defined and pagination.multiple %}
+            <nav class="pagination" aria-label="Pages">
+                {% if pagination.newer is defined and pagination.newer %}<a href="{{ pagination.newer }}">← Newer</a>{% endif %}
+                <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+                {% if pagination.older is defined and pagination.older %}<a href="{{ pagination.older }}">Older →</a>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

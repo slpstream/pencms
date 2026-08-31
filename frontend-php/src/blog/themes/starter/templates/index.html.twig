@@ -1,0 +1,154 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set lead = dossiers|first %}
+{% set strip = dossiers|slice(1, 3) %}
+{% set feed = dossiers|slice(4) %}
+
+{# Primary vocabulary terms that actually appear on posts → archive links #}
+{% set category_map = {} %}
+{% for d in dossiers %}
+    {% set cat = d.category|default(d.section|default('')) %}
+    {% if cat is not empty and attribute(category_map, cat) is not defined %}
+        {% set label = (d.term_labels[cat]|default(cat))|replace({'-': ' ', '_': ' '})|title %}
+        {% set category_map = category_map|merge({ (cat): label }) %}
+    {% endif %}
+{% endfor %}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+{# ═══ Product landing stage — soft wash + floating spotlight (not a FW grid) ═══ #}
+<section class="starter-stage" aria-label="{{ sitename | default('Featured') }}">
+    <div class="starter-stage-inner">
+        <div class="starter-stage-intro">
+            {% if edition_title is not empty %}
+                <p class="starter-edition">{{ edition_title }}</p>
+            {% elseif tagline is not empty %}
+                <p class="starter-edition starter-edition--soft">{{ tagline }}</p>
+            {% endif %}
+            <p class="starter-stage-kicker">Latest</p>
+        </div>
+
+        {% if lead is empty %}
+            <div class="starter-spotlight starter-spotlight--empty">
+                <p>No posts yet. Publish something worth reading.</p>
+            </div>
+        {% else %}
+            {% set lead_url = contentUrl(lead) %}
+            {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+            {% set lead_cat = lead.category|default(lead.section|default('')) %}
+
+            <article class="starter-spotlight{% if not lead_has_hero %} starter-spotlight--text{% endif %}{% if lead_cat is not empty %} theme-{{ lead_cat }}{% endif %}">
+                {% if lead_has_hero %}
+                    <a href="{{ lead_url }}" class="starter-spotlight-media" tabindex="-1" aria-hidden="true">
+                        <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="starter-spotlight-img">
+                    </a>
+                {% endif %}
+                <div class="starter-spotlight-body">
+                    <div class="starter-spotlight-eyebrow">
+                        <span class="post-card-category">{{ lead_cat|default('Post')|upper }}</span>
+                        {% if lead.trumpet is not empty %}
+                            <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+                        {% endif %}
+                    </div>
+                    <h1 class="starter-spotlight-title">
+                        <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                    </h1>
+                    {% if lead.deck is not empty %}
+                        <p class="starter-spotlight-deck">{{ lead.deck | striptags }}</p>
+                    {% endif %}
+                    <div class="starter-spotlight-meta">
+                        <time datetime="{{ lead.date }}">{{ lead.date | default('') | date('F j, Y') }}</time>
+                        <a href="{{ lead_url }}" class="starter-spotlight-cta">Read story &rarr;</a>
+                    </div>
+                </div>
+            </article>
+        {% endif %}
+    </div>
+</section>
+
+<main class="starter-landing" aria-label="{{ sitename | default('Stories') }}">
+
+    {% if strip is not empty %}
+        <section class="starter-strip-section" aria-label="More featured stories">
+            <div class="starter-section-head">
+                <h2 class="starter-section-label">Up next</h2>
+            </div>
+            <div class="starter-strip">
+                {% for dossier in strip %}
+                    {% set url = contentUrl(dossier) %}
+                    {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                    {% set cat = dossier.category|default(dossier.section|default('')) %}
+                    <article class="starter-strip-card{% if cat is not empty %} theme-{{ cat }}{% endif %}">
+                        <a href="{{ url }}" class="starter-strip-link">
+                            <div class="starter-strip-media{% if not has_hero %} starter-strip-media--empty{% endif %}">
+                                {% if has_hero %}
+                                    <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="starter-strip-img">
+                                {% endif %}
+                            </div>
+                            <div class="starter-strip-body">
+                                <span class="post-card-category">{{ cat|default('Post')|upper }}</span>
+                                <h3 class="starter-strip-title">{{ dossier.hero_title | default(dossier.title) }}</h3>
+                                {% if dossier.deck is not empty %}
+                                    <p class="starter-strip-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+                                <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date('M j, Y') }}</time>
+                            </div>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if feed is not empty or category_map is not empty %}
+        <section class="starter-feed-section" aria-label="All stories">
+            <div class="starter-section-head">
+                <h2 class="starter-section-label">From the archive</h2>
+            </div>
+            <div class="starter-feed">
+                {% if category_map is not empty %}
+                    <nav class="post-card starter-feed-card starter-topics-card" aria-label="Categories">
+                        <div class="post-card-meta">
+                            <span class="post-card-category">Browse</span>
+                        </div>
+                        <h2 class="post-card-title">Categories</h2>
+                        <ul class="starter-topics-list">
+                            {% for slug, label in category_map %}
+                                {% set cat_url = archiveUrl(slug) %}
+                                <li>
+                                    <a href="{{ cat_url }}" class="starter-topics-link">{{ label }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+                {% for dossier in feed %}
+                    {% set url = contentUrl(dossier) %}
+                    {% set cat = dossier.category|default(dossier.section|default('')) %}
+                    <article class="post-card starter-feed-card{% if cat is not empty %} theme-{{ cat }}{% endif %}">
+                        <div class="post-card-meta">
+                            <span class="post-card-category">{{ (dossier.term_labels[cat]|default(cat)|default('Post'))|replace({'-': ' ', '_': ' '})|title }}</span>
+                            <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date('F d, Y') }}</time>
+                        </div>
+                        <h2 class="post-card-title">
+                            <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                        </h2>
+                        {% if dossier.deck is not empty %}
+                            <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+                        {% endif %}
+                        <a href="{{ url }}" class="post-card-link">Read post &rarr;</a>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

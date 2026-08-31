@@ -1,0 +1,84 @@
+primary_vocabulary: seasons_of_the_year
+required_fields:
+- name
+- status
+- hero_title
+- deck
+- trumpet
+vocabularies:
+  topic:
+    label: Topic
+    type: hierarchical
+    controlled: true
+    required: true
+    max_depth: 2
+    terms:
+    - person
+    - relationship
+    - place
+    - event
+    - organization
+    - artifact
+    - Intelligence Operations
+    - Intelligence Operations / Covert Actions
+    - Intelligence Operations / Espionage Cases
+    - Intelligence Operations / Counterintelligence
+    - Intelligence Operations / Signals Intelligence
+    - Geopolitics
+    - Geopolitics / Diplomacy & Summits
+    - Geopolitics / Nuclear Strategy
+    - Key Figures
+    - Key Figures / Spies & Agents
+    - Key Figures / Political Leaders
+    - Key Figures / Military Commanders
+    - Key Figures / Defectors
+    - Organizations
+    - Organizations / Intelligence Agencies
+    - Organizations / Political Movements
+    - Culture & Society
+    - Culture & Society / Propaganda
+  region:
+    label: Region
+    type: flat
+    controlled: true
+    required: false
+    terms:
+    - Eastern Europe
+    - Western Europe
+    - Soviet Union / Russia
+    - United States
+    - Latin America
+    - Southeast Asia
+    - Africa
+    - Cuba
+    - Berlin
+    - Greenland
+    - Vienna
+  era:
+    label: Era
+    type: flat
+    controlled: true
+    required: false
+    terms:
+    - Origins (1945-1949)
+    - Early Cold War (1950-1959)
+    - Height of Tensions (1960-1969)
+    - Détente (1970-1979)
+    - Second Cold War (1980-1985)
+    - Endgame (1986-1991)
+    - Aftermath (1992-present)
+  tags:
+    label: Tags
+    type: flat
+    controlled: false
+    required: false
+  seasons_of_the_year:
+    label: Seasons of the Year
+    type: flat
+    controlled: true
+    required: false
+    terms:
+    - Summer
+    - Winter
+    - Autumn
+    - Spring

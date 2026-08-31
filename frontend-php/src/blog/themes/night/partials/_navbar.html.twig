@@ -1,0 +1,29 @@
+<button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+    <span class="mobile-menu-bars" aria-hidden="true"></span>
+    STALLS
+</button>
+
+<nav class="nav-menu" id="nav-menu" aria-label="Primary">
+    {% set nav_items = menu('primary') %}
+    {% for item in nav_items %}
+        <div class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+            <span class="nav-stall-no" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>
+            {% if item.target_type == 'label' %}
+                <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+            {% else %}
+                <a href="{{ item.url }}" class="nav-link{% if item.children is not empty %} nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+            {% endif %}
+            {% if item.children is not empty %}
+                <div class="nav-dropdown" role="menu">
+                    {% for child in item.children %}
+                        {% if child.target_type == 'label' %}
+                            <span class="nav-label">{{ child.label }}</span>
+                        {% else %}
+                            <a href="{{ child.url }}" class="nav-link" role="menuitem" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</nav>

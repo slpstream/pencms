@@ -1,0 +1,76 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set profile_name = '' %}
+{% set profile_role = '' %}
+{% set profile_email = '' %}
+{% set profile_avatar = '' %}
+{% set profile_links = [] %}
+{% set profile_skills = [] %}
+
+{% if author is defined %}
+  {% if author is iterable %}
+    {% set profile_name = author.name | default(author.display_name | default('')) %}
+    {% set profile_role = author.role | default(author.bio | default('')) %}
+    {% set profile_email = author.email | default('') %}
+    {% set profile_avatar = author.avatar | default('') %}
+    {% if author.links is defined and author.links is iterable %}{% set profile_links = author.links %}{% endif %}
+    {% if author.skills is defined and author.skills is iterable %}{% set profile_skills = author.skills %}{% endif %}
+  {% else %}
+    {% set profile_name = author %}
+  {% endif %}
+{% endif %}
+
+{% if profile_name is empty %}{% set profile_name = sitename %}{% endif %}
+
+<div class="layout{% if profile_name or profile_role %} has-rail{% endif %}">
+  {{ theme.partial('sidebar-profile') | raw }}
+
+  <main id="main">
+    <article class="cv">
+      <header class="cv-identity">
+        {% if profile_avatar is not empty %}
+          <img src="{{ profile_avatar }}" alt="{{ profile_name }}" class="cv-avatar">
+        {% endif %}
+        <h1 class="cv-name">{{ profile_name }}</h1>
+        {% if profile_role is not empty %}
+          <p class="cv-role">{{ profile_role }}</p>
+        {% endif %}
+        <ul class="cv-contact">
+          {% if profile_email is not empty %}
+            <li><a href="mailto:{{ profile_email }}">{{ profile_email }}</a></li>
+          {% endif %}
+          {% if profile_links is not empty %}
+            {% for link in profile_links %}
+              <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a></li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </header>
+
+      <p class="cv-print">{% if hero_title is defined and hero_title is not empty %}{{ hero_title }}{% else %}This page is the résumé — printed, it fits one sheet of A4.{% endif %} <span class="print-hint">Press <kbd>Ctrl</kbd>+<kbd>P</kbd> (<kbd>⌘</kbd><kbd>P</kbd> on a Mac).</span></p>
+
+      {% set items = dossiers | default(posts | default([])) %}
+      {% if items is not empty %}
+        <ol class="cv-entries">
+          {% for entry in items %}
+            {{ theme.partial('cv-entry', { entry: entry }) | raw }}
+          {% endfor %}
+        </ol>
+      {% else %}
+        <p class="empty">No experience entries yet — add the first one and it appears here.</p>
+      {% endif %}
+
+      {% if profile_skills is not empty %}
+        <p class="cv-skills">
+          <strong>Skills</strong> — 
+          {% for skill in profile_skills %}
+            <span class="cv-skill">{{ skill }}</span>
+          {% endfor %}
+        </p>
+      {% endif %}
+    </article>
+  </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,34 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <header class="page-header">
+        <p class="eyebrow">Archive</p>
+        <h1>{{ (hero_title | default('Care Index')) | title }}</h1>
+    </header>
+
+    {% if dossiers is defined and dossiers is not empty %}
+        <section class="care-section">
+            <ul class="care-list">
+                {% for item in dossiers %}
+                    {% set url = theme.isStatic() ? (base_path ~ item.slug ~ '/index.html') : ('post.php?slug=' ~ item.slug ~ '&section=' ~ (item.section | default('blog'))) %}
+                    <li class="care-card">
+                        <h2>
+                            <a href="{{ url }}">{{ item.hero_title | default(item.title | default('')) }}</a>
+                        </h2>
+                        {% if item.date is defined and item.date %}
+                            <p class="meta"><time datetime="{{ item.date }}">{{ item.date | date("F d, Y") }}</time></p>
+                        {% endif %}
+                        {% if item.deck is defined and item.deck %}
+                            <p class="summary">{{ item.deck | striptags }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% else %}
+        <p class="empty">No entries found in this archive.</p>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

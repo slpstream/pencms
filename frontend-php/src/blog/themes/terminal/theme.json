@@ -1,0 +1,233 @@
+{
+  "type": "native",
+  "name": "Terminal",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A dark-first developer blog: deep blue-charcoal, amber CRT phosphor accent, mono chrome over a humanist reading column, framed blocks and a changelog-style archive.",
+  "editor_skin": "terminal",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#f5f4f0",
+            "dark_default": "#151c24"
+          },
+          {
+            "id": "surface",
+            "label": "Surface / Panel",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#eceae4",
+            "dark_default": "#1b232e"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#222933",
+            "dark_default": "#e9e5dc"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#5b6572",
+            "dark_default": "#9aa5b1"
+          },
+          {
+            "id": "accent",
+            "label": "Amber Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#8a5a10",
+            "dark_default": "#e8a03e"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#d9d6cd",
+            "dark_default": "#2a3441"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'DM Sans', Seravek, 'Avenir Next', system-ui, sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'DM Sans', Seravek, 'Avenir Next', system-ui, sans-serif",
+                "label": "DM Sans"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'DM Sans', Seravek, 'Avenir Next', system-ui, sans-serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'DM Sans', Seravek, 'Avenir Next', system-ui, sans-serif",
+                "label": "DM Sans"
+              },
+              {
+                "value": "Georgia, 'Times New Roman', serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'JetBrains Mono', ui-monospace, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'JetBrains Mono', ui-monospace, monospace",
+                "label": "JetBrains Mono"
+              },
+              {
+                "value": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#E8A03E",
+    "og_vignette_color": "#1B232E",
+    "og_text_color": "#E9E5DC",
+    "og_bar_color": "#10151B",
+    "og_font": "JetBrainsMono-Bold",
+    "og_fonts": {
+      "JetBrainsMono-Bold": "assets/fonts/JetBrainsMono-Bold.ttf",
+      "JetBrainsMono-Regular": "assets/fonts/JetBrainsMono-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": "assets/images/watermark.png",
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

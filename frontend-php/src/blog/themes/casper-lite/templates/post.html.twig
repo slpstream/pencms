@@ -1,0 +1,74 @@
+    {{ theme.partial('head') | raw }}
+    {{ theme.partial('header') | raw }}
+
+    <article class="site-main">
+        <header class="article-header container-narrow">
+            {% if section is defined and section is not empty %}
+                <span class="article-tag">{{ section }}</span>
+            {% endif %}
+            {% if trumpet is defined and trumpet is not empty %}
+                <p class="article-trumpet">{{ trumpet }}</p>
+            {% endif %}
+            <h1 class="article-title">{{ hero_title }}</h1>
+            <div class="article-deck">
+                {{ deck | raw }}
+            </div>
+        </header>
+
+        {% if hero_image|default('') is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <figure class="article-hero-wrap">
+                <img src="{{ contentAsset(hero_image) }}" class="article-hero-img" alt="">
+            </figure>
+        {% endif %}
+
+        <section class="container-wide post-layout">
+            <div class="article-content traven-preview content-column">
+                {% for fragment in posts | default([]) %}
+                    <div id="{{ fragment.id | default('') }}" class="fragment-block">
+                        {% if fragment.metadata is defined and fragment.metadata is not empty %}
+                            <div class="metadata-slugs">
+                                {% for slug_item in fragment.metadata %}
+                                    <span>{{ slug_item }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if fragment.title is defined and fragment.title is not empty %}
+                            <h2 class="fragment-title">{{ fragment.title }}</h2>
+                        {% endif %}
+
+                        {{ fragment.content_html | default('') | raw }}
+
+                        {% if fragment.tags is defined and fragment.tags is not empty %}
+                            <div class="tag-list">
+                                <span>CONNECTED TO:</span>
+                                {% for tag in fragment.tags %}
+                                    <a href="{{ tag.href | default('#') }}" class="tag">{{ tag.label | default('') }}</a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {{ theme.partial('faqs') | raw }}
+
+                <section class="casper-lite-discussion">
+                    {{ theme.partial('comment-thread') | raw }}
+                    {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+                </section>
+            </div>
+
+            <aside class="sidebar-column">
+                {{ theme.partial('sidebar-secondary') | raw }}
+                {% if is_composite|default(false) %}
+                    {{ theme.partial('sidebar-toc') | raw }}
+                {% endif %}
+                {% if author.avatar|default('') is not empty or author.bio|default('') is not empty %}
+                    {{ theme.partial('sidebar-profile') | raw }}
+                {% endif %}
+                {{ theme.partial('sidebar-related') | raw }}
+            </aside>
+        </section>
+    </article>
+
+    {{ theme.partial('footer') | raw }}

@@ -1,0 +1,43 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+{% set zone = category | default(section | default('')) %}
+
+<main id="main" class="cc-desk page-page">
+    <div class="cc-desk-grid">
+        <aside class="cc-tabs" aria-label="File tabs">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+
+        <article class="cc-folder">
+            <div class="cc-paperclip cc-paperclip--folder" aria-hidden="true"></div>
+            <div class="cc-punchholes cc-punchholes--folder" aria-hidden="true"><span></span><span></span></div>
+            <header class="cc-folder-head">
+                {% if zone is not empty %}
+                <p class="cc-folder-kicker">
+                    <span class="cc-stamp cc-stamp-small">{{ zone | upper }}</span>
+                </p>
+                {% endif %}
+                <h1 class="cc-post-title post-detail-title">{{ hero_title | default(page_title | default('Untitled')) | upper }}</h1>
+                {% if deck is not empty %}
+                    <div class="cc-post-deck post-detail-deck">{{ deck | raw }}</div>
+                {% endif %}
+                {% if has_hero %}
+                    <figure class="cc-hero-polaroid">
+                        <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+                    </figure>
+                {% endif %}
+            </header>
+            <div class="cc-prose">
+                <div class="article-content traven-preview">
+                    {{ page_content | raw }}
+                </div>
+
+                {{ theme.partial('faqs') | raw }}
+            </div>
+        </article>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

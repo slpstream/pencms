@@ -1,0 +1,44 @@
+{% set rows = catalog_rows | default([]) %}
+{% if rows is not empty %}
+<div class="table-scroll">
+    <table class="cat-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Classification</th>
+                <th>Released</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dossier in rows %}
+                {% set url = contentUrl(dossier) %}
+                {% set face_i = loop.index0 % 3 %}
+                {% set face_class = face_i == 0 ? 'face-kolosse' : (face_i == 1 ? 'face-falter' : 'face-betrieb') %}
+                <tr>
+                    <td class="td-id">HA·{{ '%02d'|format(loop.index) }}</td>
+                    <td class="td-face"><a class="{{ face_class }}" href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></td>
+                    <td>
+                        {% if dossier.trumpet is not empty %}
+                            {{ dossier.trumpet | striptags }}
+                        {% elseif dossier.category is not empty %}
+                            {{ dossier.category }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td class="td-num">
+                        {% if dossier.date is not empty %}
+                            <time datetime="{{ dossier.date }}">{{ dossier.date | date('Y.m.d') }}</time>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="empty-sheet">Nothing in the catalogue yet.</p>
+{% endif %}

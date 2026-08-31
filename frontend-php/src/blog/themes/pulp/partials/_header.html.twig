@@ -1,0 +1,150 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set show_cover = is_index|default(false) %}
+{% set ticker_posts = (dossiers is defined and dossiers is not empty)
+    ? dossiers
+    : ((theme.getAllDossiers is defined and theme.getAllDossiers() is not empty)
+        ? theme.getAllDossiers()
+        : ((posts is defined and posts is not empty and (posts[0].slug is defined or posts[0].hero_title is defined))
+            ? posts
+            : [])) %}
+{% set post_count = ticker_posts|length %}
+{% set ticker_items = [] %}
+
+{% if post_count >= 2 %}
+    {% for d in ticker_posts|slice(0, 9) %}
+        {% set item_title = d.hero_title|default(d.title|default('')) %}
+        {% if item_title is not empty %}
+            {% set ticker_items = ticker_items|merge([{
+                'text': item_title,
+                'url': contentUrl(d)
+            }]) %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% if tagline is not empty %}
+        {% set ticker_items = ticker_items|merge([{
+            'text': tagline|striptags,
+            'url': ''
+        }]) %}
+    {% endif %}
+    {% for d in ticker_posts|slice(0, 9) %}
+        {% set item_title = d.hero_title|default(d.title|default('')) %}
+        {% if item_title is not empty %}
+            {% set ticker_items = ticker_items|merge([{
+                'text': item_title,
+                'url': contentUrl(d)
+            }]) %}
+        {% endif %}
+    {% endfor %}
+    {% for text in [
+        'MISPRINTS ARE FREE IF YOU ASK NICELY',
+        'THE LONG-ARM STAPLER IS BROKEN AGAIN — BRING YOUR OWN',
+        'REST A HAND ON A PAGE TO PULL IT INTO REGISTER'
+    ] %}
+        {% set ticker_items = ticker_items|merge([{
+            'text': text,
+            'url': ''
+        }]) %}
+    {% endfor %}
+{% endif %}
+
+<div class="ticker" role="marquee" aria-label="Zine ticker">
+    <div class="ticker-track" id="tickerTrack">
+        <span class="tk-set">
+            {% for item in ticker_items %}
+                {% if item.text is not empty %}
+                    {% if item.url is not empty %}
+                        <a href="{{ item.url }}" class="tk">{{ item.text|upper }}</a><span class="tk-dot">●</span>
+                    {% else %}
+                        <span class="tk">{{ item.text|upper }}</span><span class="tk-dot">●</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </span>
+    </div>
+</div>
+
+<header class="site-head{% if show_cover %} site-head--cover{% endif %}">
+    <div class="nav-paste">
+        <a class="brand-stamp hand" href="{{ home_url }}">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="" class="site-logo">
+            {% endif %}
+            <span class="brand-text">{{ sitename | default('Pulp') }}</span>
+        </a>
+        <button class="mobile-menu-toggle stamp-btn" id="mobile-menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">☰ MENU</button>
+        {{ theme.partial('navbar') | raw }}
+    </div>
+
+    {% if show_cover %}
+    <div class="masthead" id="cover">
+        <div class="press-sheet" id="pressSheet">
+            <div class="mast-toprow">
+                <div class="stamp-round hand" aria-hidden="true">
+                    <svg viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <path id="rndpath" d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0" fill="none"/>
+                        <text class="stamp-ring"><textPath href="#rndpath" startOffset="0">RISOGRAPH · TWO DRUMS · NO REGRETS ·</textPath></text>
+                        <text x="60" y="57" text-anchor="middle" class="stamp-big">{{ "now"|date("y") }}</text>
+                        <text x="60" y="76" text-anchor="middle" class="stamp-small">{{ "now"|date("M")|upper }}</text>
+                    </svg>
+                </div>
+                <p class="mast-eyebrow">{% if tagline is not empty %}{{ tagline }}{% else %}A zine about whatever is still wet{% endif %}</p>
+                <div class="stamp-price hand" aria-hidden="true">
+                    {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : [] %}
+                    {{ post_list|length }}<br>{% if post_list|length == 1 %}PAGE{% else %}PAGES{% endif %}<br>IN
+                </div>
+            </div>
+
+            <h1 class="mast-title" id="mastTitle" data-name="{{ sitename | default('Pulp') }}" aria-label="{{ sitename | default('Pulp') }}">
+                <span class="mast-title-plain">{{ sitename | default('Pulp') }}</span>
+            </h1>
+
+            {% set issue_strip = (hero_title is defined and hero_title is not empty and hero_title != sitename) ? hero_title : (tagline | default('')) %}
+            {% if issue_strip is not empty %}
+            <div class="mast-strip-wrap hand">
+                <p class="mast-strip"><span class="tape tape-l" aria-hidden="true"></span>{{ issue_strip }}<span class="tape tape-r" aria-hidden="true"></span></p>
+            </div>
+            {% endif %}
+
+            <p class="mast-dateline">Printed on offcut. Collated by insomnia. Perfect registration is for cowards.</p>
+
+            <div class="mast-annot hand" aria-hidden="true">
+                <svg class="annot-arrow" viewBox="0 0 120 70"><path class="draw" d="M6,62 C40,58 70,44 92,18 M80,20 L94,15 L90,30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                <p>the pink drum drifts left.<br>we stopped fighting it.</p>
+            </div>
+
+            <div class="sticker sticker-moon hand" aria-hidden="true">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="48" class="stk-ring"/>
+                    <circle cx="50" cy="50" r="41" class="stk-bg"/>
+                    <path d="M63 22 A33 33 0 1 0 63 78 A27 27 0 1 1 63 22 Z" class="stk-moon"/>
+                    <circle cx="66" cy="38" r="3" class="stk-star"/>
+                    <circle cx="72" cy="56" r="2.2" class="stk-star"/>
+                </svg>
+                <span class="sticker-txt">AWAKE<br>CLUB</span>
+            </div>
+
+            <div class="mast-bottomrow hand">
+                <button class="stamp-btn" id="replayBtn" type="button">⟲ RUN THE PRESS AGAIN</button>
+                <div class="control-strip" aria-hidden="true">
+                    <i class="cs cs-1"></i><i class="cs cs-2"></i><i class="cs cs-3"></i><i class="cs cs-4"></i><i class="cs cs-5"></i><i class="cs cs-6"></i>
+                    <span>CONTROL — DO NOT TRUST</span>
+                </div>
+                <div class="barcode" aria-hidden="true">
+                    <svg viewBox="0 0 120 40" preserveAspectRatio="none">
+                        <g fill="currentColor"><rect x="0" width="3" height="34"/><rect x="5" width="1.5" height="34"/><rect x="9" width="4" height="34"/><rect x="15" width="1.5" height="34"/><rect x="19" width="2.5" height="34"/><rect x="24" width="5" height="34"/><rect x="31" width="1.5" height="34"/><rect x="35" width="3" height="34"/><rect x="41" width="1.5" height="34"/><rect x="44" width="4" height="34"/><rect x="50" width="2" height="34"/><rect x="54" width="1.5" height="34"/><rect x="58" width="5" height="34"/><rect x="65" width="2" height="34"/><rect x="69" width="1.5" height="34"/><rect x="73" width="3.5" height="34"/><rect x="79" width="1.5" height="34"/><rect x="83" width="2.5" height="34"/><rect x="88" width="4.5" height="34"/><rect x="95" width="1.5" height="34"/><rect x="99" width="3" height="34"/><rect x="104" width="1.5" height="34"/><rect x="108" width="4" height="34"/><rect x="114" width="2" height="34"/></g>
+                    </svg>
+                    <span>{{ "now"|date("Ymd") }}</span>
+                </div>
+            </div>
+
+            <div class="drumbar drumbar-blue" aria-hidden="true"></div>
+            <div class="drumbar drumbar-pink" aria-hidden="true"></div>
+        </div>
+    </div>
+    {% endif %}
+</header>
+{{ theme.partial('sidebar-secondary') | raw }}

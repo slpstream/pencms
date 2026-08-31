@@ -1,0 +1,47 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+{% set inst_title = hero_title is defined and hero_title ? hero_title : (dossier is defined and dossier is not null and dossier.hero_title is defined and dossier.hero_title ? dossier.hero_title : (title is defined and title ? title : (name is defined and name ? name : 'Instructor'))) %}
+{% set inst_discipline = dossier is defined and dossier is not null and dossier.discipline is defined and dossier.discipline ? dossier.discipline : (discipline is defined and discipline ? discipline : null) %}
+{% set photo_src = photo is defined and photo ? photo : (dossier is defined and dossier is not null and dossier.photo is defined and dossier.photo ? dossier.photo : (dossier is defined and dossier is not null and dossier.hero_image is defined and dossier.hero_image ? dossier.hero_image : null)) %}
+
+<article class="instructor">
+  <header class="page-header">
+    <h1>{{ inst_title }}</h1>
+    {% if inst_discipline %}
+      <p class="discipline">{{ inst_discipline }}</p>
+    {% endif %}
+  </header>
+
+  {% if photo_src %}
+    <img class="instructor-photo" src="{{ contentAsset(photo_src) }}" alt="{{ inst_title }}" loading="lazy" decoding="async">
+  {% endif %}
+
+  {% if posts is defined and posts is not empty %}
+    {% for post_item in posts %}
+      <div class="article-content traven-preview prose">
+        {{ post_item.content_html | raw }}
+      </div>
+    {% endfor %}
+  {% elseif page_content is defined and page_content is not empty %}
+    <div class="article-content traven-preview prose">
+      {{ page_content | raw }}
+    </div>
+  {% elseif content_html is defined and content_html is not empty %}
+    <div class="article-content traven-preview prose">
+      {{ content_html | raw }}
+    </div>
+  {% elseif post is defined and post is not null and post.content_html is defined %}
+    <div class="article-content traven-preview prose">
+      {{ post.content_html | raw }}
+    </div>
+  {% endif %}
+
+  <aside class="catch-classes">
+    <h2>Catch their classes</h2>
+    <p>Every class {{ inst_title }} teaches is on the weekly timetable — no booking needed, just come a few minutes early.</p>
+    <p><a class="btn-trial" href="{{ base_path | default('/') ~ 'schedule/' }}">See the schedule</a></p>
+  </aside>
+</article>
+
+{{ theme.partial('_footer') | raw }}

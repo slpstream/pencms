@@ -1,0 +1,14 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+<header class="site-head">
+    <nav class="topbar" aria-label="Site">
+        <a class="topbar-place" href="{{ home_url }}">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="" class="site-logo">
+            {% endif %}
+            <span class="topbar-name{% if is_index|default(false) %} topbar-name--index{% endif %}">{{ sitename | default('Velo') }}</span>
+        </a>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+        {{ theme.partial('navbar') | raw }}
+    </nav>
+</header>

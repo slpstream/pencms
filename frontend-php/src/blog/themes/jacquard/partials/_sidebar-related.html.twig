@@ -1,0 +1,13 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+<nav class="yarn-related" aria-label="Related">
+    <h3 class="yarn-label">Related</h3>
+    <ul class="yarn-list">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            <li>
+                <a href="{{ url }}">{{ post.hero_title | default(post.title) }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

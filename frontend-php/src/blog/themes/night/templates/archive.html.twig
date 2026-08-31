@@ -1,0 +1,31 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="night-directory page-archive">
+    <header class="night-dir-head">
+        <p class="night-sec-eyebrow"><span lang="zh-Hant" class="tc">牌</span> · STALL DIRECTORY</p>
+        <h1 class="night-dir-title">{{ hero_title | default('Archive') }}</h1>
+    </header>
+
+    {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+    {% if post_list is not empty %}
+        <ol class="night-dir-list">
+            {% for dossier in post_list %}
+                {% set url = contentUrl(dossier) %}
+                <li>
+                    <span class="night-dir-no">{{ '%02d'|format(loop.index) }}</span>
+                    <a href="{{ url }}" class="night-dir-name">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a>
+                    <span class="night-dir-date">
+                        {% if dossier.dateline is defined and dossier.dateline is not empty %}{{ dossier.dateline }}
+                        {% elseif dossier.date is defined and dossier.date is not empty %}{{ dossier.date | date('Y.m.d') }}
+                        {% else %}—{% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p class="night-empty">No stalls on this deck.</p>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

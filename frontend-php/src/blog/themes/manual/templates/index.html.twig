@@ -1,0 +1,38 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+<main id="main" class="container manual-home">
+  <header class="home-intro">
+    <h1>{{ hero_title | default('Manual') }}</h1>
+    {% if tagline is not empty %}<p class="lede">{{ tagline }}</p>{% endif %}
+  </header>
+  {% set lead = dossiers|first %}
+  {% set updates = dossiers|slice(1, 4) %}
+  {% if lead is not empty %}
+  <section class="latest-lead" aria-labelledby="latest-heading">
+    <p class="eyebrow" id="latest-heading">Latest update</p>
+    {% set lead_url = theme.isStatic() ? (base_path ~ lead.slug ~ '/index.html') : ('post.php?slug=' ~ lead.slug ~ '&section=' ~ (lead.section | default('blog'))) %}
+    <h2><a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a></h2>
+    {% if lead.deck is not empty %}<p class="lede">{{ lead.deck | striptags }}</p>{% endif %}
+    <a class="read-link" href="{{ lead_url }}">Read update →</a>
+  </section>
+  {% endif %}
+  {% if updates is not empty %}
+  <section class="updates" aria-labelledby="updates-heading">
+    <h2 id="updates-heading" class="section-label">More recent updates</h2>
+    <ol class="toc-list">
+      {% for dossier in updates %}
+      {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+      <li class="toc-row">
+        <span class="toc-num">{{ '%02d'|format(loop.index + 1) }}</span>
+        <div>
+          <h3 class="toc-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></h3>
+          {% if dossier.deck is not empty %}<p class="toc-desc">{{ dossier.deck | striptags }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+  {% if dossiers is empty %}<p class="empty">No updates yet.</p>{% endif %}
+</main>
+{{ theme.partial('footer') | raw }}

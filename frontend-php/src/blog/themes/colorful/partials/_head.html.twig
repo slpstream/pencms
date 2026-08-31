@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="{{ site.language|default('en') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+
+    {# SEO metadata #}
+    <title>{% if hero_title is not empty and sitename is not empty and hero_title != sitename %}{{ hero_title }} | {{ sitename }}{% else %}{{ hero_title | default(sitename) }}{% endif %}</title>
+    <meta name="description" content="{{ meta_description | default(tagline | default('Vibrant & Colorful theme for PenCMS.')) }}">
+    {% if keywords is defined and keywords is not empty %}
+    <meta name="keywords" content="{{ keywords }}">
+    {% endif %}
+
+    {# Open Graph / Facebook / Twitter #}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ canonical_url | default('') }}">
+    <meta property="og:title" content="{{ og_title | default(og_title_fallback | default(page_title | default(sitename))) }}">
+    <meta property="og:description" content="{{ og_description | default(og_description_fallback | default(meta_description | default(''))) }}">
+    
+    {% set abs_og_image = og_image | default(og_default_image | default('images/defaulthero.jpg')) %}
+    {% if theme.isStatic() and (slug | default('')) is not empty %}
+        {% set abs_og_image = (site_url | default('') | trim('/', 'right')) ~ '/images/og/' ~ slug ~ '.jpg' %}
+    {% elseif not (abs_og_image matches '/^https?:\\/\\//') %}
+        {% set abs_og_image = contentAsset(abs_og_image) %}
+    {% endif %}
+    <meta property="og:image" content="{{ abs_og_image }}">
+    <meta name="twitter:card" content="{{ twitter_card | default('summary_large_image') }}">
+    <meta name="twitter:title" content="{{ og_title | default(og_title_fallback | default(page_title | default(sitename))) }}">
+    <meta name="twitter:description" content="{{ og_description | default(og_description_fallback | default(meta_description | default(''))) }}">
+    <meta name="twitter:image" content="{{ abs_og_image }}">
+
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+    {{ theme.linkCss('css/skin-colorful.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+
+    <link rel="alternate" type="application/rss+xml" title="{{ sitename | default('RSS') }}" href="{{ base_path }}feed.xml">
+    {% if theme.isStatic() %}
+    <link rel="alternate" type="text/markdown" href="index.md">
+    {% endif %}
+</head>
+<body class="traven-preview {% if category is not empty %}theme-{{ category }}{% endif %}{% if body_class is defined and body_class is not empty %} {{ body_class }}{% endif %}">

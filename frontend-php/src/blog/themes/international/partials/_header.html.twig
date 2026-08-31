@@ -1,0 +1,14 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+<header class="site-head">
+    <div class="site-head-in wrap">
+        <a class="brand" href="{{ home_url }}">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="" class="site-logo" style="max-height: 40px; width: auto; height: auto; object-fit: contain;">
+            {% endif %}
+            <span class="brand-name">{{ sitename }}</span>
+        </a>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+        {{ theme.partial('navbar') | raw }}
+    </div>
+</header>

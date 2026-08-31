@@ -1,0 +1,34 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+<section class="related-rail" aria-label="Related">
+    <h2>Related</h2>
+    <ul class="related-rail-grid">
+        {% for item in related_dossiers|slice(0, 4) %}
+            {% set url = contentUrl(item) %}
+            {% set has_thumb = item.hero_image is defined and item.hero_image is not empty and item.hero_image != 'images/defaulthero.jpg' %}
+            {% if item.hero_title is defined and item.hero_title %}
+                {% set item_title = item.hero_title %}
+            {% elseif item.title is defined and item.title %}
+                {% set item_title = item.title %}
+            {% else %}
+                {% set item_title = 'Untitled' %}
+            {% endif %}
+            <li>
+                <a href="{{ url }}">
+                    {% if has_thumb %}
+                        <img src="{{ theme.contentAsset(item.hero_image) }}" alt="" loading="lazy">
+                    {% endif %}
+                    <div class="related-rail-body">
+                        {% if item.trumpet is defined and item.trumpet %}
+                            <p class="related-rail-trumpet">{{ item.trumpet | striptags }}</p>
+                        {% endif %}
+                        <span class="related-rail-title">{{ item_title }}</span>
+                        {% if item.deck is defined and item.deck %}
+                            <p class="related-rail-deck">{{ item.deck | striptags }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

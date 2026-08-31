@@ -1,0 +1,27 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <section class="press-sheet toc-sheet">
+        <p class="sec-eyebrow">IN THIS ISSUE</p>
+        <h1 class="mr sec-title" data-t="{{ (hero_title | default('Archive'))|upper }}"><span>{{ hero_title | default('Archive') }}</span></h1>
+
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% if post_list is not empty %}
+            <ol class="toc toc-paste">
+                {% for dossier in post_list %}
+                    {% set url = contentUrl(dossier) %}
+                    <li>
+                        <span class="toc-t"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-p">{{ '%02d'|format(loop.index) }}</span>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty-zine">No matching pages in this issue.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

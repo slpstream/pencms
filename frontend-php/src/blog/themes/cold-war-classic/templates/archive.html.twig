@@ -1,0 +1,42 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+<header class="site-hero archive-listing-hero">
+    {% set archive_hero = hero_image | default('') %}
+    {% if archive_hero is not empty %}
+        <img src="{{ contentAsset(archive_hero) }}" class="hero-bg" alt="">
+    {% endif %}
+    <div class="hero-content">
+        <h1 class="hero-title">{{ hero_title | default('Archive') }}</h1>
+        <p class="hero-tagline">{{ tagline | default('') }}</p>
+    </div>
+</header>
+
+<main class="container-wide archive-listing">
+    <div class="post-card-grid">
+        {% for dossier in dossiers %}
+            {% set dossier_slug = dossier.slug | default('') %}
+            {% set section = dossier.section | default(dossier.category | default('blog')) %}
+            {% set url = theme.isStatic()
+                ? (base_path ~ dossier_slug ~ '/index.html')
+                : (base_path ~ 'post.php?slug=' ~ dossier_slug ~ '&section=' ~ (section | url_encode)) %}
+            {% set dossier_image = dossier.hero_image | default('images/defaulthero.jpg') %}
+            <article class="post-card">
+                <a href="{{ url }}" class="post-card-link">
+                    <img src="{{ contentAsset(dossier_image) }}" class="post-card-image" alt="{{ dossier.title | default('') }}">
+                    <div class="post-card-content">
+                        <span class="post-card-tag">{{ section }}</span>
+                        <h2 class="post-card-title">{{ dossier.hero_title | default(dossier.title | default('Untitled Dossier')) }}</h2>
+                        <div class="post-card-excerpt">{{ dossier.deck | default('') | striptags }}</div>
+                    </div>
+                </a>
+            </article>
+        {% else %}
+            <p class="post-card-excerpt">No matching dossiers found.</p>
+        {% endfor %}
+    </div>
+
+</main>
+
+{{ theme.partial('footer') | raw }}

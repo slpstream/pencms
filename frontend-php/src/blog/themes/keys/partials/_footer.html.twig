@@ -1,0 +1,93 @@
+<footer class="colophon">
+    <div class="colophon-inner">
+        <div class="colophon-main">
+            {% set home_url = theme.isStatic() ? (base_path ~ 'index.html') : base_path %}
+            {% if agency_name is defined and agency_name is not empty %}
+                <p class="colophon-name"><a href="{{ home_url }}">{{ agency_name }}</a></p>
+                <p class="colophon-line">
+                    {% if agency_hours is defined and agency_hours is not empty %}<span>{{ agency_hours }}</span>{% endif %}
+                    {% if agency_phone is defined and agency_phone is not empty %}<span><a href="tel:{{ agency_phone }}">{{ agency_phone }}</a></span>{% endif %}
+                    {% if agency_email is defined and agency_email is not empty %}<span><a href="mailto:{{ agency_email }}">{{ agency_email }}</a></span>{% endif %}
+                </p>
+            {% else %}
+                <p class="colophon-name"><a href="{{ home_url }}">{{ (sitename is defined and sitename is not empty) ? sitename : 'Keys Estate Agency' }}</a></p>
+                <p class="colophon-line">{{ (tagline is defined and tagline is not empty) ? tagline : 'Real estate listings, transparent facts, and personal service.' }}</p>
+            {% endif %}
+        </div>
+
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="footer-nav" aria-label="Footer Navigation">
+                <ul class="footer-menu">
+                    {% for item in footer_items %}
+                        <li class="footer-menu-group">
+                            {% if item.target_type is defined and item.target_type == 'label' %}
+                                <span class="footer-menu-label">{{ item.label }}</span>
+                            {% else %}
+                                <a href="{{ item.url }}" class="footer-menu-link" {% if item.open_in_new_tab is defined and item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                            {% endif %}
+                            {% if item.children is defined and item.children is not empty %}
+                                <ul class="footer-menu-children">
+                                    {% for child in item.children %}
+                                        <li>
+                                            {% if child.target_type is defined and child.target_type == 'label' %}
+                                                <span class="footer-menu-child-label">{{ child.label }}</span>
+                                            {% else %}
+                                                <a href="{{ child.url }}" class="footer-menu-child-link" {% if child.open_in_new_tab is defined and child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        {% endif %}
+
+        <div class="colophon-copy">
+            <p class="colophon-credits">&copy; {{ "now"|date("Y") }} {{ (sitename is defined and sitename is not empty) ? sitename : 'Keys' }}. Powered by <a href="https://pencms.org" target="_blank" rel="noopener">PenCMS</a>, Keys theme.</p>
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </div>
+    </div>
+</footer>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'default'
+    });
+</script>
+</body>
+</html>

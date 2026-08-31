@@ -1,0 +1,28 @@
+# Reverse proxy for PenCMS API (+ TLS).
+# Set PUBLIC_HOST in deploy/.env (e.g. cms.example.com or localhost).
+# Caddy issues Let's Encrypt certs for public DNS names; localhost uses internal TLS.
+
+{$PUBLIC_HOST} {
+	# MCP, REST API, OAuth AS, discovery
+	handle /api* {
+		reverse_proxy api:8008
+	}
+	handle /.well-known* {
+		reverse_proxy api:8008
+	}
+	handle /oauth* {
+		reverse_proxy api:8008
+	}
+	handle /llms.txt {
+		reverse_proxy api:8008
+	}
+
+	# PHP admin is not in this compose file by default.
+	# Point `/` at a PHP upstream when ready, e.g.:
+	#   handle {
+	#       reverse_proxy host.docker.internal:8009
+	#   }
+	handle {
+		respond "PenCMS API is up. Configure the PHP admin (or extend this Caddyfile) — see core/docs/deploy_compose.md" 200
+	}
+}

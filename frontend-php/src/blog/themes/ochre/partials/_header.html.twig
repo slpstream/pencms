@@ -1,0 +1,17 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% if is_index|default(false) %}
+<div class="ochre-mouth-nav ochre-mouth-nav--index">
+    {{ theme.partial('navbar') | raw }}
+</div>
+{% else %}
+<header class="ochre-mouth-strip">
+    <a href="{{ home_url }}" class="ochre-mouth-brand">
+        {% set logo = theme.getLogoUrl() %}
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="" class="ochre-mouth-logo">
+        {% endif %}
+        <span class="ochre-mouth-word">{{ sitename | default('Ochre') }}</span>
+    </a>
+    {{ theme.partial('navbar') | raw }}
+</header>
+{% endif %}

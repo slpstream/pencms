@@ -1,0 +1,52 @@
+<style>
+    .site-header {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+
+    .site-header,
+    .site-header .header-container,
+    .site-header .header-actions,
+    .site-header .nav-menu,
+    .site-header .nav-item,
+    .site-header .nav-link,
+    .site-header .nav-label,
+    .site-header .nav-trigger,
+    .site-header .nav-dropdown,
+    .site-header .nav-dropdown .nav-link,
+    .site-header a {
+        font-family: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif !important;
+        font-weight: 700 !important;
+        line-height: 1.1 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .site-header a,
+    .site-header a:hover,
+    .site-header a:focus,
+    .site-header a:active,
+    .site-header a:visited,
+    .site-header .nav-link,
+    .site-header .nav-link:hover,
+    .site-header .nav-link:focus {
+        text-decoration: none !important;
+        text-underline-offset: unset !important;
+    }
+
+    .site-header .nav-item,
+    .site-header .nav-link,
+    .site-header .nav-label {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+</style>
+<header class="site-header">
+    <div class="header-container">
+        <div class="header-actions">
+            {{ theme.partial('navbar', { is_post: is_post | default(false), is_index: is_index | default(false) }) | raw }}
+        </div>
+    </div>
+</header>

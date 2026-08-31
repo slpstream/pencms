@@ -1,0 +1,40 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+
+<main id="main" class="site-main page-page">
+    <header class="band band-oak plane post-oak">
+        <div class="wrap post-oak-in">
+            <h1 class="post-detail-title page-heading masthead">{{ hero_title | default('Untitled') }}</h1>
+            <div class="post-oak-split">
+                <div class="post-oak-copy">
+                    {% if deck is not empty %}
+                        <div class="post-detail-deck deck">{{ deck | striptags }}</div>
+                    {% endif %}
+                </div>
+                {{ theme.partial('sidebar-secondary') | raw }}
+            </div>
+        </div>
+    </header>
+
+    {% if has_hero %}
+        <figure class="post-hero-cut">
+            <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+        </figure>
+    {% endif %}
+
+    <div class="band band-cream band-wedges">
+        <div class="wrap post-body-wrap">
+            <div class="post-prose">
+                <div class="article-content traven-preview">
+                    {{ page_content | raw }}
+                </div>
+
+                {{ theme.partial('faqs') | raw }}
+            </div>
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

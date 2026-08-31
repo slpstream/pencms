@@ -1,0 +1,14 @@
+<aside class="sidebar-card secondary-sidebar">
+    {% set author_name = author is defined ? (author is iterable ? (author.name | default(author.display_name | default(''))) : author) : '' %}
+    {% if author_name is not empty %}
+        <div class="sidebar-title">Author</div>
+        <p class="sidebar-author-name">
+            <strong>{{ author_name }}</strong>
+        </p>
+    {% endif %}
+
+    {% if tagline is defined and tagline is not empty %}
+        <div class="sidebar-title">About</div>
+        <p class="sidebar-tagline">{{ tagline }}</p>
+    {% endif %}
+</aside>

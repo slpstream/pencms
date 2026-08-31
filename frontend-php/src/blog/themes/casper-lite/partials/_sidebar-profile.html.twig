@@ -1,0 +1,11 @@
+    <div class="sidebar-widget sidebar-card sidebar-profile">
+        <div class="profile-avatar-wrap">
+            {% if author.avatar is not empty %}
+                <img src="{{ author.avatar }}" alt="{{ author.display_name|e }}" class="profile-avatar">
+            {% endif %}
+        </div>
+        <h3 class="profile-name">{{ author.display_name|e }}</h3>
+        {% if author.bio is not empty %}
+            <p class="profile-bio">{{ author.bio|e }}</p>
+        {% endif %}
+    </div>

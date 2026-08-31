@@ -1,0 +1,10 @@
+<header class="masthead">
+    <a class="site-title" href="{{ base_path }}">
+        {% set logo = theme.getLogoUrl() %}
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+        {% endif %}
+        <span>{{ sitename }}</span>
+    </a>
+    {{ theme.partial('navbar') | raw }}
+</header>

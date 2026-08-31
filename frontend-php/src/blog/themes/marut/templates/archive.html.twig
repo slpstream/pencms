@@ -1,0 +1,58 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-wrapper">
+    <header class="hero-section" style="padding: 2rem 1.5rem; text-align: left;">
+        <span class="hero-tag">CATEGORY</span>
+        <h1 class="hero-heading" style="font-size: 2.2rem;">{{ (hero_title | default('Category Archive')) | title }}</h1>
+        {% if deck is defined and deck is not empty %}
+            <p class="hero-deck-text" style="margin-top: 0.5rem;">{{ deck | raw }}</p>
+        {% endif %}
+    </header>
+
+    <div class="magazine-grid">
+        {% for item in dossiers | default([]) %}
+            {% set slug = item.slug | default('') %}
+            {% set section = item.section | default('blog') %}
+            {% set url = theme.isStatic() ? ((base_path | default('')) ~ slug ~ '/index.html') : ((base_path | default('')) ~ 'post.php?slug=' ~ slug ~ '&section=' ~ section) %}
+            
+            <a href="{{ url }}" class="magazine-card">
+                <div class="card-media">
+                    {% set card_img = item.hero_image | default(theme.asset('images/defaulthero.jpg')) %}
+                    <img src="{{ contentAsset(card_img) }}" alt="{{ item.hero_title | default(item.title) }}" />
+                </div>
+                <div class="card-body">
+                    <div class="card-tagline">
+                        {% if item.category is defined and item.category is not empty %}
+                            <span class="card-badge">{{ item.category }}</span>
+                        {% else %}
+                            <span class="card-badge">Article</span>
+                        {% endif %}
+
+                        {% if item.trumpet is defined and item.trumpet is not empty %}
+                            <span class="card-badge-separator">&bull;</span>
+                            <span class="card-trumpet">{{ item.trumpet }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h2 class="card-title">{{ item.hero_title | default(item.title) }}</h2>
+                    
+                    {% if item.deck is not empty and item.deck != '...' %}
+                        <p class="card-description">{{ item.deck | striptags | slice(0, 140) }}...</p>
+                    {% endif %}
+
+                    <div class="card-meta">
+                        {% set card_author = (item.author.display_name | default(item.author.name | default(item.author))) | default(author.display_name | default(author.name | default('Editorial Staff'))) %}
+                        <span>By {{ card_author }}</span>
+                        <span>Read Article &rarr;</span>
+                    </div>
+                </div>
+            </a>
+        {% else %}
+            <p>No posts found in this archive.</p>
+        {% endfor %}
+    </div>
+</main>
+
+{{ theme.partial('secondary-footer') | raw }}
+{{ theme.partial('footer') | raw }}

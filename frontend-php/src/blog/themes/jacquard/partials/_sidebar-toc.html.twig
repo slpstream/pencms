@@ -1,0 +1,22 @@
+{% if posts is not empty and posts|length > 1 %}
+<nav class="yarn-toc" aria-label="Table of contents">
+    <h3 class="yarn-label">Contents</h3>
+    <ul class="yarn-list">
+        {% for post in posts %}
+            {% if post.id != 'index' %}
+                {% set label = post.title | default('') %}
+                {% if label is empty %}
+                    {% if post.id == 'intro' or post.id == 'main' %}
+                        {% set label = 'Introduction' %}
+                    {% else %}
+                        {% set label = post.id | replace({'-': ' ', '_': ' '}) | title %}
+                    {% endif %}
+                {% endif %}
+                <li>
+                    <a href="#{{ post.id }}">{{ label }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

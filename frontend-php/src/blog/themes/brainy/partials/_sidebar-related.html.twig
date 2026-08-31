@@ -1,0 +1,11 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+{% set further = related_dossiers|slice(0, 3) %}
+<div class="related-article-embed" aria-label="Related Stories">
+    <div class="related-article-label">Read Also</div>
+    {% for post in further %}
+        {% set url = contentUrl(post) %}
+        {% set title = post.hero_title | default(post.title | default('Untitled')) %}
+        <a href="{{ url }}" class="related-article-title">{{ title }}</a>
+    {% endfor %}
+</div>
+{% endif %}

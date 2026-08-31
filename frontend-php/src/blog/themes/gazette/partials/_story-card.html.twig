@@ -1,0 +1,57 @@
+{% set hero_img = dossier is defined and dossier.hero_image is defined and dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' and dossier.hero_image != 'images/defaulthero.png' ? dossier.hero_image : false %}
+{% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+
+<li class="story-card {% if index == 0 %}is-featured{% endif %}">
+  <article class="{% if index >= 1 and hero_img %}has-thumb{% endif %}">
+    <div class="story-card-body">
+      {% set card_section = dossier.section is defined and dossier.section ? dossier.section : '' %}
+      {% set card_trumpet = (index <= 5 and dossier.trumpet is defined and dossier.trumpet) ? dossier.trumpet : '' %}
+
+      {% if card_section or card_trumpet %}
+      <p class="kicker kicker-tags">
+        {% if card_section %}
+        <span class="kicker-section">{{ card_section }}</span>
+        {% endif %}
+        {% if card_section and card_trumpet %}
+        <span class="kicker-separator">&bull;</span>
+        {% endif %}
+        {% if card_trumpet %}
+        <span class="kicker-trumpet">{{ card_trumpet }}</span>
+        {% endif %}
+      </p>
+      {% endif %}
+
+      <h2 class="story-card-headline">
+        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+      </h2>
+
+      {% if index == 0 and hero_img %}
+      <figure class="story-cover">
+        <a href="{{ url }}">
+          <img src="{{ theme.contentAsset(hero_img) }}" alt="" decoding="async">
+        </a>
+      </figure>
+      {% endif %}
+
+      {% set standfirst = dossier.deck | default('') | striptags %}
+      {% if standfirst %}
+      <p class="standfirst">{{ standfirst }}</p>
+      {% endif %}
+
+      <p class="dateline">
+        {% if dossier.author %}
+        <span class="byline">{{ dossier.author }}</span> &middot; 
+        {% endif %}
+        <time datetime="{{ dossier.date | date('Y-m-d') }}">{{ dossier.date | date("F d, Y") }}</time>
+      </p>
+    </div>
+
+    {% if index >= 1 and hero_img %}
+    <figure class="story-card-media {% if index <= 5 %}story-card-media-4-3{% else %}story-card-media-1-1{% endif %}">
+      <a href="{{ url }}">
+        <img src="{{ theme.contentAsset(hero_img) }}" alt="" decoding="async">
+      </a>
+    </figure>
+    {% endif %}
+  </article>
+</li>

@@ -1,0 +1,1551 @@
+/* =============================================================================
+ * skin-1337.css — Dual-duty content skin for the 1337 theme
+ *
+ * Scope: .cm-editor (admin TravenEditor WYSIWYM) + .traven-preview (published HTML)
+ * Personality: retro-hacker / cyberpunk terminal-log
+ *   - Phosphor green + magenta/cyan neon on CRT-black
+ *   - JetBrains Mono everywhere (single face per guide §6)
+ *   - Glow, blink, and scanline accents kept off the prose body for readability
+ *
+ * This file is the SOURCE OF TRUTH for prose styling. Chrome lives in styles.css.
+ * The skin must remain usable WITHOUT loading styles.css (guide §7).
+ *
+ * CodeMirror §4 layout rules obeyed throughout:
+ *   - .cm-line marks and block widgets use margin:0 + padding (never vertical margin)
+ *   - blank-line collapse :has(br:only-child) around headings/fences/widgets
+ *   - editor widgets never float
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * 0. @font-face — declared HERE (top of skin) so the admin editor can resolve
+ *    reader fonts. Per guide §6 Risks + §7 Admin editor gotchas #2.
+ *    JetBrains Mono: regular/italic/bold/extrabold. The 400/700/800 normal
+ *    woff2 files are the same variable-font file (Google serves one file for
+ *    all weights); we keep separate @font-face blocks per weight so browser
+ *    font-matching works cleanly.
+ * -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-800-normal.woff2') format('woff2');
+}
+
+/* -----------------------------------------------------------------------------
+ * 1. Design tokens. The --traven-font-* triad is REQUIRED by admin-editor.php
+ *    (hero-title block uses these; missing → system sans on trumpet/deck).
+ *    All three point at the same mono face — the 1337 identity is mono-only.
+ * -------------------------------------------------------------------------- */
+:root {
+  --traven-font-display: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --traven-font-body: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --traven-font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* CRT-black canvas + phosphor green ink */
+  --traven-bg: #06070a;
+  --traven-bg-elev: #0c0e14;          /* elevated code/widget surface */
+  --traven-bg-code: #02030a;          /* deepest code block */
+  --traven-text: #c7f9cc;             /* primary phosphor text */
+  --traven-text-bright: #e6ffe6;      /* headlines, bright accents */
+  --traven-muted: #5b7a5b;            /* dim phosphor (captions, meta) */
+  --traven-border: #1f3a1f;           /* terminal border green */
+  --traven-border-bright: #2f6b2f;    /* hover/focus border */
+  --traven-caret: #00ff66;            /* neon caret + primary accent */
+  --traven-accent-magenta: #ff2bd6;   /* secondary neon: links, important */
+  --traven-accent-cyan: #21e6ff;      /* tertiary neon: info, note */
+  --traven-accent-amber: #ffb000;     /* quaternary: warning, tip */
+  --traven-accent-red: #ff3b5c;       /* danger: caution */
+
+  --traven-link: var(--traven-accent-magenta);
+  --traven-link-hover: var(--traven-accent-cyan);
+
+  --traven-highlight-bg: rgba(0, 255, 102, 0.22);
+  --traven-selection: rgba(0, 255, 102, 0.22);
+  --traven-selection-focused: rgba(0, 255, 102, 0.34);
+
+  --traven-expand-bg: var(--traven-bg-elev);
+  --traven-expand-border: var(--traven-border-bright);
+  --traven-expand-fg: var(--traven-text);
+  --traven-expand-link: var(--traven-accent-cyan);
+  --traven-expand-accent: var(--traven-caret);
+  --traven-expand-muted: var(--traven-muted);
+}
+
+/* -----------------------------------------------------------------------------
+ * 2. Editor base — .cm-editor. !important on font/color/bg beats admin
+ *    Tailwind Preflight + traven.css (guide §7 gotcha #2).
+ * -------------------------------------------------------------------------- */
+.cm-editor {
+  font-family: var(--traven-font-body) !important;
+  font-size: 15px !important;   /* pin to the .traven-preview base for editor/published parity */
+  background-color: var(--traven-bg) !important;
+  color: var(--traven-text) !important;
+  line-height: 1.7 !important;
+}
+.cm-editor:focus,
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+.cm-scroller {
+  font-family: inherit !important;
+  line-height: 1.7 !important;
+  padding: 14px 0 !important;
+}
+.cm-content {
+  padding: 0 26px !important;
+}
+.cm-gutters,
+.cm-gutterElement {
+  background-color: var(--traven-bg) !important;
+  color: var(--traven-muted) !important;
+  border-right: 1px solid var(--traven-border) !important;
+}
+.cm-activeLine {
+  background-color: rgba(0, 255, 102, 0.04) !important;
+}
+.cm-activeLineGutter {
+  background-color: rgba(0, 255, 102, 0.06) !important;
+  color: var(--traven-caret) !important;
+}
+
+/* Selection + cursors — required by §3.1 */
+.cm-selectionBackground,
+.cm-native-selection {
+  background-color: var(--traven-selection) !important;
+}
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: var(--traven-selection-focused) !important;
+}
+.cm-editor .cm-cursor {
+  border-left-color: var(--traven-caret) !important;
+  border-left-width: 2px !important;
+}
+.cm-editor .cm-fat-cursor {
+  background-color: var(--traven-caret) !important;
+  color: var(--traven-bg) !important;
+  opacity: 0.6 !important;
+}
+
+/* Editor scrollbar — thin neon */
+.cm-editor ::-webkit-scrollbar { width: 10px; height: 10px; }
+.cm-editor ::-webkit-scrollbar-track { background: var(--traven-bg); }
+.cm-editor ::-webkit-scrollbar-thumb {
+  background: var(--traven-border-bright);
+  border-radius: 0;
+}
+.cm-editor ::-webkit-scrollbar-thumb:hover { background: var(--traven-caret); }
+
+/* -----------------------------------------------------------------------------
+ * 3. Inline marks (all required, §3.1).
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-bold {
+  font-weight: 700;
+  color: var(--traven-text-bright);
+}
+.cm-wysiwym-italic {
+  font-style: italic;
+  color: var(--traven-text);
+}
+.cm-wysiwym-strikethrough {
+  text-decoration: line-through;
+  color: var(--traven-muted);
+}
+.cm-wysiwym-highlight {
+  background-color: var(--traven-highlight-bg);
+  border-radius: 2px;
+  padding: 1px 0;
+  color: var(--traven-text-bright);
+}
+.cm-wysiwym-inline-code {
+  font-family: var(--traven-font-mono) !important;
+  background-color: rgba(255, 43, 214, 0.12);
+  color: var(--traven-accent-magenta);
+  padding: 1px 6px;
+  border-radius: 0;
+  font-size: 0.92em;
+  font-weight: 500;
+  border: 1px solid rgba(255, 43, 214, 0.35);
+}
+.cm-wysiwym-link-anchor {
+  color: var(--traven-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 43, 214, 0.4);
+  text-underline-offset: 3px;
+}
+.cm-wysiwym-link-anchor:hover {
+  color: var(--traven-link-hover);
+  text-decoration-color: var(--traven-accent-cyan);
+}
+.cm-wysiwym-bullet {
+  color: var(--traven-caret);
+}
+
+/* Strip default underline from heading highlighters (§3.1) */
+.cm-editor .cmt-heading,
+.cm-editor .tok-heading,
+.cm-editor .cm-wysiwym-h1 span,
+.cm-editor .cm-wysiwym-h2 span,
+.cm-editor .cm-wysiwym-h3 span,
+.cm-editor .cm-wysiwym-h4 span,
+.cm-editor .cm-wysiwym-h5 span,
+.cm-editor .cm-wysiwym-h6 span {
+  text-decoration: none;
+}
+
+/* -----------------------------------------------------------------------------
+ * 4. Headings — padding only, !important, never margin (§4.1).
+ *    Identity: every heading prefixed with a neon `##`-style glyph rule via
+ *    text-decoration is avoided (that would clash with live-edit marks);
+ *    instead headings use color + weight + a left border accent.
+ * -------------------------------------------------------------------------- */
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  font-family: var(--traven-font-display);
+  color: var(--traven-text-bright);
+  letter-spacing: 0;
+  text-decoration: none;
+  border-left: 3px solid var(--traven-caret);
+  padding-left: 12px !important;
+}
+.cm-editor .cm-wysiwym-h1 {
+  font-size: 1.8em;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-top: 26px !important;
+  padding-bottom: 12px !important;
+  margin: 0 !important;
+}
+.cm-editor .cm-wysiwym-h2 {
+  font-size: 1.45em;
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-top: 22px !important;
+  padding-bottom: 10px !important;
+  margin: 0 !important;
+  border-left-color: var(--traven-accent-cyan);
+}
+.cm-editor .cm-wysiwym-h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1.35;
+  padding-top: 18px !important;
+  padding-bottom: 8px !important;
+  margin: 0 !important;
+  border-left-color: var(--traven-accent-magenta);
+}
+.cm-editor .cm-wysiwym-h4 {
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--traven-caret);
+  padding-top: 14px !important;
+  padding-bottom: 6px !important;
+  margin: 0 !important;
+  border-left: none;
+}
+.cm-editor .cm-wysiwym-h5 {
+  font-size: 0.95em;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--traven-accent-cyan);
+  padding-top: 12px !important;
+  padding-bottom: 4px !important;
+  margin: 0 !important;
+  border-left: none;
+}
+.cm-editor .cm-wysiwym-h6 {
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--traven-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding-top: 10px !important;
+  padding-bottom: 2px !important;
+  margin: 0 !important;
+  border-left: none;
+}
+
+/* -----------------------------------------------------------------------------
+ * 5. Blockquote — first/mid/last via :has() (§4.2). CodeMirror renders
+ *    blockquotes as multiple stacked .cm-line siblings.
+ * -------------------------------------------------------------------------- */
+.cm-editor .cm-wysiwym-blockquote {
+  border-left: 3px solid var(--traven-border-bright);
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 16px !important;
+  margin: 0 !important;
+  position: relative;
+}
+.cm-editor .cm-wysiwym-blockquote {
+  padding-top: 10px !important;
+}
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote {
+  padding-top: 2px !important;
+}
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) {
+  padding-bottom: 10px !important;
+}
+.cm-editor .cm-wysiwym-blockquote,
+.cm-editor .cm-wysiwym-blockquote * {
+  font-style: italic;
+  color: var(--traven-muted);
+  line-height: 1.5 !important;
+}
+
+/* -----------------------------------------------------------------------------
+ * 6. HR, fenced code blocks, collapsed-fence squash (§4.5).
+ *    Code blocks render as a CRT "screen" — deepest bg, neon border, scanline.
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-hr-widget {
+  border: 0;
+  border-top: 1px dashed var(--traven-border-bright);
+  margin: 0 !important;
+  padding: 14px 0 !important;
+  display: block;
+  width: 100%;
+}
+.cm-editor .cm-wysiwym-codeblock-line {
+  background-color: var(--traven-bg-code);
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.9em;
+  color: var(--traven-text);
+  padding-left: 22px !important;
+  padding-right: 22px !important;
+  margin: 0 !important;
+}
+.cm-editor .cm-wysiwym-codeblock-line-first {
+  padding-top: 14px !important;
+  border: 1px solid var(--traven-border-bright);
+  border-bottom: none;
+}
+.cm-editor .cm-wysiwym-codeblock-line-last {
+  padding-bottom: 14px !important;
+  border: 1px solid var(--traven-border-bright);
+  border-top: none;
+}
+.cm-editor .cm-wysiwym-codeblock-line:not(.cm-wysiwym-codeblock-line-first):not(.cm-wysiwym-codeblock-line-last) {
+  border-left: 1px solid var(--traven-border-bright);
+  border-right: 1px solid var(--traven-border-bright);
+}
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+/* Blank-line collapse after headings (§4.3) */
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child) {
+  height: 0.6em !important;
+  min-height: 0.6em !important;
+}
+
+/* -----------------------------------------------------------------------------
+ * 7. Shortcode widgets — image/video/audio/figure (§4.4, §6).
+ *    NEVER vertical margin; use padding. Auto-margins for horizontal align.
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-image-shortcode-container,
+.cm-wysiwym-video-shortcode-container,
+.cm-wysiwym-audio-shortcode-container,
+.cm-wysiwym-figure-shortcode {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 0 !important;
+  padding: 10px;
+  border: 1px solid var(--traven-border-bright);
+  border-radius: 0;
+  overflow: hidden;
+  background-color: var(--traven-bg-elev);
+  position: relative;
+  box-sizing: border-box;
+}
+.size-small  { width: 30%; }
+.size-medium { width: 50%; }
+.size-large  { width: 70%; }
+.size-full   { width: 100%; }
+
+.cm-wysiwym-image-shortcode-container.align-left   { margin: 0 auto 0 0 !important; }
+.cm-wysiwym-image-shortcode-container.align-right  { margin: 0 0 0 auto !important; }
+.cm-wysiwym-image-shortcode-container.align-center { margin: 0 auto !important; }
+.cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-wysiwym-video-shortcode-container.align-fullbleed,
+.cm-wysiwym-audio-shortcode-container.align-fullbleed,
+.cm-wysiwym-figure-shortcode.align-fullbleed {
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Shortcode meta + badges (§3.1) */
+.cm-wysiwym-image-shortcode-container .shortcode-meta,
+.cm-wysiwym-video-shortcode-container .shortcode-meta,
+.cm-wysiwym-audio-shortcode-container .shortcode-meta {
+  font-family: var(--traven-font-mono);
+  color: var(--traven-muted);
+  font-size: 0.78em;
+}
+.cm-wysiwym-image-shortcode-container .meta-badge,
+.cm-wysiwym-video-shortcode-container .meta-badge,
+.cm-wysiwym-audio-shortcode-container .meta-badge {
+  background-color: rgba(0, 255, 102, 0.1);
+  color: var(--traven-caret);
+  border: 1px solid var(--traven-border-bright);
+  border-radius: 0;
+  padding: 1px 6px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.cm-wysiwym-image-uploading {
+  border: 1px dashed var(--traven-caret) !important;
+}
+
+/* Hover-edit icons (§3.1) — 24x24 round neon buttons */
+.cm-wysiwym-image-shortcode-container .image-edit-icon,
+.cm-wysiwym-video-shortcode-container .video-edit-icon,
+.cm-wysiwym-audio-shortcode-container .audio-edit-icon,
+.cm-wysiwym-component-shortcode .image-edit-icon,
+.cm-wysiwym-figure-shortcode .figure-edit-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--traven-bg);
+  border: 1px solid var(--traven-caret);
+  color: var(--traven-caret);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.cm-wysiwym-image-shortcode-container:hover .image-edit-icon,
+.cm-wysiwym-video-shortcode-container:hover .video-edit-icon,
+.cm-wysiwym-audio-shortcode-container:hover .audio-edit-icon,
+.cm-wysiwym-component-shortcode:hover .image-edit-icon,
+.cm-wysiwym-figure-shortcode:hover .figure-edit-icon {
+  opacity: 1;
+}
+
+/* -----------------------------------------------------------------------------
+ * 8. Component shortcodes — blockquote/pullquote/info/warning (§6.5).
+ *    margin:0 !important on the outer widget; padding for rhythm.
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-component-shortcode {
+  position: relative;
+  margin: 0 !important;
+  padding: 22px 16px !important;
+  border-left: 4px solid var(--traven-border-bright);
+  background-color: var(--traven-bg-elev);
+  color: var(--traven-text);
+  overflow: hidden;
+}
+.cm-wysiwym-component-shortcode blockquote,
+.cm-wysiwym-component-shortcode p,
+.cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cm-wysiwym-component-shortcode .component-body p {
+  margin: 0 !important;
+}
+.cm-wysiwym-component-shortcode .component-body p + p,
+.cm-wysiwym-component-shortcode p + p,
+.cm-wysiwym-figure-shortcode p + p {
+  margin-top: 12px !important;
+}
+.cm-wysiwym-component-shortcode cite {
+  display: block;
+  margin-top: 10px !important;
+  color: var(--traven-muted);
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+/* Attributed blockquote — the [component name="blockquote"] shortcode renders
+   as .cm-wysiwym-component-shortcode.component-blockquote wrapping a nested
+   <blockquote> + <cite>. Style the inner blockquote (the visible quote frame)
+   + cite (right-aligned attribution) + p resets. */
+.cm-wysiwym-component-shortcode.component-blockquote {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-style: italic;
+  color: var(--traven-muted) !important;
+  overflow: hidden; /* child margins cannot collapse out of the widget */
+}
+.cm-wysiwym-component-shortcode.component-blockquote blockquote {
+  border-left: 3px solid var(--traven-border-bright) !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  margin: 0 !important;
+  position: relative;
+  font-style: italic;
+  color: var(--traven-muted);
+}
+.cm-wysiwym-component-shortcode.component-blockquote blockquote,
+.cm-wysiwym-component-shortcode.component-blockquote blockquote * {
+  line-height: 1.5 !important;
+  font-family: var(--traven-font-body) !important;
+}
+.cm-wysiwym-component-shortcode.component-blockquote blockquote p {
+  margin: 0 !important;
+}
+.cm-wysiwym-component-shortcode.component-blockquote blockquote p:not(:last-of-type) {
+  margin-bottom: 8px !important;
+}
+.cm-wysiwym-component-shortcode.component-blockquote cite {
+  display: block;
+  margin-top: 6px !important;
+  margin-bottom: 0 !important;
+  font-size: 0.85em;
+  color: var(--traven-muted);
+  font-style: normal;
+  text-align: right;
+}
+
+/* Pullquote — the [pullquote] shortcode renders as .component-pullquote
+   wrapping a nested <blockquote> + <p>. Force center alignment + normal
+   style on all children so the neon top/bottom borders frame the quote. */
+.cm-wysiwym-component-shortcode.component-pullquote {
+  border-left: none !important;
+  border-top: 2px solid var(--traven-caret) !important;
+  border-bottom: 2px solid var(--traven-caret) !important;
+  padding: 26px 16px !important;
+  margin: 0 auto !important;
+  max-width: 80% !important;
+  font-size: 1.25em !important;
+  font-weight: 700;
+  text-align: center;
+  color: var(--traven-text-bright) !important;
+  background-color: transparent !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.cm-wysiwym-component-shortcode.component-pullquote,
+.cm-wysiwym-component-shortcode.component-pullquote * {
+  line-height: 1.5 !important;
+  font-style: normal !important;
+  color: var(--traven-text-bright) !important;
+  text-align: center !important;
+  font-family: var(--traven-font-body) !important;
+}
+.cm-wysiwym-component-shortcode.component-pullquote blockquote {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.cm-wysiwym-component-shortcode.component-pullquote p {
+  margin: 0 !important;
+}
+.cm-wysiwym-component-shortcode.component-pullquote cite {
+  display: block;
+  margin-top: 10px !important;
+  font-size: 0.7em;
+  font-style: normal;
+  color: var(--traven-muted) !important;
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+.cm-wysiwym-component-shortcode.component-info {
+  border: 1px solid var(--traven-accent-cyan) !important;
+  border-left: 4px solid var(--traven-accent-cyan) !important;
+  border-radius: 0 !important;
+  background-color: rgba(33, 230, 255, 0.08) !important;
+  color: var(--traven-text) !important;
+  padding: 16px !important;
+  margin: 0 !important;
+}
+.cm-wysiwym-component-shortcode.component-warning {
+  border: 1px solid var(--traven-accent-amber) !important;
+  border-left: 4px solid var(--traven-accent-amber) !important;
+  border-radius: 0 !important;
+  background-color: rgba(255, 176, 0, 0.1) !important;
+  color: var(--traven-text) !important;
+  padding: 16px !important;
+  margin: 0 !important;
+}
+
+/* GitHub alerts in the editor — margin:0 !important (§4.4, audit §5.1).
+   Mirror the published .article-content .markdown-alert-* neon palette so
+   the editor canvas matches the rendered post. Each variant gets its own
+   neon border-left + tinted background + color, plus the alert title. */
+.cm-editor .cm-wysiwym-alert {
+  margin: 0 !important;
+  padding: 16px 20px !important;
+  overflow: hidden;
+  border-radius: 0 !important;
+  border-width: 1px 1px 1px 4px !important;
+  border-style: solid !important;
+  border-color: var(--traven-border-bright) !important;
+  font-style: normal !important;
+}
+.cm-editor .cm-wysiwym-alert,
+.cm-editor .cm-wysiwym-alert * {
+  font-style: normal !important;
+}
+.cm-editor .cm-wysiwym-alert p {
+  margin: 0 !important;
+}
+.cm-editor .cm-wysiwym-alert p + p {
+  margin-top: 10px !important;
+}
+.cm-editor .cm-wysiwym-alert .markdown-alert-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-bottom: 6px !important; /* padding, not margin — audit §4.4 */
+}
+
+.cm-editor .cm-wysiwym-alert-note {
+  border-color: var(--traven-accent-cyan) !important;
+  border-left-color: var(--traven-accent-cyan) !important;
+  background-color: rgba(33, 230, 255, 0.08) !important;
+  color: var(--traven-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-note * { color: var(--traven-text) !important; }
+.cm-editor .cm-wysiwym-alert-note .markdown-alert-title { color: var(--traven-accent-cyan) !important; }
+
+.cm-editor .cm-wysiwym-alert-tip {
+  border-color: var(--traven-caret) !important;
+  border-left-color: var(--traven-caret) !important;
+  background-color: rgba(0, 255, 102, 0.08) !important;
+  color: var(--traven-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-tip * { color: var(--traven-text) !important; }
+.cm-editor .cm-wysiwym-alert-tip .markdown-alert-title { color: var(--traven-caret) !important; }
+
+.cm-editor .cm-wysiwym-alert-important {
+  border-color: var(--traven-accent-magenta) !important;
+  border-left-color: var(--traven-accent-magenta) !important;
+  background-color: rgba(255, 43, 214, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-important * { color: var(--traven-text) !important; }
+.cm-editor .cm-wysiwym-alert-important .markdown-alert-title { color: var(--traven-accent-magenta) !important; }
+
+.cm-editor .cm-wysiwym-alert-warning {
+  border-color: var(--traven-accent-amber) !important;
+  border-left-color: var(--traven-accent-amber) !important;
+  background-color: rgba(255, 176, 0, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-warning * { color: var(--traven-text) !important; }
+.cm-editor .cm-wysiwym-alert-warning .markdown-alert-title { color: var(--traven-accent-amber) !important; }
+
+.cm-editor .cm-wysiwym-alert-caution {
+  border-color: var(--traven-accent-red) !important;
+  border-left-color: var(--traven-accent-red) !important;
+  background-color: rgba(255, 59, 92, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-caution * { color: var(--traven-text) !important; }
+.cm-editor .cm-wysiwym-alert-caution .markdown-alert-title { color: var(--traven-accent-red) !important; }
+
+/* Font-family inheritance fix for nested component children (§5.5) */
+.cm-wysiwym-component-shortcode.component-info,
+.cm-wysiwym-component-shortcode.component-info * {
+  font-family: var(--traven-font-body) !important;
+}
+.cm-wysiwym-component-shortcode.component-warning,
+.cm-wysiwym-component-shortcode.component-warning * {
+  font-family: var(--traven-font-body) !important;
+}
+
+/* -----------------------------------------------------------------------------
+ * 9. Table widget (§3.1, §4.4). margin:0 !important on the outer widget.
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-table-row {
+  margin: 0 !important;
+}
+.cm-wysiwym-table-widget {
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  overflow-x: auto;
+}
+.cm-wysiwym-table-widget table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--traven-font-mono);
+  font-size: 0.92em;
+}
+.cm-wysiwym-table-widget th,
+.cm-wysiwym-table-widget td {
+  border: 1px solid var(--traven-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+.cm-wysiwym-table-widget th {
+  background-color: var(--traven-bg-elev);
+  color: var(--traven-caret);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* -----------------------------------------------------------------------------
+ * 10. Mermaid + math widgets (§4.4, §3.1). margin:0 auto; padding for rhythm.
+ * -------------------------------------------------------------------------- */
+.cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+  text-align: center;
+}
+.cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  text-align: center;
+}
+.cm-wysiwym-inline-math-widget {
+  margin: 0 !important;
+}
+.katex-inline-fallback,
+.katex-display-fallback {
+  /* Inside .cm-editor, zero vertical margin (§3.1) */
+}
+.cm-editor .katex-inline-fallback,
+.cm-editor .katex-display-fallback {
+  margin: 0 !important;
+}
+
+/* Blank-line collapse around all block widgets (§4.7) + code fences (§4.5) */
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* -----------------------------------------------------------------------------
+ * 11. Frontmatter (§3.1).
+ * -------------------------------------------------------------------------- */
+.cm-editor .cm-wysiwym-frontmatter {
+  background-color: var(--traven-bg-code);
+  color: var(--traven-muted);
+  font-size: 0.88em;
+  padding: 4px 12px !important;
+  margin: 0 !important;
+  border-left: 2px solid var(--traven-border-bright);
+}
+.cm-editor .cm-wysiwym-frontmatter-active {
+  background-color: rgba(0, 255, 102, 0.08);
+  color: var(--traven-text);
+}
+
+/* -----------------------------------------------------------------------------
+ * 12. Optional syntax highlighting (§3.1) — markdown-relevant subset only.
+ *     Neon-on-black palette tuned for readability.
+ * -------------------------------------------------------------------------- */
+.cm-editor .tok-markup, .cm-editor .cmt-markup { color: var(--traven-muted); }
+.cm-editor .tok-meta, .cm-editor .cmt-meta { color: var(--traven-accent-amber); }
+.cm-editor .tok-punctuation, .cm-editor .cmt-punctuation { color: var(--traven-muted); }
+.cm-editor .tok-list, .cm-editor .cmt-list { color: var(--traven-caret); }
+.cm-editor .tok-comment, .cm-editor .cmt-comment { color: var(--traven-muted); font-style: italic; }
+.cm-editor .tok-keyword, .cm-editor .cmt-keyword { color: var(--traven-accent-magenta); font-weight: 700; }
+.cm-editor .tok-string, .cm-editor .cmt-string { color: var(--traven-text-bright); }
+.cm-editor .tok-number, .cm-editor .cmt-number { color: var(--traven-accent-amber); }
+.cm-editor .tok-url, .cm-editor .cmt-url,
+.cm-editor .tok-link, .cm-editor .cmt-link { color: var(--traven-accent-cyan); text-decoration: underline; }
+
+/* =============================================================================
+ * PREVIEW SCOPE — .traven-preview (published HTML + admin preview pane)
+ * Prose is scoped to .article-content where possible (guide §7 published-chrome
+ * gotchas) so chrome headlines/nav/footer tables stay clean.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * 13. Preview base. Sync bg with --traven-bg (GOTCHAS §3).
+ * -------------------------------------------------------------------------- */
+.traven-preview {
+  font-family: var(--traven-font-body);
+  background-color: var(--traven-bg);
+  color: var(--traven-text);
+  line-height: 1.75;
+  font-size: 15px;
+}
+
+/* Headings — scoped to .article-content so chrome h1/h2/h3 keep their own
+ * styling (guide §7 chrome vs skin heading cascade). */
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  font-family: var(--traven-font-display);
+  color: var(--traven-text-bright);
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin-top: 1.8em;
+  margin-bottom: 0.7em;
+  border-left: 3px solid var(--traven-caret);
+  padding-left: 12px;
+}
+.article-content h1 {
+  font-size: 1.8em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-left-color: var(--traven-caret);
+}
+.article-content h2 {
+  font-size: 1.45em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-left-color: var(--traven-accent-cyan);
+}
+.article-content h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  border-left-color: var(--traven-accent-magenta);
+}
+.article-content h4 {
+  font-size: 1.05em;
+  font-weight: 700;
+  color: var(--traven-caret);
+  border-left: none;
+  padding-left: 0;
+}
+.article-content h5 {
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--traven-accent-cyan);
+  border-left: none;
+  padding-left: 0;
+}
+.article-content h6 {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--traven-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-left: none;
+  padding-left: 0;
+}
+
+/* First-child heading margins (§5.1 parity) */
+.article-content > h1:first-child { margin-top: 0.4em !important; }
+.article-content > h2:first-child { margin-top: 0.4em !important; }
+.article-content > h3:first-child { margin-top: 0.4em !important; }
+
+/* -----------------------------------------------------------------------------
+ * 14. Paragraphs, lists, links, inline code, pre, hr, mark, sub/sup.
+ * -------------------------------------------------------------------------- */
+.article-content p {
+  margin-top: 0;
+  margin-bottom: 1.1em;
+  line-height: 1.75;
+}
+.article-content ul,
+.article-content ol {
+  padding-left: 24px;
+  margin-top: 0;
+  margin-bottom: 1.1em;
+}
+.article-content li {
+  margin-bottom: 0.4em;
+}
+.article-content li::marker {
+  color: var(--traven-caret);
+}
+.article-content a {
+  color: var(--traven-link);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 43, 214, 0.45);
+  text-underline-offset: 3px;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+.article-content a:hover {
+  color: var(--traven-link-hover);
+  text-decoration-color: var(--traven-accent-cyan);
+}
+.article-content code {
+  font-family: var(--traven-font-mono);
+  background-color: rgba(255, 43, 214, 0.12);
+  color: var(--traven-accent-magenta);
+  padding: 1px 6px;
+  border-radius: 0;
+  font-size: 0.92em;
+  font-weight: 500;
+  border: 1px solid rgba(255, 43, 214, 0.35);
+}
+.article-content pre {
+  background-color: var(--traven-bg-code);
+  color: var(--traven-text);
+  border: 1px solid var(--traven-border-bright);
+  border-radius: 0;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 1.4em 0;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+.article-content pre code {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
+.article-content hr {
+  border: 0;
+  border-top: 1px dashed var(--traven-border-bright);
+  margin: 2em 0;
+}
+.article-content mark {
+  background-color: var(--traven-highlight-bg);
+  color: var(--traven-text-bright);
+  border-radius: 2px;
+  padding: 1px 4px;
+}
+.article-content sub,
+.article-content sup {
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * 15. Tables (§5.3).
+ * -------------------------------------------------------------------------- */
+.article-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.92em;
+}
+.article-content table th,
+.article-content table td {
+  border: 1px solid var(--traven-border);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+.article-content table th {
+  background-color: var(--traven-bg-elev);
+  color: var(--traven-caret);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.article-content table tr:nth-child(even) td {
+  background-color: rgba(31, 58, 31, 0.18);
+}
+
+/* -----------------------------------------------------------------------------
+ * 16. Blockquotes — exclude pullquote + GitHub alerts + traven-alert
+ *     (GOTCHAS §4). Standard margins + padding for HTML rendering.
+ * -------------------------------------------------------------------------- */
+.article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) {
+  border-left: 3px solid var(--traven-border-bright);
+  padding: 10px 16px;
+  margin: 1.4em 0;
+  font-style: italic;
+  color: var(--traven-muted);
+}
+.article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) p {
+  margin: 0;
+}
+.article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) p + p {
+  margin-top: 10px;
+}
+
+/* Blockquote spacing parity (§5.2) — tighten before/after blockquote */
+.article-content p:has(+ blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert)),
+.article-content ul:has(+ blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert)),
+.article-content pre:has(+ blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert)) {
+  margin-bottom: 1.1em;
+}
+.article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) + p,
+.article-content blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) + pre {
+  margin-top: 1.1em;
+}
+
+/* -----------------------------------------------------------------------------
+ * 17. Traven component blockquote + pullquote (§6.5).
+ * -------------------------------------------------------------------------- */
+.article-content .traven-component-blockquote {
+  border-left: 4px solid var(--traven-border-bright);
+  padding: 14px 18px;
+  margin: 1.4em 0;
+  font-style: italic;
+  color: var(--traven-muted);
+  background-color: transparent;
+}
+.article-content .traven-component-blockquote footer,
+.article-content .traven-component-blockquote cite {
+  display: block;
+  margin-top: 6px;
+  color: var(--traven-muted);
+  font-style: normal;
+  font-size: 0.85em;
+  text-align: right;
+}
+.article-content .traven-component-pullquote {
+  border-left: none;
+  border-top: 2px solid var(--traven-caret);
+  border-bottom: 2px solid var(--traven-caret);
+  padding: 26px 18px;
+  margin: 1.8em 0;
+  font-size: 1.25em;
+  font-weight: 700;
+  text-align: center;
+  color: var(--traven-text-bright);
+  background-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.article-content .traven-component-pullquote p {
+  margin: 0;
+}
+.article-content .traven-component-pullquote cite {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.7em;
+  font-style: normal;
+  color: var(--traven-muted);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+/* -----------------------------------------------------------------------------
+ * 18. Info / warning components (§6.5) + GitHub alerts (§6.5, GOTCHAS §4).
+ *     Distinct neon treatments per variant.
+ * -------------------------------------------------------------------------- */
+.article-content .traven-component-info,
+.article-content .traven-component-warning {
+  padding: 16px 20px;
+  margin: 1.4em 0;
+  border-radius: 0;
+  font-family: var(--traven-font-body);
+}
+.article-content .traven-component-info p,
+.article-content .traven-component-warning p {
+  margin: 0;
+}
+.article-content .traven-component-info p + p,
+.article-content .traven-component-warning p + p {
+  margin-top: 10px;
+}
+.article-content .traven-component-info {
+  border: 1px solid var(--traven-accent-cyan);
+  border-left: 4px solid var(--traven-accent-cyan);
+  background-color: rgba(33, 230, 255, 0.08);
+  color: var(--traven-text);
+}
+.article-content .traven-component-warning {
+  border: 1px solid var(--traven-accent-amber);
+  border-left: 4px solid var(--traven-accent-amber);
+  background-color: rgba(255, 176, 0, 0.1);
+  color: var(--traven-text);
+}
+
+/* GitHub alerts — explicit margins/padding/font (GOTCHAS §4) */
+.article-content .markdown-alert,
+.article-content .traven-alert {
+  margin: 1.4em 0 !important;
+  padding: 16px 20px !important;
+  font-family: var(--traven-font-body) !important;
+  border-radius: 0 !important;
+  border-width: 1px 1px 1px 4px !important;
+  border-style: solid !important;
+}
+.article-content .markdown-alert p,
+.article-content .traven-alert p {
+  margin: 0 !important;
+}
+.article-content .markdown-alert p + p,
+.article-content .traven-alert p + p {
+  margin-top: 10px !important;
+}
+.article-content .markdown-alert .markdown-alert-title,
+.article-content .traven-alert .markdown-alert-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.article-content .markdown-alert-note,
+.article-content .traven-alert-note {
+  border-color: var(--traven-accent-cyan) !important;
+  border-left-color: var(--traven-accent-cyan) !important;
+  background-color: rgba(33, 230, 255, 0.08) !important;
+  color: var(--traven-text) !important;
+}
+.article-content .markdown-alert-note .markdown-alert-title,
+.article-content .traven-alert-note .markdown-alert-title {
+  color: var(--traven-accent-cyan);
+}
+.article-content .markdown-alert-tip,
+.article-content .traven-alert-tip {
+  border-color: var(--traven-caret) !important;
+  border-left-color: var(--traven-caret) !important;
+  background-color: rgba(0, 255, 102, 0.08) !important;
+  color: var(--traven-text) !important;
+}
+.article-content .markdown-alert-tip .markdown-alert-title,
+.article-content .traven-alert-tip .markdown-alert-title {
+  color: var(--traven-caret);
+}
+.article-content .markdown-alert-important,
+.article-content .traven-alert-important {
+  border-color: var(--traven-accent-magenta) !important;
+  border-left-color: var(--traven-accent-magenta) !important;
+  background-color: rgba(255, 43, 214, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.article-content .markdown-alert-important .markdown-alert-title,
+.article-content .traven-alert-important .markdown-alert-title {
+  color: var(--traven-accent-magenta);
+}
+.article-content .markdown-alert-warning,
+.article-content .traven-alert-warning {
+  border-color: var(--traven-accent-amber) !important;
+  border-left-color: var(--traven-accent-amber) !important;
+  background-color: rgba(255, 176, 0, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.article-content .markdown-alert-warning .markdown-alert-title,
+.article-content .traven-alert-warning .markdown-alert-title {
+  color: var(--traven-accent-amber);
+}
+.article-content .markdown-alert-caution,
+.article-content .traven-alert-caution {
+  border-color: var(--traven-accent-red) !important;
+  border-left-color: var(--traven-accent-red) !important;
+  background-color: rgba(255, 59, 92, 0.1) !important;
+  color: var(--traven-text) !important;
+}
+.article-content .markdown-alert-caution .markdown-alert-title,
+.article-content .traven-alert-caution .markdown-alert-title {
+  color: var(--traven-accent-red);
+}
+
+/* -----------------------------------------------------------------------------
+ * 19. Image shortcodes — Traven emitted HTML (§6.1).
+ *     Sizes on OUTER container; default centering for non-aligned.
+ * -------------------------------------------------------------------------- */
+.article-content figure.traven-image-figure {
+  margin: 1.4em 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--traven-border-bright);
+  background-color: var(--traven-bg-elev);
+  padding: 10px;
+  box-sizing: border-box;
+}
+.article-content figure.traven-image-figure.align-left   { margin: 1.4em 1.4em 1.4em 0; float: left; max-width: 50%; }
+.article-content figure.traven-image-figure.align-right  { margin: 1.4em 0 1.4em 1.4em; float: right; max-width: 50%; }
+.article-content figure.traven-image-figure.align-center { margin-left: auto; margin-right: auto; }
+.article-content figure.traven-image-figure.align-fullbleed {
+  margin: 1.8em 0;
+  border: none;
+  padding: 0;
+}
+.article-content img.traven-image-shortcode {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.article-content img.traven-image-shortcode.align-left   { float: left; margin: 1.4em 1.4em 1.4em 0; max-width: 50%; }
+.article-content img.traven-image-shortcode.align-right  { float: right; margin: 1.4em 0 1.4em 1.4em; max-width: 50%; }
+.article-content img.traven-image-shortcode.align-center { display: block; margin-left: auto; margin-right: auto; }
+.article-content img.traven-image-shortcode.align-fullbleed { width: 100%; display: block; }
+.article-content figcaption.traven-image-caption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  color: var(--traven-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Size classes on the outer figure (§6.1) */
+.article-content figure.traven-image-figure.size-small,
+.article-content figure.traven-image-figure .size-small { width: 30%; }
+.article-content figure.traven-image-figure.size-medium,
+.article-content figure.traven-image-figure .size-medium { width: 50%; }
+.article-content figure.traven-image-figure.size-large,
+.article-content figure.traven-image-figure .size-large { width: 70%; }
+.article-content figure.traven-image-figure.size-full,
+.article-content figure.traven-image-figure .size-full { width: 100%; }
+
+/* -----------------------------------------------------------------------------
+ * 20. Video + audio shortcodes (§6.2, §6.3, §8 video pitfalls).
+ *     .traven-video-container: position relative + aspect-ratio 16/9; iframe
+ *     absolute fill. Never padding-bottom on the figure (double-height gap).
+ * -------------------------------------------------------------------------- */
+.article-content .traven-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--traven-bg-code);
+  border: 1px solid var(--traven-border-bright);
+  overflow: hidden;
+}
+.article-content .traven-video-container iframe,
+.article-content .traven-video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.article-content figure.traven-video-figure {
+  margin: 1.4em 0;
+  display: flex;
+  flex-direction: column;
+}
+.article-content figure.traven-video-figure.align-left   { margin: 1.4em 1.4em 1.4em 0; float: left; max-width: 50%; }
+.article-content figure.traven-video-figure.align-right  { margin: 1.4em 0 1.4em 1.4em; float: right; max-width: 50%; }
+.article-content figure.traven-video-figure.align-center { margin-left: auto; margin-right: auto; }
+.article-content figure.traven-video-figure.align-fullbleed {
+  margin: 1.8em 0;
+}
+.article-content figure.traven-video-figure.size-small  { width: 30%; }
+.article-content figure.traven-video-figure.size-medium { width: 50%; }
+.article-content figure.traven-video-figure.size-large  { width: 70%; }
+.article-content figure.traven-video-figure.size-full   { width: 100%; }
+.article-content figure.traven-video-figure figcaption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  color: var(--traven-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+.article-content .traven-audio-container {
+  width: 100%;
+  background-color: var(--traven-bg-elev);
+  border: 1px solid var(--traven-border-bright);
+  padding: 10px;
+  box-sizing: border-box;
+}
+.article-content .traven-audio-container audio {
+  width: 100%;
+}
+.article-content figure.traven-audio-figure {
+  margin: 1.4em 0;
+  display: flex;
+  flex-direction: column;
+}
+.article-content figure.traven-audio-figure.align-left   { margin: 1.4em 1.4em 1.4em 0; float: left; max-width: 50%; }
+.article-content figure.traven-audio-figure.align-right  { margin: 1.4em 0 1.4em 1.4em; float: right; max-width: 50%; }
+.article-content figure.traven-audio-figure.align-center { margin-left: auto; margin-right: auto; }
+.article-content figure.traven-audio-figure.size-small  { width: 30%; }
+.article-content figure.traven-audio-figure.size-medium { width: 50%; }
+.article-content figure.traven-audio-figure.size-large  { width: 70%; }
+.article-content figure.traven-audio-figure.size-full   { width: 100%; }
+.article-content figure.traven-audio-figure figcaption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  color: var(--traven-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* -----------------------------------------------------------------------------
+ * 21. Figure shortcode (§6.4) + classic markdown figures (§8).
+ * -------------------------------------------------------------------------- */
+.article-content figure.traven-figure {
+  margin: 1.4em 0;
+  border: 1px solid var(--traven-border-bright);
+  background-color: var(--traven-bg-elev);
+  padding: 14px;
+  box-sizing: border-box;
+}
+.article-content .traven-figure-caption,
+.article-content figcaption.traven-figure-caption {
+  margin-top: 10px;
+  font-size: 0.85em;
+  color: var(--traven-muted);
+  text-align: center;
+  font-style: italic;
+}
+.article-content figure.classic-markdown-figure,
+.classic-markdown-figure {
+  margin: 1.4em 0;
+  text-align: center;
+  clear: both;
+}
+.article-content figure.classic-markdown-figure img,
+img.classic-markdown {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 4px;
+}
+.article-content figure.classic-markdown-figure figcaption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  color: var(--traven-muted);
+  font-style: italic;
+}
+
+/* -----------------------------------------------------------------------------
+ * 22. Fullbleed — casper-lite viewport breakout (§8).
+ *     `left: 50%; transform: translateX(-50%)` centers the element relative
+ *     to its positioned ancestor (.post-viewport, set in styles.css), so it
+ *     breaks out of the centered reading column and fills the terminal-window
+ *     frame edge-to-edge. Width capped at min(92vw, 1040px) so it never
+ *     touches the screen edge (avoids 100vw + scrollbar overflow pitfalls).
+ *     NOT 100vw wall-to-wall; overflow-x: clip on .post-viewport contains it.
+ *
+ *     Covers: PenCMS PHP gallery (.gallery-single.align-fullbleed) +
+ *     Traven editor figures (figure.traven-image-figure.align-fullbleed,
+ *     figure.traven-video-figure.align-fullbleed) + bare img.align-fullbleed.
+ * -------------------------------------------------------------------------- */
+.article-content .align-fullbleed,
+.article-content .gallery-single.align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
+.article-content figure.traven-video-figure.align-fullbleed,
+.article-content img.traven-image-shortcode.align-fullbleed {
+  width: min(92vw, 1040px) !important;
+  max-width: min(92vw, 1040px) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  float: none !important;
+  clear: both !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+/* PenCMS gallery fullbleed — 21:9 crop to match the post hero treatment */
+.article-content .gallery-single.align-fullbleed .photo-wrapper {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+}
+.article-content .gallery-single.align-fullbleed .photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+/* Traven figure fullbleed — 21:9 crop on the image */
+.article-content figure.traven-image-figure.align-fullbleed img,
+.article-content img.traven-image-shortcode.align-fullbleed {
+  width: 100% !important;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  aspect-ratio: 21 / 9;
+}
+
+/* Mobile: collapse fullbleed back to column width (no transform overflow) */
+@media (max-width: 640px) {
+  .article-content .align-fullbleed,
+  .article-content .gallery-single.align-fullbleed,
+  .article-content figure.traven-image-figure.align-fullbleed,
+  .article-content figure.traven-video-figure.align-fullbleed,
+  .article-content img.traven-image-shortcode.align-fullbleed {
+    width: 100% !important;
+    max-width: 100% !important;
+    left: auto !important;
+    transform: none !important;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 23. Title block — dual-duty (admin + published .post-detail-*).
+ * -------------------------------------------------------------------------- */
+.hero-title-block.traven-preview {
+  background-color: var(--traven-bg);
+  color: var(--traven-text-bright);
+  font-family: var(--traven-font-display);
+  padding: 24px 22px;
+  border: 1px solid var(--traven-border-bright);
+  border-left: 4px solid var(--traven-caret);
+}
+.post-detail-trumpet {
+  color: var(--traven-muted) !important;
+  font-size: 0.78em !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  margin-bottom: 10px;
+  display: block;
+}
+.post-detail-title {
+  font-family: var(--traven-font-display) !important;
+  color: var(--traven-text-bright) !important;
+  font-size: 1.9em !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  margin: 0 0 12px 0 !important;
+  border: none;
+  padding: 0;
+  line-height: 1.15 !important;
+}
+.post-detail-deck {
+  color: var(--traven-text) !important;
+  font-size: 1em !important;
+  line-height: 1.6 !important;
+  font-style: normal !important;
+  margin-top: 6px;
+}
+
+/* -----------------------------------------------------------------------------
+ * 24. PenCMS PHP gallery (.gallery-single) — published HTML (§8).
+ *     Percentage sizes (30/50/70%), default centering for non-floated blocks,
+ *     classic-markdown figure rules. Sizes on OUTER block, not inner img.
+ * -------------------------------------------------------------------------- */
+.article-content .gallery-single {
+  margin: 1.4em 0;
+  box-sizing: border-box;
+}
+.article-content .gallery-single .photo-wrapper {
+  display: block;
+}
+.article-content .gallery-single .photo-wrapper img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.article-content .gallery-single figcaption,
+.article-content .gallery-single .caption {
+  margin-top: 8px;
+  font-size: 0.82em;
+  color: var(--traven-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Default centering for .gallery-single without explicit left/right align (§8) */
+.article-content .gallery-single.inline-image-center,
+.article-content .gallery-single.align-center,
+.article-content .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Size pitfall — scope the outer block, not the img (§8) */
+.article-content .gallery-single.img--small,
+.article-content .gallery-single.size-small,
+.article-content .figure-full.img--small,
+.article-content .figure-full.size-small { width: 30%; }
+.article-content .gallery-single.img--medium,
+.article-content .gallery-single.size-medium,
+.article-content .figure-full.img--medium,
+.article-content .figure-full.size-medium { width: 50%; }
+.article-content .gallery-single.img--large,
+.article-content .gallery-single.size-large,
+.article-content .figure-full.img--large,
+.article-content .figure-full.size-large { width: 70%; }
+.article-content .gallery-single.img--full,
+.article-content .gallery-single.size-full,
+.article-content .figure-full.img--full,
+.article-content .figure-full.size-full { width: 100%; }
+
+/* Fullbleed gallery + figure rules live in §22 above (casper-lite viewport
+   breakout with 21:9 crop). The selectors here are intentionally not
+   duplicated to keep the 21:9 aspect-ratio authoritative. */
+
+/* Align helpers for gallery */
+.article-content .gallery-single.align-left,
+.article-content .gallery-single.inline-image-left {
+  float: left;
+  margin: 1.4em 1.4em 1.4em 0;
+  max-width: 50%;
+}
+.article-content .gallery-single.align-right,
+.article-content .gallery-single.inline-image-right {
+  float: right;
+  margin: 1.4em 0 1.4em 1.4em;
+  max-width: 50%;
+}
+
+/* -----------------------------------------------------------------------------
+ * 25. Expand/embed panel tokens (§12 footer responsibilities).
+ *     Override the vendor defaults so the panel reads as a distinct neon card
+ *     against the CRT-black canvas (vendor default is transparent + slate).
+ * -------------------------------------------------------------------------- */
+.traven-preview {
+  --traven-expand-bg: var(--traven-bg-elev);
+  --traven-expand-border: var(--traven-border-bright);
+  --traven-expand-fg: var(--traven-text);
+  --traven-expand-link: var(--traven-accent-cyan);
+  --traven-expand-accent: var(--traven-caret);
+  --traven-expand-muted: var(--traven-muted);
+}
+
+/* =============================================================================
+ * 26. Dark mode — 1337 is single-dark. The .cm-wysiwym-dark class is applied
+ * to <html> unconditionally by _head.html.twig (no FOUC, no toggle). All
+ * tokens above are already dark; these rules only re-scope a couple of
+ * CodeMirror selection specifics per §7.4.
+ * ========================================================================== */
+.cm-editor.cm-wysiwym-dark .cm-selectionBackground,
+.cm-editor.cm-wysiwym-dark .cm-native-selection {
+  background-color: var(--traven-selection) !important;
+}
+.cm-editor.cm-wysiwym-dark.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: var(--traven-selection-focused) !important;
+}
+.cm-editor.cm-wysiwym-dark .cm-cursor {
+  border-left-color: var(--traven-caret) !important;
+}
+.cm-editor.cm-wysiwym-dark .cm-fat-cursor {
+  background-color: var(--traven-caret) !important;
+  color: var(--traven-bg) !important;
+  opacity: 0.6 !important;
+}

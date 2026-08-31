@@ -1,0 +1,143 @@
+{
+  "type": "native",
+  "name": "Chashitsu",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A light-only tea-room theme: washi, sumi ink, generous ma, and long-form prose in mountain morning mist.",
+  "editor_skin": "chashitsu",
+  "editor_skin_base": [],
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Washi / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#F5F1E6"
+          },
+          {
+            "id": "text",
+            "label": "Sumi / Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#211E1B"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Ink",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#57514B"
+          },
+          {
+            "id": "accent",
+            "label": "Matcha / Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#4E7A5C"
+          },
+          {
+            "id": "border",
+            "label": "Borders / Scroll",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#C6BEAC"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Cormorant Garamond', 'Times New Roman', serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Cormorant Garamond', 'Times New Roman', serif", "label": "Cormorant Garamond" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'EB Garamond', Georgia, serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'EB Garamond', Georgia, serif", "label": "EB Garamond" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Courier Prime', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Courier Prime', ui-monospace, monospace", "label": "Courier Prime" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#4E7A5C",
+    "og_vignette_color": "#211E1B",
+    "og_text_color": "#211E1B",
+    "og_bar_color": "#F5F1E6",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "paper",
+    "og_accent_bar": false,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

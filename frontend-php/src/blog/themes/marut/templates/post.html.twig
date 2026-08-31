@@ -1,0 +1,195 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-wrapper">
+    <div class="docs-layout">
+        <!-- Left Sidebar: Secondary Navigation & Related / All Articles -->
+        <aside class="docs-sidebar">
+            {{ theme.partial('sidebar-secondary') | raw }}
+            
+            {% set articles_list = related_dossiers is not empty ? related_dossiers : theme.getAllDossiers() %}
+            {% if articles_list is not empty %}
+            <div class="sidebar-widget" style="margin-top: 1.5rem;">
+                <h3 class="sidebar-title">{% if related_dossiers is not empty %}Related Articles{% else %}All Articles{% endif %}</h3>
+                <ul class="sidebar-nav">
+                    {% for item in articles_list %}
+                        {% set is_active = (item.slug == slug) %}
+                        {% set url = theme.isStatic() ? (base_path ~ item.slug ~ '/index.html') : (base_path ~ 'post.php?slug=' ~ item.slug ~ '&section=' ~ (item.section | default('blog'))) %}
+                        <li class="sidebar-nav-item">
+                            <a href="{{ url }}" class="sidebar-link {% if is_active %}active{% endif %}">
+                                {{ item.hero_title | default(item.title) }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </aside>
+
+        <!-- Center Lane: Article Hero + Prose Body inside Unified Card -->
+        <div class="docs-content-container">
+            {% if posts is defined and posts|length > 0 %}
+                {% for post_item in posts %}
+                    {% if loop.first %}
+                        <article class="marut-post-detail marut-article-card">
+                            <!-- Full Article Hero Block -->
+                            <header class="marut-post-hero marut-post-header">
+                                <div class="marut-hero-meta-top">
+                                    {% if category is defined and category is not empty %}
+                                        <span class="marut-category-badge">{{ category }}</span>
+                                    {% elseif post is defined and post.category is defined and post.category is not empty %}
+                                        <span class="marut-category-badge">{{ post.category }}</span>
+                                    {% endif %}
+
+                                    {% if eyebrow is defined and eyebrow is not empty %}
+                                        <span class="marut-eyebrow">{{ eyebrow }}</span>
+                                    {% elseif trumpet is defined and trumpet is not empty %}
+                                        <span class="marut-eyebrow">{{ trumpet }}</span>
+                                    {% elseif post is defined and post.eyebrow is defined and post.eyebrow is not empty %}
+                                        <span class="marut-eyebrow">{{ post.eyebrow }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <h1>{{ hero_title | default(title | default('Untitled Article')) }}</h1>
+
+                                {% if deck is defined and deck is not empty %}
+                                    <div class="marut-deck">{{ deck | raw }}</div>
+                                {% elseif post is defined and post.deck is defined and post.deck is not empty %}
+                                    <div class="marut-deck">{{ post.deck | raw }}</div>
+                                {% endif %}
+
+                                <div class="marut-byline-dateline">
+                                    <span class="marut-byline">By {{ author | default(post.author | default('Editorial Staff')) }}</span>
+                                    <span class="marut-dateline">&bull; {{ date | default(post.date | default('now'|date('F j, Y'))) }}</span>
+                                </div>
+
+                                {% set hero_img_src = hero_image | default(post.hero_image | default(theme.asset('images/defaulthero.jpg'))) %}
+                                {% if hero_img_src is not empty %}
+                                    <div class="marut-hero-image-wrap">
+                                        <img src="{{ contentAsset(hero_img_src) }}" alt="{{ hero_title | default('Hero Image') }}" />
+                                    </div>
+                                {% endif %}
+                            </header>
+
+                            <!-- First Article Content Body -->
+                            <div id="{{ post_item.id }}" class="article-section">
+                                {% if post_item.title is not empty and posts|length > 1 %}
+                                    <h2>{{ post_item.title }}</h2>
+                                {% endif %}
+                                <div class="article-content traven-preview">
+                                    {{ post_item.content_html | raw }}
+                                </div>
+                            </div>
+                        </article>
+                    {% else %}
+                        <!-- Subsequent Fragments in Composite Posts -->
+                        <article id="{{ post_item.id }}" class="marut-article-card article-section" style="margin-top: 2rem;">
+                            {% if post_item.title is not empty %}
+                                <h2>{{ post_item.title }}</h2>
+                            {% endif %}
+                            <div class="article-content traven-preview">
+                                {{ post_item.content_html | raw }}
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <article class="marut-post-detail marut-article-card">
+                    <!-- Full Article Hero Block -->
+                    <header class="marut-post-hero marut-post-header">
+                        <div class="marut-hero-meta-top">
+                            {% if category is defined and category is not empty %}
+                                <span class="marut-category-badge">{{ category }}</span>
+                            {% endif %}
+
+                            {% if eyebrow is defined and eyebrow is not empty %}
+                                <span class="marut-eyebrow">{{ eyebrow }}</span>
+                            {% elseif trumpet is defined and trumpet is not empty %}
+                                <span class="marut-eyebrow">{{ trumpet }}</span>
+                            {% endif %}
+                        </div>
+
+                        <h1>{{ hero_title | default(title | default('Untitled Article')) }}</h1>
+
+                        {% if deck is defined and deck is not empty %}
+                            <div class="marut-deck">{{ deck | raw }}</div>
+                        {% endif %}
+
+                        <div class="marut-byline-dateline">
+                            <span class="marut-byline">By {{ author | default('Editorial Staff') }}</span>
+                            <span class="marut-dateline">&bull; {{ date | default('now'|date('F j, Y')) }}</span>
+                        </div>
+
+                        {% set hero_img_src = hero_image | default(theme.asset('images/defaulthero.jpg')) %}
+                        {% if hero_img_src is not empty %}
+                            <div class="marut-hero-image-wrap">
+                                <img src="{{ contentAsset(hero_img_src) }}" alt="{{ hero_title | default('Hero Image') }}" />
+                            </div>
+                        {% endif %}
+                    </header>
+
+                    {% if post_content is defined %}
+                        <div class="article-content traven-preview">
+                            {{ post_content | raw }}
+                        </div>
+                    {% endif %}
+                </article>
+            {% endif %}
+
+            {{ theme.partial('faqs') | raw }}
+
+            <section class="marut-discussion marut-article-card">
+                {{ theme.partial('comment-thread') | raw }}
+                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+            </section>
+        </div>
+
+        <!-- Right Sidebar: Table of Contents -->
+        {% set show_toc = (toc is not defined or (toc is defined and toc is not empty)) %}
+        {% if show_toc %}
+        <aside class="docs-toc-container" {% if toc is not defined %}style="display: none;"{% endif %}>
+            <h3 class="sidebar-title">On This Page</h3>
+            <ul class="toc-list" id="dynamic-toc">
+                <!-- Client-side heading generator or static TOC -->
+                {% if toc is defined and toc is not empty %}
+                    {% for item in toc %}
+                        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </aside>
+        {% endif %}
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tocList = document.getElementById('dynamic-toc');
+    const content = document.querySelector('.docs-content-container');
+    const container = document.querySelector('.docs-toc-container');
+    if (tocList && content) {
+        const headings = Array.from(content.querySelectorAll('h2, h3')).filter(function(h) {
+            return h.textContent && h.textContent.trim().length > 0;
+        });
+        if (headings.length > 0) {
+            headings.forEach(function(h, idx) {
+                if (!h.id) h.id = 'heading-' + idx;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + h.id;
+                a.textContent = h.textContent;
+                if (h.tagName.toLowerCase() === 'h3') {
+                    li.style.paddingLeft = '0.75rem';
+                }
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+            if (container) {
+                container.style.display = '';
+            }
+        }
+    }
+});
+</script>
+
+{{ theme.partial('footer') | raw }}

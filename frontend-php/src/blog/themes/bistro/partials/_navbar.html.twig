@@ -1,0 +1,27 @@
+<button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+    <svg viewBox="0 0 24 24" class="w-6 h-6"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+</button>
+
+<nav class="nav-menu" id="nav-menu" aria-label="Main">
+    {% set nav_items = menu('primary') %}
+    {% for item in nav_items %}
+        <div class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+            {% if item.target_type == 'label' %}
+                <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+            {% else %}
+                <a href="{{ item.url }}" class="nav-link{% if item.children is not empty %} nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+            {% endif %}
+            {% if item.children is not empty %}
+                <div class="nav-dropdown" role="menu">
+                    {% for child in item.children %}
+                        {% if child.target_type == 'label' %}
+                            <span class="nav-label">{{ child.label }}</span>
+                        {% else %}
+                            <a href="{{ child.url }}" class="nav-link" role="menuitem" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</nav>

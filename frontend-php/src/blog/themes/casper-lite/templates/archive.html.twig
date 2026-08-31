@@ -1,0 +1,35 @@
+    {{ theme.partial('head') | raw }}
+    {{ theme.partial('header') | raw }}
+
+    <header class="site-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">{{ (hero_title | default('')) | title }}</h1>
+        </div>
+    </header>
+
+    <main class="container-wide archive-section">
+        {{ theme.partial('sidebar-secondary') | raw }}
+        <div class="post-grid">
+            {% for post in dossiers | default([]) %}
+                {% set url = contentUrl(post) %}
+                <article class="post-card">
+                    <a href="{{ url }}" class="post-card-link">
+                        <img src="{{ contentAsset(post.hero_image | default('images/defaulthero.jpg')) }}" class="post-card-image" alt="">
+                        <div class="post-card-content">
+                            {% if post.section is defined and post.section is not empty %}
+                                <span class="post-card-tag">{{ post.section }}</span>
+                            {% endif %}
+                            <h2 class="post-card-title">{{ post.hero_title | default(post.title | default('')) }}</h2>
+                            {% if post.deck is defined and post.deck is not empty %}
+                                <div class="post-card-excerpt">
+                                    {{ post.deck | striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                </article>
+            {% endfor %}
+        </div>
+    </main>
+
+    {{ theme.partial('footer') | raw }}

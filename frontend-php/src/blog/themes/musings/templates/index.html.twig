@@ -1,0 +1,127 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="musings-header-meta">
+    INDEX / {{ "now"|date("Y . m") }}
+</div>
+
+{% set index_title = '' %}
+{% if hero_title is defined and hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set index_title = hero_title %}
+{% endif %}
+
+{% if index_title is not empty or (deck is defined and deck is not empty) %}
+<header class="musings-hero-card">
+    <span class="corner-star top-left">✦</span>
+    <span class="corner-star top-right">✦</span>
+    <span class="corner-star bottom-left">✦</span>
+    <span class="corner-star bottom-right">✦</span>
+    {% if index_title is not empty %}
+        <h1 class="musings-hero-title">{{ index_title }}</h1>
+    {% endif %}
+    {% if deck is defined and deck is not empty %}
+        <p class="musings-hero-deck">
+            {{ deck | striptags }}
+        </p>
+    {% endif %}
+</header>
+{% endif %}
+
+{% set items = dossiers | default(posts | default([])) %}
+
+{% if items is empty %}
+    <section class="musings-feed-section">
+        <h2>recent posts</h2>
+        <p style="color: var(--musings-muted);">No entries yet.</p>
+    </section>
+{% else %}
+    {% set latest_item = items | first %}
+    {% set remaining_items = items | slice(1) %}
+    
+    <!-- LATEST Section -->
+    <section class="musings-feed-section">
+        <h2>latest</h2>
+        {% set latest_url = theme.isStatic() ? (base_path | default('') ~ (latest_item.slug|default('')) ~ '/index.html') : ('post.php?slug=' ~ (latest_item.slug|default('')) ~ '&section=' ~ (latest_item.section | default('blog'))) %}
+        <article class="musings-post-item musings-latest-item">
+            <div class="item-date">
+                {% if latest_item.date is defined and latest_item.date is not empty %}
+                    {{ latest_item.date | date('y · m · d') }}
+                {% else %}
+                    {{ "now" | date('y · m · d') }}
+                {% endif %}
+            </div>
+            <div class="item-title musings-latest-title">
+                <a href="{{ latest_url }}">{{ latest_item.hero_title | default(latest_item.title | default('Untitled')) }}</a>
+            </div>
+            {% if latest_item.deck is defined and latest_item.deck is not empty %}
+                <div class="musings-lead-deck">{{ latest_item.deck | striptags }}</div>
+            {% endif %}
+            <div style="font-size: 0.75rem; color: var(--musings-accent); margin-top: 0.4rem;">
+                {% if latest_item.category is defined and latest_item.category is not empty %}<span class="meta-tag">{{ latest_item.category }}</span>{% endif %}
+            </div>
+        </article>
+    </section>
+
+    <!-- Horizontal Divider Line -->
+    <div class="musings-divider" style="margin: 2.5rem 0;"></div>
+
+    {% set recent_items = remaining_items | slice(0, 5) %}
+    {% set more_items = remaining_items | slice(5) %}
+
+    <!-- RECENT POSTS Section (max 5 posts) -->
+    {% if recent_items is not empty %}
+        <section class="musings-feed-section">
+            <h2>recent posts</h2>
+            <div class="musings-post-list">
+                {% for item in recent_items %}
+                    {% set item_url = theme.isStatic() ? (base_path | default('') ~ (item.slug|default('')) ~ '/index.html') : ('post.php?slug=' ~ (item.slug|default('')) ~ '&section=' ~ (item.section | default('blog'))) %}
+                    <article class="musings-post-item">
+                        <div class="item-date">
+                            {% if item.date is defined and item.date is not empty %}
+                                {{ item.date | date('y · m · d') }}
+                            {% else %}
+                                {{ "now" | date('y · m · d') }}
+                            {% endif %}
+                        </div>
+                        <div class="item-title">
+                            <a href="{{ item_url }}">{{ item.hero_title | default(item.title | default('Untitled')) }}</a>
+                        </div>
+                        {% if item.deck is defined and item.deck is not empty %}
+                            <div class="item-excerpt">{{ item.deck | striptags }}</div>
+                        {% endif %}
+                        <div style="font-size: 0.75rem; color: var(--musings-accent); margin-top: 0.2rem;">
+                            {% if item.category is defined and item.category is not empty %}<span class="meta-tag">{{ item.category }}</span>{% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- MORE Section (remaining posts: date + hero_title only) -->
+    {% if more_items is not empty %}
+        <div class="musings-divider" style="margin: 2.5rem 0;"></div>
+        <section class="musings-feed-section">
+            <h2>more</h2>
+            <div class="musings-post-list">
+                {% for item in more_items %}
+                    {% set item_url = theme.isStatic() ? (base_path | default('') ~ (item.slug|default('')) ~ '/index.html') : ('post.php?slug=' ~ (item.slug|default('')) ~ '&section=' ~ (item.section | default('blog'))) %}
+                    <article class="musings-post-item">
+                        <div class="item-date">
+                            {% if item.date is defined and item.date is not empty %}
+                                {{ item.date | date('y · m · d') }}
+                            {% else %}
+                                {{ "now" | date('y · m · d') }}
+                            {% endif %}
+                        </div>
+                        <div class="item-title">
+                            <a href="{{ item_url }}">{{ item.hero_title | default(item.title | default('Untitled')) }}</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+{% endif %}
+
+{{ theme.partial('footer') | raw }}

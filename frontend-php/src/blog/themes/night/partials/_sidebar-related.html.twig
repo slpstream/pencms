@@ -1,0 +1,44 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+{% set alley = related_dossiers|slice(0, 4) %}
+<section class="night-alley-rail" aria-label="{{ strings.relatedPosts | default('Related') }}">
+    <p class="night-sec-eyebrow"><span lang="zh-Hant" class="tc">走</span> · DOWN THE ALLEY</p>
+    <ul class="night-alley-cards">
+        {% for post in alley %}
+            {% set url = contentUrl(post) %}
+            {% set title = post.hero_title | default(post.title | default('Untitled')) %}
+            {% set thumb = post.hero_image | default('') %}
+            {% set has_thumb = thumb is not empty and thumb != 'images/defaulthero.jpg' %}
+            {% set chip_date = (post.dateline is defined and post.dateline is not empty) ? post.dateline : ((post.date is defined and post.date is not empty) ? post.date|date('Y.m.d') : '') %}
+            {% set chip_kicker = post.trumpet | default(post.category | default(post.section | default(''))) %}
+            {% set byline = post.author is iterable ? (post.author.name | default('')) : (post.author | default('')) %}
+            <li>
+                <a href="{{ url }}" class="night-chip">
+                    <span class="night-chip-head">
+                        <span class="night-chip-stamp{% if not has_thumb %} is-blank{% endif %}">
+                            {% if has_thumb %}
+                                <img src="{{ contentAsset(thumb) }}" alt="" loading="lazy" decoding="async">
+                            {% else %}
+                                <span class="night-chip-glyph tc" lang="zh-Hant" aria-hidden="true">晚</span>
+                            {% endif %}
+                        </span>
+                        <span class="night-chip-copy">
+                            <span class="night-chip-no" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span>
+                            {% if chip_kicker is not empty %}
+                                <span class="night-chip-kicker">{{ chip_kicker }}</span>
+                            {% endif %}
+                            <span class="night-chip-title">{{ title }}</span>
+                        </span>
+                    </span>
+                    {% if post.deck is defined and post.deck is not empty %}
+                        <span class="night-chip-deck">{{ post.deck | striptags | slice(0, 140) }}</span>
+                    {% endif %}
+                    <span class="night-chip-meta">
+                        {% if byline is not empty %}<span>{{ byline }}</span>{% endif %}
+                        {% if chip_date is not empty %}<span>{{ chip_date }}</span>{% endif %}
+                    </span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

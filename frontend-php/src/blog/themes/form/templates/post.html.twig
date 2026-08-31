@@ -1,0 +1,63 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+{% set post_title = hero_title is defined and hero_title ? hero_title : (dossier is defined and dossier is not null and dossier.hero_title is defined and dossier.hero_title ? dossier.hero_title : (dossier is defined and dossier is not null and dossier.title is defined and dossier.title ? dossier.title : (title is defined and title ? title : 'Untitled'))) %}
+{% set post_date = dossier is defined and dossier is not null and dossier.date is defined and dossier.date ? dossier.date : (date is defined and date ? date : null) %}
+{% set post_tags = dossier is defined and dossier is not null and dossier.tags is defined and dossier.tags ? dossier.tags : (tags is defined and tags ? tags : []) %}
+
+<article class="post">
+  <header class="page-header post-header">
+    <h1>{{ post_title }}</h1>
+    {% if post_date or post_tags is not empty %}
+      <p class="meta">
+        {% if post_date %}
+          <time datetime="{{ post_date }}">{{ post_date | date("F d, Y") }}</time>
+        {% endif %}
+        {% if post_tags is not empty %}
+          <span class="tags">
+            {% for tag in post_tags %}
+              <a class="tag" href="{{ base_path | default('/') ~ 'tag/' ~ tag ~ '/' }}">{{ tag }}</a>
+            {% endfor %}
+          </span>
+        {% endif %}
+      </p>
+    {% endif %}
+  </header>
+
+  {% set cover_img = hero_image is defined and hero_image ? hero_image : (dossier is defined and dossier is not null and dossier.hero_image is defined and dossier.hero_image ? dossier.hero_image : (cover is defined and cover ? cover : (dossier is defined and dossier is not null and dossier.cover is defined and dossier.cover ? dossier.cover : null))) %}
+  {% if cover_img and cover_img != 'images/defaulthero.jpg' %}
+    <img class="cover" src="{{ contentAsset(cover_img) }}" alt="" loading="lazy" decoding="async" style="aspect-ratio: 16 / 9; object-fit: cover;">
+  {% endif %}
+
+  {% if posts is defined and posts is not empty %}
+    {% for post_item in posts %}
+      {% if post_item.title is defined and post_item.title is not empty and posts|length > 1 %}
+        <h2>{{ post_item.title }}</h2>
+      {% endif %}
+      <div class="article-content traven-preview prose">
+        {{ post_item.content_html | raw }}
+      </div>
+    {% endfor %}
+  {% elseif page_content is defined and page_content is not empty %}
+    <div class="article-content traven-preview prose">
+      {{ page_content | raw }}
+    </div>
+  {% elseif content_html is defined and content_html is not empty %}
+    <div class="article-content traven-preview prose">
+      {{ content_html | raw }}
+    </div>
+  {% elseif post is defined and post is not null and post.content_html is defined %}
+    <div class="article-content traven-preview prose">
+      {{ post.content_html | raw }}
+    </div>
+  {% endif %}
+
+  {{ theme.partial('faqs') | raw }}
+
+  <section class="form-discussion">
+    {{ theme.partial('comment-thread') | raw }}
+    {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+  </section>
+</article>
+
+{{ theme.partial('_footer') | raw }}

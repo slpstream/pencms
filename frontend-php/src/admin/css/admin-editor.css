@@ -1,0 +1,410 @@
+/*
+ * admin-editor.css
+ * Stahl & Feuer overrides for the Content Editor (PenCMS) admin-editor.php view.
+ * Extracted from an inline <style> block. See admin-editor.php for the Alpine.js
+ * component logic that these rules are paired with.
+ */
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* ── Hero Title Block — thin host glue only ─────────────────────
+ * Personality (size, weight, tracking, transform, color) lives in
+ * the dual-duty theme skin on .post-detail-trumpet / -title / -deck.
+ * Do not invent starter-like defaults here.
+ */
+.hero-title-block.traven-preview {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    /* Match typical .cm-content horizontal inset (24px). Skins may override. */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
+}
+
+/* Editable controls: transparent chrome; inherit type from skin class / parent h1 */
+.hero-title-block.traven-preview input,
+.hero-title-block.traven-preview textarea {
+    background-color: transparent !important;
+}
+
+/* Headline: skin styles h1.post-detail-title; textarea inherits metrics */
+.hero-title-block.traven-preview h1.post-detail-title {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.hero-title-block.traven-preview h1.post-detail-title textarea {
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    font-style: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    text-transform: inherit !important;
+}
+
+/* Allow editor skins to dictate background colors of the editor card wrappers */
+.pen-card:has(#main-editor),
+.pen-card:has([id^="partial-editor-"]),
+#main-editor,
+#raw-main-editor,
+[id^="partial-editor-"] {
+    background-color: transparent !important;
+}
+
+/* Raw shortcode appearance in Markdown mode */
+.widget-raw-shortcode {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.82em;
+    color: var(--text-muted);
+    background: var(--bg-canvas);
+    padding: 2px 6px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.widget-raw-shortcode:hover {
+    background: var(--border-accent);
+    border-color: var(--accent-color);
+}
+
+.widget-badge-clickable {
+    cursor: pointer !important;
+    transition: opacity 0.15s, box-shadow 0.15s;
+    background-color: var(--rust-wash, #fff0e8) !important;
+    color: var(--accent-color, #cc4a0a) !important;
+    border-color: var(--border-accent, #f0c8a0) !important;
+}
+
+.widget-badge-clickable:hover {
+    opacity: 0.85;
+    box-shadow: 0 0 0 2px rgba(204, 74, 10, 0.2);
+}
+
+
+
+/* ── Resizable Layout Overrides ──────────────────────────────── */
+
+@media (min-width: 1024px) {
+    .resizable-left-column {
+        width: var(--left-width, 32%) !important;
+        top: var(--sticky-header-height, 56px) !important;
+        height: calc(100vh - var(--sticky-header-height, 56px) - var(--height-nav, 48px) - 45px) !important;
+    }
+
+    .resizable-right-column {
+        width: var(--right-width, 25%) !important;
+        top: var(--sticky-header-height, 56px) !important;
+        height: calc(100vh - var(--sticky-header-height, 56px) - var(--height-nav, 48px) - 45px) !important;
+    }
+
+    /* Default: both columns visible */
+    .resizable-workspace {
+        width: calc(100% - var(--left-width, 32%) - var(--right-width, 25%)) !important;
+    }
+
+    /* Left collapsed, Right visible */
+    .workspace-left-collapsed {
+        width: calc(100% - var(--right-width, 25%)) !important;
+    }
+
+    /* Left visible, Right collapsed */
+    .workspace-right-collapsed {
+        width: calc(100% - var(--left-width, 32%)) !important;
+    }
+
+    /* Both collapsed */
+    .workspace-both-collapsed {
+        width: 100% !important;
+    }
+}
+
+/* Navigation page: columns are flex children, not sticky — use parent height */
+@media (min-width: 1024px) {
+    .nav-resizable-left-column,
+    .nav-resizable-right-column {
+        height: 100% !important;
+        top: auto !important;
+    }
+}
+
+/* Hide built-in stats/word counter in Traven Editor */
+.traven-toolbar-stats {
+    display: none !important;
+}
+
+/* Smaller, regular-weight labels in left column cards with zero bottom margin */
+.resizable-left-column .pen-label {
+    font-size: 10px !important;
+    font-weight: 400 !important;
+    margin-bottom: 0px !important;
+}
+
+/* Hide individual/local editor toolbars inside their editor parents */
+#main-editor>.traven-toolbar-container,
+[id^="partial-editor-"]>.traven-toolbar-container {
+    display: none !important;
+}
+
+/* Style the shared editor toolbar container as a floating pill */
+#shared-editor-toolbar {
+    height: 20px;
+    position: relative;
+    background-color: #f4edea;
+}
+
+#shared-editor-toolbar .traven-toolbar-container {
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    background-color: #ffffff !important;
+    padding: 0px 0px !important;
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    /* keep all buttons on a single row */
+    width: max-content !important;
+    /* wrap tightly to buttons width */
+    max-width: calc(100% - 48px) !important;
+    overflow: visible !important;
+    /* allow dropdown menus to overlay the content below */
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: -6px !important;
+    /* pull it up to hang over the bottom edge */
+    z-index: 70 !important;
+    box-sizing: border-box !important;
+}
+
+/* ── Raw Markdown Mode styling ──────────────────────────────── */
+/* Hide the primary WYSIWYM editing canvas when Raw Markdown is enabled */
+.raw-markdown-active #main-editor .cm-editor,
+.raw-markdown-active [id^="partial-editor-"] .cm-editor {
+    display: none !important;
+}
+
+/* Style the raw CodeMirror editor container to look like monotype Markdown */
+.raw-editor-mount .cm-editor {
+    border: none !important;
+    outline: none !important;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 0.88em !important;
+}
+
+/* Force monospace on every CodeMirror inner element when Raw Markdown is active.
+   Skins load after admin-editor.css and some target .cm-scroller, .cm-content,
+   or .cm-line with their own font-family declarations (often !important).
+   The body.raw-markdown-active anchor gives us specificity (0,3,1) which
+   outranks any skin selector, guaranteeing a uniform monospace experience
+   regardless of the active theme. */
+body.raw-markdown-active .raw-editor-mount .cm-editor,
+body.raw-markdown-active .raw-editor-mount .cm-scroller,
+body.raw-markdown-active .raw-editor-mount .cm-content,
+body.raw-markdown-active .raw-editor-mount .cm-line,
+body.raw-markdown-active .raw-editor-mount .cm-gutterElement {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+.raw-editor-mount .cm-scroller {
+    line-height: 1.7 !important;
+    padding: 12px 0 !important;
+}
+
+.raw-editor-mount .cm-gutters {
+    background-color: transparent !important;
+    border-right: none !important;
+    color: #94a3b8 !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 0.85em !important;
+    opacity: 0.7;
+}
+
+.raw-editor-mount .cm-gutterElement {
+    padding: 0 16px 0 8px !important;
+}
+
+.raw-editor-mount .cm-activeLine {
+    background-color: rgba(241, 245, 249, 0.6) !important;
+}
+
+.raw-editor-mount .cm-activeLineGutter {
+    background-color: transparent !important;
+    color: var(--accent-color, #cc4a0a) !important;
+    font-weight: 500;
+    opacity: 1;
+}
+
+.raw-editor-mount .cm-selectionBackground {
+    background-color: rgba(204, 74, 10, 0.15) !important;
+}
+
+/* ── LaTeX Math Support styling ──────────────────────────────── */
+/* Styling for the live WYSIWYM rendered math widgets */
+.cm-wysiwym-math-widget {
+    padding: 2px 4px;
+    background-color: var(--widget-bg, #f8fafc);
+    border-radius: 4px;
+}
+
+/* Fallback styling for inline math when KaTeX is not available */
+.traven-math-fallback {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background-color: #f1f5f9;
+    padding: 1px 4px;
+    border-radius: 4px;
+}
+
+/* Fallback styling for display math blocks when KaTeX is not available */
+.traven-math-block-fallback {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-left: 4px solid #cbd5e1;
+    margin: 1em 0;
+}
+
+/* ── Mermaid Diagram Support styling ─────────────────────────── */
+/* CodeMirror §4.4: no vertical margins on block widgets — use padding */
+.cm-wysiwym-mermaid-container {
+    margin: 0 auto !important;
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    background-color: transparent !important;
+    border: none !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* Styling for rendering error messages */
+.mermaid-error-message {
+    color: #ef4444;
+    font-size: 0.85em;
+    margin-top: 8px;
+}
+
+/* Table Rendering styles for AI Chat */
+#ai-chat-messages-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+#ai-chat-messages-container th,
+#ai-chat-messages-container td {
+    border: 1px solid var(--border-color, #e2e8f0);
+    padding: 6px 8px;
+    text-align: left;
+}
+
+#ai-chat-messages-container th {
+    background-color: var(--bg-canvas, #f8fafc);
+    font-weight: 600;
+}
+
+#ai-chat-messages-container tr:nth-child(even) {
+    background-color: rgba(244, 237, 234, 0.2);
+}
+
+#ai-chat-messages-container tr:hover {
+    background-color: rgba(244, 237, 234, 0.4);
+}
+
+/* Reduce vertical gaps in lists by 90% (to almost nothing) and align bullets to the left with a minimal gutter */
+#ai-chat-messages-container ul,
+#ai-chat-messages-container ol {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+    padding-left: 12px !important;
+}
+
+/* Tailwind's preflight resets `list-style: none` on `ul`/`ol`. Without
+       an explicit `list-style-type` here, the markers rendered by
+       marked.js for `<ul>`/`<ol>` would be invisible. */
+#ai-chat-messages-container ul {
+    list-style-type: disc !important;
+}
+
+#ai-chat-messages-container ol {
+    list-style-type: decimal !important;
+}
+
+#ai-chat-messages-container li {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-left: 0px !important;
+}
+
+#ai-chat-messages-container li>p,
+#ai-chat-messages-container p {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+}
+
+/* Tighten vertical spacing inside blockquotes */
+#ai-chat-messages-container blockquote {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+#ai-chat-messages-container blockquote p {
+    margin-top: 4px !important;
+    margin-bottom: 10px !important;
+}
+
+#ai-chat-messages-container blockquote p:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Inheritable italic color for code, em, strong inside blockquotes so they don't
+   visually clash with the italic-muted parent. */
+#ai-chat-messages-container blockquote code,
+#ai-chat-messages-container blockquote em,
+#ai-chat-messages-container blockquote strong {
+    color: inherit;
+}
+
+/* Restore strong contrast for bold inside blockquotes so emphasis still reads */
+#ai-chat-messages-container blockquote strong {
+    color: var(--forge-black, #1c1a17);
+}
+
+/* Bold inside code stays subtle */
+#ai-chat-messages-container blockquote code {
+    font-style: normal;
+}
+
+/* Horizontal rule ("---") as a visible divider with breathing room */
+#ai-chat-messages-container hr {
+    border: none;
+    border-top: 1px solid var(--border-color, #e2e8f0);
+    margin: 12px 0;
+}
+
+/* ── Prompt Tools Label (AI Assistant prompt input) ──────────────
+   Originally scoped inline to the prompt input container; hidden
+   below 401px container width to save space. */
+.prompt-tools-label {
+    display: none;
+}
+
+@container (min-width: 401px) {
+    .prompt-tools-label {
+        display: inline;
+    }
+}

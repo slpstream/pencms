@@ -1,0 +1,34 @@
+{% set card_badge = (item.section is defined and item.section is not empty) ? item.section : ((item.category is defined and item.category is not empty) ? item.category : ((item.status is defined and item.status is not empty) ? item.status : '')) %}
+<li class="listing-card" data-status="{{ (item.status is defined and item.status is not empty) ? item.status : card_badge }}">
+    <div class="card-photo">
+        {% set card_img = (item.hero_image is defined and item.hero_image is not empty) ? item.hero_image : ((item.cover is defined and item.cover is not empty) ? item.cover : ((item.image is defined and item.image is not empty) ? item.image : '')) %}
+        {% if card_img is not empty %}
+            <img src="{{ contentAsset(card_img) }}" alt="{{ (item.hero_title is defined and item.hero_title is not empty) ? item.hero_title : (item.title is defined ? item.title : '') }}" loading="lazy" decoding="async">
+        {% else %}
+            <span class="card-photo-blank" aria-hidden="true"></span>
+        {% endif %}
+        {% if card_badge is not empty %}
+            <span class="status-flag">{{ card_badge }}</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if item.price is defined and item.price is not empty %}
+            <p class="card-price">{{ item.price }}</p>
+        {% endif %}
+        <h3 class="card-title">
+            <a href="{% if theme.isStatic() %}{{ base_path }}{{ item.slug is defined ? item.slug : '' }}/index.html{% else %}post.php?slug={{ item.slug is defined ? item.slug : '' }}&section={{ item.section is defined ? item.section : 'default' }}{% endif %}">
+                {{ (item.hero_title is defined and item.hero_title is not empty) ? item.hero_title : (item.title is defined ? item.title : 'Property Listing') }}
+            </a>
+        </h3>
+        <p class="spec-row">
+            {% if item.beds is defined and item.beds is not empty %}<span class="spec">{{ item.beds }} bd</span>{% endif %}
+            {% if item.baths is defined and item.baths is not empty %}<span class="spec">{{ item.baths }} ba</span>{% endif %}
+            {% if item.area is defined and item.area is not empty %}<span class="spec">{{ item.area }}</span>{% endif %}
+        </p>
+        {% if item.address is defined and item.address is not empty %}
+            <p class="card-address">{{ item.address }}</p>
+        {% elseif item.deck is defined and item.deck is not empty %}
+            <p class="card-address">{{ item.deck | striptags | slice(0, 90) }}...</p>
+        {% endif %}
+    </div>
+</li>

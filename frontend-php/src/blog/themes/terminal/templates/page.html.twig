@@ -1,0 +1,34 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main-content" class="main-container">
+    <div class="layout-grid layout-with-sidebar">
+        <div class="content-column">
+            <article class="page">
+                <header class="page-header">
+                    <h1>{{ hero_title | default(page_title | default('Untitled')) }}</h1>
+                    {% if deck is defined and deck is not empty %}
+                        <p class="lede">{{ deck | raw }}</p>
+                    {% endif %}
+                </header>
+
+                {% if page_content is defined and page_content is not empty %}
+                    <div class="prose article-content traven-preview">{{ page_content | raw }}</div>
+                {% elseif posts is defined and posts is not empty %}
+                    {% for post_item in posts %}
+                        <div class="prose article-content traven-preview">{{ post_item.content_html | raw }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                {{ theme.partial('faqs') | raw }}
+            </article>
+        </div>
+
+        <aside class="sidebar-column" aria-label="Sidebar">
+            {{ theme.partial('sidebar-toc') | raw }}
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

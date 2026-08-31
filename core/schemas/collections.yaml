@@ -1,0 +1,190 @@
+# PenCMS Content Collection Schemas
+#
+# This file is the authoritative schema surface advertised to the AI
+# assistant (Phase 5 — Dynamic Schema Discovery). It is read at startup by
+# `config.reload_collections_schema()` and served to the sidebar via
+# `GET /api/ai/schemas`.
+#
+# Field-name and optionality rules
+# --------------------------------
+# The `required:` flag on each field MUST mirror the Pydantic declaration
+# in `backend-python/app/models/page.py` (`PageFrontmatter`):
+#
+#   - `required: true`  → field is declared without `Optional[...]` and
+#                         without a default (Pydantic raises on missing).
+#   - `required: false` → field is `Optional[...]` and/or carries a default.
+#
+# This is NOT the same as `taxonomy.yaml`'s `required_fields` list, which
+# drives the *conditional* `validate_required_fields_for_non_stubs`
+# validator (only enforced when `status` is `unpublished` or `published`).
+# Those conditionally-required fields are noted in `conditional_required`
+# below so the AI can be told about them without conflating them with the
+# hard Pydantic requirement.
+#
+# The Pydantic model uses `extra='allow'`, so fields not listed here are
+# still persisted by the backend but are NOT promoted into the prompt.
+# When you add a new field to `PageFrontmatter`, add it here in the same
+# PR so the AI learns the canonical name — not the legacy alias.
+#
+# Why `name` and not `title`
+# --------------------------
+# `PageFrontmatter.alias_type_to_category` aliases legacy `title → name`
+# on input, but the canonical stored field is `name`. Advertising `title`
+# to the AI invites it to emit `title:` in frontmatter, which works today
+# only because of the validator — and silently breaks if the validator is
+# ever removed. If a future migration renames `name → title`, update this
+# YAML in the same PR.
+
+collections:
+  posts:
+    label: Posts
+    directory: posts/
+    description: |
+      Long-form articles. The default and (currently) only collection in
+      PenCMS. Maps 1:1 to a content directory under `content/`.
+    frontmatter:
+      # --- Required by Pydantic (no Optional, no default) ---
+      - name: name
+        type: string
+        required: true
+        description: "Article headline. Canonical primary headline field (legacy `title` is aliased to this on input)."
+
+      - name: category
+        type: taxonomy_ref
+        vocabulary: primary
+        required: true
+        description: "Primary classification. Holds a term from the site's `primary_vocabulary` (defined in taxonomy.yaml), NOT from the vocabulary named `topic`. The `vocabulary: primary` token here tells the AI schema renderer to inline the primary_vocabulary's allowed terms. The value also maps to the filesystem directory name under content/."
+
+      # --- Optional with defaults ---
+      - name: domain
+        type: enum
+        values: [blog]
+        required: false
+        default: blog
+        description: "Site domain / vertical. Currently only `blog` is supported."
+
+      - name: status
+        type: enum
+        values: [stub, draft, unpublished, published]
+        required: false
+        default: stub
+        description: "Editorial workflow state. `stub` and `draft` skip the conditional-required-fields check; `unpublished` and `published` require the fields listed in `conditional_required` below."
+
+      - name: published
+        type: boolean
+        required: false
+        default: false
+        description: "Whether the article is live. Distinct from `status` — `status: published` + `published: false` is a valid 'soft-unpublished' state."
+
+      - name: page
+        type: boolean
+        required: false
+        default: false
+        description: "Whether the entry is a static page (true) or a standard blog post (false)."
+
+      - name: pinned
+        type: boolean
+        required: false
+        default: false
+        description: "When true, the post is pinned to the top of public listings (still ordered by date among pinned posts). All posts are unpinned by default. Agents must NOT set this to true unless the operator explicitly asks to pin a post."
+
+      - name: noindex
+        type: boolean
+        required: false
+        default: false
+        description: "When true, the URL stays published (HTML and markdown still bake) but is omitted from sitemap, RSS, llms.txt, llms-full.txt, content.jsonl, and search-index.json. HTML robots become noindex,nofollow for that URL. Applies to posts and pages."
+
+      - name: date
+        type: date
+        required: false
+        description: "YYYY-MM-DD display / sort dateline. Distinct from `publish_at` (go-live clock). When `publish_at` is set and `date` is empty, the calendar day of `publish_at` is used."
+
+      - name: publish_at
+        type: datetime
+        required: false
+        description: "ISO-8601 UTC go-live datetime (e.g. 2026-07-20T15:00:00Z). When `status` is `published` and `publish_at` is in the future, the entry is embargoed (not listed publicly) until that instant. Omitted or past → live immediately on publish. Bare YYYY-MM-DD is accepted as UTC midnight."
+
+      - name: author
+        type: string
+        required: false
+        description: "Author or byline display name."
+
+      - name: main_image
+        type: image_path
+        required: false
+        description: "Primary card/listing image. Path relative to the assets root, e.g. `images/content/{slug}/cover.jpg`."
+
+      - name: tags
+        type: list_of_string
+        required: false
+        default: []
+        description: "Free-form tag list. The `tags` vocabulary in taxonomy.yaml is uncontrolled (`controlled: false`), so any string is valid."
+
+      - name: notes
+        type: text
+        required: false
+        description: "Editorial notes, not rendered on the public site. Used for in-CMS context."
+
+      # --- Agent provenance (set by automated workflows, not humans) ---
+      - name: created_by
+        type: enum
+        values: [human, claude, gemini]
+        required: false
+        default: human
+        description: "Who/what first created this entry. Used for agent provenance tracking."
+
+      - name: confidence
+        type: number
+        required: false
+        description: "Agent self-reported confidence (0.0–1.0). Nullable."
+
+      - name: needs_review
+        type: boolean
+        required: false
+        default: false
+        description: "Flag set by agents to request human review before publishing."
+
+      - name: source
+        type: string
+        required: false
+        description: "Free-text provenance pointer (e.g. 'Chapter 3 extraction')."
+
+      # --- Presentation fields (render-time) ---
+      - name: deck
+        type: text
+        required: false
+        description: "Editorial dek / teaser. Renders below the headline on article pages."
+
+      - name: summary
+        type: text
+        required: false
+        description: "Expand/Embed nutshell body (source=summary). Distinct from editorial deck."
+
+      - name: faqs
+        type: list
+        required: false
+        default: []
+        description: "Optional Q&A pairs for this post/page. Each item is {q, a} strings. Empty list [] is valid and default (poetry, most news). Do not derive from [expand] or headings. Not every URL should have FAQs."
+
+      - name: trumpet
+        type: string
+        required: false
+        description: "Eyebrow tagline rendered above the headline (often a category label or kicker)."
+
+      - name: hero_image
+        type: image_path
+        required: false
+        description: "Hero banner image. Path relative to the assets root."
+
+      - name: hero_title
+        type: string
+        required: false
+        description: "Optional hero-headline override. When present, replaces `name` as the large display headline on the article page (the URL/SEO `<title>` still uses `name`)."
+
+    # Fields that become required ONLY when status is unpublished/published.
+    # This mirrors `validate_required_fields_for_non_stubs` in PageFrontmatter
+    # and `required_fields` in taxonomy.yaml. The AI should be told about
+    # this so it doesn't try to publish an article missing a hero_title.
+    conditional_required:
+      when_status_in: [unpublished, published]
+      fields: [name, status]

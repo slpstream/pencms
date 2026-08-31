@@ -1,0 +1,77 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+{% set byline = author is iterable ? (author.name | default('')) : author %}
+{% set zone = category | default(section | default('')) %}
+
+<main id="main" class="ochre-wall page-post">
+
+    <header class="ochre-plaque">
+        {% if zone is not empty or trumpet is not empty %}
+        <p class="cat">
+            {% if zone is not empty %}<span class="cat-id">{{ zone }}</span>{% endif %}
+            {% if trumpet is not empty and trumpet != zone %}{{ trumpet }}{% endif %}
+        </p>
+        {% endif %}
+
+        <h1 class="post-detail-title ochre-panel-title">{{ hero_title | default(title | default('Untitled')) }}</h1>
+
+        {% if deck is not empty %}
+            <div class="post-detail-deck ochre-deck">{{ deck | raw }}</div>
+        {% endif %}
+
+        {% if has_hero %}
+            <figure class="ochre-painted-panel">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+            </figure>
+        {% endif %}
+
+        {% if byline is not empty or dateline is not empty or date is not empty %}
+        <dl class="ochre-specs ochre-plaque-meta" aria-label="Meta">
+            {% if byline is not empty %}<div><dt>Author</dt><dd>{{ byline }}</dd></div>{% endif %}
+            {% if dateline is not empty %}
+                <div><dt>Date</dt><dd>{{ dateline }}</dd></div>
+            {% elseif date is not empty %}
+                <div><dt>Date</dt><dd>{{ date | date("d F Y") }}</dd></div>
+            {% endif %}
+        </dl>
+        {% endif %}
+    </header>
+
+    <div class="ochre-chamber">
+        <div class="ochre-void">
+            <div class="ochre-survey-rail" aria-hidden="true">
+                <i class="survey-st lit"></i>
+                <i class="survey-st"></i>
+                <i class="survey-st"></i>
+            </div>
+            {{ theme.partial('sidebar-secondary') | raw }}
+            {{ theme.partial('sidebar-toc') | raw }}
+        </div>
+
+        <div class="ochre-prose">
+            {% for post in posts %}
+                <article class="ochre-fragment" id="{{ post.id }}">
+                    {% if post.title is not empty and posts|length > 1 %}
+                        <h2 class="ochre-fragment-title">{{ post.title }}</h2>
+                    {% endif %}
+                    <div class="article-content traven-preview">
+                        {{ post.content_html | raw }}
+                    </div>
+                </article>
+            {% endfor %}
+
+            {{ theme.partial('faqs') | raw }}
+
+            <section class="ochre-discussion">
+                {{ theme.partial('comment-thread') | raw }}
+                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+            </section>
+        </div>
+    </div>
+
+    {{ theme.partial('sidebar-related') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

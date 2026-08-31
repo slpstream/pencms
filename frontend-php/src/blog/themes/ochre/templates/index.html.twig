@@ -1,0 +1,88 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set index_kicker = '' %}
+{% if hero_title is defined and hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set index_kicker = hero_title %}
+{% endif %}
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+
+<main id="main" class="ochre-passage">
+
+    <header class="ochre-masthead" id="mouth">
+        {% if index_kicker is not empty %}
+            <p class="mast-eyebrow">{{ index_kicker }}</p>
+        {% endif %}
+
+        {% set logo_url = theme.getLogoUrl() %}
+        {% if logo_url is not empty %}
+            <a href="{{ home_url }}" class="mast-logo-link">
+                <img src="{{ logo_url }}" alt="" class="mast-logo">
+            </a>
+        {% endif %}
+
+        <h1 class="mast-title">{{ sitename | default('Ochre') }}</h1>
+
+        {% if tagline is not empty %}
+            <p class="mast-sub">{{ tagline }}</p>
+        {% elseif deck is not empty %}
+            <p class="mast-sub">{{ deck | striptags }}</p>
+        {% endif %}
+
+        <p class="mast-meta">
+            <span>{{ post_list|length }} {% if post_list|length == 1 %}article{% else %}articles{% endif %}</span>
+        </p>
+
+        {{ theme.partial('header', { is_index: true }) | raw }}
+    </header>
+
+    {% if post_list is not empty %}
+    <div class="ochre-exhibit" aria-label="Articles">
+        <div class="ochre-survey-spine" aria-hidden="true" style="--n: {{ post_list|length }}">
+            {% for dossier in post_list %}
+                <i class="survey-st" style="--st: {{ loop.index0 }}"></i>
+            {% endfor %}
+        </div>
+
+        {% for dossier in post_list %}
+            {% set url = contentUrl(dossier) %}
+            {% set panel_hero = dossier.hero_image | default('') %}
+            {% set panel_has_img = panel_hero is not empty and panel_hero != 'images/defaulthero.jpg' %}
+            {% set zone = dossier.trumpet | default(dossier.category | default(dossier.section | default(''))) %}
+            <article class="ochre-card{% if loop.first %} ochre-card--lead{% endif %}">
+                <p class="cat">
+                    <span class="cat-id">{{ '%02d'|format(loop.index) }}</span>
+                    {% if zone is not empty %}{{ zone }}{% endif %}
+                </p>
+                {% if panel_has_img %}
+                    <a href="{{ url }}" class="ochre-card-panel" tabindex="-1" aria-hidden="true">
+                        <img src="{{ contentAsset(panel_hero) }}" alt="" loading="{{ loop.first ? 'eager' : 'lazy' }}" decoding="async">
+                    </a>
+                {% endif %}
+                <h2 class="ochre-card-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a></h2>
+                {% if dossier.deck is defined and dossier.deck is not empty %}
+                    <p class="ochre-card-deck">{{ dossier.deck | striptags }}</p>
+                {% endif %}
+                {% set byline = dossier.author is iterable ? (dossier.author.name | default('')) : (dossier.author | default('')) %}
+                {% if (dossier.dateline is defined and dossier.dateline is not empty) or (dossier.date is defined and dossier.date is not empty) or byline is not empty %}
+                <dl class="ochre-specs">
+                    {% if dossier.dateline is defined and dossier.dateline is not empty %}
+                        <div><dt>Date</dt><dd>{{ dossier.dateline }}</dd></div>
+                    {% elseif dossier.date is defined and dossier.date is not empty %}
+                        <div><dt>Date</dt><dd>{{ dossier.date | date('d F Y') }}</dd></div>
+                    {% endif %}
+                    {% if byline is not empty %}
+                        <div><dt>Author</dt><dd>{{ byline }}</dd></div>
+                    {% endif %}
+                </dl>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="ochre-empty">Nothing published yet.</p>
+    {% endif %}
+
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,32 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-archive">
+    <section class="wrap archive-sheet">
+        <div class="rule" aria-hidden="true"></div>
+        <h1 class="grafik-title grafik-title--page">{{ hero_title | default('Archive') }}<i class="dot" aria-hidden="true"></i></h1>
+
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% if post_list is not empty %}
+            <ol class="archive-list">
+                {% for dossier in post_list %}
+                    {% set url = contentUrl(dossier) %}
+                    <li class="archive-item">
+                        <span class="archive-yr">
+                            {% if dossier.date is not empty %}
+                                <time datetime="{{ dossier.date }}">{{ dossier.date | date('Y.m.d') }}</time>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+                        <a href="{{ url }}" class="archive-ttl">{{ dossier.hero_title | default(dossier.title) }}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty-sheet">Nothing in the catalogue yet.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

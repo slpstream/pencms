@@ -1,0 +1,70 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+
+<main id="main" class="site-main page-front">
+    <section class="front-hero wrap">
+        <h1 class="front-headline">{{ hero_title | default(sitename | default('Untitled')) }}</h1>
+        {% if tagline is not empty %}
+            <p class="front-deck">{{ tagline }}</p>
+        {% endif %}
+    </section>
+
+    {% if post_list is not empty %}
+        <section class="articles-feed wrap" aria-label="Articles">
+            <div class="articles-grid">
+                {% for item in post_list %}
+                    {% set url = contentUrl(item) %}
+                    {% set item_cat = item.category | default(item.section | default('')) %}
+                    {% set has_hero = item.hero_image is not empty and item.hero_image != 'images/defaulthero.jpg' %}
+                    <article class="article-card{% if has_hero %} article-card--has-media{% endif %}">
+                        {% if has_hero %}
+                            <div class="article-card-media-wrap">
+                                <a href="{{ url }}" class="article-card-media" tabindex="-1" aria-hidden="true">
+                                    <img src="{{ contentAsset(item.hero_image) }}" alt="" loading="lazy" decoding="async">
+                                </a>
+                                <div class="article-card-header">
+                                    {% if item_cat is not empty %}
+                                        <span class="article-card-cat">{{ item_cat | replace({'-': ' ', '_': ' '}) | title }}</span>
+                                    {% endif %}
+                                    {% if item.date is not empty %}
+                                        <time datetime="{{ item.date }}" class="article-card-date">{{ item.date | date("j F Y") }}</time>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="article-card-header">
+                                {% if item_cat is not empty %}
+                                    <span class="article-card-cat">{{ item_cat | replace({'-': ' ', '_': ' '}) | title }}</span>
+                                {% endif %}
+                                {% if item.date is not empty %}
+                                    <time datetime="{{ item.date }}" class="article-card-date">{{ item.date | date("j F Y") }}</time>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <div class="article-card-body">
+                            {% if item.trumpet is not empty %}
+                                <p class="article-card-trumpet">{{ item.trumpet | striptags }}</p>
+                            {% endif %}
+                            <h2 class="article-card-title">
+                                <a href="{{ url }}">{{ item.hero_title | default(item.title) }}</a>
+                            </h2>
+                            {% if item.deck is not empty %}
+                                <p class="article-card-deck">{{ item.deck | striptags }}</p>
+                            {% endif %}
+                            <a href="{{ url }}" class="article-card-link">Read</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% else %}
+        <section class="wrap">
+            <p class="empty-feed">Nothing published yet.</p>
+        </section>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

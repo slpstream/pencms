@@ -1,0 +1,36 @@
+{% include 'partials/_head.html.twig' %}
+{% include 'partials/_header.html.twig' %}
+
+<main class="upstack-container">
+    <article class="upstack-page-detail">
+        <header class="upstack-post-header">
+            <h1>{{ hero_title | default(title | default(page_title | default('Untitled Page'))) }}</h1>
+            {% if deck is defined and deck is not empty %}
+                <div class="upstack-post-deck">{{ deck | raw }}</div>
+            {% endif %}
+
+            {% set hero_img = hero_image | default(main_image | default('')) %}
+            {% if hero_img is not empty %}
+                <div class="upstack-post-hero">
+                    <img src="{{ contentAsset(hero_img) }}" alt="{{ hero_title | default(title | default('Hero Image')) }}">
+                </div>
+            {% endif %}
+        </header>
+
+        <div class="article-content traven-preview">
+            {% if page_content is defined and page_content is not empty %}
+                {{ page_content | raw }}
+            {% elseif posts is defined and posts is not empty %}
+                {% for post_item in posts %}
+                    {{ post_item.content_html | default(post_item.content | default('')) | raw }}
+                {% endfor %}
+            {% else %}
+                {{ content_html | default(content | default(body | default(''))) | raw }}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+
+{% include 'partials/_footer.html.twig' %}

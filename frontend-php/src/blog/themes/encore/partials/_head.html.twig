@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% set site_name = sitename is defined ? sitename : 'PenCMS' %}
+{% set page_h_title = hero_title is defined and hero_title ? hero_title : (page_title is defined and page_title ? page_title : (title is defined and title ? title : site_name)) %}
+{% set page_desc = meta_description is defined and meta_description ? meta_description : (tagline is defined and tagline ? tagline : '') %}
+
+<title>{{ page_h_title }}{% if page_h_title != site_name %} · {{ site_name }}{% endif %}</title>
+
+{% if page_desc is not empty %}
+<meta name="description" content="{{ page_desc }}">
+<meta property="og:description" content="{{ page_desc }}">
+{% endif %}
+
+<meta property="og:title" content="{{ page_h_title }}">
+<meta property="og:type" content="website">
+<meta name="color-scheme" content="dark light">
+
+{# FOUC Prevention Script for Manual Theme Preference #}
+<script>
+    (function() {
+        try {
+            var theme = localStorage.getItem('encore-theme') || localStorage.getItem('theme');
+            if (!theme) {
+                theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            if (theme === 'light' || theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('cm-wysiwym-dark');
+                } else {
+                    document.documentElement.classList.remove('cm-wysiwym-dark');
+                }
+            }
+        } catch (e) {}
+    })();
+</script>
+
+{# Theme and Skin Stylesheets (linkCss automatically prepends assets/) #}
+<link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+{{ theme.linkCss('css/styles.css') | raw }}
+{{ theme.linkCss('css/skin-encore.css') | raw }}
+
+{# Mandatory KaTeX Math Stylesheet #}
+<link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+
+{# Mandatory Expand / Embed Nutshell Runtime Assets #}
+<link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+<script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+</head>
+<body class="traven-preview{% if body_class is defined and body_class is not empty %} {{ body_class }}{% endif %}">
+<a class="skip-link" href="#main">Skip to content</a>

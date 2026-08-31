@@ -1,0 +1,6 @@
+{
+  "extraPaths": [
+    "app",
+    "../../pencms-pro"
+  ]
+}

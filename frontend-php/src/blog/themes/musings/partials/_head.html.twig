@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if hero_title is defined and hero_title is not empty %}{{ hero_title }} — {{ sitename|default('') }}{% elseif page_title is defined and page_title is not empty %}{{ page_title }} — {{ sitename|default('') }}{% elseif post is defined and post.title is defined %}{{ post.title }} — {{ sitename|default('') }}{% else %}{{ sitename|default('Musings') }}{% endif %}</title>
+
+    {% set desc = meta_description | default(tagline | default('')) %}
+    {% if desc is not empty %}
+    <meta name="description" content="{{ desc }}">
+    {% endif %}
+
+    <!-- Musings Dual-Duty Skin and Site Chrome CSS -->
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+
+    {{ theme.linkCss('css/skin-musings.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+</head>
+<body class="traven-preview cm-wysiwym-dark">

@@ -1,0 +1,259 @@
+{% set feedback_kind = kind is defined and kind ? kind : 'contact' %}
+{% set feedback_parent = parent_slug is defined ? parent_slug : '' %}
+{% set feedback_source = canonical_url is defined ? canonical_url : '' %}
+{% set feedback_email = contact_email is defined ? contact_email : '' %}
+{% set feedback_heading = feedback_kind == 'comment'
+    ? strings.leaveComment|default('Leave a comment')
+    : strings.contactUs|default('Contact us') %}
+{% set has_submission_key = feedback_submission_key is defined and feedback_submission_key %}
+{% set has_feedback_endpoint = feedback_endpoint is defined and feedback_endpoint %}
+{% set feedback_fallback = feedback_static_fallback is defined and feedback_static_fallback ? feedback_static_fallback : 'mailto' %}
+{% set static_without_key = theme.isStatic() and not has_submission_key %}
+{% set omit_feedback = static_without_key and (feedback_fallback == 'hidden' or not feedback_email) %}
+
+{% if not omit_feedback %}
+<section class="pen-feedback" data-pen-feedback{% if pen_site_id is defined and pen_site_id %} data-pen-site-id="{{ pen_site_id }}"{% endif %} data-pen-feedback-rate-limited="{{ strings.feedbackRateLimited|default('Too many submissions. Please try again later.')|e('html_attr') }}" data-pen-feedback-send-failed="{{ strings.feedbackSendFailed|default('Could not send. Please try again.')|e('html_attr') }}">
+    <style>
+        .pen-feedback {
+            width: 100%;
+            margin: 2rem 0 0;
+            padding: 1.25rem 0 0;
+            border-top: 1px solid var(--color-border, #ccc);
+            color: var(--color-text, inherit);
+            font: inherit;
+        }
+        .pen-comments:has(.pen-comments__list) + .pen-feedback {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 1.5rem;
+        }
+        .pen-feedback__title {
+            margin: 0 0 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .pen-feedback__form {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .pen-feedback__form[hidden],
+        .pen-feedback__title[hidden],
+        .pen-feedback__status[hidden],
+        .pen-feedback__receipt[hidden] {
+            display: none;
+        }
+        .pen-feedback__label {
+            display: block;
+            font-size: 0.9rem;
+        }
+        .pen-feedback__label span {
+            font-weight: 400;
+            opacity: 0.75;
+        }
+        .pen-feedback__input,
+        .pen-feedback__textarea {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 0.35rem;
+            padding: 0.5rem 0.65rem;
+            border: 1px solid var(--color-border, currentColor);
+            border-radius: 4px;
+            background: var(--color-surface, transparent);
+            color: inherit;
+            font: inherit;
+        }
+        .pen-feedback__input:focus,
+        .pen-feedback__textarea:focus {
+            outline: 2px solid var(--color-accent, currentColor);
+            outline-offset: 1px;
+        }
+        .pen-feedback__textarea {
+            min-height: 8rem;
+            resize: vertical;
+        }
+        .pen-feedback__submit {
+            justify-self: end;
+            padding: 0.5rem 1rem;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+        }
+        .pen-feedback__submit:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+        .pen-feedback__status {
+            margin: 0;
+        }
+        .pen-feedback__status--error {
+            color: var(--color-accent, inherit);
+        }
+        .pen-feedback__receipt {
+            margin: 0;
+            padding: 1.25rem 1.35rem;
+            border: 1px solid var(--color-border, #ccc);
+            border-radius: 4px;
+            background: var(--color-surface, transparent);
+            color: var(--color-text, inherit);
+            text-align: left;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .pen-feedback__receipt-title {
+            margin: 0 0 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .pen-feedback__receipt-body {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .pen-feedback__noscript {
+            margin: 0.75rem 0 0;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <h2 class="pen-feedback__title">{{ feedback_heading }}</h2>
+
+    {% if static_without_key %}
+        <p class="pen-feedback__noscript">
+            <a href="mailto:{{ feedback_email }}?subject={{ feedback_heading|url_encode }}">Email {{ feedback_email }}</a>
+        </p>
+    {% else %}
+    <form class="pen-feedback__form" method="post" action="{% if has_feedback_endpoint %}{{ feedback_endpoint }}{% else %}/api/v1/feedback{% endif %}" data-pen-feedback-form>
+        <label class="pen-feedback__label">
+            {{ strings.feedbackName|default('Name') }} <span>{{ strings.feedbackOptional|default('(optional)') }}</span>
+            <input class="pen-feedback__input" type="text" name="name" maxlength="120" autocomplete="name">
+        </label>
+        <label class="pen-feedback__label">
+            {{ strings.feedbackMessage|default('Message') }}
+            <textarea class="pen-feedback__textarea" name="message" required maxlength="8000" rows="6"></textarea>
+        </label>
+        <input type="hidden" name="kind" value="{{ feedback_kind }}">
+        {% if feedback_kind == 'comment' %}
+            <input type="hidden" name="parent_slug" value="{{ feedback_parent }}">
+        {% endif %}
+        <input type="hidden" name="source_url" value="{{ feedback_source }}" data-pen-feedback-source>
+        {% if has_submission_key %}
+            <input type="hidden" name="submission_key" value="{{ feedback_submission_key }}">
+        {% endif %}
+        <button class="pen-feedback__submit" type="submit">{% if feedback_kind == 'comment' %}{{ strings.postComment|default('Post comment') }}{% else %}{{ strings.send|default('Send') }}{% endif %}</button>
+    </form>
+
+    {% if feedback_kind == 'comment' %}
+        {% set receipt_title = strings.commentThanksTitle|default('Thanks for commenting.') %}
+        {% set receipt_body = strings.commentThanksBody|default('Comments appear after a short review so spam stays off the page. You don’t need to send this again — it will show here once it is approved.') %}
+    {% else %}
+        {% set receipt_title = strings.contactThanksTitle|default('Thanks for reaching out.') %}
+        {% set receipt_body = strings.contactThanksBody|default('We received your message and will get back to you. You don’t need to send it again.') %}
+    {% endif %}
+    <div class="pen-feedback__receipt" data-pen-feedback-success role="status" aria-live="polite" hidden>
+        <p class="pen-feedback__receipt-title">{{ receipt_title }}</p>
+        <p class="pen-feedback__receipt-body">{{ receipt_body }}</p>
+    </div>
+    <p class="pen-feedback__status pen-feedback__status--error" data-pen-feedback-error hidden></p>
+
+    {% if feedback_email %}
+        <noscript>
+            <p class="pen-feedback__noscript">
+                <a href="mailto:{{ feedback_email }}?subject={{ feedback_heading|url_encode }}">Email {{ feedback_email }}</a>
+            </p>
+        </noscript>
+    {% endif %}
+    {% endif %}
+</section>
+
+{% if not static_without_key %}
+<script>
+(function () {
+    var roots = document.querySelectorAll('[data-pen-feedback]:not([data-pen-feedback-bound])');
+    Array.prototype.forEach.call(roots, function (root) {
+        root.setAttribute('data-pen-feedback-bound', '');
+        var form = root.querySelector('[data-pen-feedback-form]');
+        var title = root.querySelector('.pen-feedback__title');
+        var success = root.querySelector('[data-pen-feedback-success]');
+        var errorEl = root.querySelector('[data-pen-feedback-error]');
+        var source = root.querySelector('[data-pen-feedback-source]');
+        var submit = form ? form.querySelector('[type="submit"]') : null;
+        if (!form) {
+            return;
+        }
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (source && window.location && window.location.href) {
+                source.value = window.location.href;
+            }
+            var payload = {
+                name: (form.elements.namedItem('name') && form.elements.namedItem('name').value) || '',
+                message: (form.elements.namedItem('message') && form.elements.namedItem('message').value) || '',
+                kind: (form.elements.namedItem('kind') && form.elements.namedItem('kind').value) || 'contact',
+                source_url: (source && source.value) || ''
+            };
+            var parent = form.elements.namedItem('parent_slug');
+            if (parent) {
+                payload.parent_slug = parent.value || '';
+            }
+            var keyField = form.elements.namedItem('submission_key');
+            if (keyField && keyField.value) {
+                payload.submission_key = keyField.value;
+            }
+            if (errorEl) {
+                errorEl.hidden = true;
+                errorEl.textContent = '';
+            }
+            if (submit) {
+                submit.disabled = true;
+            }
+            var url = form.getAttribute('action') || '/api/v1/feedback';
+            var siteId = root.getAttribute('data-pen-site-id');
+            if (siteId && !(keyField && keyField.value)) {
+                url += (url.indexOf('?') >= 0 ? '&' : '?') + 'site=' + encodeURIComponent(siteId);
+            }
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(function (response) {
+                if (response.status === 429) {
+                    throw { rateLimited: true };
+                }
+                if (!response.ok) {
+                    throw { failed: true };
+                }
+                return response.json();
+            }).then(function () {
+                form.hidden = true;
+                if (title) {
+                    title.hidden = true;
+                }
+                if (success) {
+                    success.hidden = false;
+                }
+            }).catch(function (err) {
+                if (submit) {
+                    submit.disabled = false;
+                }
+                if (!errorEl) {
+                    return;
+                }
+                errorEl.hidden = false;
+                errorEl.textContent = err && err.rateLimited
+                    ? (root.getAttribute('data-pen-feedback-rate-limited') || 'Too many submissions. Please try again later.')
+                    : (root.getAttribute('data-pen-feedback-send-failed') || 'Could not send. Please try again.');
+            });
+        });
+    });
+})();
+</script>
+{% endif %}
+{% endif %}

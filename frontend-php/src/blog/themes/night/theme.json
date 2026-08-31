@@ -1,0 +1,168 @@
+{
+  "type": "native",
+  "name": "Night",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Dark-only wet neon cyberpunk: Big Shoulders signage, IBM Plex Mono prose, VT323 order-terminal code, and an underpass-arcade layout for long-form writing.",
+  "editor_skin": "night",
+  "editor_skin_base": [],
+  "color_mode": "dark",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "page_content": { "type": "html", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Asphalt / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#07070C"
+          },
+          {
+            "id": "surface",
+            "label": "Puddle / Surface",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#0E0F1A"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#C9CFDC"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#8A93A8"
+          },
+          {
+            "id": "accent",
+            "label": "Neon Pink / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#FF3D9A"
+          },
+          {
+            "id": "accent-cyan",
+            "label": "Tube Blue",
+            "type": "color",
+            "var": "--color-accent-cyan",
+            "default": "#3DD8FF"
+          },
+          {
+            "id": "accent-yellow",
+            "label": "MSG Yellow / CRT",
+            "type": "color",
+            "var": "--color-accent-yellow",
+            "default": "#FFD84A"
+          },
+          {
+            "id": "border",
+            "label": "Neon Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#152228"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Big Shoulders', 'Arial Narrow', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Big Shoulders', 'Arial Narrow', sans-serif", "label": "Big Shoulders" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'IBM Plex Mono', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'IBM Plex Mono', ui-monospace, monospace", "label": "IBM Plex Mono" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'IBM Plex Mono', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'IBM Plex Mono', ui-monospace, monospace", "label": "IBM Plex Mono" },
+              { "value": "'VT323', ui-monospace, monospace", "label": "VT323" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#FF3D9A",
+    "og_vignette_color": "#07070C",
+    "og_text_color": "#F2F4F8",
+    "og_bar_color": "#0E0F1A",
+    "og_font": "BigShoulders-Black",
+    "og_fonts": {
+      "BigShoulders-Black": "assets/fonts/BigShoulders-Black.ttf"
+    },
+    "og_headline_style": "outline",
+    "og_text_case": "upper",
+    "og_grade_preset": "night",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

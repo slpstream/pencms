@@ -1,0 +1,89 @@
+{% set schedule_data = schedule is defined and schedule is not null ? schedule : (data is defined and data is not null and data.schedule is defined ? data.schedule : null) %}
+{% if schedule_data is null %}
+  {% set schedule_data = {
+    "trialNote": "First class free — just come 10 minutes early and say hi at the desk.",
+    "days": [
+      {
+        "day": "Monday",
+        "classes": [
+          { "time": "07:00", "name": "Sunrise Vinyasa", "who": "Maya", "level": "All levels" },
+          { "time": "12:15", "name": "Lunchtime Mobility", "who": "Denny", "level": "All levels" },
+          { "time": "18:00", "name": "Foundations of Strength", "who": "Theo", "level": "Beginner" },
+          { "time": "19:15", "name": "Yin & Breathwork", "who": "Priya", "level": "All levels" }
+        ]
+      },
+      {
+        "day": "Tuesday",
+        "classes": [
+          { "time": "09:30", "name": "Mat Pilates", "who": "Rosa", "level": "All levels" },
+          { "time": "17:45", "name": "Kettlebell Strength", "who": "Theo", "level": "Intermediate" },
+          { "time": "19:00", "name": "Slow Flow", "who": "Maya", "level": "Beginner" }
+        ]
+      },
+      {
+        "day": "Wednesday",
+        "classes": [
+          { "time": "07:00", "name": "Sunrise Vinyasa", "who": "Maya", "level": "All levels" },
+          { "time": "12:15", "name": "Lunchtime Strength Express", "who": "Theo", "level": "All levels" },
+          { "time": "18:00", "name": "Mobility & Rehab", "who": "Denny", "level": "All levels" },
+          { "time": "19:15", "name": "Power Vinyasa", "who": "Maya", "level": "Intermediate" }
+        ]
+      },
+      {
+        "day": "Thursday",
+        "classes": [
+          { "time": "09:30", "name": "Mat Pilates", "who": "Rosa", "level": "All levels" },
+          { "time": "17:45", "name": "Foundations of Strength", "who": "Theo", "level": "Beginner" },
+          { "time": "19:00", "name": "Yin & Breathwork", "who": "Priya", "level": "All levels" }
+        ]
+      },
+      {
+        "day": "Friday",
+        "classes": [
+          { "time": "07:00", "name": "Sunrise Vinyasa", "who": "Maya", "level": "All levels" },
+          { "time": "12:15", "name": "Lunchtime Mobility", "who": "Denny", "level": "All levels" },
+          { "time": "18:00", "name": "Friday Strength Club", "who": "Theo", "level": "All levels" }
+        ]
+      },
+      {
+        "day": "Saturday",
+        "classes": [
+          { "time": "09:00", "name": "Weekend Flow", "who": "Maya", "level": "All levels" },
+          { "time": "10:30", "name": "Kettlebell Strength", "who": "Theo", "level": "Intermediate" },
+          { "time": "12:00", "name": "Restorative Hour", "who": "Priya", "level": "Beginner" }
+        ]
+      }
+    ]
+  } %}
+{% endif %}
+
+{% if schedule_data is not null and schedule_data.days is defined %}
+<section class="timetable" aria-label="Weekly class schedule">
+  {% if schedule_data.trialNote is defined and schedule_data.trialNote %}
+    <p class="trial-note">{{ schedule_data.trialNote }}</p>
+  {% endif %}
+  <div class="week">
+    {% for day in schedule_data.days %}
+      <section class="day" data-day="{{ day.day }}">
+        <h2 class="day-name">{{ day.day }}</h2>
+        <ul class="classes">
+          {% for session in day.classes %}
+            <li class="session">
+              <span class="session-time">{{ session.time }}</span>
+              <span class="session-what">
+                <span class="session-name">{{ session.name }}</span>
+                {% if session.who is defined and session.who %}
+                  <span class="session-who">with {{ session.who }}</span>
+                {% endif %}
+              </span>
+              {% if session.level is defined and session.level %}
+                <span class="chip">{{ session.level }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

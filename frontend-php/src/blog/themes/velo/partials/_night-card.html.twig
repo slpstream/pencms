@@ -1,0 +1,39 @@
+{% set romans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'] %}
+{% set roman = romans[card_index - 1] | default(card_index) %}
+{% set url = contentUrl(dossier) %}
+{% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+<li class="night{% if is_lead|default(false) %} is-run{% endif %}" style="--i:{{ card_index - 1 }}">
+    <a href="{{ url }}" class="night-link">
+        {% if has_hero %}
+            <div class="night-plate">
+                <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="{% if is_lead|default(false) %}eager{% else %}lazy{% endif %}" decoding="async">
+            </div>
+        {% endif %}
+        <div class="night-head">
+            <span class="night-num" aria-hidden="true">{{ roman }}</span>
+            <span class="night-date mono">
+                {% if dossier.date is not empty %}
+                    <time datetime="{{ dossier.date }}">{{ dossier.date | date('d M Y') }}</time>
+                {% else %}
+                    —
+                {% endif %}
+            </span>
+        </div>
+        <h2 class="night-event">{{ dossier.hero_title | default(dossier.title) }}</h2>
+        {% if dossier.trumpet is not empty %}
+            <p class="night-kind mono">{{ dossier.trumpet | striptags }}</p>
+        {% elseif dossier.category is not empty %}
+            <p class="night-kind mono">{{ dossier.category }}</p>
+        {% endif %}
+        {% if dossier.deck is not empty %}
+            <p class="night-line">{{ dossier.deck | striptags }}</p>
+        {% endif %}
+        {% if is_lead|default(false) %}
+            <p class="night-stamp stamp-next">IN TESTA</p>
+        {% elseif dossier.category is not empty %}
+            <p class="night-stamp stamp-plan">{{ dossier.category }}</p>
+        {% else %}
+            <p class="night-stamp stamp-plan">IN PROGRAMMA</p>
+        {% endif %}
+    </a>
+</li>

@@ -1,0 +1,134 @@
+    {{ theme.partial('head') | raw }}
+    {{ theme.partial('header') | raw }}
+
+    {% set lead = dossiers|first %}
+    {% set secondary = dossiers|slice(1, 4) %}
+    {% set secondary_rest = secondary|slice(1) %}
+    {% set rest = dossiers|slice(5) %}
+
+    {# ═══ MAGAZINE HERO — full-bleed image, or soft text fallback ═══ #}
+    {% if lead is not empty %}
+        {% set lead_url = contentUrl(lead) %}
+        {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+        <section class="mag-hero{% if not lead_has_hero %} mag-hero--text{% endif %}" aria-label="Featured story">
+            <a href="{{ lead_url }}" class="mag-hero-link">
+                {% if lead_has_hero %}
+                    <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="mag-hero-img">
+                {% endif %}
+                <div class="mag-hero-scrim">
+                    <div class="mag-hero-content">
+                        <span class="mag-hero-cat">{{ lead.category | default(lead.section | default('FEATURED')) | upper }}</span>
+                        <h1 class="mag-hero-title">{{ lead.hero_title | default(lead.title) }}</h1>
+                        {% if lead.deck is not empty %}
+                            <p class="mag-hero-deck">{{ lead.deck | striptags }}</p>
+                        {% endif %}
+                        <div class="mag-hero-meta">
+                            {% if lead.trumpet is not empty %}
+                                <span class="mag-hero-trumpet">{{ lead.trumpet | striptags }}</span>
+                            {% endif %}
+                            <time>{{ lead.date | default('') | date('F j, Y') }}</time>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+    {% endif %}
+
+    <main class="magazine-index" aria-label="{{ sitename | default('Magazine') }}">
+
+        {% if lead is empty %}
+            <div class="mag-empty">
+                <p>No stories yet.</p>
+            </div>
+        {% else %}
+
+            {# ═══ LEAD STORY — wide image + body side-by-side ═══ #}
+            {% if secondary is not empty %}
+                {% set second = secondary|first %}
+                {% set second_url = contentUrl(second) %}
+                {% set second_has_hero = second.hero_image is not empty and second.hero_image != 'images/defaulthero.jpg' %}
+                <article class="mag-lead" style="margin-left: 1.5rem; margin-right: 1.5rem;">
+                    <a href="{{ second_url }}" class="mag-lead-link">
+                        {% if second_has_hero %}
+                            <div class="mag-lead-media">
+                                <img src="{{ contentAsset(second.hero_image) }}" alt="" class="mag-lead-img">
+                            </div>
+                        {% endif %}
+                        <div class="mag-lead-body">
+                            <div class="mag-lead-eyebrow">
+                                <span class="mag-lead-cat">{{ second.category | default(second.section | default('STORY')) | upper }}</span>
+                                {% if second.trumpet is not empty %}
+                                    <span class="mag-lead-trumpet">{{ second.trumpet | striptags }}</span>
+                                {% endif %}
+                            </div>
+                            <h2 class="mag-lead-title">{{ second.hero_title | default(second.title) }}</h2>
+                            {% if second.deck is not empty %}
+                                <p class="mag-lead-deck">{{ second.deck | striptags }}</p>
+                            {% endif %}
+                            <div class="mag-lead-meta">
+                                <time>{{ second.date | default('') | date('M d, Y') }}</time>
+                                <span class="mag-lead-cta">Read story &rarr;</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            {% endif %}
+
+            {# ═══ SECONDARY GRID — image-dominant cards with overlaid text ═══ #}
+            {% if secondary_rest is not empty %}
+            {% set grid_items = secondary_rest %}
+                <div class="mag-grid" style="margin-left: 1.5rem; margin-right: 1.5rem;">
+                    {% for dossier in grid_items %}
+                        {% set url = contentUrl(dossier) %}
+                        {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                        <article class="mag-card">
+                            <a href="{{ url }}" class="mag-card-link">
+                                <div class="mag-card-media">
+                                    {% if has_hero %}
+                                        <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="mag-card-img">
+                                    {% endif %}
+                                    <div class="mag-card-overlay">
+                                        <span class="mag-card-cat">{{ dossier.category | default(dossier.section | default('POST')) | upper }}</span>
+                                        <h3 class="mag-card-title">{{ dossier.hero_title | default(dossier.title) }}</h3>
+                                        <time class="mag-card-date">{{ dossier.date | default('') | date('M d, Y') }}</time>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# ═══ BELOW THE FOLD: hero_title as section heading + archive list ═══ #}
+            {% set edition_title = '' %}
+            {% if hero_title is not empty
+                and hero_title != sitename|default('')
+                and hero_title != tagline|default('') %}
+                {% set edition_title = hero_title %}
+            {% endif %}
+
+            {% if rest is not empty %}
+                <section class="mag-list-section" style="margin-left: 1.5rem; margin-right: 1.5rem;" aria-label="{{ edition_title|default('More stories') }}">
+                    {% if edition_title is not empty %}
+                        <h2 class="mag-list-heading">{{ edition_title }}</h2>
+                    {% endif %}
+                    <ul class="mag-list">
+                        {% for dossier in rest %}
+                            {% set url = contentUrl(dossier) %}
+                            <li class="mag-list-item">
+                                <a href="{{ url }}" class="mag-list-link">
+                                    <span class="mag-list-cat">{{ dossier.category | default(dossier.section | default('POST')) | upper }}</span>
+                                    <span class="mag-list-title">{{ dossier.hero_title | default(dossier.title) }}</span>
+                                    <time class="mag-list-date">{{ dossier.date | default('') | date('M d, Y') }}</time>
+                                    <span class="mag-list-arrow" aria-hidden="true">&rarr;</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+        {% endif %}
+    </main>
+
+    {{ theme.partial('footer') | raw }}

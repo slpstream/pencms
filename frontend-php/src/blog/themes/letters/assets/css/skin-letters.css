@@ -1,0 +1,1251 @@
+/* skin-letters.css — dual-duty content skin for the Letters theme.
+   Scopes: .cm-editor (TravenEditor / CodeMirror 6) + .traven-preview (published
+   HTML + admin editor preview). Keeps the editor and published page identical.
+   Every editor widget obeys §4 of traven-theme-development.md: no vertical
+   margin, no float, no margin collapse on block widgets; breathing room is
+   padding. Preview rules may use normal margins and floats. Tokens match
+   chrome styles.css so one palette drives both layers.
+   2026-08-03 */
+
+
+/* @font-face — declared here so the admin editor (which loads only the skin CSS)
+   can resolve the theme's self-hosted fonts. */
+/* Fonts — self-hosted (never CDN) */
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-500italic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-600italic.woff2") format("woff2");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v26-latin-700italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Code";
+  src: url("../fonts/fira-code-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tokens ---------------------------------------------------------------- */
+
+:root {
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-mono: "Fira Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: var(--font-body);
+
+  --color-bg: #fbfbfc;
+  --color-text: #1b1b1e;
+  --color-muted: #5b5e66;
+  --color-wax: #8f1f2b;
+  --color-on-wax: #fbfbfc;
+  --color-border: #e0dfe4;
+  --color-leader: #b9bac2;
+  --color-code-bg: #f1f1f4;
+  --color-mark: #f3dee0;
+  --color-print-mat: #fffcf7;
+  --color-print-edge: #d8d2c8;
+  --color-print-shadow: 0 1px 2px rgba(27, 27, 30, 0.05), 0 10px 24px rgba(27, 27, 30, 0.07);
+
+  --lt-serif: var(--font-body);
+  --lt-mono: var(--font-mono);
+
+  /* Traven host contract */
+  --traven-font-display: var(--font-display);
+  --traven-font-body: var(--font-body);
+  --traven-font-mono: var(--font-mono);
+
+  --lt-bg: var(--color-bg);
+  --lt-text: var(--color-text);
+  --lt-muted: var(--color-muted);
+  --lt-wax: var(--color-wax);
+  --lt-on-wax: var(--color-on-wax);
+  --lt-border: var(--color-border);
+  --lt-leader: var(--color-leader);
+  --lt-code-bg: var(--color-code-bg);
+  --lt-mark: var(--color-mark);
+  --lt-print-mat: var(--color-print-mat);
+  --lt-print-edge: var(--color-print-edge);
+  --lt-print-shadow: var(--color-print-shadow);
+
+  --lt-text-s: 0.82rem;
+  --lt-text-m: 1.05rem;
+  --lt-text-mono: 0.85rem;
+  --lt-leading: 1.7;
+  --lt-leading-tight: 1.2;
+  --lt-radius: 4px;
+  --lt-measure: 34rem;
+  --lt-gutter: 1rem;
+  --lt-space-1: 0.25rem;
+  --lt-space-2: 0.5rem;
+  --lt-space-3: 1rem;
+  --lt-space-4: 2rem;
+  --lt-space-5: 4rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #1c1917;
+    --color-text: #ece7e0;
+    --color-muted: #a8a199;
+    --color-wax: #e58b93;
+    --color-on-wax: #1c1917;
+    --color-border: #37322e;
+    --color-leader: #5b544d;
+    --color-code-bg: #262220;
+    --color-mark: #4a2a30;
+    --color-print-mat: #2a2622;
+    --color-print-edge: #433c36;
+    --color-print-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 24px rgba(0, 0, 0, 0.28);
+  }
+}
+
+html[data-theme="dark"],
+html.cm-wysiwym-dark,
+.cm-wysiwym-dark {
+  --color-bg: #1c1917;
+  --color-text: #ece7e0;
+  --color-muted: #a8a199;
+  --color-wax: #e58b93;
+  --color-on-wax: #1c1917;
+  --color-border: #37322e;
+  --color-leader: #5b544d;
+  --color-code-bg: #262220;
+  --color-mark: #4a2a30;
+  --color-print-mat: #2a2622;
+  --color-print-edge: #433c36;
+  --color-print-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="light"] {
+  --color-bg: #faf7f2;
+  --color-text: #292524;
+  --color-muted: #6b635b;
+  --color-wax: #a82e39;
+  --color-on-wax: #ffffff;
+  --color-border: #e7e0d6;
+  --color-leader: #d4ccbf;
+  --color-code-bg: #f2ede4;
+  --color-mark: #f7e1e3;
+  --color-print-mat: #fffcf7;
+  --color-print-edge: #d8d2c8;
+  --color-print-shadow: 0 1px 2px rgba(27, 27, 30, 0.05), 0 10px 24px rgba(27, 27, 30, 0.07);
+}
+
+/* ── Shared base ------------------------------------------------------------ */
+
+html {
+  background-color: var(--lt-bg);
+}
+
+.cm-editor,
+.traven-preview {
+  font-family: var(--lt-serif);
+  color: var(--lt-text);
+  line-height: var(--lt-leading);
+  -webkit-font-smoothing: antialiased;
+}
+
+.cm-editor {
+  background-color: var(--lt-bg) !important;
+}
+.traven-preview {
+  /* Keep the page canvas; don't force white that would fight body/skin chrome */
+  background-color: transparent !important;
+  color: var(--lt-text) !important;
+}
+
+.hero-title-block.traven-preview {
+  background-color: var(--lt-bg) !important;
+  color: var(--lt-text) !important;
+}
+
+/* Title block: .post-detail-trumpet / .post-detail-title / .post-detail-deck (admin + publish) */
+.post-detail-trumpet,
+.essay-kicker-line .essay-trumpet {
+  font-family: var(--traven-font-display) !important;
+  font-size: var(--text-s, 0.8125rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: var(--tracking-caps, 0.14em) !important;
+  text-transform: uppercase !important;
+  color: var(--lt-muted) !important;
+  line-height: 1.4 !important;
+}
+
+.post-detail-title,
+.essay-header .essay-title,
+.essay-title {
+  font-family: var(--traven-font-display) !important;
+  font-size: var(--text-xxl, clamp(2rem, 5vw, 2.75rem)) !important;
+  font-weight: 500 !important;
+  line-height: var(--leading-tight, 1.2) !important;
+  letter-spacing: normal !important;
+  color: var(--lt-text) !important;
+}
+
+.post-detail-deck,
+.essay-header .essay-subtitle,
+.essay-subtitle {
+  font-family: var(--traven-font-body) !important;
+  font-size: var(--text-l, 1.25rem) !important;
+  line-height: var(--leading-tight, 1.2) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  color: var(--lt-muted) !important;
+}
+
+/* ── Editor chrome (selection, cursor, fat cursor, scroller) ---------------- */
+
+.cm-editor:focus,
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+.cm-scroller {
+  font-family: inherit !important;
+  line-height: var(--lt-leading) !important;
+  padding: 12px 0 !important;
+}
+.cm-content {
+  padding: 0 24px !important;
+}
+
+.cm-selectionBackground,
+.cm-native-selection {
+  background-color: rgba(143, 31, 43, 0.16) !important;
+}
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: rgba(143, 31, 43, 0.22) !important;
+}
+.cm-editor .cm-cursor {
+  border-left-color: var(--lt-wax) !important;
+}
+.cm-editor .cm-fat-cursor {
+  background-color: var(--lt-wax) !important;
+  opacity: 0.6 !important;
+}
+
+/* ── Inline marks ----------------------------------------------------------- */
+
+.cm-wysiwym-bold { font-weight: 700; color: var(--lt-text); }
+.cm-wysiwym-italic { font-style: italic; color: var(--lt-text); }
+.cm-wysiwym-strikethrough { text-decoration: line-through; color: var(--lt-muted); }
+.cm-wysiwym-highlight {
+  background-color: var(--lt-mark) !important;
+  color: var(--lt-text) !important;
+  border-radius: 2px;
+  padding: 0.05em 0.2em;
+}
+.cm-wysiwym-inline-code {
+  font-family: var(--lt-mono) !important;
+  font-size: 0.88em;
+  background-color: var(--lt-code-bg) !important;
+  color: var(--lt-text) !important;
+  padding: 2px 6px;
+  border-radius: var(--lt-radius);
+  border: 1px solid var(--lt-border);
+}
+.cm-wysiwym-link-anchor {
+  color: var(--lt-wax);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+/* ── Headings — padding only, !important, never vertical margin (§4.1) ------ */
+
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  font-family: var(--lt-serif) !important;
+  font-weight: 600 !important;
+  color: var(--lt-text) !important;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.cm-editor .cmt-heading,
+.cm-editor .tok-heading,
+.cm-editor .cm-wysiwym-h1 span,
+.cm-editor .cm-wysiwym-h2 span,
+.cm-editor .cm-wysiwym-h3 span,
+.cm-editor .cm-wysiwym-h4 span,
+.cm-editor .cm-wysiwym-h5 span,
+.cm-editor .cm-wysiwym-h6 span {
+  text-decoration: none;
+}
+.cm-editor .cm-wysiwym-h1 { font-size: 1.9em;   line-height: 1.2; padding-top: 24px !important; padding-bottom: 12px !important; margin: 0 !important; }
+.cm-editor .cm-wysiwym-h2 { font-size: 1.45em;  line-height: 1.25; padding-top: 20px !important; padding-bottom: 10px !important; margin: 0 !important; }
+.cm-editor .cm-wysiwym-h3 { font-size: 1.2em;   line-height: 1.3; padding-top: 16px !important; padding-bottom: 8px  !important; margin: 0 !important; }
+.cm-editor .cm-wysiwym-h4 { font-size: 1.05em;  line-height: 1.4; padding-top: 14px !important; padding-bottom: 6px  !important; margin: 0 !important; }
+.cm-editor .cm-wysiwym-h5 { font-size: 1em;     line-height: 1.5; padding-top: 12px !important; padding-bottom: 4px  !important; margin: 0 !important; }
+.cm-editor .cm-wysiwym-h6 { font-size: 0.9em;   line-height: 1.5; padding-top: 10px !important; padding-bottom: 2px  !important; margin: 0 !important; }
+
+/* ── Blockquotes — first / mid / last lines via :has() (§4.2) --------------- */
+
+.cm-editor .cm-wysiwym-blockquote {
+  border-left: 2px solid var(--lt-wax);
+  padding-left: 16px !important;
+  padding-right: 8px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  margin: 0 !important;
+  font-style: italic;
+  color: var(--lt-muted);
+}
+.cm-editor .cm-wysiwym-blockquote { padding-top: 10px !important; }
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote { padding-top: 2px !important; }
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) { padding-bottom: 10px !important; }
+
+/* ── Code blocks (§4.5) ----------------------------------------------------- */
+
+.cm-editor .cm-wysiwym-codeblock-line {
+  margin: 0 !important;
+  font-family: var(--lt-mono) !important;
+  font-size: var(--lt-text-mono);
+  background-color: var(--lt-code-bg) !important;
+  color: var(--lt-text) !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+.cm-wysiwym-codeblock-line-first {
+  padding-top: 12px !important;
+  border: 1px solid var(--lt-border);
+  border-bottom: none;
+  border-radius: var(--lt-radius) var(--lt-radius) 0 0;
+}
+.cm-wysiwym-codeblock-line-last {
+  padding-bottom: 12px !important;
+  border: 1px solid var(--lt-border);
+  border-top: none;
+  border-radius: 0 0 var(--lt-radius) var(--lt-radius);
+}
+.cm-wysiwym-codeblock-line:not(.cm-wysiwym-codeblock-line-first):not(.cm-wysiwym-codeblock-line-last) {
+  border-left: 1px solid var(--lt-border);
+  border-right: 1px solid var(--lt-border);
+}
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+/* ── Tables ---------------------------------------------------------------- */
+
+.cm-editor .cm-wysiwym-table-row {
+  background-color: var(--lt-code-bg) !important;
+  font-size: 0.9em !important;
+  margin: 0 !important;
+}
+.cm-wysiwym-table-widget {
+  margin: 0 !important;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+
+/* ── Components / figures — outer margin 0, inner resets (§4.4, §4.8) ------- */
+
+.cm-wysiwym-component-shortcode {
+  margin: 0 !important;
+  box-sizing: border-box;
+  padding: 16px 18px !important;
+  position: relative;
+}
+.cm-wysiwym-component-shortcode blockquote,
+.cm-wysiwym-component-shortcode p,
+.cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cm-wysiwym-component-shortcode p + p,
+.cm-wysiwym-figure-shortcode p + p {
+  margin-top: 0.8em !important;
+}
+.cm-wysiwym-component-shortcode.component-blockquote {
+  overflow: hidden;
+}
+.cm-wysiwym-figure-shortcode {
+  margin: 0 !important;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-component-shortcode.component-info {
+  background-color: var(--lt-code-bg) !important;
+  border: 1px solid var(--lt-border) !important;
+  border-left: 4px solid var(--lt-wax) !important;
+  border-radius: var(--lt-radius) !important;
+  color: var(--lt-text) !important;
+}
+.cm-wysiwym-component-shortcode.component-warning {
+  background-color: var(--lt-mark) !important;
+  border: 1px solid var(--lt-border) !important;
+  border-left: 4px solid var(--lt-wax) !important;
+  border-radius: var(--lt-radius) !important;
+  color: var(--lt-text) !important;
+}
+/* Editor pullquote — no float (§4); preview floats below */
+.cm-wysiwym-component-shortcode.component-pullquote {
+  border: none !important;
+  border-left: none !important;
+  padding: 8px 12px !important;
+  margin: 0 !important;
+  font-style: italic;
+  text-align: center;
+  color: var(--lt-muted) !important;
+  background-color: transparent !important;
+  float: none !important;
+  width: 100% !important;
+}
+.cm-wysiwym-component-shortcode.component-pullquote::before {
+  content: "\201C";
+  display: block;
+  text-align: left;
+  font-family: var(--lt-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 2.75em;
+  line-height: 0.55;
+  color: var(--lt-wax);
+  margin: 0 0 -0.28em;
+}
+.cm-wysiwym-component-shortcode.component-pullquote::after {
+  content: "\201D";
+  display: block;
+  text-align: right;
+  font-family: var(--lt-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 2.75em;
+  line-height: 0.55;
+  color: var(--lt-wax);
+  margin: 0.35em 0 0;
+}
+.cm-wysiwym-component-shortcode.component-pullquote,
+.cm-wysiwym-component-shortcode.component-pullquote * {
+  font-size: 1.28em;
+  line-height: 1.15 !important;
+  color: var(--lt-muted) !important;
+  text-align: center;
+}
+.cm-wysiwym-component-shortcode.component-pullquote::before {
+  text-align: left !important;
+  font-size: 2.75em !important;
+  line-height: 0.55 !important;
+  color: var(--lt-wax) !important;
+}
+.cm-wysiwym-component-shortcode.component-pullquote::after {
+  text-align: right !important;
+  font-size: 2.75em !important;
+  line-height: 0.55 !important;
+  color: var(--lt-wax) !important;
+}
+
+/* ── Media widgets — editor: no float, vertical via padding (§4.4) ---------- */
+
+.cm-wysiwym-image-shortcode-container,
+.cm-wysiwym-video-shortcode-container,
+.cm-wysiwym-audio-shortcode-container {
+  max-width: 100%;
+  margin: 0 !important;
+  padding: 12px 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.size-small  { width: 30% !important; }
+.size-medium { width: 50% !important; }
+.size-large  { width: 70% !important; }
+.size-full   { width: 100% !important; }
+
+.cm-editor .cm-wysiwym-image-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-left {
+  margin: 0 auto 0 0 !important;
+}
+.cm-editor .cm-wysiwym-image-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-right {
+  margin: 0 0 0 auto !important;
+}
+.cm-editor .cm-wysiwym-image-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-center {
+  margin: 0 auto !important;
+}
+.cm-editor .cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-video-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-audio-shortcode-container.align-fullbleed {
+  width: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* ── Block math / KaTeX fallback — margin 0 auto, padding (§4.4, §4.8) ------ */
+
+.cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+  text-align: center;
+}
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+  text-align: center;
+}
+.cm-wysiwym-inline-math-widget,
+.katex-inline-fallback {
+  font-family: var(--lt-mono);
+  background-color: var(--lt-code-bg);
+  padding: 0.05em 0.4em;
+  border-radius: 3px;
+}
+
+/* ── Mermaid (§4.4) --------------------------------------------------------- */
+
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+  background-color: transparent !important;
+  border: none !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── HR widget (§4.4) ------------------------------------------------------- */
+
+.cm-wysiwym-hr-widget {
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  border: 0 !important;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+.cm-wysiwym-hr-widget::after {
+  content: "\00B7\00B7\00B7";
+  color: var(--lt-muted);
+}
+
+/* ── Alerts — excluded from native blockquote rules (§4) -------------------- */
+
+.cm-editor .cm-wysiwym-alert {
+  font-style: normal !important;
+  margin: 0 !important;
+  padding: 12px 16px !important;
+  border-left: 4px solid var(--lt-leader);
+}
+.cm-editor .cm-wysiwym-alert-note {
+  background-color: var(--lt-code-bg) !important;
+  border-left-color: var(--lt-wax) !important;
+  color: var(--lt-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-tip {
+  background-color: var(--lt-code-bg) !important;
+  border-left-color: var(--lt-muted) !important;
+  color: var(--lt-text) !important;
+}
+.cm-editor .cm-wysiwym-alert-warning {
+  background-color: var(--lt-mark) !important;
+  border-left-color: var(--lt-wax) !important;
+  color: var(--lt-text) !important;
+}
+
+/* ── Blank-line collapse before/after headings, blockquotes, code, widgets -- */
+
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h1),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h2),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-h3),
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child) {
+  height: 0.5em !important;
+  min-height: 0.5em !important;
+}
+
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-blockquote) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PREVIEW SCOPE (published HTML + admin preview)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Body text: only the widest element margins, minus first-child heading jump */
+.traven-preview p {
+  margin: 0 0 var(--lt-space-3);
+  line-height: var(--lt-leading);
+  color: var(--lt-text);
+  font-family: var(--lt-serif);
+}
+
+.traven-preview .dropcap,
+.traven-preview span.dropcap,
+.dropcap,
+span.dropcap {
+  float: left;
+  font-family: var(--lt-serif);
+  font-size: 3.4em;
+  line-height: 0.8;
+  padding: 0.04em 0.1em 0 0;
+  margin-top: 0.04em;
+  font-weight: 500;
+  color: var(--lt-wax) !important;
+}
+
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+  .traven-preview .dropcap,
+  .traven-preview span.dropcap,
+  .dropcap,
+  span.dropcap {
+    -webkit-initial-letter: 2;
+    initial-letter: 2;
+    float: none;
+    padding: 0 0.15em 0 0;
+    margin-top: 0;
+  }
+}
+
+.traven-preview h1,
+.traven-preview h2,
+.traven-preview h3,
+.traven-preview h4,
+.traven-preview h5,
+.traven-preview h6 {
+  font-family: var(--lt-serif);
+  font-weight: 600;
+  color: var(--lt-text);
+  letter-spacing: -0.01em;
+  line-height: var(--lt-leading-tight);
+}
+
+.traven-preview h1 {
+  font-size: 1.9em;
+  margin: 0 0 var(--lt-space-3);
+}
+.traven-preview h2 {
+  font-size: 1.45em;
+  margin: var(--lt-space-4) 0 var(--lt-space-2);
+}
+.traven-preview h3 {
+  font-size: 1.2em;
+  margin: var(--lt-space-3) 0 var(--lt-space-2);
+}
+.traven-preview h4 {
+  font-size: 1.05em;
+  margin: var(--lt-space-3) 0 var(--lt-space-1);
+}
+
+/* First-child heading parity (§5.1): mirror the editor padding-top above. */
+.traven-preview > h1:first-child { margin-top: 24px !important; }
+.traven-preview > h2:first-child { margin-top: 20px !important; }
+.traven-preview > h3:first-child { margin-top: 16px !important; }
+
+.traven-preview ul,
+.traven-preview ol {
+  padding-left: 1.5rem;
+  margin: 0 0 var(--lt-space-3);
+  color: var(--lt-text);
+}
+.traven-preview li {
+  margin-bottom: 0.35rem;
+}
+.traven-preview li > ul,
+.traven-preview li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Content links only — body also carries .traven-preview for token inheritance,
+   so a bare `.traven-preview a` would restyle masthead/colophon chrome. */
+.traven-preview .article-content a,
+.traven-preview.article-content a,
+.traven-preview .prose a,
+.traven-preview.prose a {
+  color: var(--lt-wax);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+.traven-preview .article-content a:hover,
+.traven-preview.article-content a:hover,
+.traven-preview .prose a:hover,
+.traven-preview.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.traven-preview code {
+  font-family: var(--lt-mono) !important;
+  font-size: 0.88em;
+  background-color: var(--lt-code-bg) !important;
+  color: var(--lt-text) !important;
+  padding: 0.1em 0.35em;
+  border-radius: var(--lt-radius);
+  border: 1px solid var(--lt-border);
+}
+
+.traven-preview pre {
+  font-family: var(--lt-mono);
+  font-size: var(--lt-text-mono);
+  background-color: var(--lt-code-bg);
+  color: var(--lt-text);
+  padding: var(--lt-space-3);
+  border-radius: var(--lt-radius);
+  border: 1px solid var(--lt-border);
+  overflow-x: auto;
+  line-height: 1.6;
+  margin: var(--lt-space-3) 0;
+}
+.traven-preview pre code {
+  background: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Native blockquotes — exclude pullquotes and alerts (Gotcha §4) */
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) {
+  margin: var(--lt-space-3) 0 !important;
+  padding: 0 var(--lt-space-3) !important;
+  border-left: 2px solid var(--lt-wax) !important;
+  font-style: italic;
+  color: var(--lt-muted);
+}
+.traven-preview blockquote:not(.traven-component-pullquote) > p {
+  margin-bottom: var(--lt-space-2);
+}
+.traven-preview blockquote:not(.traven-component-pullquote) > p:last-child {
+  margin-bottom: 0;
+}
+.traven-preview blockquote footer,
+.traven-preview blockquote cite,
+.traven-preview blockquote .author,
+.traven-preview blockquote .source,
+.traven-preview blockquote .attribution {
+  display: block;
+  margin-top: var(--lt-space-2);
+  font-style: normal;
+  font-size: 0.9em;
+  color: var(--lt-muted);
+}
+
+/* Pullquote — floated editorial callout (Gazette pattern), wax quotes */
+.traven-preview .traven-component-pullquote,
+.traven-preview blockquote.traven-component-pullquote {
+  float: right !important;
+  width: 50% !important;
+  max-width: 18rem !important;
+  margin: 0.25rem 0 1rem 1.25rem !important;
+  padding: 0 !important;
+  border: none !important;
+  border-left: none !important;
+  font-style: italic;
+  font-size: 1.28em;
+  font-weight: 400;
+  line-height: 1.15;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--lt-muted);
+  background: transparent !important;
+}
+.traven-preview .traven-component-pullquote::before,
+.traven-preview blockquote.traven-component-pullquote::before {
+  content: "\201C";
+  display: block;
+  text-align: left;
+  font-family: var(--lt-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 2.75em;
+  line-height: 0.55;
+  color: var(--lt-wax);
+  /* Pull the quote text up into the mark — no blank line under “ */
+  margin: 0 0 -0.28em;
+}
+.traven-preview .traven-component-pullquote::after,
+.traven-preview blockquote.traven-component-pullquote::after {
+  content: "\201D";
+  display: block;
+  clear: both;
+  text-align: right;
+  font-family: var(--lt-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 2.75em;
+  line-height: 0.55;
+  color: var(--lt-wax);
+  margin: 0.35em 0 0;
+}
+.traven-preview .traven-component-pullquote p,
+.traven-preview blockquote.traven-component-pullquote p {
+  margin: 0 !important;
+  line-height: 1.15 !important;
+  color: var(--lt-muted);
+  text-align: center;
+}
+
+@media (max-width: 36rem) {
+  .traven-preview .traven-component-pullquote,
+  .traven-preview blockquote.traven-component-pullquote {
+    float: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 1rem 0 !important;
+  }
+}
+
+/* Notice cards — info / warning */
+.traven-preview .traven-component-info,
+.traven-preview .traven-component-warning {
+  margin: var(--lt-space-3) 0 !important;
+  padding: var(--lt-space-3) !important;
+  border-radius: var(--lt-radius) !important;
+  font-family: var(--lt-serif) !important;
+  color: var(--lt-text) !important;
+}
+.traven-preview .traven-component-info {
+  background-color: var(--lt-code-bg) !important;
+  border: 1px solid var(--lt-border) !important;
+  border-left: 4px solid var(--lt-wax) !important;
+}
+.traven-preview .traven-component-warning {
+  background-color: var(--lt-mark) !important;
+  border: 1px solid var(--lt-border) !important;
+  border-left: 4px solid var(--lt-wax) !important;
+}
+.traven-preview .traven-component-info .component-header,
+.traven-preview .traven-component-warning .component-header,
+.cm-wysiwym-component-shortcode.component-info .component-header,
+.cm-wysiwym-component-shortcode.component-warning .component-header {
+  margin-bottom: 0.5rem !important;
+  padding-bottom: 0 !important;
+}
+.traven-preview .traven-component-info .component-title,
+.traven-preview .traven-component-warning .component-title,
+.cm-wysiwym-component-shortcode.component-info .component-title,
+.cm-wysiwym-component-shortcode.component-warning .component-title {
+  font-size: 1.05em !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+details.traven-component summary.component-header,
+summary.component-header {
+  cursor: pointer;
+  outline: none;
+  list-style: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem;
+}
+summary.component-header::-webkit-details-marker {
+  display: none !important;
+}
+summary.component-header::after {
+  content: "\25BE";
+  font-size: 0.65em;
+  transition: transform 0.2s ease;
+  display: inline-block;
+  opacity: 0.75;
+}
+details[open] summary.component-header::after {
+  transform: rotate(-180deg);
+}
+details:not([open]) .component-body {
+  display: none !important;
+}
+
+/* Blockquote component (attributed quote) */
+.traven-preview .traven-component-blockquote {
+  margin: var(--lt-space-3) 0 !important;
+  padding: var(--lt-space-1) 0 !important;
+  border-left: 2px solid var(--lt-wax) !important;
+  padding-left: var(--lt-space-3) !important;
+}
+.traven-preview .traven-component-blockquote .component-body p {
+  font-style: italic;
+  color: var(--lt-muted);
+}
+
+/* Generic / custom component */
+.traven-preview .traven-component {
+  margin: var(--lt-space-3) 0 !important;
+}
+
+/* GitHub alerts — generous callout cards */
+.traven-preview .traven-alert {
+  padding: var(--lt-space-3) !important;
+  margin: var(--lt-space-3) 0 !important;
+  border-radius: var(--lt-radius) !important;
+  border-left: 4px solid var(--lt-leader);
+  font-family: var(--lt-serif) !important;
+  color: var(--lt-text) !important;
+}
+.traven-preview .traven-alert-note {
+  background-color: var(--lt-code-bg) !important;
+  border-left-color: var(--lt-wax) !important;
+}
+.traven-preview .traven-alert-tip {
+  background-color: var(--lt-code-bg) !important;
+  border-left-color: var(--lt-muted) !important;
+}
+.traven-preview .traven-alert-warning,
+.traven-preview .traven-alert-important,
+.traven-preview .traven-alert-caution {
+  background-color: var(--lt-mark) !important;
+  border-left-color: var(--lt-wax) !important;
+}
+.traven-preview .traven-alert p {
+  margin-bottom: 0 !important;
+}
+
+/* Highlight */
+.traven-preview mark {
+  background-color: var(--lt-mark) !important;
+  color: var(--lt-text) !important;
+  padding: 0.05em 0.2em;
+  border-radius: 3px;
+}
+
+/* Horizontal rule — three centered dots, the letters signature */
+.traven-preview hr {
+  border: 0;
+  margin: var(--lt-space-4) auto;
+  text-align: center;
+  color: var(--lt-muted);
+}
+.traven-preview hr::after {
+  content: "\00B7\00B7\00B7";
+  letter-spacing: 0.5em;
+  padding-left: 0.5em; /* re-center the trailing spacing */
+}
+
+/* Tables */
+.traven-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--lt-space-3) 0;
+  font-variant-numeric: tabular-nums;
+}
+.traven-preview th,
+.traven-preview td {
+  border-bottom: 1px solid var(--lt-border);
+  padding: var(--lt-space-2) var(--lt-space-3);
+  height: 38px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.traven-preview th {
+  font-family: var(--lt-serif);
+  font-size: var(--lt-text-s);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  background-color: transparent;
+  border-bottom-color: var(--lt-text);
+}
+
+/* ── Shortcodes: images — album print / Polaroid mat ------------------------ */
+
+.traven-preview img.traven-image-shortcode,
+.traven-preview figure.traven-image-figure {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+.traven-preview figure.traven-image-figure,
+.traven-preview .gallery-single,
+.traven-preview .figure-full,
+.traven-preview .classic-markdown-figure {
+  background: var(--lt-print-mat);
+  border: 1px solid var(--lt-print-edge);
+  box-shadow: var(--lt-print-shadow);
+  box-sizing: border-box;
+  /* Polaroid mat: even sides, heavier bottom for caption */
+  padding: 0.55rem 0.55rem 1.35rem;
+  border-radius: 0;
+}
+
+.traven-preview figure.traven-image-figure,
+.traven-preview figure.traven-video-figure,
+.traven-preview figure.traven-audio-figure,
+.traven-preview figure.traven-figure {
+  margin: var(--lt-space-4) 0;
+}
+
+.traven-preview figcaption,
+.traven-preview figcaption.traven-image-caption,
+.traven-preview figcaption.traven-video-caption,
+.traven-preview figcaption.traven-audio-caption,
+.traven-preview .traven-figure-caption {
+  font-family: var(--lt-serif);
+  font-size: var(--lt-text-s);
+  color: var(--lt-muted);
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.55rem;
+  line-height: 1.35 !important;
+  display: block;
+}
+
+/* Video/audio keep plain chrome — no album mat */
+.traven-preview figure.traven-video-figure,
+.traven-preview figure.traven-audio-figure {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Classic markdown gallery (PenCMS PHP) */
+.traven-preview .gallery-single,
+.traven-preview .figure-full {
+  margin: var(--lt-space-4) 0;
+  display: flex;
+  flex-direction: column;
+  clear: both;
+}
+/* Center unaligned single images unless explicitly floated (§GOTCHA 6) */
+.traven-preview .gallery-single.inline-image-center,
+.traven-preview .gallery-single.align-center,
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center;
+}
+.traven-preview .photo-wrapper img,
+.traven-preview figure.traven-image-figure > img,
+.traven-preview img.traven-image-shortcode {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+/* Classic markdown figure */
+.traven-preview .classic-markdown-figure {
+  margin: var(--lt-space-4) auto;
+  display: block;
+  clear: both;
+}
+.traven-preview img.classic-markdown {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0;
+}
+/* Bare image shortcodes without a figure wrapper still get a small mat */
+.traven-preview .essay-body > img.traven-image-shortcode,
+.traven-preview .article-content > img.traven-image-shortcode,
+.traven-preview.essay-body > img.traven-image-shortcode,
+.traven-preview.article-content > img.traven-image-shortcode,
+.traven-preview p > img.traven-image-shortcode {
+  background: var(--lt-print-mat);
+  border: 1px solid var(--lt-print-edge);
+  box-shadow: var(--lt-print-shadow);
+  padding: 0.45rem;
+  box-sizing: border-box;
+  margin: var(--lt-space-4) auto;
+}
+/* span.caption is inline; force block so line-height applies (§GOTCHA 8) */
+.traven-preview .gallery-single .caption,
+.traven-preview .figure-full .caption,
+.traven-preview .classic-markdown-figure .caption,
+.traven-preview figcaption.caption {
+  font-size: var(--lt-text-s);
+  line-height: 1.35 !important;
+  color: var(--lt-muted);
+  text-align: center;
+  margin-top: 0.55rem;
+  font-style: italic;
+  display: block !important;
+}
+
+/* Size constraints (percent), for both gallery markup and Traven figures */
+.traven-preview .gallery-single.img--xsmall, .traven-preview .gallery-single.size-xsmall,
+.traven-preview .figure-full.img--xsmall, .traven-preview .figure-full.size-xsmall { width: 25% !important; max-width: 100%; }
+.traven-preview .gallery-single.img--small, .traven-preview .gallery-single.size-small,
+.traven-preview .figure-full.img--small, .traven-preview .figure-full.size-small { width: 30% !important; max-width: 100%; }
+.traven-preview .gallery-single.img--medium, .traven-preview .gallery-single.size-medium,
+.traven-preview .figure-full.img--medium, .traven-preview .figure-full.size-medium { width: 50% !important; max-width: 100%; }
+.traven-preview .gallery-single.img--large, .traven-preview .gallery-single.size-large,
+.traven-preview .figure-full.img--large, .traven-preview .figure-full.size-large { width: 70% !important; max-width: 100%; }
+.traven-preview .gallery-single.img--xlarge, .traven-preview .gallery-single.size-xlarge,
+.traven-preview .figure-full.img--xlarge, .traven-preview .figure-full.size-xlarge { width: 100% !important; }
+
+/* Alignment (preview floats allowed) */
+.traven-preview .align-left,
+.traven-preview .inline-image-left {
+  float: left !important;
+  margin: 0.5rem var(--lt-space-3) var(--lt-space-3) 0 !important;
+}
+.traven-preview .align-right,
+.traven-preview .inline-image-right {
+  float: right !important;
+  margin: 0.5rem 0 var(--lt-space-3) var(--lt-space-3) !important;
+}
+.traven-preview .align-center,
+.traven-preview .inline-image-center {
+  float: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+
+/* Fullbleed — light mat only; stays straight inside the reading column */
+.traven-preview .align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  float: none !important;
+  clear: both !important;
+  border-radius: 0 !important;
+  padding: 0.45rem;
+}
+
+/* ── Shortcodes: video (required 16:9 aspect-fill) -------------------------- */
+
+.traven-preview .traven-video-container {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  overflow: hidden !important;
+  background-color: #000;
+  border-radius: var(--lt-radius) !important;
+}
+.traven-preview .traven-video-container iframe,
+.traven-preview .traven-video-container video {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+
+/* ── Shortcodes: audio ------------------------------------------------------ */
+
+.traven-preview .traven-audio-container {
+  margin: var(--lt-space-3) 0;
+  width: 100%;
+}
+.traven-preview .traven-audio-container audio {
+  width: 100%;
+}
+
+/* ── Math preview ----------------------------------------------------------- */
+
+.traven-preview .katex-display-fallback {
+  font-family: var(--lt-mono);
+  background-color: var(--lt-code-bg);
+  padding: var(--lt-space-3);
+  border-radius: var(--lt-radius);
+  text-align: center;
+  margin: var(--lt-space-3) 0;
+}
+
+/* ── Note: component font-family inheritance.
+   The starter/baseline skin forces serif onto nested <p>; for Letters the
+   serif body IS the theme, so we rely on the serif stack already applied to
+   .traven-preview and its descendants above. No overriding needed. */
+
+/* Raw editor pane uses the mono font (§3.2). */
+.raw-editor-mount .cm-editor,
+.raw-editor-mount .cm-content,
+.raw-editor-mount .cm-scroller,
+.raw-editor-mount .cm-line {
+  font-family: var(--lt-mono) !important;
+  font-size: 14px !important;
+  line-height: 1.9 !important;
+  background-color: transparent !important;
+  color: var(--lt-text) !important;
+}

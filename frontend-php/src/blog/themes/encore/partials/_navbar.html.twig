@@ -1,0 +1,39 @@
+<nav aria-label="Main navigation">
+  <ul class="nav-menu">
+    {% set primary_items = menu('primary') %}
+    {% if primary_items is defined and primary_items is not empty %}
+      {% for item in primary_items %}
+        <li class="nav-item{% if item.children is defined and item.children is not empty %} has-dropdown{% endif %}">
+          {% if item.target_type is defined and item.target_type == 'label' %}
+            <span class="nav-link">{{ item.label }}</span>
+          {% else %}
+            <a href="{{ item.url }}" class="nav-link" style="text-decoration: none;" {% if item.open_in_new_tab is defined and item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+          {% endif %}
+          {% if item.children is defined and item.children is not empty %}
+            <div class="dropdown-menu">
+              {% for child in item.children %}
+                {% if child.target_type is defined and child.target_type == 'label' %}
+                  <span class="dropdown-item">{{ child.label }}</span>
+                {% else %}
+                  <a href="{{ child.url }}" class="dropdown-item" style="text-decoration: none;" {% if child.open_in_new_tab is defined and child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    {% else %}
+      {% set bp = base_path is defined and base_path ? base_path : '/' %}
+      <li><a href="{{ bp }}" class="nav-link" style="text-decoration: none;">Home</a></li>
+      <li><a href="{{ bp }}shows/" class="nav-link" style="text-decoration: none;">Shows</a></li>
+      <li><a href="{{ bp }}music/" class="nav-link" style="text-decoration: none;">Music</a></li>
+      <li><a href="{{ bp }}press/" class="nav-link" style="text-decoration: none;">Press Kit</a></li>
+    {% endif %}
+    <li>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,58 @@
+<button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button"
+    aria-label="Toggle primary navigation" aria-controls="nav-menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+</button>
+
+<nav class="nav-menu" id="nav-menu" aria-label="Primary navigation">
+    <ul class="nav-list">
+        {% set nav_items = menu('primary') %}
+        {% for item in nav_items %}
+            <li class="nav-item{% if item.children is not empty %} has-children{% endif %}">
+                <div class="nav-item-main">
+                    {% if item.target_type == 'label' %}
+                        <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}"
+                            {% if item.children is not empty %}tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"{% endif %}>
+                            {{ item.label }}
+                        </span>
+                    {% else %}
+                        <a href="{{ item.url }}" class="nav-link"
+                            {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                            {{ item.label }}
+                        </a>
+                    {% endif %}
+
+                    {% if item.children is not empty %}
+                        <button type="button"
+                            class="nav-caret"
+                            aria-label="Toggle submenu for {{ item.label }}"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            <span aria-hidden="true">▾</span>
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if item.children is not empty %}
+                    <div class="nav-dropdown" role="menu">
+                        <ul class="nav-dropdown-list">
+                            {% for child in item.children %}
+                                <li class="nav-dropdown-item">
+                                    {% if child.target_type == 'label' %}
+                                        <span class="nav-label nav-label-child">{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" class="nav-link nav-link-child" role="menuitem"
+                                            {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                                            {{ child.label }}
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>

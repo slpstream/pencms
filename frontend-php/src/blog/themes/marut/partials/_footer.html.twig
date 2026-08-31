@@ -1,0 +1,103 @@
+<footer class="site-footer">
+    <div class="footer-container">
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="footer-menu" aria-label="Footer Navigation">
+                {% for item in footer_items %}
+                    <div class="footer-menu-group">
+                        {% if item.target_type == 'label' %}
+                            <span class="footer-menu-label">{{ item.label }}</span>
+                        {% else %}
+                            <a href="{{ item.url }}" class="footer-menu-link-main" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                        {% endif %}
+                        {% if item.children is not empty %}
+                            <ul class="footer-menu-children">
+                                {% for child in item.children %}
+                                    <li>
+                                        {% if child.target_type == 'label' %}
+                                            <span class="footer-menu-child-label">{{ child.label }}</span>
+                                        {% else %}
+                                            <a href="{{ child.url }}" class="footer-menu-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </nav>
+        {% endif %}
+        <p class="footer-copy">
+            &copy; {{ "now"|date("Y") }} {{ sitename | default('Marut Editorial') }} &bull; Powered by <a href="https://pencms.org/" target="_blank" rel="noopener">PenCMS</a> &bull; Marut Theme
+            <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" aria-label="Toggle dark/light mode">
+                <span class="theme-toggle-icon">🌙</span> <span class="theme-toggle-text">Dark Mode</span>
+            </button>
+        </p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var btn = document.getElementById("theme-toggle-btn");
+        if (!btn) return;
+
+        function updateBtn() {
+            var isDark = document.documentElement.classList.contains("theme-dark");
+            btn.querySelector(".theme-toggle-icon").textContent = isDark ? "☀️" : "🌙";
+            btn.querySelector(".theme-toggle-text").textContent = isDark ? "Light" : "Dark";
+        }
+
+        updateBtn();
+
+        btn.addEventListener("click", function() {
+            var isDark = document.documentElement.classList.toggle("theme-dark");
+            if (document.body) {
+                document.body.classList.toggle("theme-dark", isDark);
+            }
+            localStorage.setItem("marut_theme_preference", isDark ? "dark" : "light");
+            updateBtn();
+        });
+    });
+</script>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+{# Mermaid Diagram Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+            const pre = codeBlock.parentNode;
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = codeBlock.textContent;
+            pre.replaceWith(div);
+        });
+
+        if (window.mermaid) {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default'
+            });
+        }
+    });
+</script>
+</body>
+</html>

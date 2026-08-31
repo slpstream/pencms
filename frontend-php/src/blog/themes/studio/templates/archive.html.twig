@@ -1,0 +1,40 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="list column">
+        <header class="page-head">
+            <h1>{{ (category_label | default(tag_label | default(archive_title | default(page_title | default('Archive'))))) | title }}</h1>
+            {% if category_description is defined and category_description is not empty %}
+                <p class="wall-label">{{ category_description }}</p>
+            {% endif %}
+        </header>
+
+        {% set items = dossiers | default(posts | default([])) %}
+        {% if items is not empty %}
+            <ol class="entry-list" reversed>
+                {% for d in items %}
+                    {% set url = theme.isStatic() ? (base_path ~ d.slug ~ '/index.html') : ('post.php?slug=' ~ d.slug ~ '&section=' ~ (d.section | default('blog'))) %}
+                    <li class="entry">
+                        <h2><a href="{{ url }}">{{ d.hero_title | default(d.title | default('Untitled')) }}</a></h2>
+                        <p class="wall-label">
+                            {% if d.date is defined and d.date is not empty %}
+                                <time datetime="{{ d.date }}">{{ d.date | date('F d, Y') }}</time>
+                            {% endif %}
+                            {% if d.category is defined and d.category is not empty %}
+                                · <span class="tag">{{ d.category }}</span>
+                            {% endif %}
+                        </p>
+                        {% if d.deck is defined and d.deck is not empty %}
+                            <p class="entry-summary">{{ d.deck | striptags }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty">Nothing here yet.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

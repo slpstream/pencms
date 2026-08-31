@@ -1,0 +1,80 @@
+{% set thread_comments = comments is defined and comments ? comments : [] %}
+<section class="pen-comments" data-pen-comments>
+    <style>
+        .pen-comments {
+            width: 100%;
+            margin: 2rem 0 0;
+            padding: 1.25rem 0 0;
+            border-top: 1px solid var(--color-border, #ccc);
+            color: var(--color-text, inherit);
+            font: inherit;
+        }
+        .pen-comments:not(:has(.pen-comments__list)) {
+            margin: 0;
+            padding: 0;
+            border-top: none;
+        }
+        .pen-comments__title {
+            margin: 0 0 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .pen-comments__list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 1rem;
+        }
+        .pen-comment {
+            display: grid;
+            gap: 0.35rem;
+        }
+        .pen-comment--reply {
+            margin-left: 1.25rem;
+        }
+        .pen-comment__author {
+            font-weight: 600;
+        }
+        .pen-comment__body {
+            margin: 0;
+            color: var(--color-text, inherit);
+        }
+        .pen-comment__body > :first-child {
+            margin-top: 0;
+        }
+        .pen-comment__body > :last-child {
+            margin-bottom: 0;
+        }
+        .pen-comment__body p,
+        .pen-comment__body ul,
+        .pen-comment__body ol,
+        .pen-comment__body pre {
+            margin: 0 0 0.65rem;
+        }
+        .pen-comment__body a {
+            color: inherit;
+            text-underline-offset: 0.12em;
+        }
+        .pen-comment__body code {
+            font-size: 0.9em;
+        }
+    </style>
+    {% if thread_comments %}
+    <h2 class="pen-comments__title">{{ strings.comments|default('Comments') }}</h2>
+    <ol class="pen-comments__list">
+        {% for comment in thread_comments %}
+        <li class="pen-comment{% if comment.in_reply_to %} pen-comment--reply{% endif %}" data-pen-comment{% if comment.slug %} id="{{ comment.slug }}"{% endif %}>
+            <span class="pen-comment__author">{{ comment.author_name }}</span>
+            <div class="pen-comment__body">
+                {% if comment.body_html is defined and comment.body_html %}
+                    {{ comment.body_html|raw }}
+                {% else %}
+                    {{ comment.body }}
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+</section>

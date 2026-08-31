@@ -1,0 +1,126 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set lead = post_list|first %}
+{% set rest = post_list|slice(1) %}
+{% set index_kicker = '' %}
+{% if hero_title is defined and hero_title is not empty and hero_title != sitename|default('') and hero_title != tagline|default('') %}
+    {% set index_kicker = hero_title %}
+{% endif %}
+
+<main id="main" class="night-arcade">
+
+    <section class="night-signboard" aria-label="{{ sitename | default('Night') }}">
+        <div class="night-haze" aria-hidden="true"></div>
+        <div class="night-sign-stage">
+            {% set logo_url = theme.getLogoUrl() %}
+            <div class="night-sign-block">
+                {% if logo_url is not empty %}
+                    <img src="{{ logo_url }}" alt="" class="night-sign-logo">
+                {% else %}
+                    <p class="night-cjk-lantern tc" lang="zh-Hant" aria-hidden="true">晚</p>
+                {% endif %}
+                {% if index_kicker is not empty %}
+                    <p class="night-sign-kicker">{{ index_kicker }}</p>
+                {% endif %}
+                <h1 class="night-sign-title">{{ sitename | default('NIGHT') }}</h1>
+                <span class="night-sign-underline" aria-hidden="true"></span>
+            </div>
+            {% if tagline is not empty %}
+                <p class="night-sign-tag">{{ tagline }}</p>
+            {% elseif deck is not empty %}
+                <p class="night-sign-tag">{{ deck | striptags }}</p>
+            {% endif %}
+        </div>
+        <div class="night-asphalt" aria-hidden="true">
+            <div class="night-asphalt-sheen"></div>
+        </div>
+    </section>
+
+    {% if post_list is not empty %}
+    <div class="night-ticker" aria-label="Latest posts">
+        <div class="night-ticker-track">
+            <p class="night-ticker-run">
+                {% for dossier in post_list %}
+                    <a href="{{ contentUrl(dossier) }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a>
+                {% endfor %}
+            </p>
+            <p class="night-ticker-run" aria-hidden="true">
+                {% for dossier in post_list %}
+                    <span>{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</span>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if lead %}
+        {% set lead_url = contentUrl(lead) %}
+        {% set lead_hero = lead.hero_image | default('') %}
+        {% set lead_has_img = lead_hero is not empty and lead_hero != 'images/defaulthero.jpg' %}
+        <article class="night-billboard{% if lead_has_img %} has-art{% endif %}">
+            {% if lead_has_img %}
+                <a href="{{ lead_url }}" class="night-billboard-art" tabindex="-1" aria-hidden="true">
+                    <img src="{{ contentAsset(lead_hero) }}" alt="">
+                </a>
+            {% endif %}
+            <div class="night-billboard-copy">
+                <p class="night-stall-tag">STALL 01 · {{ lead.category | default('LEAD') | upper }}</p>
+                <h2 class="night-billboard-title"><a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title | default('Untitled')) }}</a></h2>
+                {% if lead.deck is defined and lead.deck is not empty %}
+                    <p class="night-billboard-deck">{{ lead.deck | striptags }}</p>
+                {% endif %}
+                <p class="night-billboard-meta">
+                    {% if lead.dateline is defined and lead.dateline is not empty %}{{ lead.dateline }}
+                    {% elseif lead.date is defined and lead.date is not empty %}{{ lead.date | date('Y.m.d') }}
+                    {% endif %}
+                </p>
+            </div>
+        </article>
+    {% endif %}
+
+    {% if rest is not empty %}
+    <section class="night-spine" aria-label="The alley">
+        <div class="night-gutter" aria-hidden="true"></div>
+        {% for dossier in rest %}
+            {% set url = contentUrl(dossier) %}
+            {% set plaque_hero = dossier.hero_image | default('') %}
+            {% set plaque_has_img = plaque_hero is not empty and plaque_hero != 'images/defaulthero.jpg' %}
+            <article class="night-plaque {% if loop.index is odd %}plaque-left{% else %}plaque-right{% endif %}">
+                <div class="night-plaque-index">
+                    <span class="night-stall-no">{{ '%02d'|format(loop.index + 1) }}</span>
+                    {% if plaque_has_img %}
+                        <a href="{{ url }}" class="night-plaque-stamp" tabindex="-1" aria-hidden="true">
+                            <img src="{{ contentAsset(plaque_hero) }}" alt="" loading="lazy" decoding="async">
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="night-plaque-body">
+                    <p class="night-stall-tag">{{ dossier.category | default(dossier.section | default('STALL')) | upper }}</p>
+                    <h3 class="night-plaque-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a></h3>
+                    {% if dossier.deck is defined and dossier.deck is not empty %}
+                        <p class="night-plaque-deck">{{ dossier.deck | striptags }}</p>
+                    {% endif %}
+                    <p class="night-plaque-date">
+                        {% if dossier.dateline is defined and dossier.dateline is not empty %}{{ dossier.dateline }}
+                        {% elseif dossier.date is defined and dossier.date is not empty %}{{ dossier.date | date('Y.m.d') }}
+                        {% endif %}
+                    </p>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+    {% elseif post_list is empty %}
+        <p class="night-empty">The board is blank tonight. Come back when the rain lets the ink dry.</p>
+    {% endif %}
+
+    <aside class="night-tally" aria-label="Board status">
+        <p><span>ENTRIES</span><span class="tv">{{ '%02d'|format(post_list|length) }}</span></p>
+        <p><span>LEAD</span><span class="tv">{% if lead %}01{% else %}—{% endif %}</span></p>
+        <p><span>RAIN</span><span class="tv">ON</span></p>
+    </aside>
+
+</main>
+
+{{ theme.partial('footer') | raw }}

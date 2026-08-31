@@ -1,0 +1,13 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+<header class="cc-strip{% if is_index|default(false) %} cc-strip--nav-only{% endif %}">
+    {% if not is_index|default(false) %}
+        <a href="{{ home_url }}" class="cc-strip-brand">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="" class="cc-strip-logo">
+            {% endif %}
+            <span class="cc-strip-word cc-stamp cc-stamp-small cc-stamp-open">{{ sitename | default('Coldcase') | upper }}</span>
+        </a>
+    {% endif %}
+    {{ theme.partial('navbar') | raw }}
+</header>

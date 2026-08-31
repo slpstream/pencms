@@ -1,0 +1,11 @@
+{% if related_dossiers is not empty %}
+<div class="sticker-related">
+    <p class="stamp-cluster-kicker">ALSO IN THIS ISSUE</p>
+    <ul class="spec-related">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            <li><a href="{{ url }}">{{ post.hero_title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

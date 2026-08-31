@@ -1,0 +1,159 @@
+{% set body_class = 'page-front' %}
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set lead = dossiers|first %}
+{% set secondary = dossiers|slice(1, 4) %}
+{% set inventory = dossiers|slice(5) %}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+{# ═══ NOCTURNAL SPOTLIGHT STAGE ═══ #}
+<section class="dark-spotlight-stage">
+    <div class="dark-spotlight-container">
+        {% if lead is not empty %}
+            {% set lead_url = contentUrl(lead) %}
+            {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+            <article class="dark-spotlight-card{% if not lead_has_hero %} dark-spotlight-card--no-image{% endif %}">
+                <a href="{{ lead_url }}" class="dark-spotlight-link">
+                    {% if lead_has_hero %}
+                        <div class="dark-spotlight-media">
+                            <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="dark-spotlight-img">
+                            <div class="dark-spotlight-scrim"></div>
+                        </div>
+                    {% endif %}
+
+                    <div class="dark-spotlight-content">
+                        <div class="dark-card-eyebrow">
+                            <span class="post-card-category">{{ lead.category | default(lead.section | default('FEATURED')) | upper }}</span>
+                            {% if lead.trumpet is not empty %}
+                                <span class="dark-trumpet">{{ lead.trumpet | striptags }}</span>
+                            {% endif %}
+                        </div>
+
+                        <h1 class="dark-spotlight-title">{{ lead.hero_title | default(lead.title) }}</h1>
+
+                        {% if lead.deck is not empty %}
+                            <div class="dark-spotlight-deck">{{ lead.deck | striptags }}</div>
+                        {% endif %}
+
+                        <div class="dark-spotlight-meta">
+                            {% if lead.author|default('') is not empty %}
+                                <span class="dark-byline">By {{ lead.author|default('') }}</span>
+                                <span class="meta-separator">&bull;</span>
+                            {% endif %}
+                            <time datetime="{{ lead.date }}">{{ lead.date | default('') | date("F j, Y") }}</time>
+                            <span class="dark-action-btn">
+                                Read Now <span class="btn-arrow">&rarr;</span>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        {% else %}
+            <div class="dark-spotlight-card dark-spotlight-card--empty">
+                <p class="empty-feed">No published dispatches yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{# ═══ MAIN NOCTURNAL LANDING SECTION ═══ #}
+<main class="main-container dark-main-container">
+    {% if edition_title is not empty or tagline is not empty %}
+        <div class="dark-section-header">
+            <header class="dark-mastband">
+                {% if edition_title is not empty %}
+                    <span class="dark-mastband-badge">{{ edition_title }}</span>
+                {% endif %}
+                {% if tagline is not empty %}
+                    <span class="dark-mastband-title">{{ tagline }}</span>
+                {% endif %}
+            </header>
+            <div class="dark-divider-bar" role="presentation"></div>
+        </div>
+    {% endif %}
+
+    <div class="layout-grid dark-layout-grid">
+        <div class="dark-feed-column">
+            
+            {# 2-Up Feature Stream #}
+            {% if secondary is not empty %}
+                <div class="dark-feature-stream">
+                    {% for dossier in secondary %}
+                        {% set url = contentUrl(dossier) %}
+                        {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+
+                        <article class="dark-feature-card {% if loop.index is odd %}card-sky-glow{% else %}card-indigo-glow{% endif %}">
+                            {% if has_hero %}
+                                <a href="{{ url }}" class="dark-card-media-link" tabindex="-1" aria-hidden="true">
+                                    <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="dark-card-img">
+                                </a>
+                            {% endif %}
+                            <div class="dark-card-body">
+                                <div class="dark-card-eyebrow">
+                                    <span class="post-card-category">{{ dossier.category | default(dossier.section | default('Post')) | upper }}</span>
+                                    {% if dossier.trumpet is not empty %}
+                                        <span class="dark-trumpet">{{ dossier.trumpet | striptags }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <h3 class="dark-card-title">
+                                    <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                </h3>
+
+                                {% if dossier.deck is not empty %}
+                                    <p class="dark-card-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+
+                                <div class="dark-card-footer">
+                                    <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date("M j, Y") }}</time>
+                                    <a href="{{ url }}" class="dark-card-link">Read <span class="btn-arrow">&rarr;</span></a>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {# Below-Fold Nocturnal Ledger #}
+            {% if inventory is not empty %}
+                <div class="dark-ledger-section">
+                    <h3 class="dark-ledger-heading">STORY ARCHIVE LEDGER</h3>
+                    <div class="dark-ledger-list">
+                        {% for dossier in inventory %}
+                            {% set url = contentUrl(dossier) %}
+                            <article class="dark-ledger-item">
+                                <span class="ledger-dot" aria-hidden="true"></span>
+                                <span class="post-card-category">{{ dossier.category | default('Post') | upper }}</span>
+                                <div class="dark-ledger-main">
+                                    <h4 class="dark-ledger-title">
+                                        <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                    </h4>
+                                    {% if dossier.deck is not empty %}
+                                        <p class="dark-ledger-deck">{{ dossier.deck | striptags }}</p>
+                                    {% endif %}
+                                </div>
+                                <time datetime="{{ dossier.date }}" class="dark-ledger-date">{{ dossier.date | default('') | date("M j") }}</time>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <aside class="sidebar-column dark-sidebar-right">
+            {{ theme.partial('sidebar-secondary') | raw }}
+            {{ theme.partial('social-links') | raw }}
+        </aside>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

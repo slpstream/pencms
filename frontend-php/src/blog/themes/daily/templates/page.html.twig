@@ -1,0 +1,31 @@
+{{ theme.partial('head', { is_content: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="page page--simple">
+    <article class="story">
+        <header class="story-head">
+        <h1>{% if hero_title is defined and hero_title %}{{ hero_title }}{% elseif page_title is defined and page_title %}{{ page_title }}{% else %}Page{% endif %}</h1>
+        {% if deck is defined and deck %}
+            <p class="dek">{{ deck | striptags }}</p>
+        {% endif %}
+        </header>
+        {% if hero_image is defined and hero_image and hero_image != 'images/defaulthero.jpg' %}
+            <figure class="hero">
+                <img src="{{ theme.contentAsset(hero_image) }}" alt="">
+            </figure>
+        {% endif %}
+        <div class="article-content traven-preview prose">
+            {% if posts is defined and posts is not empty %}
+                {% for post_item in posts %}
+                    {{ post_item.content_html | raw }}
+                {% endfor %}
+            {% elseif page_content is defined and page_content is not empty %}
+                {{ page_content | raw }}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</div>
+
+{{ theme.partial('footer') | raw }}

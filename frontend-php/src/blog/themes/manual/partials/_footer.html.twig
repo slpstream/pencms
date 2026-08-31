@@ -1,0 +1,46 @@
+<footer class="colophon"><div class="container footer-inner">
+  {% set footer_items = menu('footer') %}{% if footer_items is not empty %}<nav class="footer-menu" aria-label="Footer"><ul class="footer-menu-list">{% for item in footer_items %}<li class="footer-menu-group">{% if item.target_type == 'label' %}<span class="footer-menu-label">{{ item.label }}</span>{% else %}<a href="{{ item.url }}" class="footer-menu-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% endif %}{% if item.children is not empty %}<ul class="footer-menu-children">{% for child in item.children %}<li>{% if child.target_type == 'label' %}<span class="footer-menu-child-label">{{ child.label }}</span>{% else %}<a href="{{ child.url }}" class="footer-menu-child-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>{% endif %}</li>{% endfor %}</ul>{% endif %}</li>{% endfor %}</ul></nav>{% endif %}
+  <p>&copy; {{ "now"|date("Y") }} {{ sitename }}</p>
+</div></footer>
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement !== 'function') return;
+    document.querySelectorAll('.article-content.traven-preview').forEach(function (content) {
+      renderMathInElement(content, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    });
+  });
+</script>
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof mermaid === 'undefined') return;
+    document.querySelectorAll('.article-content.traven-preview pre code.language-mermaid').forEach(function (codeBlock) {
+      var pre = codeBlock.parentNode;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = codeBlock.textContent;
+      pre.parentNode.replaceChild(diagram, pre);
+    });
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      securityLevel: 'strict',
+      fontFamily: 'system-ui, sans-serif'
+    });
+    mermaid.run({ querySelector: '.article-content.traven-preview .mermaid' }).catch(function (error) {
+      console.error('Manual theme Mermaid rendering failed:', error);
+    });
+  });
+</script>
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+</body></html>

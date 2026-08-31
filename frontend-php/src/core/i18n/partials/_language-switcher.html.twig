@@ -1,0 +1,21 @@
+{% if alternates is defined and alternates|length > 1 %}
+<nav class="pen-language-switcher"
+     aria-label="{{ strings.languages|default('Languages') }}"
+     data-pen-language-switcher>
+    <ul>
+        {% for alternate in alternates %}
+            <li>
+                <a href="{{ alternate.url }}"
+                   hreflang="{{ alternate.language }}"
+                   lang="{{ alternate.language }}"
+                   data-pen-language-code="{{ alternate.language }}"
+                   data-pen-language-override="{{ alternate.label_override ? alternate.label : '' }}"
+                   {% if alternate.current %}aria-current="page"{% endif %}>
+                    <span data-pen-language-label>{{ alternate.label }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+<script src="{{ publicAsset('vendor/pencms/language-switcher.js') }}" defer></script>
+{% endif %}

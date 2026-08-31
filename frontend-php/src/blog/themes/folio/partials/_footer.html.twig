@@ -1,0 +1,98 @@
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-panel">
+            <div class="footer-brand-col">
+                <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="footer-brand">
+                    {% set logo = theme.getLogoUrl() %}
+                    {% if logo is not empty %}
+                        <img src="{{ logo }}" alt="" class="footer-brand-logo">
+                    {% endif %}
+                    <span class="footer-brand-text">
+                        <span class="footer-brand-name">{{ sitename }}</span>
+                        {% if tagline is not empty %}
+                            <span class="footer-brand-tagline">{{ tagline }}</span>
+                        {% endif %}
+                    </span>
+                </a>
+            </div>
+
+            <div class="footer-panel-main">
+                {{ theme.partial('sidebar-secondary') | raw }}
+                {% set footer_items = menu('footer') %}
+                {% if footer_items is not empty %}
+                    <nav class="footer-panel-nav" aria-label="Footer">
+                        {% for item in footer_items %}
+                            {% if item.target_type == 'label' and item.children is empty %}
+                                {# Skip empty label-only groups; bare links still render #}
+                            {% else %}
+                                <div class="footer-col">
+                                    {% if item.target_type == 'label' %}
+                                        <span class="footer-col-title">{{ item.label }}</span>
+                                    {% else %}
+                                        <a href="{{ item.url }}" class="footer-col-title footer-col-title--link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                                    {% endif %}
+                                    {% if item.children is not empty %}
+                                        <div class="footer-col-items">
+                                            {% for child in item.children %}
+                                                {% if child.target_type == 'label' %}
+                                                    <span class="footer-col-link footer-col-link--muted">{{ child.label }}</span>
+                                                {% else %}
+                                                    <a href="{{ child.url }}" class="footer-col-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </nav>
+                {% endif %}
+
+                <div class="footer-panel-bar">
+                    <p class="footer-meta">&copy; {{ "now"|date("Y") }} {{ sitename }} &bull; Powered by <a href="https://pencms.org/">PenCMS</a> &bull; Folio</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+{# KaTeX Auto-Render Math Scripts #}
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+{# Mermaid Loader & Renderer #}
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    if (window.mermaid) {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.classList.contains('cm-wysiwym-dark') ? 'dark' : 'default'
+        });
+    }
+</script>
+</body>
+</html>

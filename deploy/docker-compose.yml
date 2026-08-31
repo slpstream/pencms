@@ -1,0 +1,56 @@
+# PenCMS — FastAPI + Caddy (TLS).
+# From this directory:
+#   cp .env.example .env   # edit PUBLIC_HOST / JWT_* / CORS_*
+#   docker compose up -d --build
+#
+# Docs: ../core/docs/deploy_compose.md
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: ${PENCMS_API_TARGET:-api}
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      MCP_RESOURCE_URL: ${MCP_RESOURCE_URL}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS}
+      AGENT_TOKEN_EXPIRE_MINUTES: ${AGENT_TOKEN_EXPIRE_MINUTES:-15}
+      PENCMS_PREVIEW_BASE_URL: ${PENCMS_PREVIEW_BASE_URL:-}
+    volumes:
+      - pencms_content:/data/content
+      - pencms_assets:/data/assets
+      - pencms_runtime:/opt/pencms/backend-python/data
+    ports:
+      # Direct API (HTTP) for same-machine php -S / curl smoke
+      - "8008:8008"
+    expose:
+      - "8008"
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pencms_content:
+  pencms_assets:
+  pencms_runtime:
+  caddy_data:
+  caddy_config:

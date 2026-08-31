@@ -1,0 +1,66 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <div class="page-layout-with-sidebar">
+        <article class="post">
+            <header class="toolbox-post-header page-header">
+                {% if trumpet is defined and trumpet is not empty %}
+                    <p class="eyebrow">{{ trumpet }}</p>
+                {% elseif section is defined and section %}
+                    <p class="eyebrow">{{ section | title }}</p>
+                {% endif %}
+                {% if date is defined and date %}
+                    <p class="meta">
+                        <time datetime="{{ date }}">{{ date | date("F d, Y") }}</time>
+                    </p>
+                {% endif %}
+                <h1>{{ hero_title | default(page_title | default('')) }}</h1>
+                {% if deck is defined and deck %}
+                    <p class="lede">{{ deck | striptags }}</p>
+                {% endif %}
+                {% if price_from is defined and price_from %}
+                    <p class="price-line">Typical jobs from <strong>{{ price_from }}</strong> — you get a firm price before any work starts.</p>
+                {% endif %}
+            </header>
+
+            {% if hero_image is defined and hero_image %}
+                <img class="cover" src="{{ contentAsset(hero_image) }}" alt="" loading="lazy" decoding="async">
+            {% endif %}
+
+            {% if posts is defined and posts is not empty %}
+                {% for post in posts %}
+                    <div class="article-content traven-preview">{{ post.content_html | raw }}</div>
+                {% endfor %}
+            {% else %}
+                <div class="article-content traven-preview">
+                    {{ page_content | default(content_html | default(content | default(''))) | raw }}
+                </div>
+            {% endif %}
+
+            {% if included is defined and included is not empty %}
+                <section class="included" aria-label="What every visit includes">
+                    <h2>Every visit includes</h2>
+                    <ul>
+                        {% for point in included %}
+                            <li>{{ point }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {{ theme.partial('faqs') | raw }}
+
+            <section class="toolbox-discussion">
+                {{ theme.partial('comment-thread') | raw }}
+                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+            </section>
+        </article>
+
+        <aside class="sidebar-column">
+            {{ theme.partial('sidebar-secondary') | raw }}
+        </aside>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

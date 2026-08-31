@@ -1,0 +1,13 @@
+{# Site-specific status / titleblock bar — not included by stock templates.
+   Opt in with: {{ theme.partial('status') | raw }}
+   Expected locals: hero_title, and optionally section / doc_id (defaults to section). #}
+<div class="titleblock">
+  <nav class="crumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="{{ base_path }}">Home</a></li>
+      <li aria-current="page">{{ hero_title }}</li>
+    </ol>
+  </nav>
+  {% set chip = doc_id | default(section | default('')) %}
+  {% if chip is not empty %}<span class="doc-id">{{ chip }}</span>{% endif %}
+</div>

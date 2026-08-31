@@ -1,0 +1,119 @@
+<footer class="night-receipt">
+    {% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+    <div class="night-receipt-inner">
+        <div class="night-tear" aria-hidden="true"><span>TEAR HERE</span></div>
+        <p class="night-foot-line"><span>MARKET</span><span><a href="{{ home_url }}">{{ sitename | default('NIGHT') }}</a></span></p>
+        {% if tagline is not empty %}
+        <p class="night-foot-line"><span>WHERE</span><span>{{ tagline }}</span></p>
+        {% endif %}
+        <p class="night-foot-line"><span>WHEN</span><span>{{ "now"|date("Y") }} · RAIN OR RAIN</span></p>
+
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="night-receipt-nav" aria-label="Footer">
+                {% for item in footer_items %}
+                    {% if item.target_type == 'label' and item.children is empty %}
+                    {% else %}
+                        <div class="night-receipt-group">
+                            {% if item.target_type == 'label' %}
+                                <span class="night-receipt-label">{{ item.label }}</span>
+                            {% else %}
+                                <a href="{{ item.url }}" class="night-receipt-label" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                            {% endif %}
+                            {% if item.children is not empty %}
+                                <ul class="footer-menu-children">
+                                    {% for child in item.children %}
+                                        <li>
+                                            {% if child.target_type == 'label' %}
+                                                <span>{{ child.label }}</span>
+                                            {% else %}
+                                                <a href="{{ child.url }}" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        {{ theme.partial('social-links') | raw }}
+        <svg class="night-barcode" viewBox="0 0 113 40" preserveAspectRatio="none" aria-hidden="true" shape-rendering="geometricPrecision">
+            <rect x="4" y="0" width="2" height="40"/>
+            <rect x="7" y="0" width="1" height="40"/>
+            <rect x="11" y="0" width="1" height="40"/>
+            <rect x="14" y="0" width="1" height="40"/>
+            <rect x="16" y="0" width="3" height="40"/>
+            <rect x="20" y="0" width="2" height="40"/>
+            <rect x="24" y="0" width="1" height="40"/>
+            <rect x="26" y="0" width="1" height="40"/>
+            <rect x="30" y="0" width="2" height="40"/>
+            <rect x="33" y="0" width="1" height="40"/>
+            <rect x="36" y="0" width="1" height="40"/>
+            <rect x="40" y="0" width="1" height="40"/>
+            <rect x="42" y="0" width="2" height="40"/>
+            <rect x="46" y="0" width="1" height="40"/>
+            <rect x="48" y="0" width="1" height="40"/>
+            <rect x="50" y="0" width="3" height="40"/>
+            <rect x="55" y="0" width="1" height="40"/>
+            <rect x="58" y="0" width="1" height="40"/>
+            <rect x="60" y="0" width="3" height="40"/>
+            <rect x="64" y="0" width="1" height="40"/>
+            <rect x="67" y="0" width="1" height="40"/>
+            <rect x="69" y="0" width="2" height="40"/>
+            <rect x="72" y="0" width="2" height="40"/>
+            <rect x="77" y="0" width="1" height="40"/>
+            <rect x="79" y="0" width="1" height="40"/>
+            <rect x="82" y="0" width="2" height="40"/>
+            <rect x="85" y="0" width="1" height="40"/>
+            <rect x="87" y="0" width="1" height="40"/>
+            <rect x="90" y="0" width="3" height="40"/>
+            <rect x="94" y="0" width="1" height="40"/>
+            <rect x="96" y="0" width="2" height="40"/>
+            <rect x="99" y="0" width="3" height="40"/>
+            <rect x="103" y="0" width="1" height="40"/>
+            <rect x="106" y="0" width="1" height="40"/>
+        </svg>
+        <p class="night-foot-thanks"><span lang="zh-Hant" class="tc">多謝光臨</span> · THANK YOU, COME AGAIN</p>
+        <p class="night-foot-copy">&copy; {{ "now"|date("Y") }} <a href="{{ home_url }}">{{ sitename }}</a> · Powered by <a href="https://pencms.org/">PenCMS</a></p>
+    </div>
+</footer>
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    });
+</script>
+
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark'
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="terminal-window">
+    <div class="terminal-window-bar">
+        <span class="terminal-window-dots"><span></span><span></span><span></span></span>
+        <span class="terminal-window-title">man &mdash; {{ hero_title | default('post') }}</span>
+        <span>(1)</span>
+    </div>
+    <div class="terminal-window-body">
+
+        {# Breadcrumb path #}
+        <p class="post-breadcrumb">
+            /usr/share/posts<span class="post-breadcrumb-sep">/</span>
+            {% if category is not empty %}{{ category }}<span class="post-breadcrumb-sep">/</span>{% endif %}
+            {{ slug | default('untitled') }}
+        </p>
+
+        {# Eyebrow: [TAG] chip + trumpet #}
+        <div class="post-eyebrow">
+            {% if category is not empty %}
+                <span class="post-tag-chip">{{ category | upper }}</span>
+            {% endif %}
+            {% if trumpet is not empty %}
+                <span class="post-trumpet">{{ trumpet }}</span>
+            {% endif %}
+        </div>
+
+        <h1 class="post-title">{{ hero_title }}</h1>
+
+        {% if deck is not empty %}
+            <div class="post-deck">{{ deck | raw }}</div>
+        {% endif %}
+
+        {# Byline / dateline meta strip #}
+        <div class="post-meta">
+            {% if author is not empty %}
+                <span data-label="BY">{{ author }}</span>
+            {% endif %}
+            {% if dateline is not empty %}
+                <span data-label="DATE">{{ dateline }}</span>
+            {% elseif date is not empty %}
+                <span data-label="DATE">{{ date | date("Y-m-d") }}</span>
+            {% endif %}
+            {% if posts is defined and posts|length > 1 %}
+                <span data-label="FRAGS">{{ posts|length }}</span>
+            {% endif %}
+        </div>
+
+        {# Hero image — CRT-treated #}
+        {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <div class="post-hero-image-wrapper">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+            </div>
+        {% endif %}
+
+        {# `less` pager viewport — post body #}
+        <div class="post-viewport">
+            <div class="post-viewport-body">
+                {% for post in posts %}
+                    <article class="post-fragment" id="{{ post.id }}">
+                        {% if posts|length > 1 %}
+                            <div class="post-fragment-frame">{{ loop.index | format('%02d') }} / {{ posts|length | format('%02d') }}</div>
+                        {% endif %}
+                        {% if post.title is not empty and posts|length > 1 %}
+                            <h2 class="post-fragment-title">{{ post.title }}</h2>
+                        {% endif %}
+                        <div class="article-content traven-preview">
+                            {{ post.content_html | raw }}
+                        </div>
+                        {# Tags + metadata live on the fragment, not the page #}
+                        {% if (post.tags is defined and post.tags is not empty) or (post.metadata is defined and post.metadata is not empty) %}
+                            <div class="post-fragment-meta">
+                                {% if post.tags is defined %}
+                                    {% for tag in post.tags %}
+                                        {% if tag.href is not empty %}
+                                            <a href="{{ tag.href }}" class="post-tag-link">{{ tag.label }}</a>
+                                        {% else %}
+                                            <span class="post-tag-link">{{ tag.label }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% if post.metadata is defined %}
+                                    {% for meta in post.metadata %}
+                                        <span class="post-metadata-line">{{ meta }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+
+                {{ theme.partial('faqs') | raw }}
+
+                <section class="leet-discussion">
+                    {{ theme.partial('comment-thread') | raw }}
+                    {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+                </section>
+            </div>
+            <div class="post-viewport-footer">
+                <span class="less-mode">NORM</span>
+                <span>Ln 1, Col 1</span>
+                <span>{{ hero_title | length }}B</span>
+                <span>END</span>
+            </div>
+        </div>
+
+        {# In-rail TOC + Related widgets (rendered after the viewport so they
+           sit in the main column for narrow screens; on wide screens the rail
+           already holds secondary nav + profile). #}
+        {{ theme.partial('sidebar-toc') | raw }}
+        {{ theme.partial('sidebar-related') | raw }}
+
+    </div>
+</div>
+
+{{ theme.partial('footer') | raw }}

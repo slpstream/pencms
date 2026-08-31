@@ -1,0 +1,54 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+  <article class="post">
+
+    <header class="page-header post-header">
+      {% if trumpet is defined and trumpet is not empty %}
+      <p class="lede trumpet">{{ trumpet }}</p>
+      {% endif %}
+      <h1 class="post-title">{{ hero_title | default(title | default('Untitled')) }}</h1>
+      {% if deck is defined and deck is not empty %}
+      <p class="lede">{{ deck | striptags }}</p>
+      {% endif %}
+      <p class="meta release-meta">
+        {% if date is defined and date is not empty %}
+        <time datetime="{{ date }}">{{ date | date("F d, Y") }}</time>
+        {% endif %}
+        {% if version is defined and version is not empty %}
+        <span class="version-chip">{{ version }}</span>
+        {% endif %}
+        {% if tag is defined and tag is not empty %}
+        <span class="tag-chip" data-tag="{{ tag }}">{{ tag }}</span>
+        {% endif %}
+        {% if author is defined and author is not empty %}
+        · <span class="byline">By {{ author }}</span>
+        {% endif %}
+      </p>
+    </header>
+
+    {% if hero_image is defined and hero_image is not empty %}
+    <img class="cover" src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" loading="lazy" decoding="async" style="aspect-ratio: 16 / 9; object-fit: cover;">
+    {% endif %}
+
+    {% for post in posts %}
+    <div class="article-content traven-preview">
+      {{ post.content_html | raw }}
+    </div>
+    {% else %}
+    <div class="article-content traven-preview">
+      {{ page_content | raw }}
+    </div>
+    {% endfor %}
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="launch-discussion">
+      {{ theme.partial('comment-thread') | raw }}
+      {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+  </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

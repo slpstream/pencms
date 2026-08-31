@@ -1,0 +1,31 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="ochre-inventory page-archive">
+    <header class="ochre-inv-head">
+        <p class="ochre-zonemark">Archive</p>
+        <h1 class="ochre-inv-title">{{ hero_title | default('Archive') | title }}</h1>
+    </header>
+
+    {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+    {% if post_list is not empty %}
+        <ol class="ochre-inv-list">
+            {% for dossier in post_list %}
+                {% set url = contentUrl(dossier) %}
+                <li>
+                    <span class="cat-id">{{ '%02d'|format(loop.index) }}</span>
+                    <a href="{{ url }}" class="ochre-inv-name">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a>
+                    <span class="ochre-inv-meta">
+                        {% if dossier.dateline is defined and dossier.dateline is not empty %}{{ dossier.dateline }}
+                        {% elseif dossier.date is defined and dossier.date is not empty %}{{ dossier.date | date('d F Y') }}
+                        {% else %}—{% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p class="ochre-empty">Nothing here yet.</p>
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

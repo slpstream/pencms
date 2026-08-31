@@ -1,0 +1,249 @@
+{
+  "type": "native",
+  "name": "Manual",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A documentation theme built like an engineering handbook, with numbered navigation, title-block breadcrumbs, and sequence links.",
+  "editor_skin": "manual",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--bg",
+            "default": "#f2f4f6",
+            "dark_default": "#14181d"
+          },
+          {
+            "id": "panel",
+            "label": "Panel",
+            "type": "color",
+            "var": "--panel",
+            "default": "#ffffff",
+            "dark_default": "#1b212a"
+          },
+          {
+            "id": "ink",
+            "label": "Ink",
+            "type": "color",
+            "var": "--ink",
+            "default": "#161c23",
+            "dark_default": "#dce3eb"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--muted",
+            "default": "#46525e",
+            "dark_default": "#99a6b4"
+          },
+          {
+            "id": "accent",
+            "label": "Accent / Links",
+            "type": "color",
+            "var": "--accent",
+            "default": "#0b57b0",
+            "dark_default": "#7db0f5"
+          },
+          {
+            "id": "signal",
+            "label": "Signal / Warning",
+            "type": "color",
+            "var": "--signal",
+            "default": "#b26205",
+            "dark_default": "#e8a13d"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--border",
+            "default": "#d4dae1",
+            "dark_default": "#2c3540"
+          },
+          {
+            "id": "chip",
+            "label": "Chip / Code Fill",
+            "type": "color",
+            "var": "--chip",
+            "default": "#e5eaef",
+            "dark_default": "#232b35"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Fira Code', monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Fira Code', monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "'Fira Code', monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "ui-monospace, \"SFMono-Regular\", Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#0b57b0",
+    "og_vignette_color": "#46525e",
+    "og_text_color": "#ffffff",
+    "og_bar_color": "#161c23",
+    "og_font": "FiraCode-Bold",
+    "og_fonts": {
+      "FiraCode-Bold": "assets/fonts/FiraCode-Bold.ttf",
+      "FiraCode-Regular": "assets/fonts/FiraCode-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Manual",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

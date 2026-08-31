@@ -1,0 +1,40 @@
+<button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">Menu</button>
+
+<nav aria-label="Main" class="nav-menu" id="nav-menu">
+    {% set nav_items = menu('primary') %}
+    {% if nav_items is not empty %}
+        <ul>
+            {% for item in nav_items %}
+                {% set is_item_active = item.is_active|default(false) %}
+                <li class="nav-item{% if item.children is not empty %} has-children{% endif %}{% if is_item_active %} active{% endif %}">
+                    {% if item.target_type == 'label' %}
+                        <span class="nav-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+                    {% else %}
+                        <a href="{{ item.url }}" {% if is_item_active %}aria-current="page"{% endif %} class="{% if item.children is not empty %}nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                    {% endif %}
+                    {% if item.children is not empty %}
+                        <ul class="sub-menu">
+                            {% for child in item.children %}
+                                {% set is_child_active = child.is_active|default(false) %}
+                                <li class="{% if is_child_active %}active{% endif %}">
+                                    {% if child.target_type == 'label' %}
+                                        <span class="nav-label">{{ child.label }}</span>
+                                    {% else %}
+                                        <a href="{{ child.url }}" {% if is_child_active %}aria-current="page"{% endif %} {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            <li class="nav-item nav-theme-toggle">
+                <button class="theme-toggle" id="theme-toggle" data-theme-toggle type="button" aria-label="Toggle dark or light theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </li>
+        </ul>
+    {% endif %}
+</nav>
+

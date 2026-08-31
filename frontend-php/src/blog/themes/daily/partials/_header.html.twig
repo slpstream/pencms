@@ -1,0 +1,57 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set logo = theme.getLogoUrl() %}
+{% set edition = index_hero_title | default('') %}
+{% if edition == sitename | default('') %}
+    {% set edition = '' %}
+{% endif %}
+
+<div class="top-banner">
+    <p>
+        {% if edition is not empty %}
+            <strong>{{ edition }}</strong>
+        {% endif %}
+        {% if edition is not empty and tagline | default('') is not empty %}
+            &nbsp;·&nbsp;
+        {% endif %}
+        {% if tagline | default('') is not empty %}
+            {{ tagline }}
+        {% endif %}
+    </p>
+</div>
+
+{% if is_index | default(false) %}
+<header class="masthead">
+    <button class="theme-toggle" type="button" data-theme-toggle role="switch" aria-checked="false" aria-label="Dark mode">
+        <span class="theme-toggle-knob" aria-hidden="true"></span>
+    </button>
+    <a class="logo" href="{{ home_url }}">
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+        {% endif %}
+        <span>{{ sitename | default('Daily') }}</span>
+    </a>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+    {{ theme.partial('navbar') | raw }}
+</header>
+{% else %}
+<header class="site-header">
+    <div class="header-inner">
+        <a class="logo" href="{{ home_url }}">
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo">
+            {% endif %}
+            <span>{{ sitename | default('Daily') }}</span>
+        </a>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        {{ theme.partial('navbar') | raw }}
+        <button class="theme-toggle" type="button" data-theme-toggle role="switch" aria-checked="false" aria-label="Dark mode">
+            <span class="theme-toggle-knob" aria-hidden="true"></span>
+        </button>
+    </div>
+</header>
+{% endif %}
+<main id="main">

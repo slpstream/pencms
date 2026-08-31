@@ -1,0 +1,48 @@
+{{ theme.partial('head', { is_search: true, velo_oak_head: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="site-main page-search">
+    <section class="band band-night plane">
+        <div class="wrap">
+            <p class="sec-eyebrow mono sec-eyebrow-night"></p>
+            <h1 class="sec-title shade-night">{{ hero_title | default(strings.search | default('Search')) }}</h1>
+
+            <div
+                id="pencms-search"
+                class="pencms-search"
+                data-search-index-url="{{ search_index_url | default('') }}"
+                data-static="{{ theme.isStatic() ? '1' : '0' }}"
+                data-base-path="{{ base_path }}"
+                data-web-root="{{ base_path }}"
+                data-loading-text="{{ strings.loadingSearchIndex | default('Loading…') }}"
+                data-no-results-text="{{ strings.noSearchResults | default('Nessun nominativo in classifica.') }}"
+                data-hint-text="{{ strings.searchHint | default('') }}"
+                data-unavailable-text="{{ strings.searchUnavailable | default('Search unavailable.') }}"
+                data-page-text="{{ strings.page | default('Page') }}"
+                data-post-text="{{ strings.post | default('Post') }}"
+            >
+
+                <input
+                    type="search"
+                    id="search-input"
+                    class="search-input"
+                    name="q"
+                    placeholder="{{ strings.searchPlaceholder | default('Name, club, serata…') }}"
+                    autocomplete="off"
+                    enterkeyhint="search"
+                >
+
+                {% if search_index_json is defined and search_index_json is not null %}
+                <script type="application/json" id="search-index-data">{{ search_index_json | raw }}</script>
+                {% endif %}
+
+                <div id="search-results" class="search-results board" aria-live="polite"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="{{ publicAsset('vendor/minisearch/minisearch.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/minisearch/search-ui.js') }}"></script>
+
+{{ theme.partial('footer') | raw }}

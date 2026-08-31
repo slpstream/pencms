@@ -1,0 +1,54 @@
+{# Site-scoped social profile links (social_links global from ThemeEngine) #}
+{% if social_links is defined and social_links is not empty %}
+<ul class="footer-social" aria-label="Social">
+    {% for link in social_links %}
+        {% if link.url|default('') is not empty %}
+            {% set platform = link.platform|default('custom') %}
+            {% if platform == 'custom' %}
+                {% set aria_label = link.label|default('Link') %}
+            {% elseif platform == 'twitter' %}
+                {% set aria_label = 'X (Twitter)' %}
+            {% elseif platform == 'bluesky' %}
+                {% set aria_label = 'Bluesky' %}
+            {% elseif platform == 'mastodon' %}
+                {% set aria_label = 'Mastodon' %}
+            {% elseif platform == 'instagram' %}
+                {% set aria_label = 'Instagram' %}
+            {% elseif platform == 'facebook' %}
+                {% set aria_label = 'Facebook' %}
+            {% elseif platform == 'vk' %}
+                {% set aria_label = 'VK' %}
+            {% elseif platform == 'linkedin' %}
+                {% set aria_label = 'LinkedIn' %}
+            {% elseif platform == 'github' %}
+                {% set aria_label = 'GitHub' %}
+            {% elseif platform == 'telegram' %}
+                {% set aria_label = 'Telegram' %}
+            {% elseif platform == 'youtube' %}
+                {% set aria_label = 'YouTube' %}
+            {% elseif platform == 'tiktok' %}
+                {% set aria_label = 'TikTok' %}
+            {% elseif platform == 'reddit' %}
+                {% set aria_label = 'Reddit' %}
+            {% elseif platform == 'discord' %}
+                {% set aria_label = 'Discord' %}
+            {% elseif platform == 'slack' %}
+                {% set aria_label = 'Slack' %}
+            {% elseif platform == 'whatsapp' %}
+                {% set aria_label = 'WhatsApp' %}
+            {% else %}
+                {% set aria_label = platform|title %}
+            {% endif %}
+            <li>
+                <a href="{{ link.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="social-icon-link"
+                   aria-label="{{ aria_label }}">
+                    {{ theme.partial('social-icon', { platform: platform }) | raw }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}

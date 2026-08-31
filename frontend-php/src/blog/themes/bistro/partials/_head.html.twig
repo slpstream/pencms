@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title | default(sitename) }}</title>
+    {% if meta_description is defined and meta_description is not empty %}
+        <meta name="description" content="{{ meta_description }}">
+    {% endif %}
+    <meta name="color-scheme" content="light">
+
+    {# KaTeX Math Stylesheet #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+
+    {# Expand / Embed Nutshell Runtime #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+
+    {# Shared font registry — faces for Style Settings font options (admin + reader) #}
+    <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+
+    {# Theme Stylesheets #}
+    {{ theme.linkCss('css/skin-bistro.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+</head>
+<body class="traven-preview">
+<a class="skip-link" href="#main">Skip to content</a>

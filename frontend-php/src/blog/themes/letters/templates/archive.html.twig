@@ -1,0 +1,47 @@
+{% set home_href = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set items = dossiers | default(posts | default([])) %}
+{% set filter = category | default(section | default('')) %}
+{% set is_generic = (filter is empty) or (filter | lower in ['archive', 'archives', 'all']) %}
+
+<main id="main" class="letters-main">
+    <section class="archive" aria-label="Archive">
+        <header class="essay-header">
+            <h1 class="essay-title">{{ is_generic ? 'The Archive' : (filter | title) }}</h1>
+            {% if is_generic and tagline is not empty %}
+                <p class="essay-subtitle">{{ tagline }}</p>
+            {% endif %}
+        </header>
+
+        {% if items is empty %}
+            <p class="empty">Nothing written yet — the first letter is on its way.</p>
+        {% else %}
+            <ol class="toc">
+                {% for item in items %}
+                    {% set item_url = theme.isStatic() ? (base_path | default('') ~ (item.slug | default('')) ~ '/index.html') : ('post.php?slug=' ~ (item.slug | default('')) ~ '&section=' ~ (item.section | default('blog'))) %}
+                    {% set item_date = item.date | default('') %}
+                    {% set item_desc = item.deck | default(item.description | default('')) %}
+                    <li class="toc-entry">
+                        <a class="toc-link" href="{{ item_url }}">
+                            <span class="toc-title">{{ item.hero_title | default(item.title | default('Untitled')) }}</span>
+                            <span class="toc-leader" aria-hidden="true"></span>
+                            {% if item_date is not empty %}
+                                <time class="toc-date" datetime="{{ item_date }}">{{ item_date | date('M j, Y') }}</time>
+                            {% else %}
+                                <span class="toc-date">{{ "now" | date('M j, Y') }}</span>
+                            {% endif %}
+                        </a>
+                        {% if item_desc is not empty %}
+                            <p class="toc-excerpt">{{ item_desc | striptags }}</p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,24 @@
+{# Site branding for non-index pages. In the post sidebar, negative margin lets the
+   logo partially overlay the card’s top slash (smaller cousin of the index logo). #}
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set logo = theme.getLogoUrl() %}
+
+<div class="folio-branding{% if branding_variant|default('') == 'card' %} folio-branding--card{% endif %}">
+    <a href="{{ home_url }}" class="folio-branding-link" style="text-decoration: none;">
+        {% if logo is not empty %}
+            <div class="folio-branding-logo" aria-hidden="true">
+                <div class="folio-branding-logo-frame">
+                    <img src="{{ logo }}" alt="">
+                </div>
+            </div>
+        {% endif %}
+        <span class="folio-branding-text">
+            {% if sitename is not empty %}
+                <span class="folio-branding-name" style="font-size: 1.85rem;">{{ sitename }}</span>
+            {% endif %}
+            {% if tagline is not empty %}
+                <span class="folio-branding-tagline">{{ tagline }}</span>
+            {% endif %}
+        </span>
+    </a>
+</div>

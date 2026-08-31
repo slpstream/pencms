@@ -1,0 +1,11 @@
+<header class="masthead">
+    {% set logo = theme.getLogoUrl() %}
+    <a href="{{ base_path }}" class="site-title">
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="{{ sitename | default('Toolbox') }}" class="site-logo">
+        {% endif %}
+        <span>{{ sitename | default('Toolbox') }}</span>
+    </a>
+
+    {{ theme.partial('navbar') | raw }}
+</header>

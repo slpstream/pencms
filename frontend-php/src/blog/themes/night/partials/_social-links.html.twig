@@ -1,0 +1,18 @@
+{# Site-scoped social profile links (social_links global from ThemeEngine) #}
+{% if social_links is defined and social_links is not empty %}
+<div class="footer-social">
+    {% for link in social_links %}
+        {% if link.url|default('') is not empty %}
+            {% set platform = link.platform|default('custom') %}
+            {% if platform == 'custom' %}
+                {% set label = link.label|default('Link') %}
+            {% elseif platform == 'twitter' %}
+                {% set label = 'X (Twitter)' %}
+            {% else %}
+                {% set label = platform|title %}
+            {% endif %}
+            <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ label }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,12 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+<header class="site-head">
+    <a class="mark" href="{{ home_url }}">
+        {% set logo = theme.getLogoUrl() %}
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="" class="site-logo">
+        {% endif %}
+        <span class="mark-en">{{ sitename | default('Chashitsu') }}</span>
+    </a>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    {{ theme.partial('navbar') | raw }}
+</header>

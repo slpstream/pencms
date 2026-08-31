@@ -1,0 +1,41 @@
+{% set url = contentUrl(dossier) %}
+{% set weave = (ticket_index|default(0)) % 5 %}
+{% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+<article class="cloth-ticket weave-{{ weave }}">
+    <a class="ticket-swatch" href="{{ url }}" aria-hidden="true" tabindex="-1">
+        {% if has_hero %}
+            <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="lazy" decoding="async">
+        {% else %}
+            <span class="swatch-weave"></span>
+        {% endif %}
+    </a>
+    <div class="ticket-body">
+        {% if dossier.trumpet is not empty or dossier.category is not empty %}
+            <p class="ticket-no">{% if dossier.trumpet is not empty %}{{ dossier.trumpet | striptags }}{% else %}{{ dossier.category }}{% endif %}</p>
+        {% endif %}
+        <h3 class="ticket-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a></h3>
+        {% if dossier.deck is not empty %}
+            <p class="ticket-note">{{ dossier.deck | striptags }}</p>
+        {% endif %}
+        <a class="set-loom" href="{{ url }}">Read more →</a>
+    </div>
+    <dl class="ticket-specs">
+        {% if dossier.date is not empty %}
+            <div><dt>Date</dt><dd><time datetime="{{ dossier.date }}">{{ dossier.date | date('j M Y') }}</time></dd></div>
+        {% endif %}
+        {% if dossier.author is not empty %}
+            {% set byline = dossier.author is iterable ? (dossier.author.name | default('')) : dossier.author %}
+            {% if byline is not empty %}
+                <div><dt>Author</dt><dd>{{ byline }}</dd></div>
+            {% endif %}
+        {% endif %}
+        {% set section = dossier.section | default('') | trim %}
+        {% set category = dossier.category | default('') | trim %}
+        {% if section is not empty %}
+            <div><dt>Section</dt><dd>{{ section }}</dd></div>
+        {% endif %}
+        {% if category is not empty and category|lower != section|lower %}
+            <div><dt>Category</dt><dd>{{ category }}</dd></div>
+        {% endif %}
+    </dl>
+</article>

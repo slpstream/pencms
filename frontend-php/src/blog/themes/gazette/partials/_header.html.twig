@@ -1,0 +1,40 @@
+<header class="masthead {% if is_index | default(false) %}masthead-index{% endif %}">
+  {% set logo = theme.getLogoUrl() %}
+  <a class="site-title {% if is_index | default(false) %}is-index{% endif %}" href="{{ base_path }}">
+    {% if logo is not empty %}
+      <img src="{{ logo }}" alt="{{ sitename }}" class="site-logo {% if is_index | default(false) %}is-index{% endif %}">
+    {% endif %}
+    <span>{{ sitename }}</span>
+  </a>
+  {% set primary_menu = menu('primary') %}
+  {% if primary_menu is not empty %}
+  <nav class="section-nav" aria-label="Main">
+    <ul>
+      {% for item in primary_menu %}
+      <li {% if item.children is not empty %}class="nav-has-children"{% endif %}>
+        {% if item.target_type == 'label' %}
+          <span>{{ item.label }}</span>
+        {% else %}
+          <a href="{{ item.url }}" {% if item.is_active | default(false) %}aria-current="page"{% endif %} {% if item.open_in_new_tab | default(false) %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+        {% endif %}
+        {% if item.children is not empty %}
+        <ul>
+          {% for child in item.children %}
+          <li>
+            {% if child.target_type == 'label' %}
+              <span>{{ child.label }}</span>
+            {% else %}
+              <a href="{{ child.url }}" {% if child.open_in_new_tab | default(false) %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+  {{ theme.partial('sidebar-secondary') | raw }}
+</header>
+<main id="main" class="main-container">

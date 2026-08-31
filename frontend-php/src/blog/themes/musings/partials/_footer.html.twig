@@ -1,0 +1,87 @@
+    </main>
+
+    <footer class="musings-footer-wrapper" role="contentinfo">
+        {% set footer_items = menu('footer') %}
+        {% if footer_items is not empty %}
+            <nav class="musings-footer-grid" aria-label="Footer Navigation">
+                {% for item in footer_items %}
+                    {% if item.target_type == 'label' and item.children is empty %}
+                        {# skip empty header #}
+                    {% else %}
+                        <div class="musings-footer-col">
+                            {% if item.target_type == 'label' %}
+                                <div class="musings-footer-col-header">{{ item.label }}</div>
+                            {% else %}
+                                <div class="musings-footer-col-header">
+                                    <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }} &rarr;</a>
+                                </div>
+                            {% endif %}
+
+                            {% if item.children is defined and item.children is not empty %}
+                                <ul class="musings-footer-col-list">
+                                    {% for child in item.children %}
+                                        <li class="musings-footer-col-item">
+                                            {% if child.target_type == 'label' %}
+                                                <span class="footer-muted-label">{{ child.label }}</span>
+                                            {% else %}
+                                                <a href="{{ child.url }}" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        <div class="musings-footer-bar-bottom">
+            <div>
+                &copy; {{ sitename | default('') }} &middot; {{ "now"|date("Y") }}
+            </div>
+            <div>
+                <a href="{{ base_path | default('/') }}feed.xml">rss &crarr;</a>
+            </div>
+        </div>
+    </footer>
+</div> <!-- end .musings-content-wrapper -->
+</div> <!-- end .musings-layout -->
+
+<script src="{{ theme.asset('js/theme.js') }}"></script>
+
+<!-- KaTeX Auto-Render Math Scripts -->
+<script src="{{ publicAsset('vendor/katex/katex.min.js') }}"></script>
+<script src="{{ publicAsset('vendor/katex/contrib/auto-render.min.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
+
+<!-- Mermaid Loader & Renderer -->
+<script src="{{ publicAsset('vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(codeBlock) {
+        const pre = codeBlock.parentNode;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = codeBlock.textContent;
+        pre.replaceWith(div);
+    });
+
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark'
+    });
+</script>
+</body>
+</html>

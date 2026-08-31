@@ -1,0 +1,26 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+<main id="main" class="container">
+  <section class="list">
+    <header class="page-header">
+      <h1>{{ (hero_title | default('Archive')) | title }}</h1>
+    </header>
+    {% if dossiers is not empty %}
+    <ol class="toc-list">
+      {% for dossier in dossiers %}
+      {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+      <li class="toc-row">
+        <span class="toc-num">{{ '%02d'|format(loop.index) }}</span>
+        <div>
+          <h2 class="toc-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a></h2>
+          {% if dossier.deck is not empty %}<p class="toc-desc">{{ dossier.deck | striptags }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p class="empty">Nothing here yet.</p>
+    {% endif %}
+  </section>
+</main>
+{{ theme.partial('footer') | raw }}

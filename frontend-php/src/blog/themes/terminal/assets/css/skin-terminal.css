@@ -1,0 +1,781 @@
+/* Dual-Duty Content Skin — skin-terminal.css
+   Scopes: .cm-editor (Admin WYSIWYM) + .traven-preview (Published HTML)
+   Terminal — deep blue-charcoal ground, warm off-white prose, amber CRT-phosphor accent.
+   Framed dark code blocks persist across light and dark modes. */
+
+/* @font-face — declared at top of skin so both admin editor and reader views
+   resolve the local JetBrains Mono files. Per guide §6 / §7 gotcha #2. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+}
+
+/* DM Sans — humanist body & display face. Variable font: one file covers all weights. */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/dm-sans-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/dm-sans-latin-400-italic.woff2') format('woff2');
+}
+
+:root {
+  /* Style Settings knobs */
+  --font-mono: 'JetBrains Mono', ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-body: 'DM Sans', Seravek, "Avenir Next", system-ui, "Segoe UI", Roboto, "Liberation Sans", sans-serif;
+  --font-display: 'DM Sans', Seravek, "Avenir Next", system-ui, "Segoe UI", Roboto, "Liberation Sans", sans-serif;
+
+  --traven-font-mono: var(--font-mono);
+  --traven-font-body: var(--font-body);
+  --traven-font-display: var(--font-display);
+
+  /* Color Palette — Dark Scheme First */
+  --color-bg: #151c24;
+  --color-surface: #1b232e;
+  --color-text: #e9e5dc;
+  --color-muted: #9aa5b1;
+  --color-accent: #e8a03e;
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 88%, #ffffff);
+  --color-accent-wash: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --color-border: #2a3441;
+
+  /* Code Frame — Stays dark in both schemes */
+  --color-code-bg: #10151b;
+  --color-code-text: #e9e5dc;
+  --color-code-muted: #9aa5b1;
+  --color-code-bar: #1a222c;
+  --color-code-border: #2a3441;
+  --color-code-edge: var(--color-accent);
+
+  /* Traven Host Canvas Mapping */
+  --traven-bg: var(--color-bg);
+  --traven-text: var(--color-text);
+  --traven-muted: var(--color-muted);
+  --traven-accent: var(--color-accent);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.cm-wysiwym-dark) {
+    --color-bg: #f5f4f0;
+    --color-surface: #eceae4;
+    --color-text: #222933;
+    --color-muted: #5b6572;
+    --color-accent: #8a5a10;
+    --color-accent-soft: var(--color-accent);
+    --color-accent-wash: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    --color-border: #d9d6cd;
+    --color-code-edge: color-mix(in srgb, var(--color-accent) 85%, #000000);
+  }
+}
+
+html.cm-wysiwym-dark {
+  --color-bg: #151c24;
+  --color-surface: #1b232e;
+  --color-text: #e9e5dc;
+  --color-muted: #9aa5b1;
+  --color-accent: #e8a03e;
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 88%, #ffffff);
+  --color-accent-wash: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --color-border: #2a3441;
+  --color-code-edge: var(--color-accent);
+}
+
+html.theme-light {
+  --color-bg: #f5f4f0;
+  --color-surface: #eceae4;
+  --color-text: #222933;
+  --color-muted: #5b6572;
+  --color-accent: #8a5a10;
+  --color-accent-soft: var(--color-accent);
+  --color-accent-wash: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  --color-border: #d9d6cd;
+  --color-code-edge: color-mix(in srgb, var(--color-accent) 85%, #000000);
+}
+
+/* -------------------------------------------------------------------------
+ * 1. ADMIN HERO TITLE BLOCK CONTRACT & DUAL-DUTY (KB A9)
+ * ------------------------------------------------------------------------- */
+
+.hero-title-block.traven-preview {
+  background-color: var(--traven-bg, var(--color-bg)) !important;
+  color: var(--traven-text, var(--color-text)) !important;
+}
+
+.post-detail-trumpet {
+  font-family: var(--traven-font-mono, var(--font-mono, monospace)) !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--traven-accent, var(--color-accent)) !important;
+}
+
+.post-detail-title,
+.page-header h1,
+.post-header h1 {
+  font-family: var(--traven-font-body, var(--font-body, sans-serif)) !important;
+  font-size: clamp(1.875rem, 5vw, 2.625rem) !important;
+  /* DM Sans variable face; published used 750 before dual-duty move. */
+  font-weight: 750 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--traven-text, var(--color-text)) !important;
+}
+
+.post-detail-deck,
+.page-header .lede,
+.post-header .lede {
+  font-family: var(--traven-font-body, var(--font-body, sans-serif)) !important;
+  font-size: 1.3125rem !important;
+  line-height: 1.3 !important;
+  color: var(--traven-muted, var(--color-muted)) !important;
+}
+
+/* -------------------------------------------------------------------------
+ * 2. SCOPE BASE TYPOGRAPHY (.cm-editor + .traven-preview)
+ * ------------------------------------------------------------------------- */
+
+.cm-editor {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
+  font-family: var(--traven-font-body) !important;
+  font-size: 1.0625rem !important;
+  line-height: 1.65 !important;
+}
+
+.traven-preview {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
+  font-family: var(--traven-font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.cm-scroller {
+  font-family: var(--traven-font-body) !important;
+  line-height: 1.65 !important;
+}
+
+.cm-cursor {
+  border-left-color: var(--color-accent) !important;
+}
+
+.cm-selectionBackground,
+.cm-native-selection,
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background: var(--color-accent-wash) !important;
+}
+
+.traven-preview a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.traven-preview a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Headings in prose */
+.article-content.traven-preview h1,
+.article-content.traven-preview h2,
+.article-content.traven-preview h3,
+.article-content.traven-preview h4,
+.article-content.traven-preview h5,
+.article-content.traven-preview h6 {
+  font-family: var(--traven-font-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  text-wrap: balance;
+}
+
+.article-content.traven-preview h2 { font-size: 1.5rem; }
+.article-content.traven-preview h3 { font-size: 1.3125rem; }
+.article-content.traven-preview h4 { font-size: 1.0625rem; }
+
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6 {
+  font-family: var(--traven-font-body) !important;
+  font-weight: 700 !important;
+  color: var(--color-text) !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+}
+.cm-editor .cm-wysiwym-h1 { font-size: 1.875rem !important; padding-top: 24px !important; padding-bottom: 12px !important; }
+.cm-editor .cm-wysiwym-h2 { font-size: 1.5rem !important; padding-top: 20px !important; padding-bottom: 10px !important; }
+.cm-editor .cm-wysiwym-h3 { font-size: 1.3125rem !important; padding-top: 16px !important; padding-bottom: 8px !important; }
+.cm-editor .cm-wysiwym-h4 { font-size: 1.0625rem !important; padding-top: 12px !important; padding-bottom: 6px !important; }
+
+/* Paragraphs & Lists */
+.traven-preview p,
+.traven-preview ul,
+.traven-preview ol {
+  margin: 0 0 1rem;
+}
+.traven-preview li {
+  margin-bottom: 0.25rem;
+}
+.traven-preview li::marker {
+  color: var(--color-accent);
+}
+
+/* Inline Code */
+.traven-preview code,
+.cm-wysiwym-inline-code {
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.88em !important;
+  background: var(--color-accent-wash) !important;
+  color: var(--color-accent-soft) !important;
+  padding: 0.08em 0.35em !important;
+  border-radius: 3px !important;
+}
+
+/* Standard Blockquotes (excluding alerts and pullquotes) */
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) {
+  margin: 1rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 2px solid var(--color-accent);
+  color: var(--color-muted);
+}
+.traven-preview blockquote:not(.traven-component-pullquote):not(.markdown-alert):not(.traven-alert) p:last-child {
+  margin-bottom: 0;
+}
+
+.cm-editor .cm-wysiwym-blockquote {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 16px !important;
+  border-left: 2px solid var(--color-accent) !important;
+  color: var(--color-muted) !important;
+  margin: 0 !important;
+}
+.cm-editor .cm-wysiwym-blockquote { padding-top: 10px !important; }
+.cm-editor .cm-wysiwym-blockquote + .cm-wysiwym-blockquote { padding-top: 2px !important; }
+.cm-editor .cm-wysiwym-blockquote:not(:has(+ .cm-wysiwym-blockquote)) { padding-bottom: 10px !important; }
+
+/* Horizontal Rules */
+.traven-preview hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0;
+}
+
+.cm-wysiwym-hr-widget {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 0 !important;
+  padding: 1rem 0 !important;
+}
+
+/* Tables */
+.traven-preview table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 1rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+.traven-preview th,
+.traven-preview td {
+  text-align: left;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+.traven-preview th {
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+
+.cm-wysiwym-table-row {
+  margin: 0 !important;
+}
+.cm-wysiwym-table-widget {
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box;
+}
+.cm-wysiwym-table-widget table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.cm-wysiwym-table-widget th,
+.cm-wysiwym-table-widget td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* -------------------------------------------------------------------------
+ * 3. SIGNATURE CODE BLOCKS (Framed dark terminal)
+ * ------------------------------------------------------------------------- */
+
+.traven-preview pre {
+  background: var(--color-code-bg) !important;
+  color: var(--color-code-text) !important;
+  border: 1px solid var(--color-code-border) !important;
+  border-top: 2px solid var(--color-code-edge) !important;
+  border-radius: 6px !important;
+  margin: 1.5rem 0 !important;
+  padding: 0 !important;
+  overflow-x: auto;
+  line-height: 1.7 !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-code-muted) var(--color-code-bg);
+}
+.traven-preview pre::-webkit-scrollbar { height: 0.5rem; }
+.traven-preview pre::-webkit-scrollbar-track { background: var(--color-code-bg); border-radius: 6px; }
+.traven-preview pre::-webkit-scrollbar-thumb { background: var(--color-code-muted); border-radius: 6px; }
+
+.traven-preview pre code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 1rem !important;
+  background: none !important;
+  color: inherit !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.875rem !important;
+  border-radius: 0 !important;
+}
+
+/* Sticky Code Bar */
+.code-bar {
+  position: sticky;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 1rem;
+  background: var(--color-code-bar);
+  border-bottom: 1px solid var(--color-code-border);
+  font-family: var(--traven-font-mono);
+  font-size: 0.75rem;
+  color: var(--color-code-muted);
+  line-height: 1.65;
+}
+.code-lang { text-transform: uppercase; letter-spacing: 0.08em; }
+
+.copy-code {
+  font: inherit;
+  color: var(--color-code-muted);
+  background: none;
+  border: 1px solid var(--color-code-border);
+  border-radius: 3px;
+  padding: 0 0.5rem;
+  cursor: pointer;
+}
+.copy-code:hover {
+  color: var(--color-code-edge);
+  border-color: var(--color-code-edge);
+}
+
+/* CodeMirror Code Block Fences Hardening */
+.cm-editor .cm-wysiwym-codeblock-line {
+  margin: 0 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  background: var(--color-code-bg) !important;
+  color: var(--color-code-text) !important;
+  font-family: var(--traven-font-mono) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.7 !important;
+}
+.cm-editor .cm-wysiwym-codeblock-line-first {
+  padding-top: 12px !important;
+  border-top: 2px solid var(--color-code-edge) !important;
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}
+.cm-editor .cm-wysiwym-codeblock-line-last {
+  padding-bottom: 12px !important;
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+/* -------------------------------------------------------------------------
+ * 4. SHORTCODES MATRIX (Align x Size)
+ * ------------------------------------------------------------------------- */
+
+.gallery-single, .figure-full {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  clear: both;
+}
+
+.photo-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--traven-border, #444);
+  background-color: var(--traven-code-bg, #000);
+}
+
+.photo-wrapper img,
+.gallery-single img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+img.classic-markdown {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 4px;
+  border: 1px solid var(--traven-border, #444);
+}
+
+.classic-markdown-figure {
+  display: block;
+  margin: 1.5rem auto;
+  clear: both;
+}
+
+.classic-markdown-figure img.classic-markdown {
+  margin: 0 auto;
+}
+
+/* Size classes */
+.gallery-single.img--small, .gallery-single.size-small, .size-small, .img--small, .img-30 { width: 30% !important; max-width: 300px; }
+.gallery-single.img--medium, .gallery-single.size-medium, .size-medium, .img--medium, .img-50 { width: 50% !important; max-width: 500px; }
+.gallery-single.img--large, .gallery-single.size-large, .size-large, .img--large, .img-70 { width: 70% !important; }
+.gallery-single.img--full, .gallery-single.size-full, .size-full, .img--full, .img-100 { width: 100% !important; }
+
+/* Editor alignment — auto-margins only (§4.4); never float CM widgets */
+.align-left,
+.cm-wysiwym-image-shortcode-container.align-left,
+.cm-wysiwym-image-widget-container.align-left,
+.cm-wysiwym-video-shortcode-container.align-left,
+.cm-wysiwym-audio-shortcode-container.align-left,
+.cm-wysiwym-figure-shortcode.align-left,
+.cm-wysiwym-component-shortcode.align-left {
+  margin: 0 auto 0 0 !important;
+  float: none !important;
+}
+.align-right,
+.cm-wysiwym-image-shortcode-container.align-right,
+.cm-wysiwym-image-widget-container.align-right,
+.cm-wysiwym-video-shortcode-container.align-right,
+.cm-wysiwym-audio-shortcode-container.align-right,
+.cm-wysiwym-figure-shortcode.align-right,
+.cm-wysiwym-component-shortcode.align-right {
+  margin: 0 0 0 auto !important;
+  float: none !important;
+}
+.align-center,
+.cm-wysiwym-image-shortcode-container.align-center,
+.cm-wysiwym-image-widget-container.align-center,
+.cm-wysiwym-video-shortcode-container.align-center,
+.cm-wysiwym-audio-shortcode-container.align-center,
+.cm-wysiwym-figure-shortcode.align-center,
+.cm-wysiwym-component-shortcode.align-center {
+  display: block !important;
+  margin: 0 auto !important;
+  float: none !important;
+  text-align: center;
+}
+.align-fullbleed,
+.cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-wysiwym-image-widget-container.align-fullbleed,
+.cm-wysiwym-figure-shortcode.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: both !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Preview / published gallery — floats and vertical margins are fine */
+.traven-preview .align-left,
+.gallery-single.align-left,
+.inline-image-left,
+.traven-preview .inline-image-left {
+  float: left !important;
+  margin: 0.5rem 1.5rem 1rem 0 !important;
+}
+.traven-preview .align-right,
+.gallery-single.align-right,
+.inline-image-right,
+.traven-preview .inline-image-right {
+  float: right !important;
+  margin: 0.5rem 0 1rem 1.5rem !important;
+}
+.traven-preview .align-center,
+.gallery-single.align-center,
+.inline-image-center,
+.traven-preview .inline-image-center {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center;
+}
+.traven-preview .align-fullbleed,
+.gallery-single.align-fullbleed,
+.inline-image-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 1.5rem 0 !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* Single shortcode image center fallback (GOTCHAS §6) */
+.traven-preview .gallery-single.inline-image-center,
+.traven-preview .gallery-single.align-center,
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+.gallery-single.inline-image-center,
+.gallery-single.align-center,
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center;
+}
+
+/* Captions (GOTCHAS §8) */
+.gallery-single .caption,
+.figure-full .caption,
+.classic-markdown-figure .caption,
+.traven-image-caption,
+.traven-figure-caption,
+figcaption.caption,
+span.caption {
+  font-size: 0.85rem;
+  line-height: 1.05 !important;
+  color: var(--color-muted);
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+  display: block !important;
+}
+
+/* Shortcode Components */
+.traven-preview .traven-component,
+.traven-preview .traven-figure {
+  margin: 1.5rem 0;
+  border-radius: 6px;
+}
+
+.traven-preview .traven-component-pullquote {
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  border-top: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  background: var(--color-surface);
+  font-size: 1.25rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.traven-preview .traven-component-info,
+.traven-component-info {
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 6px;
+}
+
+.traven-preview .traven-component-warning,
+.traven-component-warning {
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid #e53e3e;
+  border-radius: 6px;
+}
+
+.traven-preview .traven-component-info .component-header,
+.traven-preview .traven-component-warning .component-header,
+.traven-component-info .component-header,
+.traven-component-warning .component-header,
+.cm-wysiwym-component-shortcode.component-info .component-header,
+.cm-wysiwym-component-shortcode.component-warning .component-header {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.traven-preview .traven-component-info .component-title,
+.traven-preview .traven-component-warning .component-title,
+.traven-component-info .component-title,
+.traven-component-warning .component-title,
+.cm-wysiwym-component-shortcode.component-info .component-title,
+.cm-wysiwym-component-shortcode.component-warning .component-title {
+  font-weight: 700;
+}
+
+details.traven-component-info:not([open]) .component-header,
+details.traven-component-warning:not([open]) .component-header,
+details:not([open]) summary.component-header {
+  margin-bottom: 0;
+}
+
+/* GitHub Alerts / Callouts */
+.traven-preview .markdown-alert,
+.traven-preview .traven-alert {
+  margin: 1.5rem 0 !important;
+  padding: 1rem 1.25rem !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--color-border) !important;
+  font-family: var(--traven-font-body) !important;
+}
+.traven-preview .markdown-alert-note { border-left: 3px solid var(--color-accent) !important; }
+.traven-preview .markdown-alert-warning { border-left: 3px solid #e53e3e !important; }
+
+/* Media Containers */
+.traven-preview .traven-video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+}
+.traven-preview .traven-video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.traven-preview .traven-audio-container {
+  margin: 1.5rem 0;
+}
+.traven-preview .traven-audio-container audio {
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------
+ * 5. CODEMIRROR 6 HARDENING & CARET DRIFT AUDIT RULES
+ * ------------------------------------------------------------------------- */
+
+.cm-editor .cm-wysiwym-alert {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-figure-shortcode {
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-component-shortcode {
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+.cm-wysiwym-component-shortcode.component-blockquote {
+  overflow: hidden;
+}
+
+.cm-wysiwym-component-shortcode blockquote,
+.cm-wysiwym-component-shortcode p,
+.cm-wysiwym-figure-shortcode p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cm-wysiwym-component-shortcode p + p,
+.cm-wysiwym-figure-shortcode p + p {
+  margin-top: 0.8em !important;
+}
+
+/* Blank line collapse around headings, fences, tables, math, figures, media, and components */
+.cm-editor .cm-wysiwym-h1 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h2 + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-h3 + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}

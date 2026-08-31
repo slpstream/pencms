@@ -1,0 +1,164 @@
+{
+  "type": "native",
+  "name": "Beton",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Light-only brutalist long-form theme: raw concrete slab, cast display type, cyanotype plates, and formwork seams.",
+  "editor_skin": "beton",
+  "editor_skin_base": [],
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Slab / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#CBC9C3"
+          },
+          {
+            "id": "panel",
+            "label": "Formwork / Panel",
+            "type": "color",
+            "var": "--color-panel",
+            "default": "#A3A19B"
+          },
+          {
+            "id": "text",
+            "label": "Body Ink",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#26272A"
+          },
+          {
+            "id": "muted",
+            "label": "Muted / Cast Type",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#5B5954"
+          },
+          {
+            "id": "accent",
+            "label": "Cyanotype / Links",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#14477D"
+          },
+          {
+            "id": "rust",
+            "label": "Rebar / Rust",
+            "type": "color",
+            "var": "--color-rust",
+            "default": "#96431E"
+          },
+          {
+            "id": "border",
+            "label": "Joints / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#8E8C86"
+          },
+          {
+            "id": "footer",
+            "label": "Footer Well",
+            "type": "color",
+            "var": "--color-footer",
+            "default": "#17181A"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Archivo', system-ui, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', system-ui, sans-serif", "label": "Archivo" },
+              { "value": "system-ui, -apple-system, sans-serif", "label": "System" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Archivo', system-ui, sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Archivo', system-ui, sans-serif", "label": "Archivo" },
+              { "value": "system-ui, -apple-system, sans-serif", "label": "System" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'IBM Plex Mono', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'IBM Plex Mono', ui-monospace, monospace", "label": "IBM Plex Mono" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#14477D",
+    "og_vignette_color": "#5B5954",
+    "og_text_color": "#CBC9C3",
+    "og_bar_color": "#17181A",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {},
+    "og_headline_style": "poster",
+    "og_text_case": "upper",
+    "og_grade_preset": "mono",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

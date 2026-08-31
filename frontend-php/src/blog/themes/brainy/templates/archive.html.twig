@@ -1,0 +1,64 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div id="content-wrapper">
+    <main id="main">
+        <header class="magazine-header" style="margin-bottom: 2.5rem;">
+            <div class="header-text-content" style="flex: 1 1 100%;">
+                <span class="trumpet">Archive</span>
+                <h1 class="headline">{{ hero_title | default('Article Archive') | title }}</h1>
+            </div>
+        </header>
+
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% if post_list is not empty %}
+            <div class="index-grid">
+                {% for dossier in post_list %}
+                    {% set post_url = contentUrl(dossier) %}
+                    {% set card_hero = dossier.hero_image | default(null) %}
+                    {% set card_zone = dossier.category | default(dossier.section | default('')) %}
+                    {% set card_facet = dossier.trumpet | default(card_zone) %}
+                    {% set card_byline = (dossier.author is defined and dossier.author is iterable) ? (dossier.author.name | default(dossier.author.display_name | default(''))) : (dossier.author | default('')) %}
+                    {% set card_has_deck = dossier.deck is defined and dossier.deck is not empty %}
+                    {% set card_has_date = dossier.date is defined and dossier.date is not empty %}
+                    {% set card_has_dateline = dossier.dateline is defined and dossier.dateline is not empty %}
+                    {% set card_title = dossier.hero_title | default(dossier.title | default('Untitled')) %}
+
+                    <article class="post-card">
+                        {% if card_hero is not empty and card_hero != 'images/defaulthero.jpg' %}
+                            <a href="{{ post_url }}" class="card-image-wrapper">
+                                <img src="{{ contentAsset(card_hero) }}" alt="{{ card_title }}" loading="lazy">
+                            </a>
+                        {% endif %}
+                        <div class="post-card-content">
+                            {% if card_facet is not empty %}
+                                <div class="trumpet" style="font-size: 0.8rem; margin-bottom: 0.35rem;">{{ card_facet }}</div>
+                            {% endif %}
+                            <h2 class="post-card-title">
+                                <a href="{{ post_url }}">{{ card_title }}</a>
+                            </h2>
+                            {% if card_has_deck %}
+                                <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+                            {% endif %}
+                            {% if card_byline is not empty or card_has_dateline or card_has_date %}
+                                <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--color-muted); margin-top: 0.5rem;">
+                                    {% if card_byline is not empty %}By {{ card_byline }}{% endif %}
+                                    {% if card_byline is not empty and (card_has_dateline or card_has_date) %} &bull; {% endif %}
+                                    {% if card_has_dateline %}
+                                        {{ dossier.dateline }}
+                                    {% elseif card_has_date %}
+                                        {{ dossier.date | date("m.d.y") }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="text-align: center; margin: 4rem 0; font-family: var(--font-sans);">No articles in this archive.</p>
+        {% endif %}
+    </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

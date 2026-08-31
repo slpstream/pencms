@@ -1,0 +1,22 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+{% set further = related_dossiers|slice(0, 4) %}
+<section class="ochre-further" aria-label="{{ strings.relatedPosts | default('Related') }}">
+    <p class="ochre-zonemark">More to Read</p>
+    <ol class="ochre-further-list">
+        {% for post in further %}
+            {% set url = contentUrl(post) %}
+            {% set title = post.hero_title | default(post.title | default('Untitled')) %}
+            {% set kicker = post.trumpet | default(post.category | default(post.section | default(''))) %}
+            <li>
+                <a href="{{ url }}" class="ochre-further-link">
+                    <span class="cat-id">{{ '%02d'|format(loop.index) }}</span>
+                    <span class="ochre-further-copy">
+                        {% if kicker is not empty %}<span class="ochre-further-kicker">{{ kicker }}</span>{% endif %}
+                        <span class="ochre-further-title">{{ title }}</span>
+                    </span>
+                </a>
+            </li>
+        {% endfor %}
+    </ol>
+</section>
+{% endif %}

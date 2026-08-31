@@ -1,0 +1,222 @@
+/**
+ * Theme Customize — CodeJar editor skins (editor pane only).
+ * Admin chrome stays light; dark/light applies under .pen-codejar-shell.
+ */
+
+.pen-codejar-shell {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    border: 1px solid var(--color-border, #e5e0dc);
+    background: var(--color-card, #fff);
+}
+
+.pen-codejar-pathbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--color-border, #e5e0dc);
+    flex-shrink: 0;
+    background: #f4edea;
+}
+
+.pen-codejar-pathbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.pen-codejar-theme-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border, #e5e0dc);
+    background: #fff;
+}
+
+.pen-codejar-theme-toggle button {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.45rem;
+    line-height: 1;
+    color: #6b6560;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pen-codejar-theme-toggle button[aria-pressed="true"] {
+    background: #2a2624;
+    color: #f4edea;
+}
+
+.pen-codejar-theme-toggle button:focus-visible {
+    outline: 2px solid #c45c26;
+    outline-offset: 1px;
+    z-index: 1;
+}
+
+.pen-codejar {
+    flex: 1 1 auto;
+    min-height: 280px;
+    width: 100%;
+    overflow: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+    line-height: 1.625;
+    padding: 0.75rem;
+    tab-size: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+    outline: none;
+}
+
+/* ── Dark (default) ───────────────────────────────────────────────── */
+
+.pen-codejar-shell[data-theme="dark"] .pen-codejar {
+    background: #1e1c1b;
+    color: #e8e2de;
+    caret-color: #f4edea;
+}
+
+.pen-codejar-shell[data-theme="dark"] .pen-codejar::selection,
+.pen-codejar-shell[data-theme="dark"] .pen-codejar *::selection {
+    background: #4a3f3a;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-comment,
+.pen-codejar-shell[data-theme="dark"] .hljs-quote {
+    color: #8a817a;
+    font-style: italic;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-keyword,
+.pen-codejar-shell[data-theme="dark"] .hljs-selector-tag,
+.pen-codejar-shell[data-theme="dark"] .hljs-literal,
+.pen-codejar-shell[data-theme="dark"] .hljs-section,
+.pen-codejar-shell[data-theme="dark"] .hljs-link {
+    color: #e07a5f;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-string,
+.pen-codejar-shell[data-theme="dark"] .hljs-title,
+.pen-codejar-shell[data-theme="dark"] .hljs-name,
+.pen-codejar-shell[data-theme="dark"] .hljs-type,
+.pen-codejar-shell[data-theme="dark"] .hljs-attribute,
+.pen-codejar-shell[data-theme="dark"] .hljs-symbol,
+.pen-codejar-shell[data-theme="dark"] .hljs-bullet,
+.pen-codejar-shell[data-theme="dark"] .hljs-addition,
+.pen-codejar-shell[data-theme="dark"] .hljs-variable,
+.pen-codejar-shell[data-theme="dark"] .hljs-template-tag,
+.pen-codejar-shell[data-theme="dark"] .hljs-template-variable {
+    color: #81b29a;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-number,
+.pen-codejar-shell[data-theme="dark"] .hljs-built_in,
+.pen-codejar-shell[data-theme="dark"] .hljs-builtin-name,
+.pen-codejar-shell[data-theme="dark"] .hljs-params,
+.pen-codejar-shell[data-theme="dark"] .hljs-meta,
+.pen-codejar-shell[data-theme="dark"] .hljs-selector-attr,
+.pen-codejar-shell[data-theme="dark"] .hljs-selector-pseudo {
+    color: #f2cc8f;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-tag,
+.pen-codejar-shell[data-theme="dark"] .hljs-selector-class,
+.pen-codejar-shell[data-theme="dark"] .hljs-selector-id,
+.pen-codejar-shell[data-theme="dark"] .hljs-attr {
+    color: #a8dadc;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-deletion {
+    color: #e07a5f;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-emphasis {
+    font-style: italic;
+}
+
+.pen-codejar-shell[data-theme="dark"] .hljs-strong {
+    font-weight: 700;
+}
+
+/* ── Light ────────────────────────────────────────────────────────── */
+
+.pen-codejar-shell[data-theme="light"] .pen-codejar {
+    background: #ffffff;
+    color: #1a1714;
+    caret-color: #1a1714;
+}
+
+.pen-codejar-shell[data-theme="light"] .pen-codejar::selection,
+.pen-codejar-shell[data-theme="light"] .pen-codejar *::selection {
+    background: #e8ddd6;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-comment,
+.pen-codejar-shell[data-theme="light"] .hljs-quote {
+    color: #8a817a;
+    font-style: italic;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-keyword,
+.pen-codejar-shell[data-theme="light"] .hljs-selector-tag,
+.pen-codejar-shell[data-theme="light"] .hljs-literal,
+.pen-codejar-shell[data-theme="light"] .hljs-section,
+.pen-codejar-shell[data-theme="light"] .hljs-link {
+    color: #b3441f;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-string,
+.pen-codejar-shell[data-theme="light"] .hljs-title,
+.pen-codejar-shell[data-theme="light"] .hljs-name,
+.pen-codejar-shell[data-theme="light"] .hljs-type,
+.pen-codejar-shell[data-theme="light"] .hljs-attribute,
+.pen-codejar-shell[data-theme="light"] .hljs-symbol,
+.pen-codejar-shell[data-theme="light"] .hljs-bullet,
+.pen-codejar-shell[data-theme="light"] .hljs-addition,
+.pen-codejar-shell[data-theme="light"] .hljs-variable,
+.pen-codejar-shell[data-theme="light"] .hljs-template-tag,
+.pen-codejar-shell[data-theme="light"] .hljs-template-variable {
+    color: #2d6a4f;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-number,
+.pen-codejar-shell[data-theme="light"] .hljs-built_in,
+.pen-codejar-shell[data-theme="light"] .hljs-builtin-name,
+.pen-codejar-shell[data-theme="light"] .hljs-params,
+.pen-codejar-shell[data-theme="light"] .hljs-meta,
+.pen-codejar-shell[data-theme="light"] .hljs-selector-attr,
+.pen-codejar-shell[data-theme="light"] .hljs-selector-pseudo {
+    color: #9a6700;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-tag,
+.pen-codejar-shell[data-theme="light"] .hljs-selector-class,
+.pen-codejar-shell[data-theme="light"] .hljs-selector-id,
+.pen-codejar-shell[data-theme="light"] .hljs-attr {
+    color: #0b6e99;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-deletion {
+    color: #b3441f;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-emphasis {
+    font-style: italic;
+}
+
+.pen-codejar-shell[data-theme="light"] .hljs-strong {
+    font-weight: 700;
+}

@@ -1,0 +1,22 @@
+[Unit]
+Description=PenCMS PHP admin / public preview
+After=network.target pencms-api.service
+
+[Service]
+User=user
+Group=user
+WorkingDirectory=/home/user/pencms/frontend-php
+Environment=PHP_CLI_SERVER_WORKERS=8
+EnvironmentFile=/home/user/pencms/deploy/lan/pencms.env
+# Keep distro php.ini (extensions); only bump upload limits and pin OPcache
+# for the CLI SAPI (php -S). Distro opcache.enable_cli is often 0; without
+# enable_cli=1, opcache.enable=1 is a no-op. validate_timestamps stays on
+# so deploys pick up file changes (revalidate_freq=2).
+# Optional extra: php-yaml / php8.x-yaml (ext-yaml). SiteRegistry prefers
+# Composer Symfony Yaml; the C extension is a fallback when autoload is skipped.
+ExecStart=/usr/bin/php -d upload_max_filesize=10M -d post_max_size=12M -d opcache.enable=1 -d opcache.enable_cli=1 -d opcache.validate_timestamps=1 -d opcache.revalidate_freq=2 -S 127.0.0.1:8009 -t public router.php
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

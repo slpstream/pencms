@@ -1,0 +1,18 @@
+{% set home_url = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+{% set mark = sitename | default('Jacquard') %}
+<header class="site-head" id="top">
+    <a class="wordmark" href="{{ home_url }}">
+        {% set logo = theme.getLogoUrl() %}
+        {% if logo is not empty %}
+            <img src="{{ logo }}" alt="" class="site-logo">
+        {% endif %}
+        {% if '&' in mark %}
+            {% set parts = mark|split('&') %}
+            <span>{{ parts[0]|trim }}</span> <span class="amp">&amp;</span> <span>{{ parts[1]|trim }}</span>
+        {% else %}
+            <span>{{ mark }}</span>
+        {% endif %}
+    </a>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+    {{ theme.partial('navbar') | raw }}
+</header>

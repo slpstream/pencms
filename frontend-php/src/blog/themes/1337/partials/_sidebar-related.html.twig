@@ -1,0 +1,13 @@
+{% if related_dossiers is defined and related_dossiers is not empty %}
+<div class="sidebar-widget related-widget">
+    <h3 class="sidebar-title">tail /related</h3>
+    <ul class="related-list">
+        {% for post in related_dossiers %}
+            {% set url = theme.isStatic() ? (base_path ~ post.slug ~ '/index.html') : ('post.php?slug=' ~ post.slug ~ '&section=' ~ (post.section | default('blog'))) %}
+            <li>
+                <a href="{{ url }}">{{ post.hero_title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

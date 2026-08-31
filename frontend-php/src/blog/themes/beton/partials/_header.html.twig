@@ -1,0 +1,15 @@
+<header class="site-head">
+    <div class="wrap head-row">
+        <a class="brand" href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}">
+            {% set logo = theme.getLogoUrl() %}
+            {% if logo is not empty %}
+                <img src="{{ logo }}" alt="" class="site-logo">
+            {% endif %}
+            <span class="brand-text">{{ sitename | default('Beton') }}</span>
+        </a>
+        <div class="head-actions">
+            {{ theme.partial('navbar') | raw }}
+        </div>
+    </div>
+</header>
+{{ theme.partial('sidebar-secondary') | raw }}

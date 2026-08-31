@@ -1,0 +1,39 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+
+<main id="main" class="site-main page-page">
+    <header class="post-slab wrap">
+        <div class="rule" aria-hidden="true"></div>
+        <div class="split post-split">
+            <div class="post-type">
+                <h1 class="grafik-title page-heading post-detail-title">{{ hero_title | default('Untitled') }}<i class="dot" aria-hidden="true"></i></h1>
+                {% if deck is not empty %}
+                    <p class="post-detail-deck">{{ deck | striptags }}</p>
+                {% endif %}
+            </div>
+            <div class="post-plate">
+                {% if has_hero %}
+                    <figure class="plate">
+                        <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+                    </figure>
+                {% else %}
+                    <div class="plate"><span class="plate-fallback" aria-hidden="true"></span></div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="wrap post-body-wrap">
+        <div class="post-prose">
+            <div class="article-content traven-preview">
+                {{ page_content | raw }}
+            </div>
+
+            {{ theme.partial('faqs') | raw }}
+        </div>
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

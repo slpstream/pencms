@@ -1,0 +1,36 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set has_hero = hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+{% set secondary_items = menu('secondary') %}
+
+<main id="main" class="site-main page-page">
+    <header class="page-header post-mast">
+        <h1 class="post-detail-title">{{ hero_title | default('Untitled') }}</h1>
+        {% if deck is not empty %}
+            <p class="lede post-detail-deck">{{ deck | striptags }}</p>
+        {% endif %}
+        {% if has_hero %}
+            <figure class="loom-panel post-hero">
+                <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}">
+            </figure>
+        {% endif %}
+    </header>
+
+    <div class="commissions-inner post-stage">
+        <div class="post-prose">
+            <div class="article-content traven-preview">
+                {{ page_content | raw }}
+            </div>
+
+            {{ theme.partial('faqs') | raw }}
+        </div>
+        {% if secondary_items is not empty %}
+            <aside class="yarn-wall" aria-label="Sidebar">
+                {{ theme.partial('sidebar-secondary') | raw }}
+            </aside>
+        {% endif %}
+    </div>
+</main>
+
+{{ theme.partial('footer') | raw }}

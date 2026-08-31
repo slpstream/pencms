@@ -1,0 +1,17 @@
+{% if related_dossiers is not empty %}
+<div class="sidebar-widget related-posts-widget">
+    <div class="handdrawn-divider"></div>
+    <h3 class="sidebar-title" style="margin-top: 12px !important;">{{ strings.relatedPosts }}</h3>
+    <ul class="sidebar-list">
+        {% for post in related_dossiers %}
+            {% set url = contentUrl(post) %}
+            <li class="sidebar-list-item">
+                <a href="{{ url }}" class="sidebar-list-link">
+                    {{ post.hero_title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="handdrawn-divider"></div>
+</div>
+{% endif %}

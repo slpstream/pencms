@@ -1,0 +1,173 @@
+{
+  "type": "native",
+  "name": "Coldcase",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Light-only case-file blog: manila folders, cork boards, typewriter prose, and stencil stamps for long-form investigations.",
+  "editor_skin": "coldcase",
+  "editor_skin_base": [],
+  "color_mode": "light",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": { "type": "string", "required": true },
+    "name": { "type": "string", "required": false },
+    "posts": { "type": "array", "required": false },
+    "dossiers": { "type": "array", "required": false },
+    "hero_image": { "type": "string", "required": false },
+    "deck": { "type": "html", "required": false },
+    "trumpet": { "type": "string", "required": false },
+    "date": { "type": "string", "required": false },
+    "author": { "type": "string", "required": false },
+    "dateline": { "type": "string", "required": false },
+    "page_title": { "type": "string", "required": false },
+    "tagline": { "type": "string", "required": false },
+    "page_content": { "type": "html", "required": false },
+    "og_title": { "type": "string", "required": false },
+    "og_description": { "type": "string", "required": false },
+    "og_image": { "type": "string", "required": false },
+    "meta_description": { "type": "string", "required": false }
+  },
+  "style": {
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Manila / Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#DCC98F"
+          },
+          {
+            "id": "surface",
+            "label": "Bond / Surface",
+            "type": "color",
+            "var": "--color-surface",
+            "default": "#F0E8CF"
+          },
+          {
+            "id": "text",
+            "label": "Ribbon / Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#262117"
+          },
+          {
+            "id": "muted",
+            "label": "Faded / Muted",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#4A4234"
+          },
+          {
+            "id": "accent",
+            "label": "Evidence / Accent",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#A8241B"
+          },
+          {
+            "id": "border",
+            "label": "Cork / Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#6E4A27"
+          },
+          {
+            "id": "pen",
+            "label": "Ballpoint / Notes",
+            "type": "color",
+            "var": "--color-pen",
+            "default": "#31405C"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Stardos Stencil', 'Impact', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Stardos Stencil', 'Impact', sans-serif", "label": "Stardos Stencil" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Special Elite', 'Courier New', monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Special Elite', 'Courier New', monospace", "label": "Special Elite" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "'Courier Prime', 'Courier New', ui-monospace, monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Courier Prime', 'Courier New', ui-monospace, monospace", "label": "Courier Prime" },
+              { "value": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", "label": "System Mono" }
+            ]
+          },
+          {
+            "id": "font-hand",
+            "label": "Hand Font",
+            "type": "select",
+            "var": "--font-hand",
+            "default": "'Caveat', 'Segoe Script', cursive",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Caveat', 'Segoe Script', cursive", "label": "Caveat" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#A8241B",
+    "og_vignette_color": "#6E4A27",
+    "og_text_color": "#262117",
+    "og_bar_color": "#DCC98F",
+    "og_font": "CourierPrime-Bold",
+    "og_fonts": {
+      "CourierPrime-Bold": "assets/fonts/CourierPrime-Bold.ttf"
+    },
+    "og_headline_style": "caption",
+    "og_text_case": "upper",
+    "og_grade_preset": "paper",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

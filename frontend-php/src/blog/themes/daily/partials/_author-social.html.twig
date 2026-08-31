@@ -1,0 +1,95 @@
+{# Author profile links (website / social) — only when present on the author profile. #}
+{% set author_links = [] %}
+{% if author is defined and author is iterable %}
+    {% if author.website is defined and author.website is not empty %}
+        {% set author_links = author_links|merge([{ url: author.website, label: 'Website' }]) %}
+    {% endif %}
+    {% if author.social is defined and author.social is not empty %}
+        {% if author.social.url is defined and author.social.url is not empty %}
+            {% set author_links = author_links|merge([{
+                url: author.social.url,
+                label: author.social.label|default(author.social.platform|default('Profile')|title),
+                platform: author.social.platform|default('')
+            }]) %}
+        {% elseif author.social starts with 'http' %}
+            {% set author_links = author_links|merge([{ url: author.social, label: 'Profile' }]) %}
+        {% elseif attribute(author.social, 0) is defined and attribute(author.social, 0) is iterable %}
+            {% for item in author.social %}
+                {% if item.url is defined and item.url is not empty %}
+                    {% set author_links = author_links|merge([{
+                        url: item.url,
+                        label: item.label|default(item.platform|default('Profile')|title),
+                        platform: item.platform|default('')
+                    }]) %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+    {% if author.links is defined and attribute(author.links, 0) is defined and attribute(author.links, 0) is iterable %}
+        {% for item in author.links %}
+            {% if item.url is defined and item.url is not empty %}
+                {% set author_links = author_links|merge([{
+                    url: item.url,
+                    label: item.label|default(item.platform|default('Link')|title),
+                    platform: item.platform|default('')
+                }]) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+{% if author_links is not empty %}
+<ul class="author-social" aria-label="Author links">
+    {% for link in author_links %}
+        {% set platform = link.platform|default('') %}
+        {% if platform is empty %}
+            {% set url_l = link.url|lower %}
+            {% if 'twitter.com' in url_l or 'x.com/' in url_l or url_l matches '{(^|://)(www\\.)?x\\.com(/|$)}' %}
+                {% set platform = 'twitter' %}
+            {% elseif 'bsky.app' in url_l or 'bluesky' in url_l %}
+                {% set platform = 'bluesky' %}
+            {% elseif 'instagram.com' in url_l %}
+                {% set platform = 'instagram' %}
+            {% elseif 'facebook.com' in url_l or 'fb.com' in url_l %}
+                {% set platform = 'facebook' %}
+            {% elseif 'linkedin.com' in url_l %}
+                {% set platform = 'linkedin' %}
+            {% elseif 'github.com' in url_l %}
+                {% set platform = 'github' %}
+            {% elseif 'youtube.com' in url_l or 'youtu.be' in url_l %}
+                {% set platform = 'youtube' %}
+            {% elseif 'tiktok.com' in url_l %}
+                {% set platform = 'tiktok' %}
+            {% elseif 'reddit.com' in url_l %}
+                {% set platform = 'reddit' %}
+            {% elseif 't.me/' in url_l or 'telegram.' in url_l %}
+                {% set platform = 'telegram' %}
+            {% elseif 'discord.' in url_l or 'discord.com' in url_l %}
+                {% set platform = 'discord' %}
+            {% elseif 'wa.me/' in url_l or 'whatsapp.' in url_l %}
+                {% set platform = 'whatsapp' %}
+            {% elseif 'vk.com' in url_l %}
+                {% set platform = 'vk' %}
+            {% else %}
+                {% set platform = 'custom' %}
+            {% endif %}
+        {% endif %}
+        {% if platform == 'twitter' %}
+            {% set aria_label = 'X (Twitter)' %}
+        {% elseif platform == 'custom' %}
+            {% set aria_label = link.label|default('Website') %}
+        {% else %}
+            {% set aria_label = platform|title %}
+        {% endif %}
+        <li>
+            <a href="{{ link.url }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="social-icon-link"
+               aria-label="{{ aria_label }}">
+                {{ theme.partial('social-icon', { platform: platform }) | raw }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}

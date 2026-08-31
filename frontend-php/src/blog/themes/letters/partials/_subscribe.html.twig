@@ -1,0 +1,10 @@
+{% if newsletter is defined and newsletter.formAction is defined and newsletter.formAction is not empty %}
+<aside class="letters-subscribe" aria-label="Newsletter sign-up">
+    <h2 class="letters-subscribe-prompt">{{ newsletter.prompt ?? 'Get new letters by email.' }}</h2>
+    <form class="letters-subscribe-form" action="{{ newsletter.formAction }}" method="post">
+        <label class="visually-hidden" for="subscribe-email">Email address</label>
+        <input class="letters-subscribe-input" type="email" name="email" id="subscribe-email" required autocomplete="email" placeholder="you@example.com">
+        <button class="letters-subscribe-button" type="submit">{{ newsletter.buttonLabel ?? 'Subscribe' }}</button>
+    </form>
+</aside>
+{% endif %}

@@ -1,0 +1,2930 @@
+openapi: 3.0.3
+info:
+  title: Pen CMS API Specification
+  description: |
+    The contract-first API specification for Pen CMS, a Git-native flat-file CMS.
+
+    Humans and agents share one capability vocabulary (string lists). `write:*` is
+    create+update (never split create:/update:). `delete:*` is separate. `read` is
+    monolithic. `publish:content` is content status (PATCH approve/publish) and is
+    not host `publish` (deploy + Deploy Grant). Generic PUT of a post/page does not
+    sniff status — that stays under write:posts / write:pages.
+
+    Legacy agent scope `write` expands one-way to every write:*, every delete:*, and
+    publish:content. It never implies host publish, users:manage, or manage:sites.
+
+    Human admin routes under /api authorize from cookie `pen_jwt` or Bearer JWT →
+    user YAML. Forgeable `pen_role` / `pen_user_id` cookies are not a root of trust.
+  version: 0.1.0
+servers:
+  - url: /api/v1
+paths:
+  /sites:
+    servers:
+      - url: /api
+    get:
+      summary: List registered sites
+      description: >
+        List sites the authenticated actor may access. Human admin sees the
+        full registry; authors see membership sites only; agent JWTs see
+        their bound site_id only. Create / rename / move-content / DELETE
+        are PenCMS Pro overlay paths.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Registered sites with additive i18n configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteListResponse'
+
+  /sites/{site_id}:
+    servers:
+      - url: /api
+    patch:
+      summary: Update a site
+      description: Soft-update registry fields without moving its content root.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: site_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteUpdate'
+      responses:
+        '200':
+          description: Site updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteMutationResponse'
+        '400':
+          description: Invalid site or language configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /auth/me:
+    servers:
+      - url: /api
+    get:
+      summary: Current session
+      description: >
+        Shared session shape with POST /api/auth/login (login also sets HttpOnly
+        pen_jwt and may include message). user is UserPublic only. memberships
+        are stored/unexpanded. capabilities are expanded for active_site_id.
+        Agents never copy sponsor memberships. Blocked → 403 account_suspended.
+        must_change_password still allows this GET and POST /api/auth/change-password.
+      security:
+        - CookieJwtAuth: []
+        - BearerJwt: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      responses:
+        '200':
+          description: Session payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionPayload'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: account_suspended.
+
+  /auth/verify:
+    get:
+      summary: Verify API Key
+      description: Check if the provided credential token is valid.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Token is valid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authenticated:
+                    type: boolean
+                  user:
+                    type: string
+        '401':
+          description: Unauthorized / Invalid token.
+
+  /content/collections:
+    get:
+      summary: List Collections
+      description: Retrieve list of content collections (e.g., pages, blog, portfolio).
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: List of collection directories and their file schemas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collection'
+
+  /content/collections/{collection}/entries:
+    get:
+      summary: List Entries
+      description: Retrieve indexed entries inside a specific collection, supporting sorting and metadata queries (SQLite cached).
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/ContentFallback'
+      responses:
+        '200':
+          description: A paginated list of metadata entries.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntrySummary'
+                  total:
+                    type: integer
+        '400':
+          description: Invalid, inactive, or unconfigured language/fallback request.
+
+  /content/collections/{collection}/entries/{slug}:
+    get:
+      summary: Read Entry
+      description: Retrieve the raw body and frontmatter content of a single flat file.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ContentLanguage'
+      responses:
+        '200':
+          description: Content file body and parsed frontmatter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryDetail'
+        '404':
+          description: Entry not found.
+        '400':
+          description: Invalid, inactive, or unconfigured language request.
+
+    put:
+      summary: Save Entry
+      description: Create or update a flat file with metadata frontmatter and body. Updates the SQLite index cache.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ContentLanguage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntryDetail'
+      responses:
+        '200':
+          description: Exact-language entry saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryMutationResponse'
+        '400':
+          description: Invalid document data / schema validation failure.
+        '403':
+          description: Site/key binding, enabled policy/run, or agent pause denied the write.
+
+    delete:
+      summary: Delete Entry
+      description: Delete the flat Markdown file and remove it from the SQLite index cache.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ContentLanguage'
+        - name: delete_group
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Explicitly delete the default document and all translation siblings.
+      responses:
+        '200':
+          description: File deleted.
+        '403':
+          description: >-
+            Site/key or enabled target-policy binding, agent pause, or the
+            human-only whole-group guard denied the delete.
+        '409':
+          description: Default-language entry still has translation siblings.
+
+  /content/collections/{collection}/entries/{slug}/translations:
+    post:
+      summary: Create Translation Sibling
+      description: >-
+        Atomically create one exact configured-language sibling. The server assigns
+        the translation group and actor provenance. Existing siblings are never
+        overwritten.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationSiblingCreate'
+      responses:
+        '201':
+          description: Translation sibling created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryMutationResponse'
+        '400':
+          description: Inactive i18n, invalid language, or structural mismatch.
+        '403':
+          description: Site/key binding, enabled policy/run, or agent pause denied the write.
+        '404':
+          description: Default-language source entry not found.
+        '409':
+          description: Exact-language sibling already exists.
+
+  /translations/config:
+    get:
+      summary: Get Translation Configuration
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      responses:
+        '200':
+          description: Active site's translation configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationConfig'
+    put:
+      summary: Update Translation Configuration
+      description: Human/operator update of the existing site i18n registry fields.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationConfigUpdate'
+      responses:
+        '200':
+          description: Updated translation configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationConfig'
+        '400':
+          description: Invalid language configuration.
+        '403':
+          description: Agent tokens cannot alter site translation configuration.
+
+  /translations/coverage:
+    get:
+      summary: Get Exact Translation Coverage
+      description: >-
+        Count exact sibling files only. Merged-list fallback rows never count as
+        coverage.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional exact target-language filter.
+      responses:
+        '200':
+          description: Exact coverage totals and item gaps for the active site.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationCoverageResponse'
+        '400':
+          description: Invalid or unconfigured language.
+
+  /translations/strings:
+    get:
+      summary: Get Effective UI Strings
+      description: >-
+        Resolve file-backed reader chrome strings for one exact configured
+        language using engine, theme, site-default, and site-target layers.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Exact configured language. Omitted means the site default.
+      responses:
+        '200':
+          description: Effective strings, source badges, and sparse site overrides.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiStringBundle'
+        '400':
+          description: Invalid or unconfigured language.
+    put:
+      summary: Replace Sparse UI String Overrides
+      description: >-
+        Human/operator replacement of one language's sparse site override file.
+        Omitting a key resets it to the next fallback layer.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: language
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Exact configured language whose site override file is replaced.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiStringOverrides'
+      responses:
+        '200':
+          description: Updated effective strings and sparse overrides.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UiStringBundle'
+        '400':
+          description: Inactive i18n, invalid language, key, or non-string value.
+        '403':
+          description: Human admin required.
+
+  /translations/{slug}/{language}/review:
+    post:
+      summary: Review Translation Sibling
+      description: >-
+        Approve promotes draft/stub to published and clears review. Reject
+        withholds the sibling and records the decision without deleting it.
+        Agent tokens cannot self-review; Autonomous agents set status on write.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationReviewRequest'
+      responses:
+        '200':
+          description: Review transition recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryMutationResponse'
+        '403':
+          description: Human review is required by the current publication policy.
+        '404':
+          description: Exact sibling not found.
+        '409':
+          description: Sibling is not in a reviewable state.
+
+  /translations/runs:
+    get:
+      summary: List Translation Runs
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: Bounded recent external run telemetry.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [runs]
+                properties:
+                  runs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TranslationRun'
+    post:
+      summary: Start Translation Run
+      description: Start telemetry for an external cron or MCP run; this does not schedule work.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationRunStart'
+      responses:
+        '201':
+          description: Run telemetry started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationRun'
+        '403':
+          description: Site-bound authorization or agent pause denied the run.
+
+  /translations/runs/{run_id}:
+    patch:
+      summary: Update or Finish Translation Run
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationRunUpdate'
+      responses:
+        '200':
+          description: Run telemetry updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationRun'
+        '403':
+          description: Caller does not own this site-bound run.
+        '404':
+          description: Run not found.
+
+  /mcp/translations/config:
+    get:
+      summary: MCP Get Translation Configuration
+      description: HTTP surface behind the get_translation_config MCP tool.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Site-bound translation configuration and policy health.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationConfig'
+
+  /mcp/translations/gaps:
+    get:
+      summary: MCP List Translation Gaps
+      description: Returns only coverage rows whose gap_codes list is non-empty.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Exact missing, draft, review, or rejected rows.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationCoverageResponse'
+
+  /mcp/translations/{slug}:
+    post:
+      summary: MCP Create Translation Sibling
+      description: HTTP surface behind create_translation_sibling.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TranslationSiblingCreate'
+                - type: object
+                  properties:
+                    collection:
+                      type: string
+                      default: general
+      responses:
+        '200':
+          description: Exact draft sibling created with server-derived provenance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryMutationResponse'
+        '403':
+          description: Capability/scope, site/key binding, enabled policy/run, or pause denied the write.
+        '409':
+          description: Exact sibling already exists.
+
+  /mcp/translations/{slug}/{language}:
+    delete:
+      summary: MCP Delete Translation Sibling
+      description: Delete one exact non-default sibling without cascading.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: collection
+          in: query
+          required: false
+          schema:
+            type: string
+            default: general
+      responses:
+        '200':
+          description: Exact sibling deleted.
+        '403':
+          description: Capability/scope, site/key or enabled target-policy binding, or pause denied the delete.
+        '404':
+          description: Exact sibling not found.
+
+  /mcp/translations/{slug}/{language}/review:
+    post:
+      summary: MCP Review Translation Sibling
+      description: Human-only review parity surface; agent tokens cannot self-review.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: language
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              additionalProperties: false
+              properties:
+                decision:
+                  type: string
+                  enum: [approve, reject]
+      responses:
+        '200':
+          description: Review transition recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntryMutationResponse'
+        '403':
+          description: Human review is required.
+
+  /mcp/i18n-runs:
+    get:
+      summary: MCP List Translation Runs
+      description: HTTP surface behind list_translation_runs.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: Bounded body-free run telemetry.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [runs]
+                properties:
+                  runs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TranslationRun'
+    post:
+      summary: MCP Start or Update Translation Run
+      description: HTTP surface behind report_translation_run; never schedules or executes work.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                run_id:
+                  type: string
+                  nullable: true
+                mode:
+                  type: string
+                  enum: [translate, transliterate, translate_then_transliterate]
+                  nullable: true
+                target_languages:
+                  type: array
+                  items:
+                    type: string
+                run_status:
+                  type: string
+                  enum: [running, completed, failed, cancelled]
+                  nullable: true
+                counts:
+                  $ref: '#/components/schemas/TranslationRunCounts'
+                error:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Run telemetry started or updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationRun'
+        '403':
+          description: Capability/scope, site/key binding, policy, or pause denied the operation.
+
+  /media/files:
+    get:
+      summary: List Media Files
+      description: List all assets stored in the media directory.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: List of media files.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MediaFile'
+
+    post:
+      summary: Upload Media File
+      description: Upload a new media binary asset. Supports Base64 payload or multipart uploads.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - filename
+                - content_base64
+              properties:
+                filename:
+                  type: string
+                content_base64:
+                  type: string
+                  description: Base64-encoded file contents.
+      responses:
+        '201':
+          description: Media uploaded successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaFile'
+
+  /comments:
+    get:
+      summary: List visible comments for a post
+      description: >
+        Unauthenticated public thread. Returns `visibility: visible` comment
+        files beside the post (`content/sites/{site}/{post}/comments/c-*.md`).
+        Top-level comments are oldest-first by `received_at` then slug; each
+        comment's replies follow immediately after it, oldest-first among
+        siblings. Pending and hidden are never included. Site binding: Host domain match wins; otherwise
+        `X-Pen-Site-Id` (live PHP InternalAPIClient), query `site`, then
+        `pen_site_id` cookie. Client body `site_id` is ignored. Unknown or missing posts return an empty
+        `comments` array (HTTP 200). Missing `post_slug` is 400. Not an MCP
+        tool.
+      parameters:
+        - name: post_slug
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Slug of the parent post or page.
+      responses:
+        '200':
+          description: Visible comments (possibly empty).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCommentList'
+        '400':
+          description: Missing post_slug.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /admin/comments:
+    get:
+      summary: List comment files (human admin)
+      description: >
+        Authenticated moderation list. Returns pending, visible, and hidden
+        comment files (`content/sites/{site}/{post}/comments/c-*.md`).
+        Newest-first by `received_at` then slug. Omit `post_slug` to list every
+        post on the site. Optional `visibility` filters the `comments` array;
+        `pending_counts` is always site-wide. Payload includes `visibility`,
+        `source_type`, `agent_key_name`, and `post_slug`. No `email`.
+        Site binding is the human admin chain (`X-Pen-Site-Id` / `pen_site_id`),
+        not the public ingest Host-match chain. Unknown posts return an empty
+        `comments` array (HTTP 200). Requires `write:posts`. Not an MCP tool;
+        comment files are not `fb-*` stubs.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: post_slug
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >
+            Slug of the parent post or page. Omit to list comments for every
+            post on the bound site.
+        - name: visibility
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, visible, hidden]
+      responses:
+        '200':
+          description: Comment files (possibly empty).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminCommentList'
+        '400':
+          description: Invalid visibility.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing write:posts on this site.
+    post:
+      summary: Create a visible human reply (human admin)
+      description: >
+        Write `comments/c-*.md` beside the post with `visibility: visible`,
+        `author_kind: human`, `source_type: admin`. Display `author_name` is
+        the operator's display name. Optional `in_reply_to` (one hop).
+        `approve_parent` defaults true when `in_reply_to` is set. Requires
+        `write:posts`. Unknown `post_slug` is 400.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminComment'
+      responses:
+        '200':
+          description: Created comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - comment
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/AdminComment'
+        '400':
+          description: Unknown post_slug or invalid in_reply_to.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing write:posts on this site.
+
+  /admin/comments/{comment_slug}:
+    patch:
+      summary: Update comment visibility or body
+      description: >
+        Rewrite YAML `visibility` and/or markdown body on an existing comment
+        file. Allowed visibility values: pending, visible, hidden. Visibility
+        is moderation, not post `status`. Optional `body` and `author_name`
+        keep the same slug and filename; `name` is refreshed from the first
+        words of a new body. Does not use `write_page`. Requires `write:posts`
+        and `post_slug` in the body. Unknown comment is 404.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: comment_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCommentVisibility'
+      responses:
+        '200':
+          description: Updated comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - comment
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/AdminComment'
+        '400':
+          description: Missing post_slug or invalid visibility.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing write:posts on this site.
+        '404':
+          description: Comment not found.
+    delete:
+      summary: Delete a comment file
+      description: >
+        Remove `comments/{comment_slug}.md` via content storage. Does not call
+        `delete_page`. Git history remains. Requires `delete:posts` and query
+        `post_slug`. Unknown comment is 404.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: comment_slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: post_slug
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Comment file deleted.
+        '400':
+          description: Missing post_slug.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing delete:posts on this site.
+        '404':
+          description: Comment not found.
+
+  /mcp/comments:
+    get:
+      operationId: list_comments
+      summary: MCP list comments beside a post
+      description: >
+        Agent list of comment files beside the post. JWT `site_id` is
+        authoritative (`X-Pen-Site-Id` cannot retarget). Omit `visibility`
+        for all states (admin payload including pending); set it to filter.
+        Oldest-first by `received_at` then slug. Unknown post → empty
+        `comments` array. Requires `read`. Not the public GET `/comments`
+        (visible-only, no `visibility` field).
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: post_slug
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: visibility
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, visible, hidden]
+      responses:
+        '200':
+          description: Comment files for the post (possibly empty).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminCommentList'
+        '400':
+          description: Missing post_slug or invalid visibility.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing read on this site.
+    post:
+      operationId: create_comment
+      summary: MCP create a visible agent comment
+      description: >
+        Write `comments/c-*.md` beside the post with `visibility: visible`,
+        `author_kind: agent`, `source_type: mcp`. Display `author_name` and
+        `agent_key_name` are the JWT key name. Unknown `post_slug` is 400.
+        Do not use `create_post` for a thread reply. Requires `write:posts`.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        '200':
+          description: Created comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - comment
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/AdminComment'
+        '400':
+          description: Unknown post_slug or invalid in_reply_to.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing write:posts on this site.
+
+  /mcp/comments/{comment_slug}:
+    patch:
+      operationId: set_comment_visibility
+      summary: MCP set comment visibility
+      description: >
+        Rewrite YAML `visibility` on an existing comment file. Allowed values:
+        pending, visible, hidden. Visibility is moderation, not post `status`
+        and not `ai_publish_autonomy`. Requires `write:posts` and `post_slug`
+        in the body. Unknown comment is 404. JWT `site_id` is authoritative.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: comment_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCommentVisibility'
+      responses:
+        '200':
+          description: Updated comment.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - comment
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/AdminComment'
+        '400':
+          description: Missing post_slug or invalid visibility.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing write:posts on this site.
+        '404':
+          description: Comment not found.
+    delete:
+      operationId: delete_comment
+      summary: MCP delete a comment file
+      description: >
+        Remove `comments/{comment_slug}.md` via content storage. Does not call
+        `delete_page`. Git history remains. Requires `delete:posts` and query
+        `post_slug`. Unknown comment is 404. JWT `site_id` is authoritative.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: comment_slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: post_slug
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Comment file deleted.
+        '400':
+          description: Missing post_slug.
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Missing delete:posts on this site.
+        '404':
+          description: Comment not found.
+
+  /feedback:
+    post:
+      summary: Ingest public feedback
+      description: >
+        Unauthenticated contact or comment ingest. Site binding: Host domain
+        match wins; otherwise `X-Pen-Site-Id` (PHP InternalAPIClient), query
+        `site`, `source_url` `?site=` (live `/blog/?site=` preview), then the
+        `pen_site_id` cookie. Body `site_id` is ignored (relay contract).
+        `kind=contact` writes a canonical stub page at
+        `content/sites/{site_id}/fb-{timestamp}-{slug}/index.md` via write_page.
+        `kind=comment` requires `parent_slug` of an existing post/page (not an
+        `fb-*` stub) and writes `content/sites/{site_id}/{post}/comments/c-*.md`
+        with `visibility: pending`. Unknown `parent_slug` is 400. Rate limit:
+        5 submissions per IP per 5 minutes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackIngest'
+            example:
+              name: Test
+              message: Hello from curl
+              kind: contact
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeedbackIngest'
+      responses:
+        '200':
+          description: Submission stored (contact stub or pending comment file).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackReceived'
+        '400':
+          description: >
+            Validation error (missing message, oversize field, invalid kind,
+            missing parent_slug for comments, unknown post_slug).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '429':
+          description: Too many submissions from this IP (5 per 5 minutes).
+
+  /feedback/sync:
+    post:
+      summary: Sync remote feedback from the public relay
+      description: >
+        Drain unacked items from the site's feedback relay (`GET /fetch` then
+        `POST /ack`) via `write_ingest_item` (`source_type: relay`). Contact
+        items become `fb-*` stubs; comments become `comments/c-*.md` beside
+        the parent post. Invalid comment parents are skipped (logged) and still
+        acked so the queue does not jam. Human session or agent scope `write`.
+        Site is the agent JWT `site_id` or the human active site — not Host.
+        Missing keys return HTTP 200 `{written: 0, reason: no_relay_configured}`.
+        A down relay returns `{written: 0, reason: relay_unreachable}`. Never
+        500 for those cases. Does not mint tokens.
+      security:
+        - CookieJwtAuth: []
+        - BearerJwt: []
+      responses:
+        '200':
+          description: Sync result (including empty / unreachable).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackSyncResult'
+        '401':
+          description: Not authenticated.
+        '403':
+          description: Authenticated actor lacks scope write.
+
+  /sync:
+    post:
+      summary: Git Sync
+      description: Synchronize content files to the remote origin repository (pull changes, merge, push local commits) using HTTP REST API proxies.
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Sync completed.
+        '500':
+          description: Sync failed due to network / conflict errors.
+
+  /authors/:
+    get:
+      summary: List site authors
+      description: |
+        List contributor bios for the active Content site (`content/sites/{site_id}/authors.yaml`).
+        Site scope via `X-Pen-Site-Id` (human admin). Independent of CMS users / UserPublic.
+        Bios are plain text. Not exposed as MCP tools.
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      responses:
+        '200':
+          description: Authors for the active site.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorsListResponse'
+    post:
+      summary: Create site author
+      description: Create one author bio on the active site. Slug optional (derived from name when omitted). Avatar not required.
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorCreate'
+      responses:
+        '201':
+          description: Author created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: Validation error (e.g. duplicate slug).
+
+  /authors/{slug}:
+    get:
+      summary: Get site author
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Author record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Author not found on this site.
+    put:
+      summary: Update site author
+      description: Partial update. Slug is immutable (path param only).
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorUpdate'
+      responses:
+        '200':
+          description: Updated author.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Author not found on this site.
+    delete:
+      summary: Delete site author
+      description: Delete one author and best-effort remove their avatar file.
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted.
+        '404':
+          description: Author not found on this site.
+
+  /authors/{slug}/avatar:
+    post:
+      summary: Upload author avatar
+      description: |
+        Multipart upload for one author under site `assets/images/authors/`.
+        Allowed extensions: .png .svg .webp .jpg .jpeg .gif.
+      parameters:
+        - $ref: '#/components/parameters/PenSiteId'
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Avatar stored; author record updated with logical path.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  path:
+                    type: string
+                    description: Logical path e.g. images/authors/jane-doe.webp
+                  url:
+                    type: string
+                  site_id:
+                    type: string
+                  author:
+                    $ref: '#/components/schemas/Author'
+        '400':
+          description: Unsupported file type.
+        '404':
+          description: Author not found on this site.
+
+  /publish/providers:
+    servers:
+      - url: /api
+    get:
+      summary: List publish provider catalog
+      description: >
+        Core catalog is SFTP and GitHub Pages. Pro overlay registers additional
+        cloud adapters. Each entry includes ui_schema for the admin Publish tab.
+      security:
+        - CookieJwtAuth: []
+        - BearerJwt: []
+      responses:
+        '200':
+          description: Provider catalog.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishProviderCatalog'
+
+  /publish/target:
+    servers:
+      - url: /api
+    get:
+      summary: Read publish target
+      description: Non-secret host config for a site. Secrets stay in the ZK vault.
+      security:
+        - CookieJwtAuth: []
+        - BearerJwt: []
+      parameters:
+        - name: site
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Publish target (configured or unconnected).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishTarget'
+    put:
+      summary: Save publish target
+      description: >
+        Persist non-secret host settings. Passwords and tokens must not be sent.
+        Core providers are sftp and github_pages. Unregistered provider ids return 400.
+      security:
+        - CookieJwtAuth: []
+        - BearerJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishTargetPut'
+      responses:
+        '200':
+          description: Saved target.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishTarget'
+        '400':
+          description: Invalid payload, secret keys, or unknown provider.
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Pen-API-Key
+    CookieJwtAuth:
+      type: apiKey
+      in: cookie
+      name: pen_jwt
+      description: Human session JWT. Authorize from this cookie → YAML. Never trust pen_role / pen_user_id.
+    BearerJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Human or agent JWT. Agent tokens use type=agent + scopes + site_id; they do not inherit the sponsor admin role.
+
+  parameters:
+    PenSiteId:
+      name: X-Pen-Site-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        default: default
+      description: >
+        Active Content site id for human requests. Honored only if the actor
+        has membership on that site (or YAML role admin). Unknown ids → 400.
+        Non-member → 403 site_access_denied. Agent JWTs ignore this header and
+        use the token site_id only.
+    ContentLanguage:
+      name: language
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Exact normalized configured language; omitted means the site default.
+    ContentFallback:
+      name: fallback
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - none
+          - default
+        default: none
+      description: On lists, substitute a live target sibling or the default-language row.
+
+  schemas:
+    Capability:
+      type: string
+      description: >
+        Shared human/agent vocabulary. write:* = create+update. publish:content
+        is content status, not host publish. Legacy write is one-way expansion
+        on agent keys / stored lists.
+      enum:
+        - read
+        - write
+        - write:posts
+        - delete:posts
+        - write:pages
+        - delete:pages
+        - write:media
+        - delete:media
+        - publish:content
+        - write:menus
+        - write:authors
+        - write:seo
+        - write:theme
+        - publish
+        - users:manage
+        - manage:sites
+
+    SiteMembership:
+      type: object
+      required: [site_id, capabilities]
+      properties:
+        site_id:
+          type: string
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+          description: Stored unexpanded. Empty list on PATCH memberships removes the site.
+
+    UserPublic:
+      type: object
+      required: [uuid, username, display_name]
+      properties:
+        uuid:
+          type: string
+        username:
+          type: string
+        display_name:
+          type: string
+        role:
+          type: string
+          enum: [admin, author]
+        status:
+          type: string
+          enum: [active, blocked]
+        is_bootstrap:
+          type: boolean
+        bio:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          nullable: true
+        last_login_at:
+          type: string
+          nullable: true
+
+    UserAdminView:
+      allOf:
+        - $ref: '#/components/schemas/UserPublic'
+        - type: object
+          properties:
+            memberships:
+              type: array
+              items:
+                $ref: '#/components/schemas/SiteMembership'
+            must_change_password:
+              type: boolean
+
+    UserCreate:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        display_name:
+          type: string
+        role:
+          type: string
+          enum: [admin, author]
+          default: author
+        memberships:
+          type: array
+          items:
+            $ref: '#/components/schemas/SiteMembership'
+        bio:
+          type: string
+        avatar:
+          type: string
+        website:
+          type: string
+
+    UserPatch:
+      type: object
+      properties:
+        username:
+          type: string
+        display_name:
+          type: string
+        bio:
+          type: string
+        avatar:
+          type: string
+        website:
+          type: string
+        role:
+          type: string
+          enum: [admin, author]
+        status:
+          type: string
+          enum: [active, blocked]
+        is_bootstrap:
+          type: boolean
+
+    SessionPayload:
+      type: object
+      required:
+        - user
+        - must_change_password
+        - memberships
+        - accessible_sites
+        - active_site_id
+        - capabilities
+        - edition
+      properties:
+        message:
+          type: string
+          description: Present on login only.
+        user:
+          $ref: '#/components/schemas/UserPublic'
+        vault:
+          type: string
+          nullable: true
+        must_change_password:
+          type: boolean
+        memberships:
+          type: array
+          items:
+            $ref: '#/components/schemas/SiteMembership'
+          description: Stored unexpanded. Empty for agent JWTs.
+        accessible_sites:
+          type: array
+          items:
+            type: string
+        active_site_id:
+          type: string
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+          description: Expanded effective caps for active_site_id.
+        edition:
+          type: string
+          enum: [core, pro]
+          description: >
+            Overlay presence, not a config.ini flag. ``core`` unless
+            ``pencms_pro.init_pro`` loaded at boot.
+
+    LanguageLabels:
+      type: object
+      default: {}
+      additionalProperties:
+        type: string
+        minLength: 1
+      description: Display-label overrides keyed by normalized lowercase BCP-47 tag.
+
+    SiteI18nConfig:
+      type: object
+      properties:
+        language:
+          type: string
+          default: en
+          example: en
+          description: Default language as a known, normalized lowercase BCP-47 tag.
+        languages:
+          type: array
+          default: []
+          uniqueItems: true
+          description: >-
+            Ordered normalized BCP-47 tags. When non-empty, this list must include
+            language. i18n remains inactive until it contains at least two tags.
+          items:
+            type: string
+            example: fr
+        language_labels:
+          $ref: '#/components/schemas/LanguageLabels'
+        translation_automation_paused:
+          type: boolean
+          default: false
+          description: Whether automated translation work is paused for this site.
+
+    SiteMutableFields:
+      allOf:
+        - $ref: '#/components/schemas/SiteI18nConfig'
+        - type: object
+          properties:
+            name:
+              type: string
+            domain:
+              type: string
+              nullable: true
+            theme:
+              type: string
+              nullable: true
+            sitename:
+              type: string
+              nullable: true
+            display_logo:
+              type: boolean
+              nullable: true
+            comments_enabled:
+              type: boolean
+              description: >-
+                Reader comments on posts. Missing or false means off. Opt-in via
+                Site Settings; keys are minted silently. Static dist/ POSTs to
+                the community relay unless feedback_relay_url is set.
+            tagline:
+              type: string
+              nullable: true
+            hero_title:
+              type: string
+              nullable: true
+            hero_image:
+              type: string
+              nullable: true
+            contact_email:
+              type: string
+              nullable: true
+            title_template:
+              type: string
+              nullable: true
+            meta_description:
+              type: string
+              nullable: true
+            keywords:
+              type: string
+              nullable: true
+            robots_index:
+              type: boolean
+              nullable: true
+            robots_follow:
+              type: boolean
+              nullable: true
+            robots_txt:
+              type: string
+              nullable: true
+            sitemap_enabled:
+              type: boolean
+              nullable: true
+            google_site_verification:
+              type: string
+              nullable: true
+            bing_site_verification:
+              type: string
+              nullable: true
+            feedback_relay_url:
+              type: string
+              nullable: true
+              description: >
+                Public relay origin. Empty/omitted at read time means
+                https://feedback.pencms.org. Never bake feedback_fetch_token.
+            feedback_submission_key:
+              type: string
+              nullable: true
+              description: Public 32-char hex queue routing key (hidden form field).
+            feedback_fetch_token:
+              type: string
+              nullable: true
+              description: >
+                Write-only private drain token. Empty string rotates. Never
+                returned on GET (see has_feedback_fetch_token).
+            social_links:
+              type: array
+              nullable: true
+              items:
+                type: object
+                required:
+                  - platform
+                  - url
+                properties:
+                  platform:
+                    type: string
+                  url:
+                    type: string
+                  label:
+                    type: string
+                    nullable: true
+
+    Site:
+      allOf:
+        - $ref: '#/components/schemas/SiteMutableFields'
+        - type: object
+          required:
+            - id
+            - name
+            - content_relpath
+            - language
+            - languages
+            - language_labels
+            - translation_automation_paused
+            - i18n_active
+          properties:
+            id:
+              type: string
+            content_relpath:
+              type: string
+            i18n_active:
+              type: boolean
+              readOnly: true
+              description: >-
+                True only when languages contains at least two unique normalized
+                tags and includes the default language.
+            social_preview_defaults:
+              type: object
+              readOnly: true
+              additionalProperties: true
+            feedback_relay_cursor:
+              type: string
+              nullable: true
+              description: Last acked relay integer id (string). Written by sync, not bake.
+            has_feedback_fetch_token:
+              type: boolean
+              readOnly: true
+              description: True when a fetch_token is stored. The token itself is never returned.
+
+    SiteCreate:
+      allOf:
+        - $ref: '#/components/schemas/SiteMutableFields'
+        - type: object
+          required:
+            - id
+            - name
+          properties:
+            id:
+              type: string
+              description: Stable lowercase site slug.
+
+    SiteUpdate:
+      allOf:
+        - $ref: '#/components/schemas/SiteMutableFields'
+      description: >-
+        Sparse site patch. Null i18n values are invalid; submit complete replacement
+        arrays/maps when changing languages or language_labels.
+
+    SiteListResponse:
+      type: object
+      required:
+        - sites
+      properties:
+        sites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+
+    SiteMutationResponse:
+      allOf:
+        - $ref: '#/components/schemas/Site'
+        - type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+
+    ValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+
+    FeedbackIngest:
+      type: object
+      required:
+        - message
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          description: Optional submitter handle. Stored as frontmatter submitter, not page name.
+        message:
+          type: string
+          minLength: 1
+          maxLength: 8000
+          description: Raw message body written to the stub page.
+        email:
+          type: string
+          description: Optional, not rendered publicly.
+        source_url:
+          type: string
+          description: Optional URL of the page the visitor submitted from.
+        kind:
+          type: string
+          enum: [contact, comment]
+          default: contact
+        parent_slug:
+          type: string
+          description: >
+            Post slug for comments; sanitized. Required when kind=comment.
+            Unknown post (or an fb-* stub) returns 400. Ignored for contact.
+        site_id:
+          type: string
+          description: >
+            Ignored. Write target is Host when it matches a site domain,
+            else X-Pen-Site-Id, else query `site`, else `source_url` `?site=`,
+            else `pen_site_id` cookie.
+
+    FeedbackReceived:
+      type: object
+      required:
+        - status
+        - slug
+      properties:
+        status:
+          type: string
+          enum: [received]
+        slug:
+          type: string
+          description: >
+            Contact stub id (`fb-…`) or comment id (`c-…`), e.g.
+            fb-20260819120000-hello-from-curl or c-20260820t153000z-nice-frosting.
+
+    FeedbackSyncResult:
+      type: object
+      required:
+        - written
+      properties:
+        written:
+          type: integer
+          minimum: 0
+          description: Number of contact stubs plus comment files written this drain.
+        slugs:
+          type: array
+          items:
+            type: string
+          description: fb-* and/or c-* ids written this drain.
+        reason:
+          type: string
+          enum: [no_relay_configured, relay_unreachable]
+          description: >
+            Present when nothing could be drained, or when ack failed after
+            writes. Omitted on a successful drain (including empty queue).
+
+    PublicComment:
+      type: object
+      required:
+        - slug
+        - author_name
+        - author_kind
+        - body
+        - received_at
+      properties:
+        slug:
+          type: string
+          description: Comment file id (`c-…`).
+        author_name:
+          type: string
+          description: Display name only. No commenter accounts or email.
+        author_kind:
+          type: string
+          enum: [public, agent, human]
+        body:
+          type: string
+          description: Comment markdown/plain body.
+        in_reply_to:
+          type: string
+          nullable: true
+          description: Parent comment slug; one hop only. Null for top-level.
+        received_at:
+          type: string
+          description: UTC timestamp when the comment was stored.
+
+    PublicCommentList:
+      type: object
+      required:
+        - post_slug
+        - comments
+      properties:
+        post_slug:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicComment'
+
+    AdminComment:
+      type: object
+      required:
+        - slug
+        - author_name
+        - author_kind
+        - body
+        - received_at
+        - visibility
+      properties:
+        slug:
+          type: string
+          description: Comment file id (`c-…`).
+        author_name:
+          type: string
+          description: Display name only. No commenter accounts or email.
+        author_kind:
+          type: string
+          enum: [public, agent, human]
+        body:
+          type: string
+        in_reply_to:
+          type: string
+          nullable: true
+        received_at:
+          type: string
+        visibility:
+          type: string
+          enum: [pending, visible, hidden]
+          description: Moderation state. Not post status.
+        source_type:
+          type: string
+          enum: [form, relay, mcp, admin]
+        agent_key_name:
+          type: string
+          nullable: true
+        post_slug:
+          type: string
+
+    AdminCommentList:
+      type: object
+      required:
+        - comments
+        - pending_counts
+      properties:
+        post_slug:
+          type: string
+          description: Echo of the query. Empty string when listing the whole site.
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminComment'
+        pending_counts:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Site-wide pending count keyed by post_slug.
+
+    SetCommentVisibility:
+      type: object
+      required:
+        - post_slug
+      properties:
+        visibility:
+          type: string
+          enum: [pending, visible, hidden]
+        post_slug:
+          type: string
+        body:
+          type: string
+          maxLength: 8000
+        author_name:
+          type: string
+
+    CreateAdminComment:
+      type: object
+      required:
+        - post_slug
+        - body
+      properties:
+        post_slug:
+          type: string
+        body:
+          type: string
+          maxLength: 8000
+        in_reply_to:
+          type: string
+          nullable: true
+        approve_parent:
+          type: boolean
+          description: >
+            When in_reply_to is set, default true. Sets the parent comment
+            visible before writing the reply.
+
+    CreateComment:
+      type: object
+      required:
+        - post_slug
+        - body
+      properties:
+        post_slug:
+          type: string
+          description: Existing post or page slug on the bound site.
+        body:
+          type: string
+          maxLength: 8000
+          description: Comment body. Not a new article.
+        in_reply_to:
+          type: string
+          nullable: true
+          description: Parent comment slug; one hop only.
+
+    Collection:
+      type: object
+      properties:
+        name:
+          type: string
+        path:
+          type: string
+        schema:
+          type: object
+          description: Schema configuration describing expected fields.
+
+    EntrySummary:
+      type: object
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        published:
+          type: boolean
+        modified_at:
+          type: string
+          format: date-time
+        language:
+          type: string
+          description: Actual row language; present only when site i18n is active.
+        translation_group:
+          type: string
+          nullable: true
+          pattern: '^tg_[0-9a-f]{32}$'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranslationPeer'
+        is_fallback:
+          type: boolean
+          description: True only when a merged list substituted the default row.
+
+    EntryDetail:
+      type: object
+      required:
+        - frontmatter
+        - body
+      properties:
+        frontmatter:
+          type: object
+          description: Key-value metadata matching collection specifications.
+        body:
+          type: string
+          description: Markdown body content.
+        composite:
+          type: boolean
+          nullable: true
+          description: Omit on update to preserve the existing composite structure.
+        partials:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+        run_id:
+          type: string
+          nullable: true
+          writeOnly: true
+          description: >-
+            Active bound telemetry run for an agent exact-sibling update.
+            Required when automation_policy is enabled; ignored for reads.
+        language:
+          type: string
+          description: Exact content language; present only when site i18n is active.
+        translation_group:
+          type: string
+          nullable: true
+          pattern: '^tg_[0-9a-f]{32}$'
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranslationPeer'
+        provenance:
+          $ref: '#/components/schemas/ContentProvenance'
+        version:
+          type: string
+          nullable: true
+          readOnly: true
+          description: >-
+            Opaque optimistic-concurrency token from the content file mtime.
+            Echo it back as expected_version on a later PUT.
+        expected_version:
+          type: string
+          nullable: true
+          writeOnly: true
+          description: >-
+            Opaque token from a prior GET `version`. A mismatch returns 409
+            version_conflict unless force is true. Omitted means unconditional write.
+        force:
+          type: boolean
+          writeOnly: true
+          default: false
+          description: Explicit overwrite after a version_conflict. Omitted expected_version is not force.
+
+    TranslationPeer:
+      type: object
+      required:
+        - language
+        - published
+        - needs_review
+      properties:
+        language:
+          type: string
+        status:
+          type: string
+          nullable: true
+        published:
+          type: boolean
+        needs_review:
+          type: boolean
+        review_decision:
+          type: string
+          nullable: true
+          enum: [pending, approved, rejected]
+
+    ContentProvenance:
+      type: object
+      readOnly: true
+      required:
+        - created_by
+        - needs_review
+      properties:
+        created_by:
+          type: string
+          enum: [human, agent]
+        created_by_id:
+          type: string
+          nullable: true
+        updated_by:
+          type: string
+          nullable: true
+          enum: [human, agent]
+        updated_by_id:
+          type: string
+          nullable: true
+        run_id:
+          type: string
+          nullable: true
+        needs_review:
+          type: boolean
+        reviewed_by:
+          type: string
+          nullable: true
+        reviewed_at:
+          type: string
+          format: date-time
+          nullable: true
+        review_decision:
+          type: string
+          enum: [pending, approved, rejected]
+        review_note:
+          type: string
+          nullable: true
+          maxLength: 500
+
+    EntryMutationResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        version:
+          type: string
+          nullable: true
+          description: Opaque mtime token of the file after a successful write.
+        version_warning:
+          type: string
+          description: Present only when expected_version mismatched and strict 409 is disabled.
+        entry:
+          description: Present for active-i18n exact-language mutations; omitted by legacy monolingual writes.
+          allOf:
+            - $ref: '#/components/schemas/EntryDetail'
+            - type: object
+              properties:
+                provenance:
+                  $ref: '#/components/schemas/ContentProvenance'
+
+    TranslationSiblingCreate:
+      type: object
+      required:
+        - language
+      properties:
+        language:
+          type: string
+          description: Exact configured non-default target language.
+        frontmatter:
+          type: object
+          description: >-
+            Optional localized fields. Language, translation_group, structural
+            identity, and actor/reviewer provenance are server-owned.
+        body:
+          type: string
+          default: ''
+        composite:
+          type: boolean
+          nullable: true
+          description: Omit to inherit the source document's composite structure.
+        partials:
+          type: object
+          additionalProperties:
+            type: string
+        run_id:
+          type: string
+          nullable: true
+          description: >-
+            Open telemetry run owned by the same site-bound actor. Optional for
+            humans and when localization policy is disabled; required for agent
+            sibling creates/updates while automation_policy is enabled.
+
+    TranslationReviewRequest:
+      type: object
+      required:
+        - decision
+      additionalProperties: false
+      properties:
+        decision:
+          type: string
+          enum: [approve, reject]
+        note:
+          type: string
+          maxLength: 500
+
+    TranslationConfig:
+      allOf:
+        - $ref: '#/components/schemas/SiteI18nConfig'
+        - type: object
+          required:
+            - language
+            - languages
+            - language_labels
+            - translation_automation_paused
+            - i18n_active
+            - automation_policy
+          properties:
+            i18n_active:
+              type: boolean
+              readOnly: true
+            automation_policy:
+              $ref: '#/components/schemas/LocalizationAutomationPolicy'
+
+    TranslationConfigUpdate:
+      allOf:
+        - $ref: '#/components/schemas/SiteI18nConfig'
+        - type: object
+          required:
+            - language
+            - languages
+            - language_labels
+            - translation_automation_paused
+          properties:
+            automation_policy:
+              $ref: '#/components/schemas/LocalizationAutomationPolicy'
+
+    LocalizationTargetPolicy:
+      type: object
+      required:
+        - operation
+        - model
+        - agent_key_id
+        - review_policy
+      additionalProperties: false
+      properties:
+        operation:
+          type: string
+          enum: [translate, transliterate, translate_then_transliterate]
+        model:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Non-secret model identifier interpreted by the external caller.
+        agent_key_id:
+          type: string
+          description: Immutable non-secret ID of the site-bound agent key (granular scopes or legacy read/write/publish).
+        review_policy:
+          type: string
+          enum: [require_review, allow_unreviewed_draft]
+          default: require_review
+        agent_key_name:
+          type: string
+          nullable: true
+          readOnly: true
+        binding_valid:
+          type: boolean
+          readOnly: true
+        binding_error:
+          type: string
+          nullable: true
+          readOnly: true
+          enum: [missing_or_revoked, wrong_site, missing_scope]
+
+    LocalizationAutomationPolicy:
+      type: object
+      required:
+        - enabled
+        - targets
+      additionalProperties: false
+      properties:
+        enabled:
+          type: boolean
+          default: false
+        targets:
+          type: object
+          description: Policies keyed by configured non-default language.
+          additionalProperties:
+            $ref: '#/components/schemas/LocalizationTargetPolicy'
+        policy_valid:
+          type: boolean
+          readOnly: true
+        policy_error:
+          type: string
+          nullable: true
+          readOnly: true
+
+    TranslationCoverageTotals:
+      type: object
+      required:
+        - eligible
+        - existing
+        - published
+        - draft
+        - needs_review
+        - rejected
+        - missing
+      properties:
+        eligible:
+          type: integer
+          minimum: 0
+        existing:
+          type: integer
+          minimum: 0
+        published:
+          type: integer
+          minimum: 0
+        draft:
+          type: integer
+          minimum: 0
+        needs_review:
+          type: integer
+          minimum: 0
+        rejected:
+          type: integer
+          minimum: 0
+        missing:
+          type: integer
+          minimum: 0
+
+    TranslationCoverageSibling:
+      allOf:
+        - $ref: '#/components/schemas/TranslationPeer'
+        - type: object
+          required:
+            - translation_group
+          properties:
+            translation_group:
+              type: string
+              nullable: true
+
+    TranslationCoverageItem:
+      type: object
+      required:
+        - slug
+        - collection
+        - source
+        - siblings
+        - gap_codes
+      properties:
+        slug:
+          type: string
+        collection:
+          type: string
+          description: Exact collection required by content sibling routes.
+        source:
+          $ref: '#/components/schemas/TranslationCoverageSibling'
+        siblings:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranslationCoverageSibling'
+        gap_codes:
+          type: array
+          items:
+            type: string
+
+    TranslationCoverageResponse:
+      type: object
+      required:
+        - config
+        - totals
+        - items
+      properties:
+        config:
+          $ref: '#/components/schemas/TranslationConfig'
+        totals:
+          $ref: '#/components/schemas/TranslationCoverageTotals'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranslationCoverageItem'
+
+    UiStringValue:
+      type: object
+      required:
+        - effective
+        - source
+      properties:
+        effective:
+          type: string
+        source:
+          type: string
+          enum: [engine, theme, site_default, site_target]
+        override:
+          type: string
+          nullable: true
+          description: Sparse value stored in the requested language's site file.
+
+    UiStringBundle:
+      type: object
+      required:
+        - config
+        - language
+        - strings
+        - overrides
+      properties:
+        config:
+          $ref: '#/components/schemas/TranslationConfig'
+        language:
+          type: string
+        strings:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UiStringValue'
+        overrides:
+          type: object
+          additionalProperties:
+            type: string
+
+    UiStringOverrides:
+      type: object
+      required:
+        - overrides
+      additionalProperties: false
+      properties:
+        overrides:
+          type: object
+          additionalProperties:
+            type: string
+
+    TranslationRunCounts:
+      type: object
+      additionalProperties: false
+      properties:
+        discovered:
+          type: integer
+          minimum: 0
+        attempted:
+          type: integer
+          minimum: 0
+        created:
+          type: integer
+          minimum: 0
+        updated:
+          type: integer
+          minimum: 0
+        skipped:
+          type: integer
+          minimum: 0
+        failed:
+          type: integer
+          minimum: 0
+
+    TranslationRunStart:
+      type: object
+      required:
+        - mode
+      additionalProperties: false
+      properties:
+        mode:
+          type: string
+          enum: [translate, transliterate, translate_then_transliterate, manual]
+        target_languages:
+          type: array
+          uniqueItems: true
+          maxItems: 32
+          items:
+            type: string
+
+    TranslationRunUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum: [running, completed, failed, cancelled]
+        counts:
+          $ref: '#/components/schemas/TranslationRunCounts'
+        error:
+          type: string
+          maxLength: 160
+
+    TranslationRun:
+      type: object
+      required:
+        - run_id
+        - site_id
+        - actor
+        - actor_id
+        - mode
+        - target_languages
+        - policy_applied
+        - review_policy
+        - started_at
+        - status
+        - counts
+      properties:
+        run_id:
+          type: string
+        site_id:
+          type: string
+        actor:
+          type: string
+          enum: [human, agent]
+        actor_id:
+          type: string
+        mode:
+          type: string
+        target_languages:
+          type: array
+          items:
+            type: string
+        policy_applied:
+          type: boolean
+          description: Whether this run was validated against an enabled target policy.
+        model:
+          type: string
+          nullable: true
+          description: Non-secret model identifier snapshotted at run start.
+        agent_key_id:
+          type: string
+          nullable: true
+          description: Immutable non-secret key ID snapshotted at run start.
+        agent_key_name:
+          type: string
+          nullable: true
+        review_policy:
+          type: string
+          enum: [require_review, allow_unreviewed_draft]
+        started_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [running, completed, failed, cancelled]
+        counts:
+          $ref: '#/components/schemas/TranslationRunCounts'
+        error:
+          type: string
+          nullable: true
+
+    MediaFile:
+      type: object
+      properties:
+        filename:
+          type: string
+        public_url:
+          type: string
+        size_bytes:
+          type: integer
+        modified_at:
+          type: string
+          format: date-time
+
+    Author:
+      type: object
+      required:
+        - slug
+        - name
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+          description: "Display name (editor copies this into post frontmatter author: byline)."
+        bio:
+          type: string
+          description: Plain text biography.
+        website:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+          description: "Logical asset path e.g. images/authors/jane-doe.webp"
+        email:
+          type: string
+        role:
+          type: string
+          description: Optional label (not RBAC).
+        sort_order:
+          type: integer
+          default: 0
+
+    AuthorCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+          description: Optional; derived from name when omitted.
+        bio:
+          type: string
+        website:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        email:
+          type: string
+        role:
+          type: string
+        sort_order:
+          type: integer
+          nullable: true
+
+    AuthorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        website:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        email:
+          type: string
+        role:
+          type: string
+        sort_order:
+          type: integer
+
+    AuthorsListResponse:
+      type: object
+      required:
+        - site_id
+        - authors
+      properties:
+        site_id:
+          type: string
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+
+    PublishProviderCatalog:
+      type: object
+      required:
+        - providers
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublishProvider'
+
+    PublishProvider:
+      type: object
+      required:
+        - id
+        - label
+        - enabled
+      properties:
+        id:
+          type: string
+          description: Core ids are sftp and github_pages.
+        label:
+          type: string
+        enabled:
+          type: boolean
+        capabilities:
+          type: object
+        yaml_fields:
+          type: array
+          items:
+            type: string
+        vault_key:
+          type: string
+        http_alias:
+          type: string
+        ui_schema:
+          type: object
+
+    PublishTarget:
+      type: object
+      properties:
+        site_id:
+          type: string
+        configured:
+          type: boolean
+        provider:
+          type: string
+          nullable: true
+        host:
+          type: string
+          nullable: true
+        port:
+          type: integer
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        remote_path:
+          type: string
+          nullable: true
+        auth_method:
+          type: string
+          nullable: true
+        public_url:
+          type: string
+          nullable: true
+        last_published_at:
+          type: string
+          nullable: true
+        last_status:
+          type: string
+          nullable: true
+        agent_publish:
+          type: string
+          nullable: true
+        github_owner:
+          type: string
+          nullable: true
+        github_repo:
+          type: string
+          nullable: true
+        github_pages_branch:
+          type: string
+          nullable: true
+        github_pages_cname:
+          type: string
+          nullable: true
+        webhook_url:
+          type: string
+          nullable: true
+        has_webhook_secret:
+          type: boolean
+
+    PublishTargetPut:
+      type: object
+      required:
+        - site
+      properties:
+        site:
+          type: string
+        provider:
+          type: string
+          description: Core values are sftp and github_pages.
+        host:
+          type: string
+        port:
+          type: integer
+        username:
+          type: string
+        remote_path:
+          type: string
+        auth_method:
+          type: string
+        public_url:
+          type: string
+        github_owner:
+          type: string
+        github_repo:
+          type: string
+        github_pages_branch:
+          type: string
+        github_pages_cname:
+          type: string
+        webhook_url:
+          type: string
+        webhook_secret:
+          type: string
+          description: Write-only HMAC signing secret; never returned on GET.

@@ -1,0 +1,33 @@
+{% set url = contentUrl(dossier) %}
+{% set title = dossier.hero_title | default(dossier.title | default('Untitled')) %}
+{% set n = spread_index | default(1) %}
+{% set tilts = ['-0.7deg', '0.8deg', '-0.6deg', '0.5deg', '-0.8deg'] %}
+{% set tilt = tilts[(n - 1) % 5] %}
+{% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+{% set folio_l = n * 2 %}
+{% set folio_r = folio_l + 1 %}
+
+<article class="spread" style="--tilt:{{ tilt }};">
+    <div class="page pg-l">
+        <p class="pg-kicker">{% if dossier.trumpet is not empty %}{{ dossier.trumpet | striptags | upper }}{% elseif dossier.category is not empty %}{{ dossier.category | upper }}{% else %}INTERIOR{% endif %}</p>
+        <h3 class="mr pg-title" data-t="{{ title|upper }}"><span>{{ title }}</span></h3>
+        {% if dossier.deck is not empty %}
+            <p class="pg-body">{{ dossier.deck | striptags }}</p>
+        {% endif %}
+        <p class="pg-folio">{{ folio_l }} · {{ sitename | default('PULP') }}</p>
+    </div>
+    <div class="page pg-r">
+        {% if has_hero %}
+            <a href="{{ url }}" class="spread-plate" tabindex="-1" aria-hidden="true">
+                <img src="{{ contentAsset(dossier.hero_image) }}" alt="">
+            </a>
+        {% endif %}
+        {% set stamp_date = (dossier.dateline is defined and dossier.dateline is not empty) ? dossier.dateline : (dossier.date | default('')) %}
+        {% if stamp_date is not empty %}
+            <p class="pg-spec">{{ stamp_date }}</p>
+        {% endif %}
+        <a class="card-link" href="{{ url }}">OPEN THE SPREAD →</a>
+        <p class="pg-folio r">{{ folio_r }}</p>
+    </div>
+    <span class="stamp-reg" aria-hidden="true">IN&nbsp;REGISTER ✓</span>
+</article>

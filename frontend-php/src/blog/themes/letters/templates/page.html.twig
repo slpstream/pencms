@@ -1,0 +1,29 @@
+{% set home_href = base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') %}
+
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main" class="letters-main">
+    <article class="page-single">
+        <header class="essay-header">
+            <h1 class="essay-title">{{ hero_title | default(title | default('Untitled')) }}</h1>
+            {% if deck is defined and deck is not empty %}
+                <p class="essay-subtitle">{{ deck | striptags }}</p>
+            {% endif %}
+        </header>
+
+        {% if hero_image is defined and hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <div class="essay-cover">
+                <img class="cover" src="{{ contentAsset(hero_image) }}" alt="{{ hero_title | default('') }}" loading="lazy" decoding="async">
+            </div>
+        {% endif %}
+
+        <div class="prose article-content traven-preview">
+            {{ page_content | raw }}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

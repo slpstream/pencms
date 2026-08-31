@@ -1,0 +1,199 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set lead = dossiers|first %}
+{% set secondary = dossiers|slice(1, 4) %}
+{% set rest = dossiers|slice(5) %}
+
+{% set category_map = {} %}
+{% for d in dossiers %}
+    {% set cat = d.category|default(d.section|default('')) %}
+    {% if cat is not empty and attribute(category_map, cat) is not defined %}
+        {% set label = d.term_labels[cat]|default(cat) %}
+        {% set category_map = category_map|merge({ (cat): label }) %}
+    {% endif %}
+{% endfor %}
+
+{% set edition_title = '' %}
+{% if hero_title is not empty
+    and hero_title != sitename|default('')
+    and hero_title != tagline|default('') %}
+    {% set edition_title = hero_title %}
+{% endif %}
+
+{% set secondary_items = menu('secondary') %}
+
+{# One left-anchored shell: mastband + stories share one edge (no empty left column) #}
+<div class="editorial-front-shell">
+    {% if edition_title is not empty %}
+        <header class="editorial-issue-mastband">
+            <p class="editorial-issue-mastband-title">{{ edition_title }}</p>
+            <div class="handdrawn-divider editorial-issue-mastband-rule" role="presentation"></div>
+        </header>
+    {% endif %}
+
+    <main class="editorial-issue" aria-label="{{ sitename | default('Editorial') }}">
+    {% if lead is empty %}
+        <p class="editorial-issue-empty">No essays in this issue yet.</p>
+    {% else %}
+        {% set lead_url = contentUrl(lead) %}
+        {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+
+        <article class="editorial-issue-lead{% if lead_has_hero %} editorial-issue-lead--with-plate{% endif %}">
+            <div class="editorial-issue-lead-copy">
+                <header class="post-detail-header editorial-issue-lead-header">
+                    <div class="post-detail-eyebrow">
+                        {% if lead.trumpet is not empty %}
+                            <span class="post-detail-trumpet">{{ lead.trumpet | striptags }}</span>
+                        {% elseif lead.category is not empty %}
+                            <span class="post-detail-trumpet">{{ lead.category }}</span>
+                        {% endif %}
+                    </div>
+                    <h1 class="post-detail-title editorial-issue-lead-title">
+                        <a href="{{ lead_url }}" class="editorial-issue-title-link">{{ lead.hero_title | default(lead.title) }}</a>
+                    </h1>
+                    {% if lead.deck is not empty %}
+                        <div class="post-detail-deck">{{ lead.deck | striptags }}</div>
+                    {% endif %}
+                    <p class="editorial-issue-continue">
+                        <a href="{{ lead_url }}" style="text-decoration: none;">Continue reading &rarr;</a>
+                    </p>
+                </header>
+            </div>
+
+            {% if lead_has_hero %}
+                <figure class="editorial-issue-lead-visual">
+                    <a href="{{ lead_url }}" class="editorial-issue-plate" tabindex="-1" aria-hidden="true">
+                        <img src="{{ contentAsset(lead.hero_image) }}" alt="" class="post-detail-hero-image">
+                    </a>
+                    <figcaption class="post-detail-meta editorial-issue-lead-meta">
+                        <time datetime="{{ lead.date }}">{{ lead.date | default('') | date('F d, Y') }}</time>
+                        {% if lead.category is not empty %}
+                            <span class="meta-separator">&bull;</span>
+                            <span>{{ lead.category }}</span>
+                        {% endif %}
+                    </figcaption>
+                </figure>
+            {% else %}
+                <div class="post-detail-meta editorial-issue-lead-meta">
+                    <time datetime="{{ lead.date }}">{{ lead.date | default('') | date('F d, Y') }}</time>
+                    {% if lead.category is not empty %}
+                        <span class="meta-separator">&bull;</span>
+                        <span>{{ lead.category }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </article>
+
+        {% if secondary is not empty %}
+            <div class="handdrawn-divider" role="presentation"></div>
+
+            <section class="editorial-issue-also" aria-label="Also in this issue">
+                <h2 class="editorial-issue-kicker">Also in this issue</h2>
+                <div class="handdrawn-divider editorial-issue-kicker-rule" role="presentation"></div>
+
+                <div class="editorial-issue-cards">
+                    {% for dossier in secondary %}
+                        {% set url = contentUrl(dossier) %}
+                        {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+                        <article class="editorial-issue-card">
+                            {% if has_hero %}
+                                <a href="{{ url }}" class="editorial-issue-card-plate" tabindex="-1" aria-hidden="true">
+                                    <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="editorial-issue-card-image">
+                                </a>
+                            {% endif %}
+                            <div class="editorial-issue-card-body">
+                                <div class="editorial-issue-card-meta">
+                                    {% if dossier.trumpet is not empty %}
+                                        <span class="post-detail-trumpet">{{ dossier.trumpet | striptags }}</span>
+                                    {% elseif dossier.category is not empty %}
+                                        <span class="post-detail-trumpet">{{ dossier.category }}</span>
+                                    {% endif %}
+                                    <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date('M d, Y') }}</time>
+                                </div>
+                                <h3 class="editorial-issue-card-title">
+                                    <a href="{{ url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+                                </h3>
+                                {% if dossier.deck is not empty %}
+                                    <p class="editorial-issue-card-deck">{{ dossier.deck | striptags }}</p>
+                                {% endif %}
+                                <a href="{{ url }}" class="editorial-issue-card-more">Read &rarr;</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if rest is not empty or category_map is not empty or secondary_items is not empty %}
+            <div class="handdrawn-divider" role="presentation"></div>
+
+            <section class="editorial-issue-folio" aria-label="Further reading and browse">
+                {% if rest is not empty %}
+                    <div class="editorial-issue-folio-main">
+                        <h2 class="editorial-issue-folio-label">Further reading</h2>
+                        <ul class="editorial-issue-further-list">
+                            {% for dossier in rest %}
+                                {% set url = contentUrl(dossier) %}
+                                <li>
+                                    <a href="{{ url }}" class="editorial-issue-further-link">
+                                        <span class="editorial-issue-further-title">{{ dossier.hero_title | default(dossier.title) }}</span>
+                                        <time datetime="{{ dossier.date }}">{{ dossier.date | default('') | date('Y-m-d') }}</time>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if category_map is not empty or secondary_items is not empty %}
+                    <aside class="editorial-issue-folio-side">
+                        {% if category_map is not empty %}
+                            <nav class="editorial-issue-folio-block" aria-label="Topics">
+                                <h3 class="editorial-issue-folio-label">Topics</h3>
+                                <ul class="editorial-issue-topic-list">
+                                    {% for slug, label in category_map %}
+                                        {% set cat_url = archiveUrl(slug) %}
+                                        <li><a href="{{ cat_url }}">{{ label }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                        {% if secondary_items is not empty %}
+                            <nav class="editorial-issue-folio-block" aria-label="Navigate">
+                                <h3 class="editorial-issue-folio-label">Navigate</h3>
+                                <ul class="editorial-issue-nav-list">
+                                    {% for item in secondary_items %}
+                                        <li>
+                                            {% if item.target_type == 'label' %}
+                                                <span>{{ item.label }}</span>
+                                            {% else %}
+                                                <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                                            {% endif %}
+                                            {% if item.children is not empty %}
+                                                <ul>
+                                                    {% for child in item.children %}
+                                                        <li>
+                                                            {% if child.target_type == 'label' %}
+                                                                <span>{{ child.label }}</span>
+                                                            {% else %}
+                                                                <a href="{{ child.url }}" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </aside>
+                {% endif %}
+            </section>
+        {% endif %}
+    {% endif %}
+    </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

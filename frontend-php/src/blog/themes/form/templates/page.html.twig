@@ -1,0 +1,27 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+{% set pg_title = hero_title is defined and hero_title ? hero_title : (dossier is defined and dossier is not null and dossier.hero_title is defined and dossier.hero_title ? dossier.hero_title : (page_title is defined and page_title ? page_title : (title is defined and title ? title : 'Untitled'))) %}
+{% set pg_desc = dossier is defined and dossier is not null and dossier.description is defined and dossier.description ? dossier.description : (dossier is defined and dossier is not null and dossier.deck is defined and dossier.deck ? dossier.deck : (meta_description is defined and meta_description ? meta_description : null)) %}
+{% set body_content = page_content is defined and page_content ? page_content : (content_html is defined and content_html ? content_html : (post is defined and post is not null and post.content_html is defined ? post.content_html : '')) %}
+
+<article class="page">
+  <header class="page-header">
+    <h1>{{ pg_title }}</h1>
+    {% if pg_desc %}
+      <p class="lede">{{ pg_desc }}</p>
+    {% endif %}
+  </header>
+
+  <div class="article-content traven-preview prose">
+    {{ body_content | raw }}
+  </div>
+
+  {{ theme.partial('faqs') | raw }}
+
+  {% if (dossier is defined and dossier is not null and ((dossier.showSchedule is defined and dossier.showSchedule) or (dossier.show_schedule is defined and dossier.show_schedule) or (dossier.slug is defined and dossier.slug == 'schedule'))) or (showSchedule is defined and showSchedule) or (show_schedule is defined and show_schedule) %}
+    {{ theme.partial('_schedule') | raw }}
+  {% endif %}
+</article>
+
+{{ theme.partial('_footer') | raw }}

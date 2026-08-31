@@ -1,0 +1,40 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="work">
+        {% set page_heading = hero_title | default(page_title | default(sitename | default('Work'))) %}
+        {% if page_heading is not empty and page_heading != sitename %}
+            <h1 class="work-title">{{ page_heading }}</h1>
+        {% endif %}
+
+        {% set items = dossiers | default(posts | default([])) %}
+        {% if items is not empty %}
+            <ul class="work-grid">
+                {% for d in items %}
+                    {% set url = theme.isStatic() ? (base_path ~ d.slug ~ '/index.html') : ('post.php?slug=' ~ d.slug ~ '&section=' ~ (d.section | default('blog'))) %}
+                    {% set client_name = (d.client is defined and d.client is not empty) ? d.client : ((d.metadata is defined and d.metadata.client is defined) ? d.metadata.client : '') %}
+                    <li class="work-card">
+                        <a href="{{ url }}">
+                            {% if d.hero_image is defined and d.hero_image is not empty %}
+                                <img src="{{ contentAsset(d.hero_image) }}" alt="" loading="lazy" decoding="async">
+                            {% else %}
+                                <span class="work-card-blank" aria-hidden="true"></span>
+                            {% endif %}
+                            <span class="work-card-label">
+                                {{ d.hero_title | default(d.title | default('Untitled Work')) }}
+                                {% if client_name is not empty %}
+                                    <span class="work-card-client"> — {{ client_name }}</span>
+                                {% endif %}
+                            </span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty column">Nothing hangs here yet — publish your first project to fill this wall.</p>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

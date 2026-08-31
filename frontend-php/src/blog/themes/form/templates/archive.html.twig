@@ -1,0 +1,33 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<section class="list">
+  <header class="page-header">
+    <h1>{{ (page_title is defined and page_title ? page_title : (hero_title is defined and hero_title ? hero_title : 'Archive')) | title }}</h1>
+  </header>
+
+  {% set items = dossiers is defined and dossiers ? dossiers : (posts is defined and posts ? posts : []) %}
+  {% if items is not empty %}
+    <ul class="card-list">
+      {% for item in items %}
+        {{ theme.partial('_card', { item: item }) | raw }}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">Nothing here yet.</p>
+  {% endif %}
+
+  {% if pagination is defined and pagination is not null and pagination.multiple is defined and pagination.multiple %}
+    <nav class="pagination" aria-label="Pages">
+      {% if pagination.newer is defined and pagination.newer %}
+        <a href="{{ pagination.newer }}">← Newer</a>
+      {% endif %}
+      <span>Page {{ pagination.page | default(1) }} of {{ pagination.totalPages | default(1) }}</span>
+      {% if pagination.older is defined and pagination.older %}
+        <a href="{{ pagination.older }}">Older →</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</section>
+
+{{ theme.partial('_footer') | raw }}

@@ -1,0 +1,19 @@
+{% set has_composite_toc = (posts is defined and posts|length > 1) %}
+<div class="sidebar-widget sidebar-toc" id="sidebar-toc"{% if not has_composite_toc %} style="display: none;"{% endif %}>
+    <h3 class="sidebar-title">Contents</h3>
+    <ul class="sidebar-list toc-list" id="sidebar-toc-list">
+        {% if has_composite_toc %}
+            {% for post_item in posts %}
+                {% if post_item.id != 'index' %}
+                    {% set label = post_item.title | default('') %}
+                    {% if label is empty %}
+                        {% set label = post_item.id | replace({'-': ' ', '_': ' '}) | title %}
+                    {% endif %}
+                    <li class="sidebar-list-item">
+                        <a href="#{{ post_item.id }}" class="sidebar-list-link">{{ label }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>

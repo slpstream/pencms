@@ -1,0 +1,20 @@
+{% if posts is not empty and posts|length > 1 %}
+<nav class="toc-whisper" aria-label="On this page">
+    <p class="label">On this page</p>
+    <ul class="toc-whisper-list">
+        {% for post in posts %}
+            {% if post.id != 'index' %}
+                {% set label = post.title | default('') %}
+                {% if label is empty %}
+                    {% if post.id == 'intro' or post.id == 'main' %}
+                        {% set label = 'Introduction' %}
+                    {% else %}
+                        {% set label = post.id | replace({'-': ' ', '_': ' '}) | title %}
+                    {% endif %}
+                {% endif %}
+                <li><a href="#{{ post.id }}" class="ink-link quiet">{{ label }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

@@ -1,0 +1,38 @@
+{% set url = contentUrl(dossier) %}
+{% set featured = featured|default(false) %}
+{% set weave = (ticket_index|default(0)) % 5 %}
+{% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+{% set byline = '' %}
+{% if dossier.author is not empty %}
+    {% set byline = dossier.author is iterable ? (dossier.author.name | default('')) : dossier.author %}
+{% endif %}
+<article class="story-card{% if featured %} story-card--lead{% endif %} weave-{{ weave }}">
+    <a class="story-card-media" href="{{ url }}" tabindex="-1" aria-hidden="true">
+        {% if has_hero %}
+            <img src="{{ contentAsset(dossier.hero_image) }}" alt="" class="story-card-img" loading="{{ featured ? 'eager' : 'lazy' }}" decoding="async">
+        {% else %}
+            <span class="story-card-weave swatch-weave"></span>
+        {% endif %}
+    </a>
+    <div class="story-card-body">
+        {% if dossier.trumpet is not empty or dossier.category is not empty %}
+            <p class="story-card-kicker">{% if dossier.trumpet is not empty %}{{ dossier.trumpet | striptags }}{% else %}{{ dossier.category }}{% endif %}</p>
+        {% endif %}
+        {% if featured %}
+            <h2 class="story-card-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a></h2>
+        {% else %}
+            <h3 class="story-card-title"><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('Untitled')) }}</a></h3>
+        {% endif %}
+        {% if dossier.deck is not empty %}
+            <p class="story-card-deck">{{ dossier.deck | striptags }}</p>
+        {% endif %}
+        <p class="story-card-meta">
+            {% if byline is not empty %}<span>{{ byline }}</span>{% endif %}
+            {% if dossier.date is not empty %}
+                {% if byline is not empty %}<span class="story-card-meta-sep" aria-hidden="true">·</span>{% endif %}
+                <time datetime="{{ dossier.date }}">{{ dossier.date | date('j M Y') }}</time>
+            {% endif %}
+        </p>
+        <a class="story-card-cta" href="{{ url }}">Read more →</a>
+    </div>
+</article>

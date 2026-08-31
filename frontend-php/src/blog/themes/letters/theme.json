@@ -1,0 +1,249 @@
+{
+  "type": "native",
+  "name": "Letters",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "A newsletter and essay theme: book-serif body type on cool paper white, a sealing-wax red accent.",
+  "editor_skin": "letters",
+  "color_mode": "both",
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": false,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Paper Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#fbfbfc",
+            "dark_default": "#1c1917"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#1b1b1e",
+            "dark_default": "#ece7e0"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#5b5e66",
+            "dark_default": "#a8a199"
+          },
+          {
+            "id": "wax",
+            "label": "Sealing Wax",
+            "type": "color",
+            "var": "--color-wax",
+            "default": "#8f1f2b",
+            "dark_default": "#e58b93"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#e3e3e8",
+            "dark_default": "#37322e"
+          },
+          {
+            "id": "code-bg",
+            "label": "Code Background",
+            "type": "color",
+            "var": "--color-code-bg",
+            "default": "#f1f1f4",
+            "dark_default": "#262220"
+          },
+          {
+            "id": "mark",
+            "label": "Highlight",
+            "type": "color",
+            "var": "--color-mark",
+            "default": "#f3dee0",
+            "dark_default": "#4a2a30"
+          },
+          {
+            "id": "print-mat",
+            "label": "Print Mat",
+            "type": "color",
+            "var": "--color-print-mat",
+            "default": "#fffcf7",
+            "dark_default": "#2a2622"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "\"Newsreader\", Georgia, \"Times New Roman\", serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "\"Newsreader\", Georgia, \"Times New Roman\", serif",
+                "label": "Newsreader"
+              },
+              {
+                "value": "Georgia, \"Times New Roman\", serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "\"Newsreader\", Georgia, \"Times New Roman\", serif",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "\"Newsreader\", Georgia, \"Times New Roman\", serif",
+                "label": "Newsreader"
+              },
+              {
+                "value": "Georgia, \"Times New Roman\", serif",
+                "label": "Georgia"
+              }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "\"Fira Code\", ui-monospace, \"SF Mono\", Menlo, Consolas, monospace",
+            "options": [
+              {
+                "value": "",
+                "label": "Theme default"
+              },
+              {
+                "value": "\"Fira Code\", ui-monospace, \"SF Mono\", Menlo, Consolas, monospace",
+                "label": "Fira Code"
+              },
+              {
+                "value": "ui-monospace, \"SF Mono\", Menlo, Consolas, monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#8f1f2b",
+    "og_vignette_color": "#5b5e66",
+    "og_text_color": "#fbfbfc",
+    "og_bar_color": "#1b1b1e",
+    "og_font": "Newsreader-Bold",
+    "og_fonts": {
+      "Newsreader-Bold": "assets/fonts/Newsreader-Bold.ttf",
+      "Newsreader-Regular": "assets/fonts/Newsreader-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

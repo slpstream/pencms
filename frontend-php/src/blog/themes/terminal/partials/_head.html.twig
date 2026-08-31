@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <title>{{ page_title | default(sitename) }}</title>
+
+    {# FOUC Prevention Script (Runs before body renders) #}
+    <script>
+        (function() {
+            let scheme = null;
+            try {
+                scheme = localStorage.getItem('color-scheme');
+            } catch (e) {}
+            if (!scheme) {
+                try {
+                    const match = document.cookie.match(/(^|;)\s*color-scheme\s*=\s*([^;]+)/);
+                    scheme = match ? match[2] : null;
+                } catch (e) {}
+            }
+            if (scheme === 'light') {
+                document.documentElement.classList.add('theme-light');
+                document.documentElement.classList.remove('cm-wysiwym-dark');
+            } else if (scheme === 'dark') {
+                document.documentElement.classList.add('cm-wysiwym-dark');
+                document.documentElement.classList.remove('theme-light');
+            } else {
+                if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    document.documentElement.classList.add('theme-light');
+                } else {
+                    document.documentElement.classList.add('cm-wysiwym-dark');
+                }
+            }
+        })();
+    </script>
+    
+    {# Dual-Duty Content Skin + Chrome Styles #}
+        <link rel="stylesheet" href="{{ publicAsset('fonts/fonts.css') }}">
+{{ theme.linkCss('css/skin-terminal.css') | raw }}
+    {{ theme.linkCss('css/styles.css') | raw }}
+
+    {# KaTeX Math Stylesheet #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/katex/katex.min.css') }}">
+
+    {# Expand / Embed Nutshell Runtime #}
+    <link rel="stylesheet" href="{{ publicAsset('vendor/traven/expand-embed.css') }}">
+    <script type="module" src="{{ publicAsset('vendor/traven/expand-embed-runtime.js') }}"></script>
+</head>
+<body class="traven-preview">
+    <a href="#main-content" class="skip-link">Skip to main content</a>

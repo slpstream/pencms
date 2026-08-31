@@ -1,0 +1,896 @@
+/* PenCMS shared web font registry — linked via publicAsset('fonts/fonts.css').
+ * Browsers lazy-load @font-face; unused families are not fetched.
+ * Sibling-relative urls survive dynamic (/assets/fonts/) and static ({webRoot}assets/fonts/).
+ * Source of truth: fonts.json (includes faces hoovered from theme assets/fonts/).
+ */
+
+/* Roboto */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./roboto-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./roboto-700.woff2') format('woff2');
+}
+
+/* Inter */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./inter-v20-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./inter-v20-latin-700.woff2') format('woff2');
+}
+
+/* Outfit */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./outfit-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./outfit-700.woff2') format('woff2');
+}
+
+/* Courier Prime */
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./courier-prime-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./courier-prime-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./courier-prime-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./courier-prime-latin-700-italic.woff2') format('woff2');
+}
+
+/* Playfair Display */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./playfair-display-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./playfair-display-700.woff2') format('woff2');
+}
+
+/* Atkinson Hyperlegible Next */
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./atkinson-hyperlegible-next-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./atkinson-hyperlegible-next-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./atkinson-hyperlegible-next-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./atkinson-hyperlegible-next-latin-700-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./atkinson-hyperlegible-next-latin-800-normal.woff2') format('woff2');
+}
+
+/* Fira Code */
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fira-code-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fira-code-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fira-code-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fira-code-latin-700-normal.woff2') format('woff2');
+}
+
+/* Barlow Condensed */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./barlow-condensed-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./barlow-condensed-700.woff2') format('woff2');
+}
+
+/* Barlow Semi Condensed */
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./barlow-semi-condensed-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./barlow-semi-condensed-700.woff2') format('woff2');
+}
+
+/* Bebas Neue */
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./bebas-neue-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./bebas-neue-700.woff2') format('woff2');
+}
+
+/* Blinker */
+@font-face {
+  font-family: 'Blinker';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./blinker-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Blinker';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./blinker-700.woff2') format('woff2');
+}
+
+/* Computer Modern Serif */
+@font-face {
+  font-family: 'Computer Modern Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./computer-modern-serif-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./computer-modern-serif-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./computer-modern-serif-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Serif';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./computer-modern-serif-700-italic.woff2') format('woff2');
+}
+
+/* Computer Modern Typewriter */
+@font-face {
+  font-family: 'Computer Modern Typewriter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./computer-modern-typewriter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Typewriter';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./computer-modern-typewriter-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Typewriter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./computer-modern-typewriter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Computer Modern Typewriter';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./computer-modern-typewriter-700-italic.woff2') format('woff2');
+}
+
+/* Datatype */
+@font-face {
+  font-family: 'Datatype';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./datatype-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Datatype';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./datatype-700.woff2') format('woff2');
+}
+
+/* DM Sans */
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./dm-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./dm-sans-400-italic.woff2') format('woff2');
+}
+
+/* Epunda Slab */
+@font-face {
+  font-family: 'Epunda Slab';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./epunda-slab-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Epunda Slab';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./epunda-slab-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Epunda Slab';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./epunda-slab-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Epunda Slab';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./epunda-slab-700-italic.woff2') format('woff2');
+}
+
+/* Goudy Bookletter 1911 */
+@font-face {
+  font-family: 'Goudy Bookletter 1911';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./goudy-bookletter-1911-400.woff2') format('woff2');
+}
+
+/* Hubot Sans */
+@font-face {
+  font-family: 'Hubot Sans';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('./hubot-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Hubot Sans';
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('./hubot-sans-400-italic.woff2') format('woff2');
+}
+
+/* JetBrains Mono */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./jetbrains-mono-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./jetbrains-mono-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./jetbrains-mono-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./jetbrains-mono-800.woff2') format('woff2');
+}
+
+/* Lora */
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./lora-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./lora-700.woff2') format('woff2');
+}
+
+/* Macondo */
+@font-face {
+  font-family: 'Macondo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./macondo-400.woff2') format('woff2');
+}
+
+/* Manrope */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./manrope-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./manrope-700.woff2') format('woff2');
+}
+
+/* Mozilla Headline */
+@font-face {
+  font-family: 'Mozilla Headline';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url('./mozilla-headline-700.woff2') format('woff2');
+}
+
+/* M PLUS 1 Code */
+@font-face {
+  font-family: 'M PLUS 1 Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./mplus1-code-400.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'M PLUS 1 Code';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./mplus1-code-700.ttf') format('truetype');
+}
+
+/* Newsreader */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./newsreader-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./newsreader-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./newsreader-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./newsreader-500-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./newsreader-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./newsreader-600-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./newsreader-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./newsreader-700-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./newsreader-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./newsreader-800-italic.woff2') format('woff2');
+}
+
+/* Nunito */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./nunito-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./nunito-700.woff2') format('woff2');
+}
+
+/* Oswald */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./oswald-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./oswald-700.woff2') format('woff2');
+}
+
+/* Plus Jakarta Sans */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./plus-jakarta-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./plus-jakarta-sans-700.woff2') format('woff2');
+}
+
+/* Roboto Condensed */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./roboto-condensed-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./roboto-condensed-700.woff2') format('woff2');
+}
+
+/* Saira Condensed */
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./saira-condensed-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('./saira-condensed-900.woff2') format('woff2');
+}
+
+/* Sora */
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./sora-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./sora-700.woff2') format('woff2');
+}
+
+/* Source Serif 4 */
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./source-serif-4-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./source-serif-4-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./source-serif-4-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./source-serif-4-700-italic.woff2') format('woff2');
+}
+
+/* Space Grotesk */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./space-grotesk-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./space-grotesk-700.woff2') format('woff2');
+}
+
+/* Syne */
+@font-face {
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./syne-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./syne-700.woff2') format('woff2');
+}
+
+/* Victor Mono */
+@font-face {
+  font-family: 'Victor Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./victor-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Victor Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./victor-mono-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Victor Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./victor-mono-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Victor Mono';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./victor-mono-700-italic.woff2') format('woff2');
+}
+
+/* Archivo */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./archivo-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./archivo-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./archivo-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./archivo-500-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./archivo-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./archivo-600-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./archivo-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./archivo-700-italic.woff2') format('woff2');
+}
+
+/* Gentium Book Plus */
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./gentium-book-plus-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./gentium-book-plus-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./gentium-book-plus-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Gentium Book Plus';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./gentium-book-plus-700-italic.woff2') format('woff2');
+}
+
+/* Alegreya */
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./alegreya-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./alegreya-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./alegreya-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./alegreya-500-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./alegreya-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./alegreya-600-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./alegreya-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./alegreya-700-italic.woff2') format('woff2');
+}
+
+/* Calistoga */
+@font-face {
+  font-family: 'Calistoga';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./calistoga-400.woff2') format('woff2');
+}
+

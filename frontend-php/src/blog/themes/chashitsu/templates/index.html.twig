@@ -1,0 +1,73 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+{% set lead = post_list|first %}
+{% set rest = post_list|slice(1) %}
+
+<main id="main" class="site-main page-front">
+    <p class="ma-mark" lang="ja" aria-hidden="true">間</p>
+
+    {% if lead is not empty %}
+        {% set lead_url = contentUrl(lead) %}
+        {% set lead_has_hero = lead.hero_image is not empty and lead.hero_image != 'images/defaulthero.jpg' %}
+        <section class="tokonoma" id="top" aria-label="{{ sitename | default('Chashitsu') }}">
+            <canvas id="heroInk" class="ink-canvas" data-ink="hero" aria-hidden="true"></canvas>
+            <div class="hero-text">
+                {% if lead.trumpet is not empty %}
+                    <p class="eyebrow rise rise-1">{{ lead.trumpet | striptags }}</p>
+                {% elseif tagline is not empty %}
+                    <p class="eyebrow rise rise-1">{{ tagline }}</p>
+                {% else %}
+                    <p class="eyebrow rise rise-1">{{ sitename | default('Chashitsu') }}</p>
+                {% endif %}
+                <h1 class="chashitsu-title rise rise-2">
+                    <a href="{{ lead_url }}">{{ lead.hero_title | default(lead.title) }}</a>
+                </h1>
+                {% if lead.deck is not empty %}
+                    <p class="hero-sub rise rise-3">{{ lead.deck | striptags }}</p>
+                {% endif %}
+                {% if lead_has_hero %}
+                    <a href="{{ lead_url }}" class="vignette-plate rise rise-4">
+                        <img src="{{ contentAsset(lead.hero_image) }}" alt="" loading="eager" decoding="async">
+                    </a>
+                {% endif %}
+                <p class="hero-cta rise rise-5">
+                    <a class="ink-link" href="{{ lead_url }}">Read the essay</a>
+                </p>
+            </div>
+            <div class="scroll-cue" aria-hidden="true"></div>
+        </section>
+    {% else %}
+        <section class="tokonoma" id="top">
+            <canvas id="heroInk" class="ink-canvas" data-ink="hero" aria-hidden="true"></canvas>
+            <div class="hero-text">
+                <p class="eyebrow">{{ sitename | default('Chashitsu') }}</p>
+                <h1 class="chashitsu-title">The kettle is not yet on.</h1>
+                <p class="hero-sub">Nothing published yet — the first essay will appear here.</p>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if rest is not empty %}
+        {% for dossier in rest %}
+            <div class="divider" aria-hidden="true"><canvas class="ink-canvas" data-ink="divider"></canvas></div>
+            {% set url = contentUrl(dossier) %}
+            {% set has_hero = dossier.hero_image is not empty and dossier.hero_image != 'images/defaulthero.jpg' %}
+            <article class="river-entry col" data-reveal>
+                {% if has_hero %}
+                    <a href="{{ url }}" class="vignette-plate river-plate">
+                        <img src="{{ contentAsset(dossier.hero_image) }}" alt="" loading="lazy" decoding="async">
+                    </a>
+                {% endif %}
+                <p class="label">{% if dossier.date is not empty %}<time datetime="{{ dossier.date }}">{{ dossier.date | date('F j, Y') }}</time>{% else %}Essay{% endif %}</p>
+                <h2 class="river-title"><a href="{{ url }}" class="ink-link">{{ dossier.hero_title | default(dossier.title) }}</a></h2>
+                {% if dossier.deck is not empty %}
+                    <p class="river-deck">{{ dossier.deck | striptags }}</p>
+                {% endif %}
+            </article>
+        {% endfor %}
+    {% endif %}
+</main>
+
+{{ theme.partial('footer') | raw }}

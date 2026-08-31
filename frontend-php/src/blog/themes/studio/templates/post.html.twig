@@ -1,0 +1,69 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <article class="project post">
+        {% if hero_image is defined and hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+            <figure class="project-cover">
+                <img src="{{ contentAsset(hero_image) }}" alt="" decoding="async" style="aspect-ratio: 21 / 9; object-fit: cover;">
+            </figure>
+        {% endif %}
+
+        {% set client_name = (client is defined and client is not empty) ? client : ((metadata is defined and metadata.client is defined) ? metadata.client : '') %}
+        {% set services_list = (services is defined and services is not empty) ? services : ((metadata is defined and metadata.services is defined) ? metadata.services : []) %}
+        {% set post_date = date is defined ? date : '' %}
+        {% set post_author = author is defined ? author : '' %}
+
+        <header class="project-head column">
+            <h1>{{ hero_title | default(title | default(name | default('Untitled'))) }}</h1>
+            <p class="wall-label">
+                {% if client_name is not empty %}
+                    <span class="client">{{ client_name }}</span> · 
+                {% endif %}
+                {% if post_date is not empty %}
+                    <time datetime="{{ post_date }}">{{ post_date | date("F d, Y") }}</time>
+                {% endif %}
+                {% if services_list is not empty %}
+                    · <span class="services">
+                        {% for service in services_list %}
+                            <span class="service">{{ service }}</span>
+                        {% endfor %}
+                    </span>
+                {% elseif post_author is not empty %}
+                    · <span class="byline">By {{ post_author }}</span>
+                {% endif %}
+            </p>
+            {% if deck is defined and deck is not empty %}
+                <p class="lede">{{ deck | striptags }}</p>
+            {% endif %}
+        </header>
+
+        <div class="prose article-content traven-preview column">
+            {% if posts is defined and posts is not empty %}
+                {% for post_item in posts %}
+                    <div class="post-fragment" id="{{ post_item.id | default('') }}">
+                        {% if post_item.title is not empty and posts|length > 1 %}
+                            <h2>{{ post_item.title }}</h2>
+                        {% endif %}
+                        {{ post_item.content_html | raw }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                {{ page_content | default(content_html | default(content | default(''))) | raw }}
+            {% endif %}
+        </div>
+
+        {{ theme.partial('faqs') | raw }}
+
+        <section class="studio-discussion column">
+            {{ theme.partial('comment-thread') | raw }}
+            {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+        </section>
+
+        <nav class="project-return column" aria-label="Back to all work">
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}">← All work</a>
+        </nav>
+    </article>
+</main>
+
+{{ theme.partial('footer') | raw }}

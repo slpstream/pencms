@@ -1,0 +1,29 @@
+<div class="terminal-shell">
+    <aside class="terminal-rail" id="terminal-rail">
+        <div class="site-masthead">
+            <p class="site-masthead-pre">root@pencms:~#</p>
+            <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="site-title">{{ sitename | default('1337') }}</a>
+            {% if tagline is not empty %}
+                <span class="site-tagline">{{ tagline }}</span>
+            {% endif %}
+        </div>
+
+        <div class="system-status">
+            <span data-label="TTY" class="status-ok">tty/7</span>
+            <span data-label="CONN">uplink</span>
+            <span data-label="ENC">aes256</span>
+            <span data-label="PWR" class="status-ok">ok</span>
+        </div>
+
+        <div class="rail-nav-stack" id="rail-nav-stack">
+            {{ theme.partial('navbar') | raw }}
+
+            {# Secondary + profile: rail sidebar on desktop; mobile drawer panel #}
+            <div class="rail-widgets">
+                {{ theme.partial('sidebar-secondary') | raw }}
+                {{ theme.partial('sidebar-profile') | raw }}
+            </div>
+        </div>
+    </aside>
+
+    <main class="terminal-main">

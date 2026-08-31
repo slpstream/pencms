@@ -1,0 +1,76 @@
+{% if skip_slug is not defined %}
+    {% set skip_slug = '' %}
+{% endif %}
+
+{% set all_dossiers = theme.getAllDossiers() %}
+
+{# Site-wide newest-first list for "The Latest". #}
+{% set latest_items = [] %}
+{% for item in all_dossiers %}
+    {% if (item.slug | default('')) != skip_slug and latest_items|length < 3 %}
+        {% set latest_items = latest_items|merge([item]) %}
+    {% endif %}
+{% endfor %}
+
+{% set latest_slugs = [] %}
+{% for item in latest_items %}
+    {% set latest_slugs = latest_slugs|merge([item.slug | default('')]) %}
+{% endfor %}
+
+{# Random featured pick: has a hero, and is never the current post or one of The Latest. #}
+{% set featured_pool = [] %}
+{% for item in all_dossiers %}
+    {% set item_slug = item.slug | default('') %}
+    {% if item_slug != skip_slug
+        and item_slug not in latest_slugs
+        and item.hero_image is defined
+        and item.hero_image is not empty
+        and item.hero_image != 'images/defaulthero.jpg' %}
+        {% set featured_pool = featured_pool|merge([item]) %}
+    {% endif %}
+{% endfor %}
+{% set featured = featured_pool is not empty ? random(featured_pool) : null %}
+
+<aside class="sidebar story-rail">
+    {% if latest_items is not empty %}
+    <section class="latest">
+        <h2>The Latest</h2>
+        <ul>
+            {% for item in latest_items %}
+                {% set url = contentUrl(item) %}
+                {% set has_thumb = item.hero_image is defined and item.hero_image is not empty and item.hero_image != 'images/defaulthero.jpg' %}
+                <li>
+                    <a href="{{ url }}">
+                        {% if has_thumb %}
+                            <img src="{{ theme.contentAsset(item.hero_image) }}" alt="" loading="lazy">
+                        {% endif %}
+                        <span>{% if item.hero_title is defined and item.hero_title %}{{ item.hero_title }}{% elseif item.title is defined and item.title %}{{ item.title }}{% else %}Untitled{% endif %}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if featured %}
+        {% set featured_url = contentUrl(featured) %}
+        {% if featured.hero_title is defined and featured.hero_title %}
+            {% set featured_title = featured.hero_title %}
+        {% elseif featured.title is defined and featured.title %}
+            {% set featured_title = featured.title %}
+        {% else %}
+            {% set featured_title = 'Untitled' %}
+        {% endif %}
+        <section class="branded">
+            <h2>Featured</h2>
+            <a class="branded-card" href="{{ featured_url }}">
+                <img src="{{ theme.contentAsset(featured.hero_image) }}" alt="{{ featured_title }}">
+            </a>
+            <a class="branded-title" href="{{ featured_url }}">{{ featured_title }}</a>
+        </section>
+    {% endif %}
+
+    {% if is_composite is defined and is_composite %}
+        {{ theme.partial('sidebar-toc') | raw }}
+    {% endif %}
+</aside>

@@ -1,0 +1,38 @@
+{{ theme.partial('head', { is_content: false }) | raw }}
+{{ theme.partial('header') | raw }}
+
+<main id="main">
+    <section class="list">
+        <header class="page-header">
+            <h1>{{ page_title | default(sitename) }}</h1>
+            {% if tagline is not empty %}
+                <p class="meta">{{ tagline }}</p>
+            {% endif %}
+        </header>
+
+        {% set post_list = dossiers is not empty ? dossiers : (posts is not empty ? posts : []) %}
+        {% if post_list is not empty %}
+            <ol class="post-list" reversed>
+                {% for dossier in post_list %}
+                    {{ theme.partial('post_card', { dossier: dossier, loop: loop }) | raw }}
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="empty">Nothing published yet — your first post will appear here.</p>
+        {% endif %}
+
+        {% if pagination is defined and pagination.total_pages > 1 %}
+            <nav class="pagination" aria-label="Pages">
+                {% if pagination.current_page > 1 %}
+                    <a href="{{ base_path }}?page={{ pagination.current_page - 1 }}">← Newer</a>
+                {% endif %}
+                <span>Page {{ pagination.current_page }} of {{ pagination.total_pages }}</span>
+                {% if pagination.current_page < pagination.total_pages %}
+                    <a href="{{ base_path }}?page={{ pagination.current_page + 1 }}">Older →</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

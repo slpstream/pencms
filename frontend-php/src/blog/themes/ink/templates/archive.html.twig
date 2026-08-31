@@ -1,0 +1,41 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<main class="main-content">
+  <div class="index-feed-container">
+    <h1 class="post-title" style="margin-bottom: 2rem;">Category: {{ (category | default('Archive')) | title }}</h1>
+
+    <div class="index-grid">
+      {% for dossier in dossiers %}
+        {% set post_url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : (base_path ~ 'post.php?slug=' ~ dossier.slug) %}
+        <article class="post-card">
+          {% set card_hero = dossier.hero_image | default(null) %}
+          {% if card_hero is not empty %}
+            <a href="{{ post_url }}" class="card-image-wrapper">
+              <div class="card-image-gradient"></div>
+              <img src="{{ theme.contentAsset(card_hero) }}" alt="" class="card-image" loading="lazy">
+            </a>
+          {% endif %}
+          <div class="post-card-content">
+            {% if dossier.date is not empty %}
+              <p class="post-card-date">{{ dossier.date | date("F d, Y") }}</p>
+            {% endif %}
+            <h2 class="post-card-title">
+              <a href="{{ post_url }}">{{ dossier.hero_title | default(dossier.title) }}</a>
+            </h2>
+            {% if dossier.deck is not empty %}
+              <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+            {% endif %}
+          </div>
+        </article>
+      {% else %}
+        <p>No posts found in this archive.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+
+  {{ theme.partial('sidebar-secondary') | raw }}
+</main>
+
+{{ theme.partial('footer') | raw }}

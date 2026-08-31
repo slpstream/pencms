@@ -1,0 +1,29 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<nav class="stamp-rail" aria-label="Secondary">
+    <ul class="stamp-rail-list mono">
+        {% for item in secondary_items %}
+            <li class="stamp-rail-item{% if item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type == 'label' %}
+                    <span class="stamp-rail-label">{{ item.label }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="stamp-rail-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+                {% if item.children is not empty %}
+                    <ul class="stamp-rail-children">
+                        {% for child in item.children %}
+                            <li>
+                                {% if child.target_type == 'label' %}
+                                    <span class="stamp-rail-label">{{ child.label }}</span>
+                                {% else %}
+                                    <a href="{{ child.url }}" class="stamp-rail-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

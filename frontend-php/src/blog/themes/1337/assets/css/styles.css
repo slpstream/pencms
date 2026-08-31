@@ -1,0 +1,1928 @@
+/* =============================================================================
+ * styles.css — 1337 theme chrome (Layer A)
+ *
+ * Layout + chrome for the retro-hacker / cyberpunk terminal-log theme.
+ *   - ASCII-box masthead + faux system-status bar
+ *   - Boot-log terminal-window hero on the index
+ *   - `tree` directory listing of posts
+ *   - `man`/`less` pager viewport for posts
+ *   - `ls -la` table for archives
+ *   - `grep` prompt for search
+ *   - Split-terminal layout: narrow left status rail + main viewport
+ *   - Scanline overlay + CRT vignette + phosphor glow + blinking caret
+ *
+ * The dual-duty prose skin lives in skin-1337.css. This file is NOT loaded
+ * inside the TravenEditor.
+ *
+ * Animation policy: all motion is gated behind prefers-reduced-motion: no-preference
+ * so accessibility is preserved.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * 0. Reset + base canvas. CRT-black with a subtle vignette.
+ *    Single centered track (guide §7 row 6 fix) — no asymmetric grid that
+ *    would break fullbleed math.
+ * -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--1337-bg);
+  color: var(--1337-text);
+  font-family: var(--traven-font-body, 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay + CRT vignette on the chrome shell, NOT on .traven-preview
+ * prose (keeps readability + avoids hitting the editor canvas). Applied via
+ * body::before/::after so they sit above the bg but below content. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  background-image: repeating-linear-gradient(to bottom,
+      rgba(0, 255, 102, 0.035) 0px,
+      rgba(0, 255, 102, 0.035) 1px,
+      transparent 1px,
+      transparent 3px);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9989;
+  background: radial-gradient(ellipse at center,
+      transparent 55%,
+      rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Re-declare sub/sup after the universal reset (contract requirement) */
+sub,
+sup {
+  font-size: 0.72em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+/* -----------------------------------------------------------------------------
+ * 1. Design tokens (chrome-only). Prose tokens live in skin-1337.css.
+ * -------------------------------------------------------------------------- */
+:root {
+  --1337-bg: var(--traven-bg, #06070a);
+  --1337-bg-elev: var(--traven-bg-elev, #0c0e14);
+  --1337-bg-code: var(--traven-bg-code, #02030a);
+  --1337-text: var(--traven-text, #c7f9cc);
+  --1337-text-bright: var(--traven-text-bright, #e6ffe6);
+  --1337-muted: var(--traven-muted, #5b7a5b);
+  --1337-border: var(--traven-border, #1f3a1f);
+  --1337-border-bright: var(--traven-border-bright, #2f6b2f);
+  --1337-caret: var(--traven-caret, #00ff66);
+  --1337-magenta: var(--traven-accent-magenta, #ff2bd6);
+  --1337-cyan: var(--traven-accent-cyan, #21e6ff);
+  --1337-amber: var(--traven-accent-amber, #ffb000);
+  --1337-red: var(--traven-accent-red, #ff3b5c);
+
+  --1337-glow-caret: 0 0 6px rgba(0, 255, 102, 0.55), 0 0 14px rgba(0, 255, 102, 0.25);
+  --1337-glow-magenta: 0 0 6px rgba(255, 43, 214, 0.5), 0 0 14px rgba(255, 43, 214, 0.22);
+  --1337-glow-cyan: 0 0 6px rgba(33, 230, 255, 0.5), 0 0 14px rgba(33, 230, 255, 0.22);
+
+  --1337-rail-width: 240px;
+  --1337-measure: 720px;
+  --1337-frame-pad: 22px;
+}
+
+/* -----------------------------------------------------------------------------
+ * 2. Layout shell — split-terminal. Narrow left status rail + main viewport.
+ *    On mobile the rail collapses to a top bar + drawer.
+ * -------------------------------------------------------------------------- */
+.terminal-shell {
+  display: grid;
+  grid-template-columns: var(--1337-rail-width) 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.terminal-rail {
+  background-color: var(--1337-bg-code);
+  border-right: 1px solid var(--1337-border-bright);
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-main {
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 880px) {
+  .terminal-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-rail {
+    border-right: none;
+    border-bottom: 1px solid var(--1337-border-bright);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 3. Masthead — ASCII-box site banner inside the rail.
+ * -------------------------------------------------------------------------- */
+.site-masthead {
+  padding: 18px var(--1337-frame-pad) 14px;
+  border-bottom: 1px solid var(--1337-border-bright);
+  background-color: var(--1337-bg-code);
+}
+
+.site-masthead-pre {
+  color: var(--1337-muted);
+  font-size: 0.7em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+
+.site-masthead-pre::before {
+  content: "┌─ ";
+  color: var(--1337-caret);
+}
+
+.site-title {
+  display: block;
+  margin: 0;
+  font-family: var(--traven-font-display);
+  font-size: 1.5em;
+  font-weight: 800;
+  color: var(--1337-text-bright);
+  text-decoration: none;
+  text-shadow: var(--1337-glow-caret);
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+
+.site-title:hover {
+  color: var(--1337-caret);
+}
+
+.site-tagline {
+  display: block;
+  margin: 6px 0 0 0;
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  font-style: italic;
+}
+
+.site-tagline::before {
+  content: "$ echo ";
+  color: var(--1337-caret);
+  font-style: normal;
+}
+
+/* System status bar — faux telemetry under the masthead */
+.system-status {
+  padding: 8px var(--1337-frame-pad);
+  border-bottom: 1px solid var(--1337-border);
+  background-color: rgba(0, 255, 102, 0.03);
+  font-size: 0.7em;
+  color: var(--1337-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+.system-status span::before {
+  content: attr(data-label) ":";
+  color: var(--1337-caret);
+  margin-right: 4px;
+}
+
+.system-status .status-ok {
+  color: var(--1337-text-bright);
+}
+
+.system-status .status-warn {
+  color: var(--1337-amber);
+}
+
+/* -----------------------------------------------------------------------------
+ * 4. Primary nav — horizontal "menu bar" with `▌` cursors. Lives in the rail.
+ *    Sturdy dropdown: zero-gap hover bridge + JS grace delay (theme.js).
+ * -------------------------------------------------------------------------- */
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--1337-border-bright);
+  color: var(--1337-caret);
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+  margin: 10px var(--1337-frame-pad);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mobile-menu-toggle:hover {
+  background-color: rgba(0, 255, 102, 0.08);
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--1337-border-bright);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item.has-children>.nav-trigger::after {
+  content: " ▾";
+  color: var(--1337-muted);
+  font-size: 0.78em;
+}
+
+.nav-link,
+.nav-label {
+  display: block;
+  padding: 8px var(--1337-frame-pad);
+  color: var(--1337-text);
+  text-decoration: none;
+  font-size: 0.88em;
+  letter-spacing: 0.04em;
+  border-left: 2px solid transparent;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.nav-link::before,
+.nav-label::before {
+  content: "▌";
+  color: transparent;
+  margin-right: 6px;
+}
+
+.nav-link:hover,
+.nav-label:hover,
+.nav-item:hover>.nav-link,
+.nav-item:hover>.nav-label,
+.nav-item:focus-within>.nav-link,
+.nav-item:focus-within>.nav-label {
+  background-color: rgba(0, 255, 102, 0.07);
+  border-left-color: var(--1337-caret);
+  color: var(--1337-text-bright);
+}
+
+.nav-link:hover::before,
+.nav-label:hover::before {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.nav-label {
+  cursor: default;
+  color: var(--1337-muted);
+  text-transform: uppercase;
+  font-size: 0.74em;
+  letter-spacing: 0.12em;
+}
+
+/* Sturdy dropdown — gapless hover bridge via padding + ::before bridge */
+.nav-dropdown {
+  display: none;
+  position: static;
+  background-color: var(--1337-bg);
+  border-left: 2px solid var(--1337-border);
+  margin-left: calc(var(--1337-frame-pad) - 2px);
+  padding: 4px 0;
+}
+
+.nav-item:hover>.nav-dropdown,
+.nav-item:focus-within>.nav-dropdown,
+.nav-item.open>.nav-dropdown {
+  display: block;
+}
+
+.nav-dropdown .nav-link,
+.nav-dropdown .nav-label {
+  padding-left: calc(var(--1337-frame-pad) + 14px);
+  font-size: 0.82em;
+  color: var(--1337-muted);
+}
+
+.nav-dropdown .nav-link::before {
+  content: "└─ ";
+  color: var(--1337-border-bright);
+  margin-right: 4px;
+}
+
+.nav-dropdown .nav-link:hover::before {
+  color: var(--1337-caret);
+}
+
+/* Rail nav stack — primary nav + secondary/profile widgets share one drawer on mobile */
+.rail-nav-stack {
+  display: contents;
+}
+
+/* On desktop the rail nav is always visible; mobile drawer handled below */
+@media (max-width: 880px) {
+  .rail-nav-stack {
+    display: block;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .nav-menu {
+    display: none;
+    padding: 6px 0 0 0;
+    border-bottom: none;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  /* Secondary nav + operator card tuck into the mobile drawer */
+  .rail-widgets {
+    display: none;
+  }
+
+  .rail-nav-stack.drawer-open .rail-widgets {
+    display: block;
+    border-bottom: 1px solid var(--1337-border-bright);
+  }
+
+  .rail-widgets .sidebar-widget:last-child {
+    border-bottom: none;
+  }
+
+  .rail-widgets .sidebar-widget {
+    padding: 10px var(--1337-frame-pad);
+  }
+
+  .rail-widgets .profile-card {
+    padding: 10px var(--1337-frame-pad) 12px;
+  }
+
+  .rail-widgets .profile-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Compact masthead — fewer rows, tighter rhythm */
+  .site-masthead {
+    padding: 8px var(--1337-frame-pad) 6px;
+  }
+
+  .site-masthead-pre {
+    margin: 0 0 2px 0;
+    font-size: 0.62em;
+    letter-spacing: 0.1em;
+  }
+
+  .site-title {
+    font-size: 1.15em;
+    line-height: 1.2;
+  }
+
+  .site-tagline {
+    margin: 2px 0 0 0;
+    font-size: 0.68em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Hide decorative status telemetry on mobile */
+  .system-status {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    margin: 6px var(--1337-frame-pad);
+    padding: 6px 10px;
+    font-size: 0.78em;
+  }
+
+  /* Tighter drawer menus — fit more links on small screens */
+  .nav-menu {
+    line-height: 1.15;
+  }
+
+  .nav-link,
+  .nav-label {
+    padding: 3px var(--1337-frame-pad);
+    line-height: 1.15;
+  }
+
+  .nav-dropdown {
+    padding: 0;
+  }
+
+  .nav-dropdown .nav-link,
+  .nav-dropdown .nav-label {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 1.15;
+  }
+
+  .rail-widgets .sidebar-title {
+    margin: 0 0 4px 0;
+    line-height: 1.15;
+  }
+
+  .rail-widgets .sidebar-list-item {
+    line-height: 1.15;
+  }
+
+  .rail-widgets .sidebar-list-link,
+  .rail-widgets .sidebar-nav-label {
+    padding: 1px 0;
+    line-height: 1.15;
+  }
+
+  .rail-widgets .secondary-nav-children {
+    padding-left: 14px;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .site-masthead-pre {
+    display: none;
+  }
+
+  .site-tagline {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 5. Secondary nav — `tree` outline in the rail.
+ * -------------------------------------------------------------------------- */
+.sidebar-widget {
+  padding: 14px var(--1337-frame-pad);
+  border-bottom: 1px solid var(--1337-border);
+}
+
+.sidebar-title {
+  margin: 0 0 10px 0;
+  font-size: 0.74em;
+  font-weight: 700;
+  color: var(--1337-caret);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.sidebar-title::before {
+  content: "## ";
+  color: var(--1337-border-bright);
+}
+
+/* Chrome headline specificity guard (guide §7): scope with body.traven-preview
+ * so a lone .sidebar-title rule does not lose to .traven-preview hN. */
+body.traven-preview .sidebar-title {
+  font-family: var(--traven-font-display) !important;
+  font-size: 0.74em !important;
+  font-weight: 700 !important;
+  color: var(--1337-caret) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0 0 10px 0 !important;
+  border: none;
+  padding: 0;
+  line-height: 1.4;
+}
+
+.secondary-nav-list,
+.sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85em;
+  color: var(--1337-text);
+}
+
+.sidebar-list-item {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.sidebar-list-link,
+.sidebar-nav-label {
+  color: var(--1337-text);
+  text-decoration: none;
+  display: block;
+  padding: 3px 0;
+  transition: color 120ms ease;
+}
+
+.sidebar-list-link:hover {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+/* `tree` outline for secondary nav */
+.secondary-nav-list .sidebar-list-item {
+  padding-left: 0;
+}
+
+.secondary-nav-list .sidebar-list-item::before {
+  content: "├── ";
+  color: var(--1337-border-bright);
+}
+
+.secondary-nav-list .sidebar-list-item:last-child::before {
+  content: "└── ";
+}
+
+.secondary-nav-children {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 18px;
+  font-size: 0.95em;
+}
+
+.secondary-nav-children .sidebar-list-item::before {
+  content: "│  └── ";
+  color: var(--1337-border-bright);
+}
+
+.secondary-nav-children .sidebar-list-link {
+  color: var(--1337-muted);
+}
+
+.secondary-nav-children .sidebar-list-link:hover {
+  color: var(--1337-cyan);
+}
+
+/* -----------------------------------------------------------------------------
+ * 6. Profile widget — ASCII ID card.
+ * -------------------------------------------------------------------------- */
+.profile-card {
+  padding: 14px var(--1337-frame-pad);
+  border-bottom: 1px solid var(--1337-border);
+  font-size: 0.82em;
+}
+
+.profile-id-frame {
+  border: 1px solid var(--1337-border-bright);
+  padding: 12px;
+  background-color: var(--1337-bg);
+}
+
+.profile-id-header {
+  color: var(--1337-caret);
+  font-size: 0.74em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--1337-border-bright);
+  padding-bottom: 4px;
+}
+
+.profile-avatar {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--1337-caret);
+  margin-bottom: 8px;
+  filter: grayscale(0.4) contrast(1.05);
+}
+
+.profile-name {
+  display: block;
+  color: var(--1337-text-bright);
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.profile-name::before {
+  content: "user: ";
+  color: var(--1337-muted);
+  font-weight: 400;
+}
+
+.profile-bio {
+  color: var(--1337-muted);
+  font-style: italic;
+  margin: 0 0 8px 0;
+  font-size: 0.92em;
+  line-height: 1.5;
+}
+
+.profile-link {
+  color: var(--1337-cyan);
+  text-decoration: none;
+  font-size: 0.88em;
+}
+
+.profile-link::before {
+  content: "↳ ";
+  color: var(--1337-border-bright);
+}
+
+.profile-link:hover {
+  text-shadow: var(--1337-glow-cyan);
+}
+
+/* -----------------------------------------------------------------------------
+ * 7. TOC widget — `cat -n` numbered outline.
+ * -------------------------------------------------------------------------- */
+.toc-widget .toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: tocline;
+  font-size: 0.82em;
+}
+
+.toc-widget .toc-list li {
+  counter-increment: tocline;
+  margin: 0;
+  padding: 2px 0;
+  line-height: 1.5;
+}
+
+.toc-widget .toc-list li::before {
+  content: counter(tocline, decimal-leading-zero) "  ";
+  color: var(--1337-muted);
+}
+
+.toc-widget .toc-list a {
+  color: var(--1337-text);
+  text-decoration: none;
+}
+
+.toc-widget .toc-list a:hover {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.toc-widget .toc-list .toc-level-2 {
+  padding-left: 14px;
+}
+
+.toc-widget .toc-list .toc-level-2::before {
+  content: "      ";
+}
+
+.toc-widget .toc-list .toc-level-3 {
+  padding-left: 28px;
+}
+
+.toc-widget .toc-list .toc-level-3::before {
+  content: "            ";
+}
+
+/* -----------------------------------------------------------------------------
+ * 8. Related widget — `>>` chevron list.
+ * -------------------------------------------------------------------------- */
+.related-widget .related-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.84em;
+}
+
+.related-widget .related-list li {
+  margin: 0 0 6px 0;
+  padding: 0;
+}
+
+.related-widget .related-list a {
+  color: var(--1337-text);
+  text-decoration: none;
+}
+
+.related-widget .related-list a::before {
+  content: ">> ";
+  color: var(--1337-magenta);
+}
+
+.related-widget .related-list a:hover {
+  color: var(--1337-magenta);
+  text-shadow: var(--1337-glow-magenta);
+}
+
+/* -----------------------------------------------------------------------------
+ * 9. Main viewport — terminal window frame.
+ * -------------------------------------------------------------------------- */
+.terminal-window {
+  margin: 28px;
+  border: 1px solid var(--1337-border-bright);
+  background-color: var(--1337-bg);
+  box-shadow: 0 0 0 1px rgba(0, 255, 102, 0.05), 0 0 40px rgba(0, 255, 102, 0.04);
+  position: relative;
+}
+
+.terminal-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background-color: var(--1337-bg-elev);
+  border-bottom: 1px solid var(--1337-border-bright);
+  font-size: 0.74em;
+  color: var(--1337-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.terminal-window-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.terminal-window-dots span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--1337-border-bright);
+}
+
+.terminal-window-dots span:nth-child(1) {
+  border-color: var(--1337-red);
+}
+
+.terminal-window-dots span:nth-child(2) {
+  border-color: var(--1337-amber);
+}
+
+.terminal-window-dots span:nth-child(3) {
+  border-color: var(--1337-caret);
+}
+
+.terminal-window-title {
+  flex: 1;
+  text-align: center;
+  color: var(--1337-text-bright);
+}
+
+.terminal-window-body {
+  padding: var(--1337-frame-pad);
+}
+
+@media (max-width: 880px) {
+  .terminal-window {
+    margin: 8px;
+  }
+
+  .terminal-window-body {
+    padding: 12px;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 10. Index hero — boot-log terminal banner with blinking prompt.
+ * -------------------------------------------------------------------------- */
+.boot-hero {
+  margin: 0 0 22px 0;
+  border: 1px solid var(--1337-border-bright);
+  border-left: 4px solid var(--1337-caret);
+  background-color: var(--1337-bg-code);
+  padding: 22px 22px 18px;
+  position: relative;
+}
+
+.boot-hero-pre {
+  color: var(--1337-muted);
+  font-size: 0.74em;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.boot-hero-pre .ok {
+  color: var(--1337-caret);
+}
+
+.boot-hero-pre .warn {
+  color: var(--1337-amber);
+}
+
+.boot-hero-title {
+  margin: 6px 0 8px 0;
+  font-size: 2em;
+  font-weight: 800;
+  color: var(--1337-text-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: var(--1337-glow-caret);
+  word-break: break-word;
+  line-height: 1.15;
+}
+
+.boot-hero-title::before {
+  content: "> ";
+  color: var(--1337-caret);
+}
+
+.boot-hero-deck {
+  color: var(--1337-text);
+  margin: 0 0 14px 0;
+  font-size: 1em;
+  line-height: 1.65;
+}
+
+.boot-hero-deck::before {
+  content: "$ echo ";
+  color: var(--1337-caret);
+}
+
+.boot-hero-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 0.72em;
+  color: var(--1337-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-top: 1px dashed var(--1337-border-bright);
+  padding-top: 10px;
+}
+
+.boot-hero-status span::before {
+  content: attr(data-label) ":";
+  color: var(--1337-caret);
+  margin-right: 4px;
+}
+
+.boot-hero-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  background-color: var(--1337-caret);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  box-shadow: var(--1337-glow-caret);
+}
+
+/* -----------------------------------------------------------------------------
+ * 11. `tree` directory listing of posts (index + archive variant).
+ * -------------------------------------------------------------------------- */
+.tree-listing {
+  font-size: 0.92em;
+  line-height: 1.7;
+  color: var(--1337-text);
+}
+
+.tree-listing-header {
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px dashed var(--1337-border-bright);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.tree-row {
+  display: grid;
+  grid-template-columns: 28px 36px 1fr auto auto;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.tree-row:hover {
+  background-color: rgba(0, 255, 102, 0.06);
+  border-left-color: var(--1337-caret);
+}
+
+.tree-row-glyph {
+  color: var(--1337-border-bright);
+}
+
+.tree-row-idx {
+  color: var(--1337-muted);
+  font-size: 0.9em;
+}
+
+.tree-row-title {
+  color: var(--1337-text-bright);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-row:hover .tree-row-title {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.tree-row-date {
+  color: var(--1337-muted);
+  font-size: 0.82em;
+  white-space: nowrap;
+}
+
+.tree-row-size {
+  color: var(--1337-cyan);
+  font-size: 0.82em;
+  white-space: nowrap;
+}
+
+.tree-row-empty {
+  padding: 18px 8px;
+  color: var(--1337-muted);
+  font-style: italic;
+}
+
+.tree-row-empty::before {
+  content: "$ ls --  no dossiers in queue";
+  color: var(--1337-amber);
+  font-style: normal;
+}
+
+@media (max-width: 640px) {
+  .tree-row {
+    grid-template-columns: 24px 1fr auto;
+    gap: 8px;
+  }
+
+  .tree-row-idx,
+  .tree-row-size {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * 12. `ls -la` archive table.
+ * -------------------------------------------------------------------------- */
+.ls-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88em;
+}
+
+.ls-table thead th {
+  text-align: left;
+  color: var(--1337-caret);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78em;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--1337-border-bright);
+}
+
+.ls-table tbody td {
+  padding: 7px 10px;
+  border-bottom: 1px dashed var(--1337-border);
+  color: var(--1337-text);
+}
+
+.ls-table tbody tr {
+  transition: background-color 120ms ease;
+}
+
+.ls-table tbody tr:hover {
+  background-color: rgba(0, 255, 102, 0.06);
+}
+
+.ls-table .ls-perms {
+  color: var(--1337-magenta);
+  white-space: nowrap;
+}
+
+.ls-table .ls-date {
+  color: var(--1337-muted);
+  white-space: nowrap;
+}
+
+.ls-table .ls-title a {
+  color: var(--1337-text-bright);
+  text-decoration: none;
+}
+
+.ls-table .ls-title a:hover {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+/* -----------------------------------------------------------------------------
+ * 13. Post header — `man`/`less` pager breadcrumb + title bar.
+ * -------------------------------------------------------------------------- */
+.post-breadcrumb {
+  font-size: 0.78em;
+  color: var(--1337-muted);
+  margin: 0 0 6px 0;
+  letter-spacing: 0.06em;
+  word-break: break-all;
+}
+
+.post-breadcrumb::before {
+  content: "$ pwd  ";
+  color: var(--1337-caret);
+}
+
+.post-breadcrumb-sep {
+  color: var(--1337-border-bright);
+}
+
+.post-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+}
+
+.post-tag-chip {
+  color: var(--1337-cyan);
+  border: 1px solid var(--1337-cyan);
+  padding: 1px 8px;
+  font-size: 0.74em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: var(--1337-glow-cyan);
+}
+
+.post-trumpet {
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.post-trumpet::before {
+  content: "// ";
+  color: var(--1337-border-bright);
+}
+
+.post-title {
+  margin: 4px 0 10px 0;
+  font-size: 1.9em;
+  font-weight: 800;
+  color: var(--1337-text-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-shadow: var(--1337-glow-caret);
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+/* Chrome headline specificity guard (guide §7) */
+body.traven-preview .post-title {
+  font-family: var(--traven-font-display) !important;
+  font-size: 1.9em !important;
+  font-weight: 800 !important;
+  color: var(--1337-text-bright) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  margin: 4px 0 10px 0 !important;
+  border: none;
+  padding: 0;
+}
+
+.post-deck {
+  color: var(--1337-text);
+  margin: 0 0 12px 0;
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 0.78em;
+  color: var(--1337-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 1px dashed var(--1337-border-bright);
+  border-bottom: 1px dashed var(--1337-border-bright);
+  padding: 8px 0;
+  margin: 0 0 18px 0;
+}
+
+.post-meta span::before {
+  content: attr(data-label) ":";
+  color: var(--1337-caret);
+  margin-right: 4px;
+}
+
+.post-meta .meta-sep {
+  color: var(--1337-border-bright);
+}
+
+/* Hero image — CRT-treated, framed */
+.post-hero-image-wrapper {
+  /* Fullbleed across the terminal-window frame; 21:9 crop keeps it short. */
+  margin: 0 0 18px 0;
+  border: 1px solid var(--1337-border-bright);
+  padding: 6px;
+  background-color: var(--1337-bg-code);
+  position: relative;
+}
+
+.post-hero-image-wrapper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  /* crop to fill the 21:9 frame */
+  object-position: center;
+  filter: contrast(1.08) saturate(1.15) hue-rotate(-6deg);
+  mix-blend-mode: screen;
+  opacity: 0.92;
+}
+
+.post-hero-image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom,
+      rgba(0, 255, 102, 0.06) 0px,
+      rgba(0, 255, 102, 0.06) 1px,
+      transparent 1px,
+      transparent 3px);
+}
+
+/* -----------------------------------------------------------------------------
+ * 14. Post body — `less` pager viewport with status footer.
+ * -------------------------------------------------------------------------- */
+.post-viewport {
+  border: 1px solid var(--1337-border-bright);
+  background-color: var(--1337-bg);
+  margin: 0 0 18px 0;
+  position: relative;
+  /* fullbleed breakout anchor */
+  overflow-x: clip;
+  /* prevent fullbleed from causing page-wide h-scroll */
+}
+
+.post-viewport-body {
+  padding: 22px 26px;
+  max-width: var(--1337-measure);
+  margin: 0 auto;
+}
+
+.post-viewport-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  padding: 6px 14px;
+  border-top: 1px solid var(--1337-border-bright);
+  background-color: var(--1337-bg-elev);
+  font-size: 0.72em;
+  color: var(--1337-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.post-viewport-footer .less-mode {
+  color: var(--1337-caret);
+}
+
+/* Mobile: single terminal frame — drop nested post-viewport box */
+@media (max-width: 880px) {
+  .post-viewport {
+    border: none;
+    background-color: transparent;
+    margin-bottom: 12px;
+  }
+
+  .post-viewport-body {
+    padding: 14px 0;
+    max-width: none;
+  }
+
+  .post-viewport-footer {
+    padding: 6px 0;
+    border-top: 1px solid var(--1337-border-bright);
+  }
+
+  .post-hero-image-wrapper {
+    padding: 4px;
+  }
+}
+
+/* Composite fragments — numbered frames */
+.post-fragment {
+  margin: 0 0 24px 0;
+}
+
+.post-fragment-frame {
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 1px dashed var(--1337-border-bright);
+  border-bottom: 1px dashed var(--1337-border-bright);
+  padding: 4px 0;
+  margin: 0 0 16px 0;
+}
+
+.post-fragment-frame::before {
+  content: "──[ ";
+  color: var(--1337-border-bright);
+}
+
+.post-fragment-frame::after {
+  content: " ]──";
+  color: var(--1337-border-bright);
+}
+
+.post-fragment-title {
+  margin: 0 0 12px 0;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--1337-text-bright);
+  border-left: 3px solid var(--1337-cyan);
+  padding-left: 12px;
+}
+
+body.traven-preview .post-fragment-title {
+  font-family: var(--traven-font-display) !important;
+  font-size: 1.3em !important;
+  font-weight: 700 !important;
+  color: var(--1337-text-bright) !important;
+  margin: 0 0 12px 0 !important;
+  border-left: 3px solid var(--1337-cyan);
+  padding-left: 12px;
+  line-height: 1.3;
+}
+
+/* Fragment tags + metadata (live on the fragment, not the page) */
+.post-fragment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--1337-border);
+  font-size: 0.76em;
+}
+
+.post-tag-link {
+  color: var(--1337-cyan);
+  text-decoration: none;
+  border: 1px solid var(--1337-border-bright);
+  padding: 1px 7px;
+}
+
+.post-tag-link::before {
+  content: "#";
+  color: var(--1337-border-bright);
+}
+
+.post-tag-link:hover {
+  color: var(--1337-caret);
+  border-color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.post-metadata-line {
+  color: var(--1337-muted);
+  font-style: italic;
+}
+
+/* --- Q&A / FAQ (before discussion) --- */
+.post-viewport-body .pen-qa {
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--1337-border-bright);
+  color: inherit;
+}
+
+.post-viewport-body .pen-qa .pen-qa-heading {
+  font-family: var(--traven-font-display, var(--font-display, inherit));
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+
+.post-viewport-body .pen-qa dt {
+  color: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.post-viewport-body .pen-qa dd {
+  color: inherit;
+  line-height: 1.6;
+}
+
+/* --- Comments + feedback (1337 discussion) --- */
+.leet-discussion {
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--1337-border-bright);
+}
+
+.leet-discussion .pen-comments:not(:has(.pen-comments__list)) {
+  display: none;
+}
+
+.leet-discussion .pen-comments,
+.leet-discussion .pen-feedback,
+.leet-discussion .pen-comments:has(.pen-comments__list) + .pen-feedback {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+  color: var(--1337-text);
+}
+
+.leet-discussion .pen-comments:has(.pen-comments__list) {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--1337-border-bright);
+}
+
+body.traven-preview .leet-discussion .pen-comments__title,
+body.traven-preview .leet-discussion .pen-feedback__title,
+.leet-discussion .pen-comments__title,
+.leet-discussion .pen-feedback__title {
+  font-family: inherit !important;
+  font-size: 0.85em !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--1337-caret) !important;
+  text-shadow: var(--1337-glow-caret);
+  line-height: 1.3 !important;
+  margin: 0 0 1rem !important;
+  padding: 0 0 4px !important;
+  border: none !important;
+  border-bottom: 1px solid var(--1337-border-bright) !important;
+}
+
+.leet-discussion .pen-comments__list {
+  gap: 0;
+}
+
+.leet-discussion .pen-comment {
+  padding: 1rem 0;
+  border-top: 1px dashed var(--1337-border);
+  gap: 0.35rem;
+}
+
+.leet-discussion .pen-comment:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.leet-discussion .pen-comment--reply {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--1337-cyan);
+}
+
+.leet-discussion .pen-comment__author {
+  font-family: inherit;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--1337-text-bright);
+}
+
+.leet-discussion .pen-comment__body {
+  font-family: inherit;
+  font-size: 0.95em;
+  line-height: 1.6;
+  color: var(--1337-text);
+}
+
+.leet-discussion .pen-feedback__form {
+  gap: 1rem;
+}
+
+.leet-discussion .pen-feedback__label {
+  font-family: inherit;
+  font-size: 0.8em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--1337-muted);
+}
+
+.leet-discussion .pen-feedback__label span {
+  color: var(--1337-muted);
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.leet-discussion .pen-feedback__input,
+.leet-discussion .pen-feedback__textarea {
+  font-family: inherit;
+  font-size: 0.95em;
+  color: var(--1337-text-bright);
+  background-color: var(--1337-bg-code);
+  border: 1px solid var(--1337-border-bright);
+  border-left: 3px solid var(--1337-caret);
+  border-radius: 0;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  outline: none;
+  caret-color: var(--1337-caret);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leet-discussion .pen-feedback__input:focus,
+.leet-discussion .pen-feedback__textarea:focus {
+  border-color: var(--1337-caret);
+  box-shadow: 0 0 0 1px var(--1337-caret), 0 0 14px rgba(0, 255, 102, 0.18);
+}
+
+.leet-discussion .pen-feedback__submit {
+  justify-self: end;
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 0;
+  border: 1px solid var(--1337-caret);
+  background: var(--1337-caret);
+  color: var(--1337-bg-code);
+  cursor: pointer;
+  transition: opacity 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.leet-discussion .pen-feedback__submit:hover {
+  filter: brightness(1.2);
+  box-shadow: var(--1337-glow-caret);
+}
+
+.leet-discussion .pen-feedback__submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.leet-discussion .pen-feedback__status--ok {
+  font-family: inherit;
+  color: var(--1337-cyan);
+  font-size: 0.85em;
+}
+
+.leet-discussion .pen-feedback__status--error {
+  font-family: inherit;
+  color: var(--1337-red);
+  font-size: 0.85em;
+}
+
+.leet-discussion .pen-feedback__noscript,
+.leet-discussion .pen-feedback__noscript a {
+  font-family: inherit;
+  font-size: 0.85em;
+  color: var(--1337-caret);
+}
+
+/* -----------------------------------------------------------------------------
+ * 15. Page (`cat <file>`) — cleaner than post, no byline strip.
+ * -------------------------------------------------------------------------- */
+.page-window .post-viewport-body {
+  padding-top: 26px;
+}
+
+/* -----------------------------------------------------------------------------
+ * 16. Search — `grep` prompt wrapping the mandatory #pencms-search block.
+ *    The JS hook IDs and data-attrs are untouched.
+ * -------------------------------------------------------------------------- */
+.grep-prompt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px 0;
+  font-size: 0.92em;
+}
+
+.grep-prompt::before {
+  content: "$ grep -i";
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+  letter-spacing: 0.06em;
+}
+
+.pencms-search .search-label {
+  display: block;
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+}
+
+.pencms-search .search-input {
+  width: 100%;
+  background-color: var(--1337-bg-code);
+  border: 1px solid var(--1337-border-bright);
+  border-left: 3px solid var(--1337-caret);
+  color: var(--1337-text-bright);
+  font-family: inherit;
+  font-size: 1em;
+  padding: 10px 12px;
+  outline: none;
+  border-radius: 0;
+  caret-color: var(--1337-caret);
+}
+
+.pencms-search .search-input::placeholder {
+  color: var(--1337-muted);
+  font-style: italic;
+}
+
+.pencms-search .search-input:focus {
+  border-color: var(--1337-caret);
+  box-shadow: 0 0 0 1px var(--1337-caret), 0 0 18px rgba(0, 255, 102, 0.18);
+}
+
+.pencms-search .search-results {
+  margin-top: 1.5rem;
+  font-size: 0.9em;
+}
+
+.pencms-search .search-status {
+  color: var(--1337-muted);
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.pencms-search .search-status-error {
+  color: #ff5555;
+}
+
+.pencms-search .search-results-list,
+body.traven-preview .pencms-search .search-results-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.pencms-search .search-result-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--1337-border-bright);
+}
+
+.pencms-search .search-result-item:first-child {
+  padding-top: 0.25rem;
+}
+
+.pencms-search .search-result-type,
+body.traven-preview .pencms-search .search-result-type {
+  display: none !important;
+}
+
+.pencms-search .search-result-title,
+body.traven-preview .pencms-search .search-result-title {
+  font-family: inherit !important;
+  font-size: 1.2em !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin: 0 0 0.35rem !important;
+  padding: 0 !important;
+}
+
+.pencms-search .search-result-title a,
+body.traven-preview .pencms-search .search-result-title a {
+  color: var(--1337-caret) !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease, text-shadow 0.15s ease;
+}
+
+.pencms-search .search-result-title a:visited,
+body.traven-preview .pencms-search .search-result-title a:visited {
+  color: var(--1337-caret) !important;
+}
+
+.pencms-search .search-result-title a:hover,
+.pencms-search .search-result-title a:focus-visible,
+body.traven-preview .pencms-search .search-result-title a:hover,
+body.traven-preview .pencms-search .search-result-title a:focus-visible {
+  color: #ffffff !important;
+  text-shadow: 0 0 8px var(--1337-caret);
+  text-decoration: underline;
+}
+
+.pencms-search .search-result-excerpt,
+body.traven-preview .pencms-search .search-result-excerpt {
+  font-family: inherit !important;
+  font-size: 0.95em !important;
+  line-height: 1.55 !important;
+  color: var(--1337-muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* -----------------------------------------------------------------------------
+ * 17. Footer — faux `shutdown` line + footer menu (3rd mandatory slot).
+ * -------------------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--1337-border-bright);
+  background-color: var(--1337-bg-code);
+  padding: 22px var(--1337-frame-pad);
+  margin-top: auto;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-prompt {
+  color: var(--1337-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.footer-prompt::before {
+  content: "$ shutdown -h now  ";
+  color: var(--1337-amber);
+}
+
+.footer-prompt::after {
+  content: "▌";
+  color: var(--1337-caret);
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.footer-menu-group {
+  min-width: 140px;
+}
+
+.footer-menu-label,
+.footer-col-heading {
+  display: block;
+  color: var(--1337-caret);
+  font-size: 0.74em;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 6px 0;
+  font-weight: 700;
+}
+
+.footer-menu-link,
+.footer-col-link {
+  display: block;
+  color: var(--1337-text);
+  text-decoration: none;
+  font-size: 0.84em;
+  padding: 2px 0;
+}
+
+.footer-menu-link::before,
+.footer-col-link::before {
+  content: "└─ ";
+  color: var(--1337-border-bright);
+}
+
+.footer-menu-link:hover,
+.footer-col-link:hover {
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.footer-menu-children,
+.footer-col-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-menu-children li,
+.footer-col-list li {
+  margin: 0;
+}
+
+.footer-copy {
+  color: var(--1337-muted);
+  font-size: 0.74em;
+  margin: 0;
+}
+
+.footer-credits {
+  color: var(--1337-muted);
+  font-size: 0.74em;
+  margin: 4px 0 0 0;
+}
+
+.footer-credits a {
+  color: var(--1337-cyan);
+  text-decoration: none;
+}
+
+/* -----------------------------------------------------------------------------
+ * 18. Generic helpers.
+ * -------------------------------------------------------------------------- */
+.terminal-prompt::before {
+  content: "> ";
+  color: var(--1337-caret);
+}
+
+.terminal-prompt-bright::before {
+  content: "$ ";
+  color: var(--1337-caret);
+  text-shadow: var(--1337-glow-caret);
+}
+
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: var(--1337-muted);
+}
+
+.bright {
+  color: var(--1337-text-bright);
+}
+
+.caret {
+  color: var(--1337-caret);
+}
+
+/* =============================================================================
+ * 19. ANIMATIONS — wild CRT effects, all gated behind no-preference.
+ *     - Blinking caret (boot hero + footer + nav cursor)
+ *     - Phosphor glow flicker on the masthead title
+ *     - Subtle CRT curvature wobble on the viewport (very faint)
+ *     - Boot-log "typing" fade-in on the hero pre-line
+ * ========================================================================== */
+@keyframes blink-caret {
+
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes glow-flicker {
+
+  0%,
+  100% {
+    text-shadow: 0 0 6px rgba(0, 255, 102, 0.55), 0 0 14px rgba(0, 255, 102, 0.25);
+  }
+
+  47% {
+    text-shadow: 0 0 5px rgba(0, 255, 102, 0.45), 0 0 12px rgba(0, 255, 102, 0.18);
+  }
+
+  48% {
+    text-shadow: 0 0 2px rgba(0, 255, 102, 0.2), 0 0 4px rgba(0, 255, 102, 0.08);
+  }
+
+  49% {
+    text-shadow: 0 0 6px rgba(0, 255, 102, 0.55), 0 0 14px rgba(0, 255, 102, 0.25);
+  }
+
+  92% {
+    text-shadow: 0 0 4px rgba(0, 255, 102, 0.35), 0 0 9px rgba(0, 255, 102, 0.12);
+  }
+
+  93% {
+    text-shadow: 0 0 7px rgba(0, 255, 102, 0.6), 0 0 16px rgba(0, 255, 102, 0.3);
+  }
+}
+
+@keyframes crt-wobble {
+
+  0%,
+  100% {
+    transform: none;
+  }
+
+  50% {
+    transform: translateY(0.5px);
+  }
+}
+
+@keyframes boot-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scanline-sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  .boot-hero-caret,
+  .footer-prompt::after,
+  .boot-hero-title::after {
+    animation: blink-caret 1.05s steps(1) infinite;
+  }
+
+  .site-title {
+    animation: glow-flicker 6s ease-in-out infinite;
+  }
+
+  .terminal-window {
+    animation: crt-wobble 9s ease-in-out infinite;
+  }
+
+  .boot-hero-pre {
+    animation: boot-fade 700ms ease-out both;
+  }
+
+  /* A single sweeping scanline band across the viewport — very faint */
+  .terminal-shell::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 14vh;
+    top: 0;
+    pointer-events: none;
+    z-index: 9991;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(0, 255, 102, 0.04) 50%,
+        transparent 100%);
+    animation: scanline-sweep 11s linear infinite;
+    opacity: 0.5;
+  }
+}
+
+/* Reduced motion: keep everything static, no flicker, no wobble, no sweep. */
+@media (prefers-reduced-motion: reduce) {
+
+  .boot-hero-caret,
+  .footer-prompt::after,
+  .boot-hero-title::after {
+    animation: none;
+    opacity: 0.85;
+  }
+
+  .site-title,
+  .terminal-window,
+  .boot-hero-pre,
+  .terminal-shell::after {
+    animation: none;
+  }
+}

@@ -1,0 +1,6 @@
+# Minimal / alternate empty taxonomy skeleton (same shape as taxonomy.yaml).
+primary_vocabulary: ""
+required_fields:
+  - name
+  - status
+vocabularies: {}

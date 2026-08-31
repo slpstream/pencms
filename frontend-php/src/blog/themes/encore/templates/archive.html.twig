@@ -1,0 +1,47 @@
+{{ theme.partial('_head') | raw }}
+{{ theme.partial('_header') | raw }}
+
+<main id="main" class="main-container">
+  <section class="list">
+    <header class="page-header">
+      <h1>{{ (tag | default(category | default(archive_title | default('Archive')))) | title }}</h1>
+      <p class="lede">Browsing posts in {{ tag | default(category | default('Archive')) }}.</p>
+    </header>
+
+    {% if dossiers is defined and dossiers is not empty %}
+      <ul class="post-list">
+        {% for dossier in dossiers %}
+          {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+          <li class="post-card">
+            {% if dossier.date is defined and dossier.date %}
+              <p class="show-meta"><time datetime="{{ dossier.date }}">{{ dossier.date | date('F d, Y') }}</time></p>
+            {% endif %}
+            <h2><a href="{{ url }}">{{ dossier.hero_title | default(dossier.title | default('')) }}</a></h2>
+            {% if dossier.deck is defined and dossier.deck %}
+              <p class="summary">{{ dossier.deck | striptags }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% elseif posts is defined and posts is not empty %}
+      <ul class="post-list">
+        {% for post in posts %}
+          {% set url = theme.isStatic() ? (base_path ~ post.slug ~ '/index.html') : ('post.php?slug=' ~ post.slug ~ '&section=' ~ (post.section | default('blog'))) %}
+          <li class="post-card">
+            {% if post.date is defined and post.date %}
+              <p class="show-meta"><time datetime="{{ post.date }}">{{ post.date | date('F d, Y') }}</time></p>
+            {% endif %}
+            <h2><a href="{{ url }}">{{ post.hero_title | default(post.title | default('')) }}</a></h2>
+            {% if post.deck is defined and post.deck %}
+              <p class="summary">{{ post.deck | striptags }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty">No entries found in this archive.</p>
+    {% endif %}
+  </section>
+</main>
+
+{{ theme.partial('_footer') | raw }}

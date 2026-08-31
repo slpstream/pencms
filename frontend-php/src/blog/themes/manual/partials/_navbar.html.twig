@@ -1,0 +1,8 @@
+<button class="mobile-menu-toggle" type="button" data-menu-toggle aria-controls="primary-nav" aria-expanded="false">Menu</button>
+<nav class="primary-nav" id="primary-nav" aria-label="Primary">
+  {% set nav_items = menu('primary') %}
+  <ul>{% for item in nav_items %}<li{% if item.children is not empty %} class="has-children"{% endif %}>
+    {% if item.target_type == 'label' %}<span>{{ item.label }}</span>{% else %}<a href="{{ item.url }}"{% if item.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>{% endif %}
+    {% if item.children is not empty %}<ul>{% for child in item.children %}<li>{% if child.target_type == 'label' %}<span>{{ child.label }}</span>{% else %}<a href="{{ child.url }}"{% if child.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>{% endif %}</li>{% endfor %}</ul>{% endif %}
+  </li>{% endfor %}</ul>
+</nav>

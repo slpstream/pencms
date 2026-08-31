@@ -1,0 +1,106 @@
+<div class="musings-layout">
+    <aside class="musings-sidebar" aria-label="Main Navigation">
+        <div class="musings-sidebar-header">
+            <div class="musings-site-header">
+                <h1 class="site-title">
+                    <a href="{{ base_path | default('') ~ (theme.isStatic() ? 'index.html' : 'index.php') }}">{{ sitename | default('Musings') }}</a>
+                </h1>
+                {% if tagline is defined and tagline is not empty %}
+                    <p class="site-tagline">{{ tagline }}</p>
+                {% endif %}
+            </div>
+            <button class="musings-menu-toggle" aria-expanded="false" aria-controls="musings-sidebar-content" aria-label="Toggle navigation">
+                <span class="musings-hamburger-bar"></span>
+                <span class="musings-hamburger-bar"></span>
+                <span class="musings-hamburger-bar"></span>
+            </button>
+        </div>
+        
+        <div class="musings-sidebar-content" id="musings-sidebar-content">
+            <div class="musings-sidebar-top">
+                {% include 'partials/_navbar.html.twig' %}
+                {% include 'partials/_sidebar-secondary.html.twig' %}
+            </div>
+            
+            <div class="musings-sidebar-bottom">
+                {% set author_name = '' %}
+                {% if author is defined %}
+                    {% if author.display_name is defined and author.display_name is not empty %}
+                        {% set author_name = author.display_name %}
+                    {% elseif author is iterable and author.name is defined and author.name is not empty %}
+                        {% set author_name = author.name %}
+                    {% elseif author is not iterable and author is not empty %}
+                        {% set author_name = author %}
+                    {% endif %}
+                {% endif %}
+                {% if author_name is empty %}
+                    {% set author_name = sitename | default('Author') %}
+                {% endif %}
+
+                {% set author_avatar_url = '' %}
+                {% if author is defined and author.avatar is defined and author.avatar is not empty %}
+                    {% set author_avatar_url = author.avatar %}
+                {% endif %}
+
+                {% set author_bio_text = '' %}
+                {% if author is defined and author.bio is defined and author.bio is not empty %}
+                    {% set author_bio_text = author.bio %}
+                {% endif %}
+
+                <div class="musings-author-card">
+                    <div class="musings-author-inner">
+                        {% if author_avatar_url is not empty %}
+                            <img src="{{ author_avatar_url }}" alt="{{ author_name }}" class="musings-author-avatar">
+                        {% else %}
+                            <div class="musings-author-avatar-fallback">
+                                <span>{{ author_name|slice(0, 1)|upper }}</span>
+                            </div>
+                        {% endif %}
+                        <div class="musings-author-info">
+                            <div class="musings-author-name">{{ author_name }}</div>
+                            {% if author_bio_text is not empty %}
+                                <div class="musings-author-bio">{{ author_bio_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="musings-divider"></div>
+                
+                <!-- Lower Left Logo Placement -->
+                <div class="musings-logo-container">
+                    {% set logo = theme.getLogoUrl() %}
+                    {% if logo is not empty %}
+                        <img src="{{ logo }}" alt="{{ sitename | default('') }} logo" class="musings-logo">
+                    {% else %}
+                        <!-- Fallback Sunflower Graphic -->
+                        <svg class="musings-sunflower-svg" viewBox="0 0 100 70" fill="currentColor">
+                            <circle cx="35" cy="40" r="12" fill="#d97706" />
+                            <circle cx="35" cy="40" r="10" fill="#78350f" />
+                            <g fill="#facc15">
+                                <ellipse cx="35" cy="22" rx="3" ry="7" />
+                                <ellipse cx="35" cy="58" rx="3" ry="7" />
+                                <ellipse cx="17" cy="40" rx="7" ry="3" />
+                                <ellipse cx="53" cy="40" rx="7" ry="3" />
+                                <ellipse cx="22" cy="27" rx="6" ry="3" transform="rotate(-45 22 27)" />
+                                <ellipse cx="48" cy="53" rx="6" ry="3" transform="rotate(-45 48 53)" />
+                                <ellipse cx="22" cy="53" rx="6" ry="3" transform="rotate(45 22 53)" />
+                                <ellipse cx="48" cy="27" rx="6" ry="3" transform="rotate(45 48 27)" />
+                            </g>
+                            <circle cx="75" cy="30" r="9" fill="#d97706" />
+                            <circle cx="75" cy="30" r="7" fill="#78350f" />
+                            <g fill="#fde047">
+                                <ellipse cx="75" cy="16" rx="2.5" ry="5.5" />
+                                <ellipse cx="75" cy="44" rx="2.5" ry="5.5" />
+                                <ellipse cx="61" cy="30" rx="5.5" ry="2.5" />
+                                <ellipse cx="89" cy="30" rx="5.5" ry="2.5" />
+                            </g>
+                        </svg>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="musings-content-wrapper">
+        <main class="musings-main" id="main-content">

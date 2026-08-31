@@ -1,0 +1,20 @@
+{% set url = contentUrl(dossier) %}
+{% set zone = dossier.trumpet | default(dossier.category | default(dossier.section | default(''))) %}
+<li>
+    <a class="cc-inv-row" href="{{ url }}">
+        <span class="cc-inv-no">DOC-{{ '%02d'|format(doc_index|default(1)) }}</span>
+        <span class="cc-inv-title">
+            {% if zone is not empty %}<span class="cc-inv-zone">{{ zone }} — </span>{% endif %}
+            {{ dossier.hero_title | default(dossier.title | default('Untitled')) }}
+        </span>
+        <span class="cc-inv-date">
+            {% if dossier.dateline is defined and dossier.dateline is not empty %}
+                {{ dossier.dateline }}
+            {% elseif dossier.date is defined and dossier.date is not empty %}
+                {{ dossier.date | date('d M y')|upper }}
+            {% else %}
+                —
+            {% endif %}
+        </span>
+    </a>
+</li>

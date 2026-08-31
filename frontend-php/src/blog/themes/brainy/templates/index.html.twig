@@ -1,0 +1,119 @@
+{{ theme.partial('head', { is_index: true }) | raw }}
+{{ theme.partial('header', { is_index: true }) | raw }}
+
+<div id="content-wrapper">
+    <main id="main">
+        {% set post_list = (dossiers is defined and dossiers is not empty) ? dossiers : ((posts is defined and posts is not empty) ? posts : []) %}
+        {% set lead = post_list|first %}
+        {% set rest = post_list|slice(1) %}
+
+        {% if lead is not empty %}
+            {% set lead_url = contentUrl(lead) %}
+            {% set lead_hero = lead.hero_image | default(null) %}
+            {% set lead_zone = lead.category | default(lead.section | default('')) %}
+            {% set lead_facet = lead.trumpet | default(lead_zone) %}
+            {% set lead_byline = (lead.author is defined and lead.author is iterable) ? (lead.author.name | default(lead.author.display_name | default(''))) : (lead.author | default('')) %}
+            {% set lead_has_dateline = lead.dateline is defined and lead.dateline is not empty %}
+            {% set lead_has_date = lead.date is defined and lead.date is not empty %}
+            {% set lead_has_deck = lead.deck is defined and lead.deck is not empty %}
+            {% set lead_title = lead.hero_title | default(lead.title | default('Untitled')) %}
+
+            <article class="index-lead-story">
+                <div class="magazine-header">
+                    {% if lead_hero is not empty and lead_hero != 'images/defaulthero.jpg' %}
+                        <figure class="header-image standard-image">
+                            <a href="{{ lead_url }}">
+                                <img src="{{ contentAsset(lead_hero) }}" alt="{{ lead_title }}">
+                            </a>
+                        </figure>
+                    {% endif %}
+
+                    <div class="header-text-content">
+                        {% if lead_facet is not empty %}
+                            <span class="trumpet">{{ lead_facet }}</span>
+                        {% endif %}
+
+                        <h1 class="headline">
+                            <a href="{{ lead_url }}">{{ lead_title }}</a>
+                        </h1>
+
+                        {% if lead_has_deck %}
+                            <div class="deck">{{ lead.deck | striptags }}</div>
+                        {% endif %}
+
+                        {% if lead_byline is not empty or lead_has_dateline or lead_has_date %}
+                            <div class="byline-container">
+                                {% if lead_byline is not empty %}
+                                    <div class="byline">
+                                        By <span class="byline-author">{{ lead_byline }}</span>
+                                    </div>
+                                {% endif %}
+                                {% if lead_has_dateline or lead_has_date %}
+                                    <div class="timestamp-container">
+                                        <span class="timestamp">
+                                            {% if lead_has_dateline %}
+                                                {{ lead.dateline }}
+                                            {% elseif lead_has_date %}
+                                                {{ lead.date | date("m.d.y") }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+        {% endif %}
+
+        {% if rest is not empty %}
+            <div class="index-grid">
+                {% for dossier in rest %}
+                    {% set post_url = contentUrl(dossier) %}
+                    {% set card_hero = dossier.hero_image | default(null) %}
+                    {% set card_zone = dossier.category | default(dossier.section | default('')) %}
+                    {% set card_facet = dossier.trumpet | default(card_zone) %}
+                    {% set card_byline = (dossier.author is defined and dossier.author is iterable) ? (dossier.author.name | default(dossier.author.display_name | default(''))) : (dossier.author | default('')) %}
+                    {% set card_has_deck = dossier.deck is defined and dossier.deck is not empty %}
+                    {% set card_has_date = dossier.date is defined and dossier.date is not empty %}
+                    {% set card_has_dateline = dossier.dateline is defined and dossier.dateline is not empty %}
+                    {% set card_title = dossier.hero_title | default(dossier.title | default('Untitled')) %}
+
+                    <article class="post-card">
+                        {% if card_hero is not empty and card_hero != 'images/defaulthero.jpg' %}
+                            <a href="{{ post_url }}" class="card-image-wrapper">
+                                <img src="{{ contentAsset(card_hero) }}" alt="{{ card_title }}" loading="lazy">
+                            </a>
+                        {% endif %}
+                        <div class="post-card-content">
+                            {% if card_facet is not empty %}
+                                <div class="trumpet" style="font-size: 0.8rem; margin-bottom: 0.35rem;">{{ card_facet }}</div>
+                            {% endif %}
+                            <h2 class="post-card-title">
+                                <a href="{{ post_url }}">{{ card_title }}</a>
+                            </h2>
+                            {% if card_has_deck %}
+                                <p class="post-card-deck">{{ dossier.deck | striptags }}</p>
+                            {% endif %}
+                            {% if card_byline is not empty or card_has_dateline or card_has_date %}
+                                <div style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--color-muted); margin-top: 0.5rem;">
+                                    {% if card_byline is not empty %}By {{ card_byline }}{% endif %}
+                                    {% if card_byline is not empty and (card_has_dateline or card_has_date) %} &bull; {% endif %}
+                                    {% if card_has_dateline %}
+                                        {{ dossier.dateline }}
+                                    {% elseif card_has_date %}
+                                        {{ dossier.date | date("m.d.y") }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% elseif lead is empty %}
+            <p style="text-align: center; margin: 4rem 0; font-family: var(--font-sans);">No articles found.</p>
+        {% endif %}
+    </main>
+</div>
+
+{{ theme.partial('footer') | raw }}

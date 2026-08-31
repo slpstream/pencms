@@ -1,0 +1,29 @@
+<li class="post-card">
+    <article>
+        {% set url = dossier.url is defined and dossier.url is not empty ? dossier.url : (theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog')))) %}
+        <h2>
+            <a href="{{ url }}">
+                {{ dossier.hero_title | default(dossier.title | default('Untitled')) }}
+            </a>
+        </h2>
+        <p class="meta">
+            <time datetime="{{ dossier.date | default('now') | date('Y-m-d') }}">
+                {{ dossier.date | default('now') | date("F d, Y") }}
+            </time>
+            {% if dossier.author is defined and dossier.author is not empty %}
+                <span class="byline"> · {{ dossier.author }}</span>
+            {% endif %}
+            {% if dossier.tags is defined and dossier.tags is not empty %}
+                <span class="tags">
+                    {% for tag in dossier.tags %}
+                        <a class="tag" href="{{ base_path }}tag/{{ tag }}/">{{ tag }}</a>
+                    {% endfor %}
+                </span>
+            {% endif %}
+        </p>
+        {% set summary_text = dossier.deck | default(dossier.summary | default(dossier.description | default(''))) | striptags %}
+        {% if summary_text is not empty %}
+            <p class="summary">{{ summary_text }}</p>
+        {% endif %}
+    </article>
+</li>

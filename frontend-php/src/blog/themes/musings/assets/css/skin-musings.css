@@ -1,0 +1,767 @@
+/* Traven Editor - Musings Theme (Dark Retro Field-Journal Base) */
+
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/source-serif-4-latin-400-italic.woff2') format('woff2');
+}
+
+:root {
+  /* Typography Variables */
+  --traven-font-display: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  --traven-font-body: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  --traven-font-mono: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  /* Pure Dark Color Palette Variables */
+  --traven-bg: #0d1117;
+  --traven-sidebar-bg: #080a09;
+  --traven-text: #dad4c7;
+  --traven-muted: #8b949e;
+  --traven-accent: #85e89d;
+  --traven-accent-bright: #a6e22e;
+  --traven-border: #30363d;
+  --traven-border-light: #21262d;
+  --traven-selection: rgba(133, 232, 157, 0.2);
+  --traven-selection-focused: rgba(133, 232, 157, 0.35);
+  --traven-caret: #85e89d;
+
+  --traven-h-color: #dad4c7;
+  --traven-bold-color: #dad4c7;
+  --traven-italic-color: #dad4c7;
+  --traven-highlight-bg: rgba(133, 232, 157, 0.25);
+
+  --traven-code-bg: #161b22;
+  --traven-code-text: #85e89d;
+  --traven-code-border: #30363d;
+
+  --traven-blockquote-border: #85e89d;
+  --traven-blockquote-text: #dad4c7;
+
+  --traven-widget-bg: #161b22;
+  --traven-widget-border: #30363d;
+  --traven-widget-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --traven-widget-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+
+  --traven-active-line: rgba(133, 232, 157, 0.05);
+  --traven-frontmatter-bg: #161b22;
+  --traven-frontmatter-border: #30363d;
+  --traven-frontmatter-active-bg: #0d1117;
+  --traven-frontmatter-active-text: #85e89d;
+
+  --traven-info-bg: rgba(56, 189, 248, 0.1);
+  --traven-info-border: rgba(56, 189, 248, 0.3);
+  --traven-info-text: #38bdf8;
+  --traven-warning-bg: rgba(245, 158, 11, 0.1);
+  --traven-warning-border: rgba(245, 158, 11, 0.3);
+  --traven-warning-text: #fbbf24;
+
+  /* GitHub Alert Variables (Dark Mode) */
+  --traven-alert-note-border: rgba(56, 189, 248, 0.4);
+  --traven-alert-note-bg: rgba(56, 189, 248, 0.08);
+  --traven-alert-note-text: #38bdf8;
+  --traven-alert-tip-border: rgba(133, 232, 157, 0.4);
+  --traven-alert-tip-bg: rgba(133, 232, 157, 0.08);
+  --traven-alert-tip-text: #85e89d;
+  --traven-alert-important-border: rgba(168, 85, 247, 0.4);
+  --traven-alert-important-bg: rgba(168, 85, 247, 0.08);
+  --traven-alert-important-text: #c084fc;
+  --traven-alert-warning-border: rgba(245, 158, 11, 0.4);
+  --traven-alert-warning-bg: rgba(245, 158, 11, 0.08);
+  --traven-alert-warning-text: #fbbf24;
+  --traven-alert-caution-border: rgba(239, 68, 68, 0.4);
+  --traven-alert-caution-bg: rgba(239, 68, 68, 0.08);
+  --traven-alert-caution-text: #f87171;
+}
+
+/* Base System Typography Stacks */
+.cm-editor,
+.traven-preview {
+  font-family: var(--traven-font-body) !important;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--traven-text);
+  background-color: var(--traven-bg);
+}
+
+.cm-wysiwym-inline-code,
+.cm-wysiwym-codeblock-line,
+.cm-wysiwym-frontmatter,
+.raw-editor-mount .cm-editor,
+.traven-preview code,
+.traven-preview pre {
+  font-family: var(--traven-font-mono) !important;
+}
+
+/* Links in editor & preview */
+.cm-editor .cm-link,
+.traven-preview a {
+  color: var(--traven-accent);
+  text-decoration: none !important;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.cm-editor .cm-link:hover,
+.traven-preview a:hover {
+  color: var(--traven-accent-bright);
+  text-decoration: none !important;
+  opacity: 0.9;
+}
+
+/* Headings */
+.cm-editor .cm-wysiwym-h1,
+.cm-editor .cm-wysiwym-h2,
+.cm-editor .cm-wysiwym-h3,
+.cm-editor .cm-wysiwym-h4,
+.cm-editor .cm-wysiwym-h5,
+.cm-editor .cm-wysiwym-h6,
+.traven-preview h1,
+.traven-preview h2,
+.traven-preview h3,
+.traven-preview h4,
+.traven-preview h5,
+.traven-preview h6 {
+  font-family: var(--traven-font-display);
+  font-weight: 400;
+  color: var(--traven-h-color);
+  letter-spacing: -0.02em;
+}
+
+/* Title block: .post-detail-trumpet / .post-detail-title / .post-detail-deck (admin + publish) */
+.post-detail-trumpet,
+.musings-post-eyebrow .musings-post-trumpet {
+  font-family: var(--traven-font-display) !important;
+  font-size: 0.92rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--traven-muted) !important;
+  line-height: 1.4 !important;
+}
+
+.post-detail-title,
+.musings-post-header h1,
+.musings-post-detail h1 {
+  font-family: var(--traven-font-display) !important;
+  font-size: clamp(2.35rem, 5.5vw + 1rem, 4.625rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--traven-text) !important;
+}
+
+.post-detail-deck,
+.musings-post-deck {
+  font-family: var(--traven-font-body) !important;
+  font-size: 1.625rem !important;
+  line-height: 1.5 !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  color: var(--traven-text) !important;
+  opacity: 0.78 !important;
+}
+
+.hero-title-block.traven-preview {
+  background-color: var(--traven-bg) !important;
+  color: var(--traven-text) !important;
+}
+
+.article-content.traven-preview h1,
+.traven-preview .article-content h1,
+.traven-preview h1:not(.musings-post-header h1):not(.musings-hero-card h1) {
+  font-size: 2.2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.traven-preview h2 {
+  font-size: 1.6rem;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.25;
+}
+
+.traven-preview h3 {
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.traven-preview h4 {
+  font-size: 1.1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.traven-preview h5 {
+  font-size: 1.0rem;
+  margin-top: 1.0rem;
+  margin-bottom: 0.5rem;
+}
+
+.traven-preview h6 {
+  font-size: 0.9rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  color: var(--traven-muted);
+}
+
+/* Paragraphs & Text Elements */
+.traven-preview p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.traven-preview strong,
+.cm-editor .cm-strong {
+  color: var(--traven-bold-color);
+  font-weight: 700;
+}
+
+.traven-preview em,
+.traven-preview i,
+.cm-editor .cm-em {
+  color: var(--traven-italic-color);
+  font-style: italic;
+}
+
+.traven-preview mark {
+  background-color: var(--traven-highlight-bg);
+  color: var(--traven-text);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+/* Horizontal Rules */
+.traven-preview hr {
+  border: none;
+  border-top: 1px solid var(--traven-border);
+  margin: 2rem 0;
+}
+
+/* Lists */
+.traven-preview ul,
+.traven-preview ol {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.traven-preview li {
+  margin-bottom: 0.4rem;
+}
+
+.traven-preview ul li::marker {
+  color: var(--traven-accent);
+}
+
+/* Blockquotes */
+.traven-preview blockquote {
+  margin: 1.5rem 0;
+  padding: 0.8rem 1.2rem;
+  border-left: 3px solid var(--traven-blockquote-border);
+  background-color: var(--traven-code-bg);
+  color: var(--traven-blockquote-text);
+  font-style: normal;
+}
+
+.traven-preview blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code & Preformatted */
+.traven-preview code {
+  background-color: var(--traven-code-bg);
+  color: var(--traven-code-text);
+  padding: 0.15em 0.4em;
+  border: 1px solid var(--traven-code-border);
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.traven-preview pre {
+  background-color: var(--traven-code-bg);
+  border: 1px solid var(--traven-code-border);
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.traven-preview pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* Tables */
+.traven-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.95em;
+}
+
+.traven-preview th,
+.traven-preview td {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--traven-border);
+  text-align: left;
+}
+
+.traven-preview th {
+  background-color: var(--traven-code-bg);
+  color: var(--traven-h-color);
+  font-weight: 700;
+}
+
+.traven-preview tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Video Containers (Mandatory aspect ratio) */
+.traven-video-container,
+.traven-preview .traven-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 1.5rem;
+  background-color: #000000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.traven-video-container iframe,
+.traven-video-container video,
+.traven-preview .traven-video-container iframe,
+.traven-preview .traven-video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Traven Audio & Media Shortcodes */
+.traven-preview .traven-audio-shortcode,
+.traven-audio-shortcode {
+  background: var(--traven-code-bg);
+  border: 1px solid var(--traven-border);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+/* GitHub Style Alerts */
+.traven-preview .traven-alert {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+  border-radius: 0 4px 4px 0;
+}
+
+.traven-preview .traven-alert-note {
+  border-color: var(--traven-alert-note-border);
+  background-color: var(--traven-alert-note-bg);
+  color: var(--traven-alert-note-text);
+}
+
+.traven-preview .traven-alert-tip {
+  border-color: var(--traven-alert-tip-border);
+  background-color: var(--traven-alert-tip-bg);
+  color: var(--traven-alert-tip-text);
+}
+
+.traven-preview .traven-alert-important {
+  border-color: var(--traven-alert-important-border);
+  background-color: var(--traven-alert-important-bg);
+  color: var(--traven-alert-important-text);
+}
+
+.traven-preview .traven-alert-warning {
+  border-color: var(--traven-alert-warning-border);
+  background-color: var(--traven-alert-warning-bg);
+  color: var(--traven-alert-warning-text);
+}
+
+.traven-preview .traven-alert-caution {
+  border-color: var(--traven-alert-caution-border);
+  background-color: var(--traven-alert-caution-bg);
+  color: var(--traven-alert-caution-text);
+}
+
+/* Traven Shortcode Component Boxes (Info, Warning, Details) */
+.traven-preview .traven-component,
+.traven-component {
+  margin: 1.75rem 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--traven-border);
+  background-color: var(--traven-code-bg);
+}
+
+.traven-preview .traven-component summary.component-header,
+.traven-component summary.component-header,
+.traven-preview .traven-component .component-header,
+.traven-component .component-header {
+  padding: 0.75rem 1rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  outline: none;
+}
+
+.traven-preview details.traven-component summary.component-header,
+details.traven-component summary.component-header {
+  cursor: pointer;
+  list-style: none;
+}
+
+.traven-preview details.traven-component summary.component-header::-webkit-details-marker,
+details.traven-component summary.component-header::-webkit-details-marker {
+  display: none;
+}
+
+.traven-preview .traven-component .component-title,
+.traven-component .component-title {
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.traven-preview .traven-component .component-body,
+.traven-component .component-body {
+  padding: 0.5rem 1rem 0.85rem 1rem;
+  color: var(--traven-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.traven-preview .traven-component .component-body p:last-child,
+.traven-component .component-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Info Component Box */
+.traven-preview .traven-component-info,
+.traven-component-info {
+  background-color: rgba(133, 232, 157, 0.04);
+  border: 1px solid rgba(133, 232, 157, 0.25);
+  border-left: 4px solid var(--traven-accent);
+}
+
+.traven-preview .traven-component-info .component-header,
+.traven-component-info .component-header,
+.traven-preview .traven-component-info .component-title,
+.traven-component-info .component-title {
+  color: var(--traven-accent);
+}
+
+/* Warning Component Box */
+.traven-preview .traven-component-warning,
+.traven-component-warning {
+  background-color: rgba(224, 108, 117, 0.04);
+  border: 1px solid rgba(224, 108, 117, 0.25);
+  border-left: 4px solid #e06c75;
+}
+
+.traven-preview .traven-component-warning .component-header,
+.traven-component-warning .component-header,
+.traven-preview .traven-component-warning .component-title,
+.traven-component-warning .component-title {
+  color: #e06c75;
+}
+
+/* PenCMS Image & Media Shortcodes, Figures & Matrices */
+.traven-preview img,
+.traven-preview figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.traven-preview figure {
+  margin: 1.75rem 0;
+  display: block;
+  max-width: 100%;
+}
+
+.traven-preview figcaption,
+.traven-preview .traven-figure-caption,
+.traven-preview .figure-caption {
+  font-size: 0.82rem;
+  color: var(--traven-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* Image & Shortcode Alignment (Float Left / Float Right / Center) */
+.traven-preview .align-left,
+.traven-preview .alignleft,
+.traven-preview .inline-image-left,
+.traven-preview figure.align-left,
+.traven-preview figure.alignleft,
+.traven-preview figure.inline-image-left,
+.traven-preview .gallery-single.align-left,
+.traven-preview .gallery-single.inline-image-left,
+.gallery-single.align-left,
+.gallery-single.inline-image-left {
+  float: left !important;
+  margin-top: 0.5rem !important;
+  margin-right: 1.75rem !important;
+  margin-bottom: 1.25rem !important;
+  margin-left: 0 !important;
+  max-width: 48%;
+}
+
+.traven-preview .align-right,
+.traven-preview .alignright,
+.traven-preview .inline-image-right,
+.traven-preview figure.align-right,
+.traven-preview figure.alignright,
+.traven-preview figure.inline-image-right,
+.traven-preview .gallery-single.align-right,
+.traven-preview .gallery-single.inline-image-right,
+.gallery-single.align-right,
+.gallery-single.inline-image-right {
+  float: right !important;
+  margin-top: 0.5rem !important;
+  margin-right: 0 !important;
+  margin-bottom: 1.25rem !important;
+  margin-left: 1.75rem !important;
+  max-width: 48%;
+}
+
+.traven-preview .align-center,
+.traven-preview .aligncenter,
+.traven-preview figure.align-center,
+.traven-preview figure.aligncenter,
+.traven-preview img.aligncenter,
+.traven-preview img.align-center,
+.traven-preview .img-center,
+.traven-preview img[class*="align-center"],
+.traven-preview figure[class*="align-center"] {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center;
+}
+
+.traven-preview .align-fullbleed,
+.traven-preview .fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview figure.fullbleed,
+.traven-preview img.img-fullbleed,
+.traven-preview img.fullbleed {
+  width: 100%;
+  max-width: none;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Traven HTML Gallery Single Container Rules */
+.traven-preview .gallery-single,
+.gallery-single {
+  margin: 1.75rem 0;
+  display: block;
+}
+
+.traven-preview .gallery-single.inline-image-center,
+.traven-preview .gallery-single.align-center,
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+.gallery-single.inline-image-center,
+.gallery-single.align-center,
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center;
+}
+
+.traven-preview .gallery-single .photo-wrapper img,
+.traven-preview .gallery-single img,
+.gallery-single .photo-wrapper img,
+.gallery-single img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border-radius: 4px;
+}
+
+.traven-preview .gallery-single .caption,
+.gallery-single .caption {
+  font-size: 0.82rem;
+  color: var(--traven-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+  display: block;
+}
+
+/* Image Size Classes for Figures & Gallery Elements */
+.traven-preview .size-small,
+.traven-preview .img--small,
+.traven-preview figure.size-small,
+.traven-preview .img-30,
+.gallery-single.size-small,
+.gallery-single.img--small {
+  width: 30% !important;
+  max-width: 300px;
+}
+
+.traven-preview .size-medium,
+.traven-preview .img--medium,
+.traven-preview figure.size-medium,
+.traven-preview .img-50,
+.gallery-single.size-medium,
+.gallery-single.img--medium {
+  width: 50% !important;
+  max-width: 500px;
+}
+
+.traven-preview .size-large,
+.traven-preview .img--large,
+.traven-preview figure.size-large,
+.traven-preview .img-70,
+.gallery-single.size-large,
+.gallery-single.img--large {
+  width: 70% !important;
+}
+
+.traven-preview .size-full,
+.traven-preview .img--full,
+.traven-preview figure.size-full,
+.traven-preview .img-100,
+.gallery-single.size-full,
+.gallery-single.img--full {
+  width: 100% !important;
+}
+
+/* Audio Player & Shortcodes */
+.traven-preview audio,
+.traven-audio-container audio {
+  width: 100%;
+  margin: 1rem 0;
+  accent-color: var(--traven-accent);
+}
+
+/* Traven Pullquotes */
+.traven-preview .traven-component-pullquote {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--traven-accent);
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px dashed var(--traven-border);
+  border-bottom: 1px dashed var(--traven-border);
+}
+
+/* Strict Zero Margin Rules for Admin CodeMirror Editor line elements to prevent caret drift */
+.cm-editor .cm-line {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ═════════════════════════════════════════════════════════════ */
+/* CodeMirror 6 Caret Audit & Zero-Margin Contract Rules        */
+/* ═════════════════════════════════════════════════════════════ */
+
+/* 1. Line marks & widgets - zero margin */
+.cm-editor .cm-wysiwym-codeblock-line {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-table-row {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-alert {
+  margin: 0 !important;
+}
+
+.cm-editor .cm-wysiwym-figure-shortcode {
+  margin: 0 !important;
+}
+
+/* 2. Collapsed fence */
+.cm-editor .cm-wysiwym-collapsed-fence {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
+/* 3. Mermaid & Math widgets zero margin auto */
+.cm-editor .cm-wysiwym-mermaid-container {
+  margin: 0 auto !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .cm-wysiwym-block-math-widget {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+.cm-editor .katex-display-fallback {
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+
+/* 4. Component inner reset */
+.cm-editor .cm-wysiwym-component-shortcode blockquote,
+.cm-editor .cm-wysiwym-component-shortcode p,
+.cm-editor .cm-wysiwym-figure-shortcode blockquote,
+.cm-editor .cm-wysiwym-figure-shortcode p {
+  margin: 0;
+}
+
+.cm-editor .cm-wysiwym-component-blockquote {
+  overflow: hidden;
+}
+
+/* 5. Blank line collapse before and after widgets */
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-codeblock-line-first),
+.cm-editor .cm-wysiwym-codeblock-line-last + .cm-line:has(br:only-child),
+.cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
+.cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
+.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
+.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode),
+.cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
+.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
+.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
+.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container) {
+  height: 0.4em !important;
+  min-height: 0.4em !important;
+}

@@ -1,0 +1,53 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+<div class="terminal-window">
+    <div class="terminal-window-bar">
+        <span class="terminal-window-dots"><span></span><span></span><span></span></span>
+        <span class="terminal-window-title">root@pencms: ~/feed</span>
+        <span>sh</span>
+    </div>
+    <div class="terminal-window-body">
+
+        {# Boot-log hero — blinking prompt + status line #}
+        <section class="boot-hero">
+            <pre class="boot-hero-pre"><span class="ok">[ ok ]</span> mounting /dev/feed
+<span class="ok">[ ok ]</span> decoding dossiers
+<span class="ok">[ ok ]</span> uplink stable
+<span class="warn">[ * ]</span> {{ dossiers | default([]) | length }} entries in queue</pre>
+            <h1 class="boot-hero-title">{{ hero_title | default(sitename | default('1337')) }}<span class="boot-hero-caret" aria-hidden="true"></span></h1>
+            {% if deck is not empty %}
+                <div class="boot-hero-deck">{{ deck | raw }}</div>
+            {% endif %}
+            <div class="boot-hero-status">
+                <span data-label="USER">{{ author | default('anon') }}</span>
+                <span data-label="TTY">tty/7</span>
+                <span data-label="UPTIME">99.9%</span>
+                <span data-label="CONN" class="status-ok">online</span>
+            </div>
+        </section>
+
+        {# `tree` directory listing of dossiers #}
+        <section class="tree-listing">
+            <div class="tree-listing-header">total {{ dossiers | default([]) | length }} dossiers</div>
+            {% if dossiers is defined and dossiers is not empty %}
+                {% for dossier in dossiers %}
+                    {% set row_idx = loop.index | format('%02d') %}
+                    {% set url = theme.isStatic() ? (base_path ~ dossier.slug ~ '/index.html') : ('post.php?slug=' ~ dossier.slug ~ '&section=' ~ (dossier.section | default('blog'))) %}
+                    <a href="{{ url }}" class="tree-row">
+                        <span class="tree-row-glyph">{% if not loop.last %}├──{% else %}└──{% endif %}</span>
+                        <span class="tree-row-idx">{{ row_idx }}</span>
+                        <span class="tree-row-title">{{ dossier.hero_title | default(dossier.title | default('untitled')) }}</span>
+                        <span class="tree-row-date">{{ dossier.date | default(dossier.dateline | default('----/--/--')) }}</span>
+                        <span class="tree-row-size">{{ dossier.read_time | default(dossier.size | default('—')) }}</span>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="tree-row-empty"></div>
+            {% endif %}
+        </section>
+
+    </div>
+</div>
+
+{{ theme.partial('footer') | raw }}

@@ -1,0 +1,60 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set secondary_items = menu('secondary') %}
+<main class="main-container">
+    {{ theme.partial('sidebar-secondary') | raw }}
+
+    <div class="post-detail-header{% if secondary_items is empty %} post-detail-header--no-secondary-nav{% endif %}">
+        <div class="post-detail-eyebrow">
+            <span class="post-card-badge">{{ category | default(section | default('POST')) | upper }}</span>
+            {% if trumpet is not empty %}
+                <span class="post-detail-trumpet">{{ trumpet }}</span>
+            {% endif %}
+        </div>
+        <h1 class="post-detail-title">{{ hero_title }}</h1>
+        {% if deck is not empty %}
+            <p class="post-detail-deck">{{ deck | raw }}</p>
+        {% endif %}
+        <div class="post-detail-meta">
+            {% if author is not empty %}
+                <span class="post-detail-byline">{{ author }}</span>
+            {% endif %}
+            {% if dateline is not empty %}
+                {% if author is not empty %}<span class="meta-separator">&mdash;</span>{% endif %}
+                <time datetime="{{ date }}">{{ dateline }}</time>
+            {% elseif date is not empty %}
+                {% if author is not empty %}<span class="meta-separator">&mdash;</span>{% endif %}
+                <time datetime="{{ date }}">{{ date | date("Y-m-d") }}</time>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if hero_image is not empty and hero_image != 'images/defaulthero.jpg' %}
+        <div class="post-hero-image-wrapper">
+            <img src="{{ contentAsset(hero_image) }}" alt="{{ hero_title }}" class="post-detail-hero-image">
+        </div>
+    {% endif %}
+
+    <div class="post-content-wrapper">
+        {% for post in posts %}
+            <article class="post-body" id="{{ post.id }}">
+                {% if post.title is not empty and posts|length > 1 %}
+                    <h2 class="post-fragment-title">{{ post.title }}</h2>
+                {% endif %}
+                <div class="article-content traven-preview">
+                    {{ post.content_html | raw }}
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    {{ theme.partial('faqs') | raw }}
+
+    <section class="freedomware-discussion">
+        {{ theme.partial('comment-thread') | raw }}
+        {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+    </section>
+</main>
+
+{{ theme.partial('footer') | raw }}

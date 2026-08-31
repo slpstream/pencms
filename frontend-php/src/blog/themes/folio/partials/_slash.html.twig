@@ -1,0 +1,21 @@
+{# Torn-paper gap between sections. Body bg (canvas) is gray; sections are white.
+   edge: omit/'both' = pair; 'top' = flip only (torn top of first section, no orphan upper slash);
+   'bottom' = non-flip only.
+   First slash = white torn shape extending the upper section down (torn bottom edge).
+   Second slash = same shape flipped vertically, extending the lower section up (torn top edge).
+   Gray body shows through the gap, so BOTH the upper bottom and lower top slope up. #}
+{% set edge = edge|default('both') %}
+{% if edge != 'top' %}
+<div class="folio-slash" aria-hidden="true">
+  <svg viewBox="0 0 1152 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="folio-slash-fill" d="M1152 0.999781V0.510196H0V47.9998C0 54.8232 5.68201 60.2734 12.4995 59.9894L1140.5 12.9894C1146.93 12.7216 1152 7.43288 1152 0.999781Z"></path>
+  </svg>
+</div>
+{% endif %}
+{% if edge != 'bottom' %}
+<div class="folio-slash folio-slash-flip{% if edge == 'top' %} folio-slash--intro{% endif %}" aria-hidden="true">
+  <svg viewBox="0 0 1152 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="folio-slash-fill" d="M1152 0.999781V0.510196H0V47.9998C0 54.8232 5.68201 60.2734 12.4995 59.9894L1140.5 12.9894C1146.93 12.7216 1152 7.43288 1152 0.999781Z"></path>
+  </svg>
+</div>
+{% endif %}

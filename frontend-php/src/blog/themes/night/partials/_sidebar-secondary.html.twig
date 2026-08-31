@@ -1,0 +1,31 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<aside class="night-lantern" aria-label="Secondary">
+    <p class="night-lantern-cjk tc" lang="zh-Hant" aria-hidden="true">晚</p>
+    <p class="night-lantern-kicker">LANTERN</p>
+    <ul class="night-lantern-list">
+        {% for item in secondary_items %}
+            <li class="night-lantern-item{% if item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type == 'label' %}
+                    <span class="night-lantern-label">{{ item.label }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="night-lantern-link" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+                {% if item.children is not empty %}
+                    <ul class="night-lantern-children">
+                        {% for child in item.children %}
+                            <li>
+                                {% if child.target_type == 'label' %}
+                                    <span class="night-lantern-label">{{ child.label }}</span>
+                                {% else %}
+                                    <a href="{{ child.url }}" class="night-lantern-link" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</aside>
+{% endif %}

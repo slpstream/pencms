@@ -1,0 +1,27 @@
+{% set secondary_items = menu('secondary') %}
+{% if secondary_items is not empty %}
+<nav class="secondary-rail" aria-label="Secondary">
+    <div class="secondary-rail-inner">
+        {% for item in secondary_items %}
+            <div class="secondary-rail-item{% if item.children is not empty %} has-children{% endif %}">
+                {% if item.target_type == 'label' %}
+                    <span class="secondary-rail-label{% if item.children is not empty %} nav-trigger{% endif %}">{{ item.label }}</span>
+                {% else %}
+                    <a href="{{ item.url }}" class="secondary-rail-link{% if item.children is not empty %} nav-trigger{% endif %}" {% if item.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}</a>
+                {% endif %}
+                {% if item.children is not empty %}
+                    <div class="secondary-rail-dropdown" role="menu">
+                        {% for child in item.children %}
+                            {% if child.target_type == 'label' %}
+                                <span class="secondary-rail-label">{{ child.label }}</span>
+                            {% else %}
+                                <a href="{{ child.url }}" class="secondary-rail-link" role="menuitem" {% if child.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>{{ child.label }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}

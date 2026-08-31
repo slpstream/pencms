@@ -1,0 +1,11 @@
+<header class="masthead site-header{% if (is_index is defined and is_index) or (body_class is defined and body_class == 'page-front') %} home-header{% endif %}">
+  {% set logo = theme.getLogoUrl() %}
+  <a class="site-title" href="{{ base_path is defined and base_path ? base_path : '/' }}" style="text-decoration: none;">
+    {% if logo is not empty %}
+      <img src="{{ logo }}" alt="{{ sitename is defined ? sitename : '' }}" class="site-logo">
+    {% else %}
+      <span>{{ sitename is defined ? sitename : '' }}</span>
+    {% endif %}
+  </a>
+  {{ theme.partial('_navbar') | raw }}
+</header>

@@ -1,0 +1,237 @@
+{
+  "type": "native",
+  "name": "Keys",
+  "version": "1.0.0",
+  "author": "PenCMS",
+  "license": "MIT",
+  "description": "Real-estate theme. Clean white page with agency-board green and photo-first listing cards.",
+  "editor_skin": "keys",
+  "color_mode": "both",
+  "editor_skin_base": [],
+  "supports": {
+    "toc": true,
+    "hero_image": true,
+    "composite": true,
+    "seo_meta": true,
+    "custom_fonts": true,
+    "sidebars": true,
+    "markdown_alternate": true
+  },
+  "variables": {
+    "hero_title": {
+      "type": "string",
+      "required": true
+    },
+    "posts": {
+      "type": "array",
+      "required": false
+    },
+    "dossiers": {
+      "type": "array",
+      "required": false
+    },
+    "hero_image": {
+      "type": "string",
+      "required": false
+    },
+    "deck": {
+      "type": "html",
+      "required": false
+    },
+    "trumpet": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "string",
+      "required": false
+    },
+    "author": {
+      "type": "string",
+      "required": false
+    },
+    "dateline": {
+      "type": "string",
+      "required": false
+    },
+    "page_title": {
+      "type": "string",
+      "required": false
+    },
+    "tagline": {
+      "type": "string",
+      "required": false
+    },
+    "page_content": {
+      "type": "html",
+      "required": false
+    },
+    "og_title": {
+      "type": "string",
+      "required": false
+    },
+    "og_description": {
+      "type": "string",
+      "required": false
+    },
+    "og_image": {
+      "type": "string",
+      "required": false
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "style": {
+    "dark_scope": {
+      "selector": "html.cm-wysiwym-dark, html[data-theme=\"dark\"]"
+    },
+    "groups": [
+      {
+        "id": "colors",
+        "label": "Color Palette",
+        "fields": [
+          {
+            "id": "bg",
+            "label": "Background",
+            "type": "color",
+            "var": "--color-bg",
+            "default": "#fcfcfa",
+            "dark_default": "#171d1a"
+          },
+          {
+            "id": "card",
+            "label": "Card / Panel",
+            "type": "color",
+            "var": "--color-card",
+            "default": "#ffffff",
+            "dark_default": "#1e2621"
+          },
+          {
+            "id": "text",
+            "label": "Body Text",
+            "type": "color",
+            "var": "--color-text",
+            "default": "#232825",
+            "dark_default": "#e5e8e5"
+          },
+          {
+            "id": "muted",
+            "label": "Muted Text",
+            "type": "color",
+            "var": "--color-muted",
+            "default": "#5c6560",
+            "dark_default": "#a3aca6"
+          },
+          {
+            "id": "accent",
+            "label": "Agency Green",
+            "type": "color",
+            "var": "--color-accent",
+            "default": "#1e5c46",
+            "dark_default": "#66b592"
+          },
+          {
+            "id": "flag-offer",
+            "label": "Offer Flag",
+            "type": "color",
+            "var": "--color-flag-offer",
+            "default": "#9a6a10",
+            "dark_default": "#dfa945"
+          },
+          {
+            "id": "tint",
+            "label": "Tint / Soft Fill",
+            "type": "color",
+            "var": "--color-tint",
+            "default": "#edf3ef",
+            "dark_default": "#212b25"
+          },
+          {
+            "id": "border",
+            "label": "Borders",
+            "type": "color",
+            "var": "--color-border",
+            "default": "#e3e6e3",
+            "dark_default": "#2d3630"
+          },
+          {
+            "id": "code-bg",
+            "label": "Code Background",
+            "type": "color",
+            "var": "--color-code-bg",
+            "default": "#f2f4f2",
+            "dark_default": "#232b26"
+          }
+        ]
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "fields": [
+          {
+            "id": "font-display",
+            "label": "Display Font",
+            "type": "select",
+            "var": "--font-display",
+            "default": "'Manrope', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Manrope', sans-serif", "label": "Manrope" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-body",
+            "label": "Body Font",
+            "type": "select",
+            "var": "--font-body",
+            "default": "'Manrope', sans-serif",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              { "value": "'Manrope', sans-serif", "label": "Manrope" },
+              { "value": "Georgia, 'Times New Roman', serif", "label": "Georgia" }
+            ]
+          },
+          {
+            "id": "font-mono",
+            "label": "Mono Font",
+            "type": "select",
+            "var": "--font-mono",
+            "default": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+            "options": [
+              { "value": "", "label": "Theme default" },
+              {
+                "value": "ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, \"Liberation Mono\", monospace",
+                "label": "System Mono"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "social_preview": {
+    "og_accent_color": "#1E5C46",
+    "og_vignette_color": "#232825",
+    "og_text_color": "#FFFFFF",
+    "og_bar_color": "#171D1A",
+    "og_font": "Manrope-Bold",
+    "og_fonts": {
+      "Manrope-Bold": "assets/fonts/Manrope-Bold.ttf",
+      "Manrope-Regular": "assets/fonts/Manrope-Regular.ttf"
+    },
+    "og_headline_style": "plain",
+    "og_text_case": "title",
+    "og_grade_preset": "clean",
+    "og_accent_bar": true,
+    "og_watermark": null,
+    "og_default_hero": "assets/images/defaulthero.jpg",
+    "og_default_image": null,
+    "og_fallback_title": "Untitled",
+    "og_title_fallback": null,
+    "og_description_fallback": null,
+    "twitter_card": "summary_large_image"
+  }
+}

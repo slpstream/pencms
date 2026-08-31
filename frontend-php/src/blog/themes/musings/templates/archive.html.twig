@@ -1,0 +1,49 @@
+{{ theme.partial('head') | raw }}
+{{ theme.partial('header') | raw }}
+
+{% set raw_filter = archive_title | default(category | default('')) | trim %}
+{% set is_generic = raw_filter is empty or raw_filter | lower in ['archive', 'archives', 'all'] %}
+
+<div class="musings-header-meta">
+    {% if is_generic %}
+        POSTS / CHRONOLOGICAL
+    {% else %}
+        ARCHIVE / {{ raw_filter | upper }}
+    {% endif %}
+</div>
+
+<section class="musings-archive-page">
+    <header class="musings-post-header">
+        {% if is_generic %}
+            <h1>All Posts</h1>
+        {% else %}
+            <h1>{{ raw_filter | title }}</h1>
+        {% endif %}
+    </header>
+
+    {% set items = dossiers | default(posts | default([])) %}
+    {% if items is empty %}
+        <p style="color: var(--musings-muted);">No archive entries found.</p>
+    {% else %}
+        <div class="musings-post-list">
+            {% for item in items %}
+                {% set item_url = theme.isStatic() ? (base_path | default('') ~ (item.slug|default('')) ~ '/index.html') : ('post.php?slug=' ~ (item.slug|default('')) ~ '&section=' ~ (item.section | default('blog'))) %}
+                <article class="musings-post-item">
+                    <div class="item-date">
+                        {% if item.date is defined and item.date is not empty %}
+                            {{ item.date | date('y · m · d') }}
+                        {% endif %}
+                    </div>
+                    <div class="item-title">
+                        <a href="{{ item_url }}">{{ item.hero_title | default(item.title | default('Untitled')) }}</a>
+                    </div>
+                    {% if item.deck is defined and item.deck is not empty %}
+                        <div class="item-excerpt">{{ item.deck | striptags }}</div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+
+{{ theme.partial('footer') | raw }}

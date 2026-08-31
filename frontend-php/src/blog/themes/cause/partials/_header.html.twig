@@ -1,0 +1,11 @@
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="masthead">
+    <a href="{{ base_path ~ (theme.isStatic() ? 'index.html' : 'index.php') }}" class="site-title">
+        {% set logo = theme.getLogoUrl() %}
+        {% if logo is defined and logo is not empty %}
+            <img src="{{ logo }}" alt="{{ sitename | default('Cause') }}" class="site-logo" style="max-height: 40px; vertical-align: middle; margin-right: 8px;">
+        {% endif %}
+        {{ sitename | default('Cause') }}
+    </a>
+    {{ theme.partial('navbar') | raw }}
+</header>

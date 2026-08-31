@@ -1,0 +1,23 @@
+{% if author is defined and author is not empty %}
+    {% set auth_avatar = author.avatar|default('') %}
+    {% set auth_bio = author.bio|default('') %}
+    {% set auth_website = author.website|default('') %}
+    {% set auth_name = author.display_name|default(author.name|default(author is iterable ? '' : author)) %}
+    {% if auth_avatar is not empty or auth_bio is not empty or auth_website is not empty %}
+    <div class="sidebar-widget profile-card">
+        <h3 class="sidebar-title">About the Author</h3>
+        {% if auth_avatar is not empty %}
+            <img src="{{ auth_avatar }}" alt="{{ auth_name|e }}" class="profile-avatar">
+        {% endif %}
+        {% if auth_name is not empty %}
+            <h4 class="profile-name">{{ auth_name|e }}</h4>
+        {% endif %}
+        {% if auth_bio is not empty %}
+            <p class="profile-bio">{{ auth_bio|e }}</p>
+        {% endif %}
+        {% if auth_website is not empty %}
+            <a href="{{ auth_website }}" class="profile-link" target="_blank" rel="noopener noreferrer">Visit Website &rarr;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endif %}
