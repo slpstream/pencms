@@ -126,6 +126,12 @@ composer.lock
 .DS_Store
 Thumbs.db
 
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
 # User avatars
 /backend-python/apps/blog/shared/images/avatar.*
 
