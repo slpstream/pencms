@@ -244,6 +244,9 @@
              Loaded synchronously (not deferred) because renderMsg() calls
              marked.parse() on first AI response render. ~40 KB minified. -->
         <script src="/assets/vendor/marked/marked.min.js"></script>
+        <!-- XSS sanitizer for marked postprocess; vendor copy at assets/vendor/dompurify/. -->
+        <script src="/assets/vendor/dompurify/purify.min.js"></script>
+        <script src="js/ai-markdown-sanitize.js"></script>
         <?php
     endif;
     if ($penLoadTraven):

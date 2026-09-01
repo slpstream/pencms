@@ -66,40 +66,7 @@ md.use({
       return out.join("\n");
     },
     postprocess(html) {
-      return html
-        .replace(/<script\b[\s\S]*?<\/script>/gi, "")
-        .replace(/<iframe\b[\s\S]*?<\/iframe>/gi, "")
-        .replace(/<style\b[\s\S]*?<\/style>/gi, "")
-        .replace(/<object\b[\s\S]*?<\/object>/gi, "")
-        .replace(/<embed\b[\s\S]*?<\/embed>/gi, "")
-        .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "")
-        .replace(
-          /(\b(?:href|src|xlink:href|formaction)\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi,
-          (_m, prefix, q1, q2, q3) => {
-            const raw =
-              q1 !== undefined ? q1 : q2 !== undefined ? q2 : q3 || "";
-            const decoded = raw.replace(
-              /&(?:#x[0-9a-f]+|#[0-9]+|[a-z][a-z0-9]+);/gi,
-              (ent) => {
-                try {
-                  const d = document.createElement("textarea");
-                  d.innerHTML = ent;
-                  return d.value;
-                } catch (e) {
-                  return ent;
-                }
-              },
-            );
-            if (
-              /^(?:j[\s\x00-\x1f]*a[\s\x00-\x1f]*v[\s\x00-\x1f]*a[\s\x00-\x1f]*s[\s\x00-\x1f]*c[\s\x00-\x1f]*r[\s\x00-\x1f]*i[\s\x00-\x1f]*p[\s\x00-\x1f]*t[\s\x00-\x1f]*:|v[\s\x00-\x1f]*b[\s\x00-\x1f]*s[\s\x00-\x1f]*c[\s\x00-\x1f]*r[\s\x00-\x1f]*i[\s\x00-\x1f]*p[\s\x00-\x1f]*t[\s\x00-\x1f]*:|d[\s\x00-\x1f]*a[\s\x00-\x1f]*t[\s\x00-\x1f]*:)/i.test(
-                decoded,
-              )
-            ) {
-              return prefix + '"#"';
-            }
-            return _m;
-          },
-        );
+      return sanitizeAiMarkdownHtml(html);
     },
   },
   renderer: {

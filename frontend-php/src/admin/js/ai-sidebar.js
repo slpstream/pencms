@@ -93,52 +93,9 @@ md.use({
     },
     postprocess(html) {
       // XSS defense-in-depth. marked's defaults escape `&`/`<`/`>` inside
-      // *text nodes* but pass through raw HTML blocks/attributes. This hook
-      // strips dangerous tags, event handlers, and unsafe URI schemes in
-      // href/src/xlink:href/formaction.
-      //
-      // TODO: consider adopting DOMPurify (~20 KB) for a full
-      // browser-grade sanitizer if the threat model widens (e.g. if AI can
-      // be coerced into unusual encoded payloads).
-      return html
-        .replace(/<script\b[\s\S]*?<\/script>/gi, "")
-        .replace(/<iframe\b[\s\S]*?<\/iframe>/gi, "")
-        .replace(/<style\b[\s\S]*?<\/style>/gi, "")
-        .replace(/<object\b[\s\S]*?<\/object>/gi, "")
-        .replace(/<embed\b[\s\S]*?<\/embed>/gi, "")
-        .replace(/\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "")
-        .replace(
-          /(\b(?:href|src|xlink:href|formaction)\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi,
-          (_m, prefix, q1, q2, q3) => {
-            const raw =
-              q1 !== undefined ? q1 : q2 !== undefined ? q2 : q3 || "";
-            // Decode named and numeric character references (e.g.
-            // `&#x6A;avascript:` or `java&#x73;cript:`) before scheme
-            // matching, so encoded payloads don't slip past the regex.
-            // The browser will decode these entities at parse time and
-            // execute the resulting `javascript:` URL.
-            const decoded = raw.replace(
-              /&(?:#x[0-9a-f]+|#[0-9]+|[a-z][a-z0-9]+);/gi,
-              (ent) => {
-                try {
-                  const d = document.createElement("textarea");
-                  d.innerHTML = ent;
-                  return d.value;
-                } catch (e) {
-                  return ent;
-                }
-              },
-            );
-            if (
-              /^(?:j[\s\x00-\x1f]*a[\s\x00-\x1f]*v[\s\x00-\x1f]*a[\s\x00-\x1f]*s[\s\x00-\x1f]*c[\s\x00-\x1f]*r[\s\x00-\x1f]*i[\s\x00-\x1f]*p[\s\x00-\x1f]*t[\s\x00-\x1f]*:|v[\s\x00-\x1f]*b[\s\x00-\x1f]*s[\s\x00-\x1f]*c[\s\x00-\x1f]*r[\s\x00-\x1f]*i[\s\x00-\x1f]*p[\s\x00-\x1f]*t[\s\x00-\x1f]*:|d[\s\x00-\x1f]*a[\s\x00-\x1f]*t[\s\x00-\x1f]*a[\s\x00-\x1f]*:)/i.test(
-                decoded,
-              )
-            ) {
-              return prefix + '"#"';
-            }
-            return _m;
-          },
-        );
+      // *text nodes* but pass through raw HTML blocks/attributes. DOMPurify
+      // strips dangerous tags, event handlers, and unsafe URI schemes.
+      return sanitizeAiMarkdownHtml(html);
     },
   },
   renderer: {
