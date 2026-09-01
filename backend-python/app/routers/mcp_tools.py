@@ -98,7 +98,9 @@ def _parse_expand_embed_refs(text: str) -> List[Dict[str, Any]]:
     import re
 
     refs: List[Dict[str, Any]] = []
-    re_sc = re.compile(r"\[(expand|embed)\s*([^\]]*)\]", re.IGNORECASE)
+    # [^\]]* already consumes spaces after the keyword; a leading \s* overlaps
+    # and is quadratic on '[expand' + spaces with no closing ']'.
+    re_sc = re.compile(r"\[(expand|embed)([^\]]*)\]", re.IGNORECASE)
     for m in re_sc.finditer(text or ""):
         mode = m.group(1).lower()
         attr = m.group(2) or ""
@@ -198,19 +200,85 @@ def _normalize_media_fields_in_frontmatter(fm: Dict[str, Any]) -> Dict[str, Any]
     return out
 
 
-def _extract_image_shortcode_srcs(body: str) -> List[str]:
-    """Return non-empty src values from [image ...] shortcodes in body markdown."""
+def _iter_image_shortcode_attrs(body: str) -> List[str]:
+    """Return the attribute blob inside each [image ...] shortcode."""
     import re
 
     return [
-        m.group(2).strip()
-        for m in re.finditer(
-            r'\[image[^\]]*?\bsrc=(["\'])(.*?)\1',
-            body or "",
-            flags=re.IGNORECASE,
-        )
-        if m.group(2).strip()
+        m.group(1) or ""
+        for m in re.finditer(r"\[image([^\]]*)\]", body or "", flags=re.IGNORECASE)
     ]
+
+
+def _parse_image_src_attr(attrs: str) -> Optional[str]:
+    """Quoted src value, or '' for empty unquoted src=. None if absent / unquoted path."""
+    lower = attrs.lower()
+    start = 0
+    while True:
+        idx = lower.find("src=", start)
+        if idx == -1:
+            return None
+        if idx > 0:
+            prev = attrs[idx - 1]
+            if prev.isalnum() or prev == "_":
+                start = idx + 1
+                continue
+        pos = idx + 4
+        if pos >= len(attrs):
+            return ""
+        ch = attrs[pos]
+        if ch in "\"'":
+            end = attrs.find(ch, pos + 1)
+            if end == -1:
+                return attrs[pos + 1 :]
+            return attrs[pos + 1 : end]
+        if attrs[pos:].strip() == "":
+            return ""
+        start = idx + 1
+
+
+def _extract_image_shortcode_srcs(body: str) -> List[str]:
+    """Return non-empty src values from [image ...] shortcodes in body markdown."""
+    out: List[str] = []
+    for attrs in _iter_image_shortcode_attrs(body):
+        src = _parse_image_src_attr(attrs)
+        if src is not None and src.strip():
+            out.append(src.strip())
+    return out
+
+
+def _has_empty_markdown_image(body: str) -> bool:
+    """True if body contains ![alt]() with only space/tab in the URL (no newlines)."""
+    i = 0
+    n = len(body)
+    while True:
+        j = body.find("![", i)
+        if j == -1:
+            return False
+        close = body.find("]", j + 2)
+        nl = body.find("\n", j + 2)
+        if close == -1 or (nl != -1 and nl < close):
+            i = j + 2
+            continue
+        if close + 1 < n and body[close + 1] == "(":
+            k = close + 2
+            while k < n and body[k] in " \t":
+                k += 1
+            if k < n and body[k] == ")":
+                return True
+        i = j + 2
+
+
+def _has_empty_media_refs(body: str) -> bool:
+    """True if body has an empty [image src] or empty markdown image URL."""
+    text = body or ""
+    if _has_empty_markdown_image(text):
+        return True
+    for attrs in _iter_image_shortcode_attrs(text):
+        src = _parse_image_src_attr(attrs)
+        if src is not None and not src.strip():
+            return True
+    return False
 
 
 async def collect_media_path_warnings(
@@ -1453,8 +1521,6 @@ async def write_content_file(
         merged_fm = _normalize_media_fields_in_frontmatter(merged_fm)
 
         # Load per-site AI settings guardrails
-        import re
-
         ai_settings = load_ai_settings(site_id)
 
         publish_autonomy = ai_settings.get("ai_publish_autonomy", "require_approval")
@@ -1497,7 +1563,7 @@ async def write_content_file(
 
         # 3. Enforce media path integrity
         if prevent_empty_media:
-            if re.search(r'\[image[^\]]*src=(["\'])\s*\1', body) or re.search(r'\[image\s+[^\]]*src=\s*\]', body) or re.search(r'!\[.*?\]\(\s*\)', body):
+            if _has_empty_media_refs(body):
                 raise HTTPException(
                     status_code=400,
                     detail="Integrity Violation: Image source path cannot be empty. Ensure all [image src=\"...\"] shortcodes have a valid path. Use the relative_path returned by generate_media or list_media to verify correct paths."
@@ -1765,25 +1831,34 @@ async def create_post(
 
 
 
+def _markdown_heading(line: str) -> Optional[tuple[int, str]]:
+    """Return (level, title) for an ATX heading, else None. Linear scan."""
+    s = line.strip()
+    if not s.startswith("#"):
+        return None
+    i = 0
+    while i < len(s) and i < 6 and s[i] == "#":
+        i += 1
+    if i >= len(s) or not s[i].isspace():
+        return None
+    return i, s[i:].strip()
+
+
 def match_heading(line: str, heading_path: str) -> bool:
-    import re
     line_stripped = line.strip()
     h_stripped = heading_path.strip()
-    
+
     # Direct match (case-insensitive)
     if line_stripped.lower() == h_stripped.lower():
         return True
-        
-    # Match heading title only
-    match = re.match(r"^(#{1,6})\s+(.*)$", line_stripped)
-    if match:
-        title = match.group(2).strip()
-        # Compare title case-insensitively
+
+    parsed = _markdown_heading(line_stripped)
+    if parsed:
+        title = parsed[1]
         if title.lower() == h_stripped.lower():
             return True
-        # Also compare title if heading_path has leading hash
-        h_match = re.match(r"^(#{1,6})\s+(.*)$", h_stripped)
-        if h_match and title.lower() == h_match.group(2).strip().lower():
+        h_parsed = _markdown_heading(h_stripped)
+        if h_parsed and title.lower() == h_parsed[1].lower():
             return True
     return False
 
@@ -1825,7 +1900,6 @@ async def split_section(
         target_content = partials[clean_source_slug] or ""
 
     def perform_split(text: str, marker: Optional[str]) -> tuple[str, str, str]:
-        import re
         lines = text.replace("\r", "").split("\n")
         
         if not marker:
@@ -1878,18 +1952,16 @@ async def split_section(
             raise HTTPException(404, f"Split marker '{marker}' not found in '{clean_source_slug}'")
             
         if is_heading and match_line is not None:
-            m = re.match(r"^(#{1,6})\s+(.*)$", match_line.strip())
-            start_level = len(m.group(1)) if m else 1
-            heading_title = m.group(2).strip() if m else marker
-            
+            parsed = _markdown_heading(match_line.strip())
+            start_level = parsed[0] if parsed else 1
+            heading_title = parsed[1] if parsed else marker
+
             end_idx = len(lines)
             for i in range(start_idx + 1, len(lines)):
-                m_sub = re.match(r"^(#{1,6})\s+(.*)$", lines[i].strip())
-                if m_sub:
-                    level = len(m_sub.group(1))
-                    if level <= start_level:
-                        end_idx = i
-                        break
+                sub = _markdown_heading(lines[i].strip())
+                if sub and sub[0] <= start_level:
+                    end_idx = i
+                    break
                         
             section_text = "\n".join(lines[start_idx:end_idx]).strip()
             rem_lines = lines[:start_idx] + lines[end_idx:]
