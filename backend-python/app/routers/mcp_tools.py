@@ -3,6 +3,7 @@ import json
 import subprocess
 import uuid
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
 from config import COLLECTIONS_SCHEMA, CONTENT_DIR_PATH, REQUIRED_FIELDS, TAXONOMY, content_storage
 from fastapi import APIRouter, BackgroundTasks, Body, Depends, Header, HTTPException, Request, status
@@ -31,6 +32,7 @@ from services.file_service import (
 )
 from services.i18n_service import ContentI18nError, normalize_requested_language
 from services.i18n_run_service import list_runs, start_run, update_run
+from services.url_safety import hostname_is
 from services.translation_service import (
     TranslationAuthorizationError,
     TranslationConflictError,
@@ -2442,7 +2444,10 @@ async def generate_media(
 
     headers = {"Content-Type": "application/json"}
     if x_pen_ai_image_key:
-        if "nano-gpt.com" in base_url and "/api/v1/" in base_url:
+        parsed = urlparse(base_url)
+        if hostname_is(parsed.hostname, "nano-gpt.com") and "/api/v1/" in (
+            parsed.path or ""
+        ):
             headers["x-api-key"] = x_pen_ai_image_key
         else:
             headers["Authorization"] = f"Bearer {x_pen_ai_image_key}"

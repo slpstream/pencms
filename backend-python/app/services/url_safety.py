@@ -69,6 +69,15 @@ def is_blocked_hostname(hostname: Optional[str]) -> bool:
     return any(host == suffix.lstrip(".") or host.endswith(suffix) for suffix in BLOCKED_HOST_SUFFIXES)
 
 
+def hostname_is(hostname: Optional[str], domain: str) -> bool:
+    """True if *hostname* is *domain* or a subdomain of it (not a path/prefix spoof)."""
+    host = (hostname or "").lower().rstrip(".")
+    domain = domain.lower().rstrip(".")
+    if not host or not domain:
+        return False
+    return host == domain or host.endswith("." + domain)
+
+
 def assert_public_hostname(hostname: Optional[str]) -> None:
     """Reject hosts that are metadata, private, or resolve to a blocked address."""
     if not hostname:

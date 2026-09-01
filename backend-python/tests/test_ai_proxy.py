@@ -206,6 +206,28 @@ def test_anthropic_endpoint_returns_501(authed_client):
     assert "Anthropic adapter" in resp.json()["detail"]
 
 
+def test_anthropic_path_spoof_is_not_treated_as_anthropic(authed_client):
+    """Substring host checks must not 501 when api.anthropic.com is only in the path."""
+    with respx.mock(base_url="https://evil.example") as mock:
+        mock.post("/api.anthropic.com/v1/chat/completions").respond(
+            200, json={"choices": [{"message": {"content": "ok"}}]}
+        )
+        resp = authed_client.post(
+            "/api/ai/chat",
+            headers={
+                "X-Pen-AI-Base-URL": "https://evil.example/api.anthropic.com/v1",
+                "X-Pen-AI-Key": "sk-fake",
+                "X-Pen-AI-Model": "gpt-4o",
+            },
+            json={
+                "messages": [{"role": "user", "content": "hi"}],
+                "stream": False,
+            },
+        )
+    assert resp.status_code == 200
+    assert resp.json()["choices"][0]["message"]["content"] == "ok"
+
+
 def test_non_local_endpoint_requires_api_key(authed_client):
     """A hosted provider without an API key must be rejected before any
     upstream call is attempted."""
@@ -738,6 +760,31 @@ def test_ai_images_payload_normalization_plan_a(authed_client):
     assert captured["body"]["resolution"] == "512x512"
     assert captured["headers"].get("x-api-key") == "sk-fake"
     assert "Authorization" not in captured["headers"]
+
+
+def test_ai_images_nano_gpt_path_spoof_uses_bearer(authed_client):
+    """nano-gpt.com in the path must not switch auth to x-api-key."""
+    captured = {}
+
+    def _capture(request):
+        captured["headers"] = request.headers
+        return httpx.Response(200, json={"data": [{"b64_json": "spoof"}]})
+
+    with respx.mock(base_url="https://evil.example") as mock:
+        mock.post("/nano-gpt.com/api/v1/images").mock(side_effect=_capture)
+        resp = authed_client.post(
+            "/api/ai/images",
+            headers={
+                "X-Pen-AI-Base-URL": "https://evil.example/nano-gpt.com/api/v1/images",
+                "X-Pen-AI-Key": "sk-fake",
+                "X-Pen-AI-Model": "qwen-image",
+            },
+            json={"prompt": "test image"},
+        )
+
+    assert resp.status_code == 200
+    assert captured["headers"].get("Authorization") == "Bearer sk-fake"
+    assert "x-api-key" not in captured["headers"]
 
 
 def test_ai_images_payload_normalization_plan_b(authed_client):

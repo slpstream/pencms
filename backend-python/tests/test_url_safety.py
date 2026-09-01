@@ -11,6 +11,7 @@ from services.url_safety import (
     UrlSafetyError,
     assert_public_hostname,
     canonicalize_public_https_url,
+    hostname_is,
     is_blocked_ip,
 )
 
@@ -18,6 +19,16 @@ from services.url_safety import (
 PUBLIC_ADDRINFO = [
     (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0)),
 ]
+
+
+def test_hostname_is_exact_and_subdomain():
+    assert hostname_is("api.anthropic.com", "api.anthropic.com")
+    assert hostname_is("API.Anthropic.COM.", "api.anthropic.com")
+    assert hostname_is("cdn.nano-gpt.com", "nano-gpt.com")
+    assert not hostname_is("evil-nano-gpt.com", "nano-gpt.com")
+    assert not hostname_is("api.anthropic.com.evil.example", "api.anthropic.com")
+    assert not hostname_is(None, "nano-gpt.com")
+    assert not hostname_is("", "nano-gpt.com")
 
 
 def test_is_blocked_ip_loopback_and_mapped():

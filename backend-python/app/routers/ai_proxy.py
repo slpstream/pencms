@@ -20,6 +20,7 @@ from services.extract_prompts import (
 )
 from services.localization_policy_service import POLICY_KEY
 from services.site_service import resolve_human_site_id
+from services.url_safety import hostname_is
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -232,12 +233,13 @@ def resolve_chat_upstream(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or restricted Base URL.",
         )
-    if "api.anthropic.com" in base_url:
+    parsed = urlparse(base_url)
+    if hostname_is(parsed.hostname, "api.anthropic.com"):
         raise HTTPException(
             status_code=status.HTTP_501_NOT_IMPLEMENTED,
             detail="Anthropic adapter not yet implemented",
         )
-    is_local = _is_loopback_host(urlparse(base_url).hostname or "")
+    is_local = _is_loopback_host(parsed.hostname or "")
     if not is_local and not x_pen_ai_key:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -585,7 +587,7 @@ async def ai_images_proxy(
     # 6. Configure headers
     headers = {"Content-Type": "application/json"}
     if x_pen_ai_key and not is_local:
-        if "nano-gpt.com" in base_url and "/api/v1/" in base_url:
+        if hostname_is(hostname, "nano-gpt.com") and "/api/v1/" in (parsed.path or ""):
             headers["x-api-key"] = x_pen_ai_key
         else:
             headers["Authorization"] = f"Bearer {x_pen_ai_key}"
