@@ -334,7 +334,7 @@ document.addEventListener('alpine:init', () => {
                     if (!hay.includes(q)) continue;
                 }
 
-                const esc = (s) => String(s).replace(/"/g, '\\"');
+                const esc = (s) => String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
                 results.push({
                     slug,
                     title,

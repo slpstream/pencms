@@ -61,7 +61,7 @@ class CheckExpandRefsRequest(BaseModel):
 
 
 def _escape_shortcode_attr(value: str) -> str:
-    return value.replace('"', '\\"')
+    return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _catalog_row_from_page(page) -> Dict[str, Any]:
