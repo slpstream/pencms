@@ -836,9 +836,11 @@ class APIClient {
             console.warn('Logout API error:', e);
         }
         if (typeof document !== 'undefined') {
-            document.cookie = 'pen_user_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-            document.cookie = 'pen_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-            document.cookie = 'pen_site_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            const isSecure = typeof window !== 'undefined' && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            const secureSuffix = isSecure ? '; Secure' : '';
+            document.cookie = 'pen_user_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + secureSuffix;
+            document.cookie = 'pen_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + secureSuffix;
+            document.cookie = 'pen_site_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + secureSuffix;
         }
         if (typeof sessionStorage !== 'undefined') {
             try {

@@ -55,7 +55,9 @@
                 const next = (id && String(id).trim()) || 'default';
                 const prev = window.AUTH.siteId;
                 window.AUTH.siteId = next;
-                document.cookie = 'pen_site_id=' + encodeURIComponent(next) + '; path=/; max-age=604800';
+                const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const secureSuffix = isSecure ? '; Secure' : '';
+                document.cookie = 'pen_site_id=' + encodeURIComponent(next) + '; path=/; max-age=604800; SameSite=Lax' + secureSuffix;
                 try {
                     localStorage.setItem('pen_site_id', next);
                 } catch (e) {}
@@ -166,9 +168,11 @@
                     console.warn('Logout API error:', e);
                 }
                 // Clear client auth cookies
-                document.cookie = 'pen_user_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                document.cookie = 'pen_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                document.cookie = 'pen_site_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                const isLogoutSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const logoutSecureSuffix = isLogoutSecure ? '; Secure' : '';
+                document.cookie = 'pen_user_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + logoutSecureSuffix;
+                document.cookie = 'pen_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + logoutSecureSuffix;
+                document.cookie = 'pen_site_id=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax' + logoutSecureSuffix;
                 // Clear session storage & master password
                 try {
                     sessionStorage.removeItem('pen_master_password');
