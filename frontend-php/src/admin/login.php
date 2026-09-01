@@ -89,10 +89,8 @@ include 'includes/_head.php';
                             sessionStorage.setItem('pen_master_password', cleanPassword);
                             
                             // Set cookies for frontend auth check
-                            const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                            const secureSuffix = isSecure ? '; Secure' : '';
-                            document.cookie = `pen_user_id=${data.user.uuid}; path=/; max-age=604800; SameSite=Lax${secureSuffix}`;
-                            document.cookie = `pen_role=${data.user.role}; path=/; max-age=604800; SameSite=Lax${secureSuffix}`;
+                            document.cookie = `pen_user_id=${data.user.uuid}; path=/; max-age=604800; SameSite=Lax; Secure`;
+                            document.cookie = `pen_role=${data.user.role}; path=/; max-age=604800; SameSite=Lax; Secure`;
                             
                             window.location.href = 'index.php';
                         } else if (res.status === 403 && data.detail === 'account_suspended') {
