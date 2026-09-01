@@ -3,6 +3,7 @@
 from routers.mcp_tools import (
     _extract_image_shortcode_srcs,
     _has_empty_media_refs,
+    _iter_image_shortcode_attrs,
     _markdown_heading,
     _parse_expand_embed_refs,
     match_heading,
@@ -50,6 +51,27 @@ def test_has_empty_media_unquoted_src_and_markdown():
     assert _has_empty_media_refs("![alt]( )")
     assert not _has_empty_media_refs("![alt](images/content/ok.png)")
     assert not _has_empty_media_refs("[image src=unquoted.png]")
+
+
+def test_image_shortcode_case_unclosed_and_nested_close():
+    assert _extract_image_shortcode_srcs('[IMAGE src="x.png"]') == ["x.png"]
+    assert _iter_image_shortcode_attrs(
+        '[image no close [image src="y.png"]'
+    ) == [' no close [image src="y.png"']
+    assert _extract_image_shortcode_srcs("[image never closed") == []
+    assert not _has_empty_media_refs("[image never closed")
+
+
+def test_expand_case_unclosed_and_nested_close():
+    refs = _parse_expand_embed_refs('[EXPAND slug="X"] [EMBED slug="Y"]')
+    assert refs == [
+        {"mode": "expand", "slug": "X", "heading": None},
+        {"mode": "embed", "slug": "Y", "heading": None},
+    ]
+    nested = _parse_expand_embed_refs('[expand no close [expand slug="z"]')
+    assert nested == [{"mode": "expand", "slug": "z", "heading": None}]
+    assert _parse_expand_embed_refs("[expand never closed") == []
+    assert _parse_expand_embed_refs("[embed never closed") == []
 
 
 def test_markdown_heading_and_match_heading():

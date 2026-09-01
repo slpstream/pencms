@@ -98,12 +98,24 @@ def _parse_expand_embed_refs(text: str) -> List[Dict[str, Any]]:
     import re
 
     refs: List[Dict[str, Any]] = []
-    # [^\]]* already consumes spaces after the keyword; a leading \s* overlaps
-    # and is quadratic on '[expand' + spaces with no closing ']'.
-    re_sc = re.compile(r"\[(expand|embed)([^\]]*)\]", re.IGNORECASE)
-    for m in re_sc.finditer(text or ""):
-        mode = m.group(1).lower()
-        attr = m.group(2) or ""
+    raw = text or ""
+    lower = raw.lower()
+    i = 0
+    while True:
+        pos_expand = lower.find("[expand", i)
+        pos_embed = lower.find("[embed", i)
+        if pos_expand == -1 and pos_embed == -1:
+            break
+        if pos_embed == -1 or (pos_expand != -1 and pos_expand < pos_embed):
+            mode = "expand"
+            end_kw = pos_expand + len("[expand")
+        else:
+            mode = "embed"
+            end_kw = pos_embed + len("[embed")
+        close = raw.find("]", end_kw)
+        if close == -1:
+            break
+        attr = raw[end_kw:close]
         slug = ""
         heading = None
         slug_m = re.search(
@@ -138,6 +150,7 @@ def _parse_expand_embed_refs(text: str) -> List[Dict[str, Any]]:
                 "heading": heading,
             }
         )
+        i = close + 1
     return refs
 
 
@@ -202,12 +215,22 @@ def _normalize_media_fields_in_frontmatter(fm: Dict[str, Any]) -> Dict[str, Any]
 
 def _iter_image_shortcode_attrs(body: str) -> List[str]:
     """Return the attribute blob inside each [image ...] shortcode."""
-    import re
-
-    return [
-        m.group(1) or ""
-        for m in re.finditer(r"\[image([^\]]*)\]", body or "", flags=re.IGNORECASE)
-    ]
+    text = body or ""
+    lower = text.lower()
+    out: List[str] = []
+    start = 0
+    needle = "[image"
+    nlen = len(needle)
+    while True:
+        idx = lower.find(needle, start)
+        if idx == -1:
+            break
+        close = text.find("]", idx + nlen)
+        if close == -1:
+            break
+        out.append(text[idx + nlen : close])
+        start = close + 1
+    return out
 
 
 def _parse_image_src_attr(attrs: str) -> Optional[str]:
