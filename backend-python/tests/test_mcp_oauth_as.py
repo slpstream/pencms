@@ -345,3 +345,122 @@ def test_no_dcr_register_endpoint(client):
         },
     )
     assert resp.status_code == 404
+
+
+def _public_addrinfo(*_args, **_kwargs):
+    import socket
+
+    return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))]
+
+
+class _ForbiddenAsyncClient:
+    def __init__(self, *args, **kwargs):
+        raise AssertionError("httpx.AsyncClient should not be constructed")
+
+
+class _CimdHttpClient:
+    def __init__(self, *args, **kwargs):
+        self.kwargs = kwargs
+        self.requested_url = None
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args):
+        return None
+
+    async def get(self, url, headers=None):
+        self.requested_url = url
+        _CimdHttpClient.last = self
+        body = {
+            "redirect_uris": ["http://127.0.0.1:8765/callback"],
+        }
+        import json
+
+        raw = json.dumps(body).encode()
+
+        class _Resp:
+            status_code = 200
+            content = raw
+
+            @staticmethod
+            def json():
+                return body
+
+        return _Resp()
+
+
+@pytest.mark.parametrize(
+    "client_id",
+    [
+        "http://cimd.example/client.json",
+        "https://127.0.0.1/client.json",
+        "https://localhost/client.json",
+        "https://[::ffff:127.0.0.1]/client.json",
+        "https://169.254.169.254/client.json",
+        "https://192.168.1.1/client.json",
+        "https://metadata.google.internal/client.json",
+        "https://cimd.example:8443/client.json",
+        "https://user:pass@cimd.example/client.json",
+        "https://foo.internal/client.json",
+        "https://127.1/client.json",
+        "https://2130706433/client.json",
+    ],
+)
+def test_cimd_ssrf_rejected_unauthenticated(client, client_id, monkeypatch):
+    monkeypatch.setattr("services.url_safety.socket.getaddrinfo", _public_addrinfo)
+    monkeypatch.setattr("routers.oauth_mcp.httpx.AsyncClient", _ForbiddenAsyncClient)
+    _, challenge = _pkce_pair()
+    params = _authorize_params(challenge)
+    params["client_id"] = client_id
+    resp = client.get("/oauth/authorize", params=params)
+    assert resp.status_code == 400, resp.text
+    assert "restricted" in resp.json()["detail"].lower() or "invalid" in resp.json()[
+        "detail"
+    ].lower()
+
+
+def test_cimd_rejects_private_dns(client, monkeypatch):
+    import socket
+
+    monkeypatch.setattr(
+        "services.url_safety.socket.getaddrinfo",
+        lambda *args, **kwargs: [
+            (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 0))
+        ],
+    )
+    monkeypatch.setattr("routers.oauth_mcp.httpx.AsyncClient", _ForbiddenAsyncClient)
+    _, challenge = _pkce_pair()
+    params = _authorize_params(challenge)
+    params["client_id"] = "https://evil.example/client.json"
+    resp = client.get("/oauth/authorize", params=params)
+    assert resp.status_code == 400, resp.text
+
+
+def test_unauthenticated_cimd_does_not_fetch(client, monkeypatch):
+    monkeypatch.setattr("services.url_safety.socket.getaddrinfo", _public_addrinfo)
+    monkeypatch.setattr("routers.oauth_mcp.httpx.AsyncClient", _ForbiddenAsyncClient)
+    _, challenge = _pkce_pair()
+    params = _authorize_params(challenge)
+    params["client_id"] = "https://cimd.example/client.json"
+    resp = client.get("/oauth/authorize", params=params)
+    assert resp.status_code == 200, resp.text
+    assert "Sign in" in resp.text
+
+
+def test_authenticated_cimd_fetches_metadata(authed_client, monkeypatch):
+    _CimdHttpClient.last = None
+    monkeypatch.setattr("services.url_safety.socket.getaddrinfo", _public_addrinfo)
+    monkeypatch.setattr("routers.oauth_mcp.httpx.AsyncClient", _CimdHttpClient)
+    _create_agent_key(authed_client, ["read"])
+    _, challenge = _pkce_pair()
+    params = _authorize_params(challenge)
+    params["client_id"] = "https://CIMD.example:443/client.json"
+    resp = authed_client.get("/oauth/authorize", params=params)
+    assert resp.status_code == 200, resp.text
+    assert "Authorize client" in resp.text
+    last = _CimdHttpClient.last
+    assert last is not None
+    assert last.requested_url == "https://cimd.example/client.json"
+    assert last.kwargs.get("follow_redirects") is False
+    assert last.kwargs.get("trust_env") is False

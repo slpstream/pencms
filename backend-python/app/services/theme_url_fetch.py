@@ -7,9 +7,7 @@ downloads with SSRF protections and size limits before handing bytes to
 
 from __future__ import annotations
 
-import ipaddress
 import logging
-import socket
 from typing import Optional, Tuple
 from urllib.parse import quote, urljoin, urlparse
 
@@ -21,6 +19,7 @@ from services.theme_install_service import (
     ThemeInvalidArchiveError,
     ThemeTooLargeError,
 )
+from services.url_safety import UrlSafetyError, assert_public_hostname
 
 logger = logging.getLogger("pencms.theme_url_fetch")
 
@@ -58,48 +57,12 @@ def _redact_url(url: str) -> str:
     return parsed._replace(netloc=netloc).geturl()
 
 
-def _is_blocked_ip(ip: ipaddress._BaseAddress) -> bool:
-    return bool(
-        ip.is_private
-        or ip.is_loopback
-        or ip.is_link_local
-        or ip.is_multicast
-        or ip.is_reserved
-        or ip.is_unspecified
-    )
-
-
 def assert_public_https_host(hostname: Optional[str]) -> None:
     """Reject hosts that resolve to private or metadata addresses."""
-    if not hostname:
-        raise ThemeUrlFetchError("Invalid URL hostname")
-
-    host = hostname.lower().rstrip(".")
-
     try:
-        ip = ipaddress.ip_address(host)
-        if _is_blocked_ip(ip):
-            raise ThemeUrlFetchError("URL host is not allowed")
-        return
-    except ValueError:
-        pass
-
-    try:
-        infos = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
-    except socket.gaierror as exc:
-        raise ThemeUrlFetchError(f"Could not resolve host: {host}") from exc
-
-    if not infos:
-        raise ThemeUrlFetchError(f"Could not resolve host: {host}")
-
-    for info in infos:
-        ip_str = info[4][0]
-        try:
-            ip = ipaddress.ip_address(ip_str)
-        except ValueError:
-            continue
-        if _is_blocked_ip(ip):
-            raise ThemeUrlFetchError("URL host resolves to a restricted address")
+        assert_public_hostname(hostname)
+    except UrlSafetyError as exc:
+        raise ThemeUrlFetchError(str(exc)) from exc
 
 
 def _parse_github_repo(path: str) -> Optional[Tuple[str, str, str]]:

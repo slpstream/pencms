@@ -9,7 +9,6 @@ from __future__ import annotations
 import base64
 import hashlib
 import html
-import ipaddress
 import json
 import os
 import secrets
@@ -40,6 +39,7 @@ from services.oauth_store import (
     store_auth_code,
     store_refresh_token,
 )
+from services.url_safety import UrlSafetyError, canonicalize_public_https_url
 from services.user_service import get_user_by_uuid, get_user_by_username
 
 router = APIRouter(tags=["oauth-mcp"])
@@ -173,37 +173,17 @@ def redirect_uri_allowed(redirect_uri: str) -> bool:
     return _is_loopback_http(redirect_uri) or _is_https_absolute(redirect_uri)
 
 
-def _is_safe_cimd_url(client_id: str) -> bool:
-    """Ensure CIMD URL is a valid public HTTPS endpoint and not an internal/metadata SSRF target."""
-    try:
-        parsed = urlparse(client_id)
-        if parsed.scheme != "https":
-            return False
-        hostname = parsed.hostname
-        if not hostname:
-            return False
-        if hostname.lower() in ("localhost", "metadata.google.internal"):
-            return False
-        try:
-            ip = ipaddress.ip_address(hostname)
-            if (
-                ip.is_private
-                or ip.is_loopback
-                or ip.is_link_local
-                or ip.is_multicast
-                or ip.is_reserved
-                or ip.is_unspecified
-            ):
-                return False
-        except ValueError:
-            pass
-        return True
-    except Exception:
-        return False
-
-
-async def validate_client_redirect(client_id: str, redirect_uri: str) -> None:
+async def validate_client_redirect(
+    client_id: str,
+    redirect_uri: str,
+    *,
+    fetch_cimd: bool = True,
+) -> None:
     """Validate client_id (CIMD or static allowlist) and redirect_uri pairing.
+
+    When ``fetch_cimd`` is False, CIMD URLs are only syntax/SSRF-checked;
+    the metadata document is not fetched. Pairing is therefore unconfirmed
+    for CIMD until an authenticated fetch runs.
 
     Raises HTTPException on failure.
     """
@@ -213,17 +193,28 @@ async def validate_client_redirect(client_id: str, redirect_uri: str) -> None:
             detail="redirect_uri must be http://localhost|127.0.0.1 (any port) or https",
         )
 
-    # Prefer CIMD: HTTPS URL as client_id
-    if client_id.startswith("https://"):
-        if not _is_safe_cimd_url(client_id):
+    # Prefer CIMD: URL as client_id (must be public HTTPS after canonicalization)
+    if urlparse(client_id).scheme:
+        try:
+            canonical_url = canonicalize_public_https_url(
+                client_id, require_port_443=True
+            )
+        except UrlSafetyError:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid or restricted client_id URL",
             )
+        if not fetch_cimd:
+            return
         try:
-            async with httpx.AsyncClient(timeout=5.0, follow_redirects=False) as client:
+            async with httpx.AsyncClient(
+                timeout=5.0, follow_redirects=False, trust_env=False
+            ) as client:
+                # CIMD client_id is an HTTPS URL by spec. canonicalize_public_https_url
+                # enforces scheme/port/DNS/IP checks; fetch is session-gated; body is not reflected.
+                # codeql[py/full-ssrf]
                 resp = await client.get(
-                    client_id,
+                    canonical_url,
                     headers={"Accept": "application/json"},
                 )
             if resp.status_code != 200:
@@ -374,7 +365,9 @@ def _authorize_query_params(request: Request) -> dict:
     }
 
 
-async def _validate_authorize_params(params: dict) -> List[str]:
+async def _validate_authorize_params(
+    params: dict, *, fetch_cimd: bool = True
+) -> List[str]:
     """Validate authorize request params. Raises HTTPException (not redirect)
     when redirect_uri / client_id are unusable.
     """
@@ -385,7 +378,7 @@ async def _validate_authorize_params(params: dict) -> List[str]:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="client_id and redirect_uri are required",
         )
-    await validate_client_redirect(client_id, redirect_uri)
+    await validate_client_redirect(client_id, redirect_uri, fetch_cimd=fetch_cimd)
 
     if params.get("response_type") != "code":
         raise HTTPException(
@@ -498,10 +491,13 @@ def _consent_html(
 async def oauth_authorize(request: Request):
     """OAuth 2.1 authorization endpoint — admin session + agent-key consent."""
     params = _authorize_query_params(request)
+    user = await get_optional_user(request)
+    fetch_cimd = user is not None
     try:
-        scopes = await _validate_authorize_params(params)
+        scopes = await _validate_authorize_params(params, fetch_cimd=fetch_cimd)
     except HTTPException as exc:
-        # If redirect_uri is usable, prefer OAuth error redirect for some errors
+        # If redirect_uri is usable, prefer OAuth error redirect for some errors.
+        # Unauthenticated CIMD cannot confirm redirect_uri pairing without a fetch.
         redirect_uri = params.get("redirect_uri")
         client_id = params.get("client_id")
         if (
@@ -510,9 +506,12 @@ async def oauth_authorize(request: Request):
             and redirect_uri_allowed(redirect_uri)
             and exc.status_code == 400
             and "resource" in (exc.detail or "").lower()
+            and (fetch_cimd or not urlparse(client_id).scheme)
         ):
             try:
-                await validate_client_redirect(client_id, redirect_uri)
+                await validate_client_redirect(
+                    client_id, redirect_uri, fetch_cimd=fetch_cimd
+                )
                 return _oauth_error_redirect(
                     redirect_uri,
                     "invalid_request",
@@ -523,7 +522,6 @@ async def oauth_authorize(request: Request):
                 pass
         raise
 
-    user = await get_optional_user(request)
     if user is None:
         return _login_html(params)
 

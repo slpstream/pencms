@@ -33,7 +33,7 @@ def _build_zip(files: Dict[str, str]) -> bytes:
 
 def test_resolve_direct_zip_url(monkeypatch):
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
     url = resolve_download_url("https://cdn.example.com/themes/starter.zip")
@@ -93,7 +93,7 @@ def test_assert_public_https_host_blocks_loopback():
 
 def test_assert_public_https_host_blocks_private_dns(monkeypatch):
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 0))],
     )
     with pytest.raises(ThemeUrlFetchError, match="restricted"):
@@ -113,7 +113,7 @@ def _mock_stream_response(status_code: int, body: bytes, headers: dict | None = 
 def test_download_zip_bytes_success(monkeypatch):
     zip_bytes = _build_zip({"theme.json": "{}"})
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
 
@@ -131,7 +131,7 @@ def test_download_zip_bytes_success(monkeypatch):
 
 def test_download_zip_bytes_rejects_html(monkeypatch):
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
     mock_response = _mock_stream_response(200, b"<html>not a zip</html>")
@@ -147,7 +147,7 @@ def test_download_zip_bytes_rejects_html(monkeypatch):
 
 def test_download_zip_bytes_rejects_oversized_content_length(monkeypatch):
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
     mock_response = _mock_stream_response(
@@ -175,7 +175,7 @@ def test_download_zip_bytes_follows_redirect_with_ssrf_check(monkeypatch):
             return blocked_ip
         return public_ip
 
-    monkeypatch.setattr("services.theme_url_fetch.socket.getaddrinfo", fake_getaddrinfo)
+    monkeypatch.setattr("services.url_safety.socket.getaddrinfo", fake_getaddrinfo)
 
     redirect_response = MagicMock()
     redirect_response.status_code = 302
@@ -196,7 +196,7 @@ def test_download_zip_bytes_follows_redirect_with_ssrf_check(monkeypatch):
 
 def test_download_zip_bytes_upstream_error(monkeypatch):
     monkeypatch.setattr(
-        "services.theme_url_fetch.socket.getaddrinfo",
+        "services.url_safety.socket.getaddrinfo",
         lambda *args, **kwargs: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0))],
     )
     mock_response = _mock_stream_response(404, b"")
