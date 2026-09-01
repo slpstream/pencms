@@ -390,7 +390,7 @@ async def test_ssh_connection(
     except Exception as e:
         elapsed_ms = round((time.monotonic() - start) * 1000)
         print(f"[test-ssh] EXCEPTION after {elapsed_ms}ms: {type(e).__name__}: {e}", flush=True)
-        return {"success": False, "error": f"SSH execution failed: {e}"}
+        return {"success": False, "error": "SSH execution failed due to an internal error"}
 
     elapsed_ms = round((time.monotonic() - start) * 1000)
     print(f"[test-ssh] rc={rc} elapsed={elapsed_ms}ms stdout={stdout[:200]!r} stderr={stderr[:200]!r}", flush=True)
