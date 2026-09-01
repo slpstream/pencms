@@ -4182,7 +4182,9 @@ When writing or updating frontmatter, follow these rules exactly:
     },
 
     _escapeShortcodeAttr(value) {
-      return String(value ?? "").replace(/"/g, '\\"');
+      return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"');
     },
 
     _buildExpandEmbedShortcode({ mode, slug, text, heading, source }) {
