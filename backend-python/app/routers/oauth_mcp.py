@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import html
+import ipaddress
 import json
 import os
 import secrets
@@ -172,6 +173,35 @@ def redirect_uri_allowed(redirect_uri: str) -> bool:
     return _is_loopback_http(redirect_uri) or _is_https_absolute(redirect_uri)
 
 
+def _is_safe_cimd_url(client_id: str) -> bool:
+    """Ensure CIMD URL is a valid public HTTPS endpoint and not an internal/metadata SSRF target."""
+    try:
+        parsed = urlparse(client_id)
+        if parsed.scheme != "https":
+            return False
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+        if hostname.lower() in ("localhost", "metadata.google.internal"):
+            return False
+        try:
+            ip = ipaddress.ip_address(hostname)
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_link_local
+                or ip.is_multicast
+                or ip.is_reserved
+                or ip.is_unspecified
+            ):
+                return False
+        except ValueError:
+            pass
+        return True
+    except Exception:
+        return False
+
+
 async def validate_client_redirect(client_id: str, redirect_uri: str) -> None:
     """Validate client_id (CIMD or static allowlist) and redirect_uri pairing.
 
@@ -185,8 +215,13 @@ async def validate_client_redirect(client_id: str, redirect_uri: str) -> None:
 
     # Prefer CIMD: HTTPS URL as client_id
     if client_id.startswith("https://"):
+        if not _is_safe_cimd_url(client_id):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or restricted client_id URL",
+            )
         try:
-            async with httpx.AsyncClient(timeout=5.0, follow_redirects=True) as client:
+            async with httpx.AsyncClient(timeout=5.0, follow_redirects=False) as client:
                 resp = await client.get(
                     client_id,
                     headers={"Accept": "application/json"},
@@ -195,6 +230,11 @@ async def validate_client_redirect(client_id: str, redirect_uri: str) -> None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Failed to fetch client ID metadata document",
+                )
+            if len(resp.content) > 65536:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Client metadata document exceeds maximum size limit",
                 )
             meta = resp.json()
         except HTTPException:
