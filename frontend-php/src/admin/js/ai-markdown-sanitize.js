@@ -10,3 +10,13 @@ function sanitizeAiMarkdownHtml(html) {
     ADD_ATTR: ["target"],
   });
 }
+
+/** Escape for HTML text nodes and double-quoted attributes. */
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}

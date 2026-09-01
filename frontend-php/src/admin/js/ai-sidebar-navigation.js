@@ -110,8 +110,8 @@ md.use({
         return `<${tag} class="text-base font-bold mt-3 mb-1 leading-snug text-forge-black">${text}</${tag}>`;
       return `<${tag} class="text-sm font-bold mt-3 mb-1 leading-normal text-forge-black">${text}</${tag}>`;
     },
-    image({ href, title, tokens }) {
-      const alt = tokens ? this.parser.parseInline(tokens) : "";
+    image({ href, title, text }) {
+      const alt = escapeHtml(text || "");
       let attrs = `src="${escapeHtml(href)}" alt="${alt}"`;
       if (title) attrs += ` title="${escapeHtml(title)}"`;
       return `<img ${attrs} class="max-h-40 rounded border border-border my-1" style="display:block" />`;
@@ -119,13 +119,6 @@ md.use({
   },
 });
 md.use({ gfm: true, breaks: true });
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
 
 /** Catalog size cap so system prompts stay within token budget. */
 const NAV_CATALOG_LIMIT = 150;

@@ -144,8 +144,8 @@ md.use({
     },
     // Intercept media images in LLM Markdown responses and apply a
     // per-URL cache-buster so the browser never serves a stale file.
-    image({ href, title, tokens }) {
-      const alt = tokens ? this.parser.parseInline(tokens) : "";
+    image({ href, title, text }) {
+      const alt = escapeHtml(text || "");
       // Strip any pre-existing query string then append our buster
       if (href && /\/api\/(assets\/raw|v1\/media\/files)\//.test(href)) {
         const buster = _mediaUrlBusters.get(href);
@@ -166,13 +166,6 @@ md.use({
   },
 });
 md.use({ gfm: true, breaks: true });
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
 
 const TOOL_DEFINITIONS = [
   {
