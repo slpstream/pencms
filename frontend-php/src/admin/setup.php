@@ -12,7 +12,7 @@ if (isset($_COOKIE['pen_user_id']) && $_COOKIE['pen_user_id'] !== 'author') {
     <div class="pen-panel p-8 w-full max-w-md space-y-6">
         <div class="text-center space-y-2">
             <h1 class="text-2xl font-sans font-black text-forge-black tracking-tight uppercase">PenCMS Setup</h1>
-            <p class="text-sm text-forge-dark">Create the first administrator account</p>
+            <p class="text-sm text-forge-dark">Create your account</p>
         </div>
 
         <div x-show="error" x-cloak class="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-[2px]">

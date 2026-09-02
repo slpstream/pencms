@@ -1,9 +1,9 @@
 <p align="center">
   <img src="frontend-php/src/admin/images/pencms-512x512.png" alt="PenCMS" width="200">
 </p>
-
+<p align="center">
 # PenCMS
-
+</p>
 PenCMS is the world's first-ever AI-native CMS made from the ground up for the age of agents: An Agent-first, API-first, Markdown-centric headless Content Management System anyone can self-host, complete with a built-in MCP server. 
 
 
@@ -13,7 +13,7 @@ PenCMS is an Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a 
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/slpstream/pencms)
 
-> 🚀 **Self-Hosting PenCMS?** Follow our step-by-step **[ELI5 Quickstart Guide](core/docs/quickstart.md)** to get the Python Brain and PHP Face running on your machine in 5 minutes!
+>**Self-Hosting PenCMS?** Follow the step-by-step **[ELI5 Quickstart Guide](core/docs/quickstart.md)** to get the Python Brain and PHP Face running on your machine in 5 minutes.
 
 ---
 

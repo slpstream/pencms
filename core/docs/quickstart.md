@@ -134,9 +134,9 @@ Now that both engines are running, open your web browser and go to:
 ```text
  ┌─────────────────────────────────────────────────────────┐
  │                      PenCMS Setup                       │
- │           Create the first administrator account        │
+ │                   Create your account                   │
  │                                                         │
- │   Username:        [ grandma               ]            │
+ │   Username:        [ gracehopper           ]            │
  │   Master Password: [ ••••••••••••          ]            │
  │   Repeat Password: [ ••••••••••••          ]            │
  │                                                         │
@@ -260,7 +260,7 @@ Point your AI agent harness (e.g. Cursor MCP or Claude Desktop) to your MCP endp
 ## 7. Help! Something Went Wrong (Troubleshooting)
 
 ### Q: I opened `http://127.0.0.1:8009/` and got a "404 Not Found" error.
-**Answer**: Don't panic! PenCMS does not have a generic index at `/`.
+**Answer**: Don't panic! PenCMS does not have a generic index at `/` and this is on purpose, so you can use the webroot of your server for a landing page, a redirect or anything else you want. Keeping it clean means PenCMS does not take over your entire box, and you can run something else on it, too.
 - To view your administration dashboard: visit **[http://127.0.0.1:8009/admin/](http://127.0.0.1:8009/admin/)** (or `/admin/setup.php` on first run).
 - To view your public blog: visit **[http://127.0.0.1:8009/blog/](http://127.0.0.1:8009/blog/)**.
 
@@ -296,3 +296,5 @@ Point your AI agent harness (e.g. Cursor MCP or Claude Desktop) to your MCP endp
     PHP_CLI_SERVER_WORKERS=8 php -c php.ini -S 127.0.0.1:8009 -t public router.php
     ```
   - Re-open **[http://127.0.0.1:8009/admin/](http://127.0.0.1:8009/admin/)**. All your posts, themes, and settings are safely preserved in your `pencms-data` directory.
+
+
