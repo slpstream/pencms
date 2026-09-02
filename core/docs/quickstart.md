@@ -6,7 +6,7 @@ If you can copy and paste a command into a terminal window, you can run PenCMS.
 
 ---
 
-## 1. The Big Picture: "The Brain and The Face"
+## 1. The Big Picture: "The Backend and The Frontend"
 
 PenCMS is built in two friendly parts that work together like a team:
 
@@ -15,7 +15,7 @@ PenCMS is built in two friendly parts that work together like a team:
  │                      YOUR COMPUTER                          │
  │                                                             │
  │   ┌───────────────────────┐       ┌─────────────────────┐   │
- │   │       THE BRAIN       │       │       THE FACE      │   │
+ │   │         BACKEND       │       │       FRONTEND      │   │
  │   │   (Python / FastAPI)  │◄─────►│    (PHP Built-in)   │   │
  │   │       Port: 8008      │       │      Port: 8009     │   │
  │   └───────────────────────┘       └─────────────────────┘   │
@@ -27,17 +27,17 @@ PenCMS is built in two friendly parts that work together like a team:
        (Claude, Cursor, etc.)         (Admin Editor & Blog)
 ```
 
-1. **The Brain (Python / FastAPI on Port `8008`)**:
+1. **The Backend "Brain" (Python / FastAPI on Port `8008`)**:
    - Manages all your Markdown files and media.
    - Handles search, tags, categories, and Git syncing.
    - Speaks directly to AI agents via the built-in MCP server.
-2. **The Face (PHP on Port `8009`)**:
+2. **The Browser-based Frontend (PHP on Port `8009`)**:
    - What you see and interact with in your web browser.
    - Includes the **Admin Dashboard**, the **Visual Post Editor**, and your **Public Blog**.
-   - Automatically passes API requests to the Brain behind the scenes.
+   - Automatically passes API requests to the Backend behind the scenes.
 
 > [!IMPORTANT]
-> Both **The Brain** and **The Face** must be running at the same time for PenCMS to work.
+> Both **The Backend** and **The Frontend** must be running at the same time for PenCMS to work.
 
 ---
 
@@ -86,7 +86,7 @@ pip install -r requirements.txt
 # 3. Install Chromium for Theme Inspection (one-time download)
 playwright install chromium
 
-# 4. Start the Brain server!
+# 4. Start the Backend server!
 uvicorn app.main:app --reload --port 8008
 ```
 
@@ -140,7 +140,7 @@ Now that both engines are running, open your web browser and go to:
  │   Master Password: [ ••••••••••••          ]            │
  │   Repeat Password: [ ••••••••••••          ]            │
  │                                                         │
- │             [ Create Admin Account ]                    │
+ │                 [ Create Admin Account ]                │
  └─────────────────────────────────────────────────────────┘
 ```
 
@@ -173,8 +173,8 @@ PenCMS includes ready-to-use service and configuration templates in [`deploy/lan
 
 | File | Purpose |
 | :--- | :--- |
-| [`deploy/lan/pencms-api.service`](../../deploy/lan/pencms-api.service) | Systemd unit that keeps the Python Brain running automatically on port `8008` |
-| [`deploy/lan/pencms-php.service`](../../deploy/lan/pencms-php.service) | Systemd unit that keeps the PHP Face running automatically on port `8009` |
+| [`deploy/lan/pencms-api.service`](../../deploy/lan/pencms-api.service) | Systemd unit that keeps the Python Backend running automatically on port `8008` |
+| [`deploy/lan/pencms-php.service`](../../deploy/lan/pencms-php.service) | Systemd unit that keeps the PHP Frontend running automatically on port `8009` |
 | [`deploy/lan/nginx-pencms.conf`](../../deploy/lan/nginx-pencms.conf) | Nginx reverse-proxy configuration that provides local HTTPS (`:443`) |
 | [`deploy/lan/pencms.env.example`](../../deploy/lan/pencms.env.example) | Environment template for secrets and origin configuration |
 
@@ -246,7 +246,7 @@ Point your AI agent harness (e.g. Cursor MCP or Claude Desktop) to your MCP endp
 
 | Setup Type | MCP Endpoint URL | Notes |
 | :--- | :--- | :--- |
-| **Local Machine (Track 1)** | `http://127.0.0.1:8008/api/mcp` | Direct connection to the Python Brain |
+| **Local Machine (Track 1)** | `http://127.0.0.1:8008/api/mcp` | Direct connection to the Python Backend |
 | **Home LAN Server (Track 2)** | `https://<YOUR-LAN-IP>/api/mcp` | Connect via standard HTTPS on port 443 |
 | **Public VPS (Track 3)** | `https://cms.yourdomain.com/api/mcp` | Must match your `MCP_RESOURCE_URL` |
 
@@ -267,7 +267,7 @@ Point your AI agent harness (e.g. Cursor MCP or Claude Desktop) to your MCP endp
 ---
 
 ### Q: Setup or Login says "Network error. Could not reach API."
-**Answer**: The PHP Face cannot talk to the Python Brain.
+**Answer**: The PHP Frontend cannot talk to the Python Backend.
 1. Check **Terminal Window #1** (the Python backend). Is it still running?
 2. Open **[http://127.0.0.1:8008/api/health](http://127.0.0.1:8008/api/health)** in your browser. If it doesn't return `{"status":"ok"}`, restart your Python server using `uvicorn app.main:app --reload --port 8008`.
 

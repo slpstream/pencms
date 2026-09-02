@@ -1,19 +1,18 @@
 <p align="center">
   <img src="frontend-php/src/admin/images/pencms-512x512.png" alt="PenCMS" width="200">
 </p>
-<p align="center">
-# PenCMS
-</p>
+<h1 align="center">PenCMS</h1>
+
 PenCMS is the world's first-ever AI-native CMS made from the ground up for the age of agents: An Agent-first, API-first, Markdown-centric headless Content Management System anyone can self-host, complete with a built-in MCP server. 
 
 
-**Many agents via keys. One operator.**
+### **Many agents via keys. One operator.**
 
-PenCMS is an Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) brain and a PHP admin, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
+PenCMS is an Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) backend and a PHP admin frontend, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/slpstream/pencms)
 
->**Self-Hosting PenCMS?** Follow the step-by-step **[ELI5 Quickstart Guide](core/docs/quickstart.md)** to get the Python Brain and PHP Face running on your machine in 5 minutes.
+>**Self-Hosting PenCMS?** Follow the step-by-step **[ELI5 Quickstart Guide](core/docs/quickstart.md)** to get the Python Backend and PHP Frontend running on your machine in 5 minutes.
 
 ---
 
@@ -36,7 +35,7 @@ pencms/
 │   ├── schemas/            # Document Schemas
 │   └── docs/               # Guides (incl. quickstart.md, mcp_guide.md)
 │
-├── backend-python/         # FastAPI CMS + MCP + OAuth (the product brain)
+├── backend-python/         # FastAPI CMS + MCP + OAuth (the product brain, its backend)
 │
 └── frontend-php/           # Admin UI client (Traven Editor integration)
 ```
@@ -54,11 +53,11 @@ pencms/
 | **Agents / MCP / OAuth** | [`core/docs/mcp_guide.md`](core/docs/mcp_guide.md) |
 | **Users + agent keys** | [`core/docs/users-and-access.md`](core/docs/users-and-access.md) |
 
-### 🚀 2-Minute Local Quickstart (Laptop / Desktop)
+### 2-Minute Local Quickstart (Laptop / Desktop)
 
-PenCMS runs as two coordinated engines—the **Python Brain** (API & storage on `:8008`) and the **PHP Face** (Admin UI & Blog on `:8009`).
+PenCMS runs as two coordinated engines—the **Python Backend** (API & storage on `:8008`) and the **PHP Frontend** (Admin UI & Blog on `:8009`).
 
-1. **Start the Brain** (Terminal 1):
+1. **Start the Backend** (Terminal 1):
    ```bash
    cd backend-python
    python3 -m venv venv && source venv/bin/activate
@@ -67,7 +66,7 @@ PenCMS runs as two coordinated engines—the **Python Brain** (API & storage on 
    uvicorn app.main:app --reload --port 8008
    ```
 
-2. **Start the Face** (Terminal 2):
+2. **Start the Frontend** (Terminal 2):
    ```bash
    cd frontend-php
    PHP_CLI_SERVER_WORKERS=8 php -c php.ini -S 127.0.0.1:8009 -t public router.php
@@ -82,7 +81,7 @@ PenCMS runs as two coordinated engines—the **Python Brain** (API & storage on 
 
 ---
 
-### 🐳 Docker Compose (VPS / Public HTTPS)
+### Docker Compose (VPS / Public HTTPS)
 
 For cloud VPS deployments with automatic Let's Encrypt TLS:
 
