@@ -568,7 +568,7 @@ The AI sidebar additionally has `insert_expand_embed` and `list_page_headings` f
 
 ## Related: publish to a host
 
-Static host deploy (SFTP / GitHub Pages; cloud adapters in Pro) is separate from Git content push:
+Static host deploy (SFTP / GitHub Pages) is separate from Git content push:
 
 - Humans: [`publish-howto.md`](./publish-howto.md) — connect a host, first Publish, Export zip, webhooks
 - Agents + hybrid: [`publish-agents.md`](./publish-agents.md) — Deploy Grant, scope `publish`, `publish_site` / status poll

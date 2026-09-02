@@ -2,7 +2,7 @@
 
 This document provides a detailed reference of the options, methods, formatting helpers, and events available on the `TravenEditor` instance.
 
-For PenCMS-specific host features (link suggestions, `[expand]` / `[embed]`), see [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md).
+For PenCMS-specific host features (link suggestions, `[expand]` / `[embed]`), see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).
 
 For the API of PenCMS, please consult the Swagger docs for the Python/FastAPI backend: `http://127.0.0.1:8008/api/docs`
 
@@ -26,7 +26,7 @@ Initializes a new editor instance.
 | `onChange` | `function` | `null` | Callback fired on change: `(value: string) => void`. |
 | `onSave` | `function` | `null` | Callback fired on Save command (Cmd+S / Ctrl+S): `(value: string) => void`. |
 | `onUploadImage` | `function` | `null` | Callback returning a promise of the uploaded image's URL: `(file: File) => Promise<string>`. |
-| `onSuggestLinks` | `function` | `null` | Optional host callback for Insert Link modal autocomplete: `(query: string) => Promise<{ title: string, url: string, slug?: string }[]>`. When omitted, the modal stays text + URL only. PenCMS returns published posts/pages with `url` set to the bare slug (Markdown `[title](slug)`); see [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md). Also powers Expand/Embed slug typeahead when those plugin tools are loaded. |
+| `onSuggestLinks` | `function` | `null` | Optional host callback for Insert Link modal autocomplete: `(query: string) => Promise<{ title: string, url: string, slug?: string }[]>`. When omitted, the modal stays text + URL only. PenCMS returns published posts/pages with `url` set to the bare slug (Markdown `[title](slug)`); see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md). Also powers Expand/Embed slug typeahead when those plugin tools are loaded. |
 | `imageAspectOptions` | `Array<{ value: string, label: string }>` | `null` | Optional host-declared Aspect pills for the Edit/Insert Image modal (Traven ≥ 0.2.25). When set and non-empty, advanced mode shows an Aspect row; values are managed as `class` tokens on `[image]`. PenCMS loads this from the active theme’s `theme.json` `editor_image_aspect` via `window.PEN_EDITOR_IMAGE_ASPECT`. Omit / `[]` → modal unchanged. |
 | `onListHeadings` | `function` | `null` | Optional host callback for Expand/Embed Heading dropdown: `(slug: string) => Promise<{ title: string, level?: number }[]>`. Fallback when `onListExpandTargets` is omitted (Traven ≥ 0.2.21 + expand-embed ≥ 0.1.9). PenCMS implements via `store.getPageHeadings`. |
 | `onListExpandTargets` | `function` | `null` | Preferred Expand/Embed target picker: `(slug: string) => Promise<{ summary?: string\|null, deck?: string\|null, headings: { title: string, level?: number }[] }>`. Modal: Whole post \| Summary \| Deck \| sections → `source="summary"` / `source="deck"` or `heading=` (Traven ≥ 0.2.24 + expand-embed ≥ 0.1.12). PenCMS implements via `store.getPageExpandTargets`. |
@@ -173,7 +173,7 @@ Returns the configured image upload handler, or `null` if not configured.
 ### `getSuggestLinks()`
 Returns the configured link-suggestion handler for the Insert Link modal, or `null` if not configured.
 *   **Returns:** `(query: string) => Promise<{ title: string, url: string, slug?: string }[]>` or `null`
-*   **See:** [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md)
+*   **See:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md)
 
 ### `getImageAspectOptions()`
 Returns host-declared image aspect options for the Edit/Insert Image modal, or `null` if not configured / empty (Traven ≥ 0.2.25). PenCMS supplies this from the active theme’s `editor_image_aspect`.
@@ -182,7 +182,7 @@ Returns host-declared image aspect options for the Edit/Insert Image modal, or `
 ### `getListHeadings()`
 Returns the configured heading-list handler for the Expand/Embed insert modal, or `null` if not configured.
 *   **Returns:** `(slug: string) => Promise<{ title: string, level?: number }[]>` or `null`
-*   **See:** [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md)
+*   **See:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md)
 
 ### `getComponents()`
 Returns the list of currently registered component schemas.

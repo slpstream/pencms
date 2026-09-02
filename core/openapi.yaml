@@ -27,8 +27,7 @@ paths:
       description: >
         List sites the authenticated actor may access. Human admin sees the
         full registry; authors see membership sites only; agent JWTs see
-        their bound site_id only. Create / rename / move-content / DELETE
-        are PenCMS Pro overlay paths.
+        their bound site_id only.
       security:
         - ApiKeyAuth: []
       responses:
@@ -1410,8 +1409,8 @@ paths:
     get:
       summary: List publish provider catalog
       description: >
-        Core catalog is SFTP and GitHub Pages. Pro overlay registers additional
-        cloud adapters. Each entry includes ui_schema for the admin Publish tab.
+        List supported publish provider types and their schemas (e.g. SFTP, GitHub Pages).
+        Each entry includes ui_schema for the admin Publish tab.
       security:
         - CookieJwtAuth: []
         - BearerJwt: []

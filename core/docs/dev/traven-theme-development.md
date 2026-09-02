@@ -68,7 +68,7 @@ graph TD
 > - **Prefer vanilla dual-duty skins** for in-house themes — one `skin-{id}.css` for `.cm-editor` and `.traven-preview`, no framework reset on content.
 > - **Independent themes may use Tailwind** for site chrome, but then they must (1) re-assert content tokens on `.traven-preview` / `.traven-preview p`, (2) style captions for both Traven `figcaption.*` and PenCMS `.caption` / `.classic-markdown-figure .caption`, and (3) declare self-hosted **`@font-face` in the skin** (`url('../fonts/….woff2')`). Faces that exist only under Tailwind-inlined chrome never register in the editor, so the skin’s `font-family: "MyFont", system-ui` silently uses the fallback while publish uses the real face.
 >
-> PenCMS packaging details: [`pencms-theme-development.md`](pencms-theme-development.md) §6.
+> PenCMS packaging details: [`pencms-theme-development.md`](../pencms-theme-development.md) §6.
 
 ---
 
@@ -246,7 +246,7 @@ Targets compiled HTML. Almost all of these are standard selectors nested inside 
 | `.traven-preview .traven-component .component-header`, `.component-title` | Info/warning title row. Style weight/case; `padding-bottom` when open; zero when `details:not([open])`. Editor: padding, never vertical margin (§4.4). |
 | `.traven-preview .traven-figure` | The `[figure]` block wrapper. |
 | `.traven-preview .traven-figure-caption` | The caption inside `.traven-figure`. |
-| `.traven-preview .traven-figure.align-fullbleed` | Breakout. Same `100vw / calc(50% - 50vw)` pattern as images — **requires a centered containing block**. On PenCMS published pages with sidebars, override/scope in chrome CSS; see [`pencms-theme-development.md`](pencms-theme-development.md) §8. |
+| `.traven-preview .traven-figure.align-fullbleed` | Breakout. Same `100vw / calc(50% - 50vw)` pattern as images — **requires a centered containing block**. On PenCMS published pages with sidebars, override/scope in chrome CSS; see [`pencms-theme-development.md`](../pencms-theme-development.md) §8. |
 | `.traven-preview figure.traven-image-figure figcaption.traven-image-caption` | Caption of the `[image]` figure. |
 
 #### Alignment helpers (shared between editor and preview)
@@ -514,7 +514,7 @@ For `align-fullbleed`, the standard viewport breakout is:
 }
 ```
 
-This is correct in a **centered** preview pane *if* the theme wants wall-to-wall viewport fullbleed. PenCMS does **not** require that look — a wider-than-column stage that keeps full source height (casper-lite-style) is equally valid. Published templates also use `.traven-preview` on the article (and often `<body>`), so skin rules run inside site chrome. If you do use viewport math with asymmetric sidebars, the breakout fails (flush-left, gutter on the right). Fix in theme chrome or pick a non-viewport interpretation. Details: [`pencms-theme-development.md`](pencms-theme-development.md) §8 *Fullbleed on published pages*. Do not paper over viewport math with JavaScript.
+This is correct in a **centered** preview pane *if* the theme wants wall-to-wall viewport fullbleed. PenCMS does **not** require that look — a wider-than-column stage that keeps full source height (casper-lite-style) is equally valid. Published templates also use `.traven-preview` on the article (and often `<body>`), so skin rules run inside site chrome. If you do use viewport math with asymmetric sidebars, the breakout fails (flush-left, gutter on the right). Fix in theme chrome or pick a non-viewport interpretation. Details: [`pencms-theme-development.md`](../pencms-theme-development.md) §8 *Fullbleed on published pages*. Do not paper over viewport math with JavaScript.
 
 ### 6.2 `[video ...]`
 
@@ -1029,7 +1029,7 @@ The custom overlay theme `skin-custom.css` implements font variables that can be
 ```
 
 > [!IMPORTANT]
-> **PenCMS host note:** In PenCMS (`admin-editor.php`), trumpet / `hero_title` / deck are **outside** `.cm-editor` but inside `.hero-title-block.traven-preview`, using the same `.post-detail-trumpet` / `.post-detail-title` / `.post-detail-deck` classes as published Twig. Host CSS (`admin-editor.css`) is thin glue only. Dual-duty PenCMS skins **must** define `--traven-font-display/body/mono`, force `.cm-editor` / `.traven-preview` with `!important`, and style those three `.post-detail-*` selectors once in the skin — or the admin header strip stays unthemed while the canvas looks half-themed. Details: [`pencms-theme-development.md`](pencms-theme-development.md) §7 *Admin editor gotchas*; sticky **A9** in [`knowledgebase.md`](dev/knowledgebase.md).
+> **PenCMS host note:** In PenCMS (`admin-editor.php`), trumpet / `hero_title` / deck are **outside** `.cm-editor` but inside `.hero-title-block.traven-preview`, using the same `.post-detail-trumpet` / `.post-detail-title` / `.post-detail-deck` classes as published Twig. Host CSS (`admin-editor.css`) is thin glue only. Dual-duty PenCMS skins **must** define `--traven-font-display/body/mono`, force `.cm-editor` / `.traven-preview` with `!important`, and style those three `.post-detail-*` selectors once in the skin — or the admin header strip stays unthemed while the canvas looks half-themed. Details: [`pencms-theme-development.md`](../pencms-theme-development.md) §7 *Admin editor gotchas*; sticky **A9** in [`knowledgebase.md`](knowledgebase.md).
 
 To update fonts dynamically and ensure CodeMirror layout accuracy, perform the update and request a viewport measurement:
 

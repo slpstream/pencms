@@ -12,7 +12,7 @@ Comprehensive blueprint for building **complete** PenCMS site themes: Twig chrom
 - Implementing **new** Traven engine shortcodes (grammar, widgets, compiler) — that lives in Traven core.
 - Ghost-import / Handlebars themes — PenCMS ships **native Twig only**.
 - Designing marketing landing pages unrelated to post/page rendering.
-- Rewriting Traven’s dual-scope selector bible — **link and adapt**; do not fork a second incomplete copy. See [`traven-theme-development.md`](traven-theme-development.md).
+- Rewriting Traven’s dual-scope selector bible — **link and adapt**; do not fork a second incomplete copy. See [`traven-theme-development.md`](dev/traven-theme-development.md).
 
 ---
 
@@ -29,7 +29,7 @@ Comprehensive blueprint for building **complete** PenCMS site themes: Twig chrom
 | Doc | Role vs this guide |
 |---|---|
 | [`theme-adding.md`](theme-adding.md) | Quick-start: scaffold, switch, validate. Points here for everything else. |
-| [`traven-theme-development.md`](traven-theme-development.md) | Canonical dual-scope CSS / editor skin guide. This guide **composes** it for PenCMS packaging. |
+| [`traven-theme-development.md`](dev/traven-theme-development.md) | Canonical dual-scope CSS / editor skin guide. This guide **composes** it for PenCMS packaging. |
 | [`traven-shortcodes.md`](traven-shortcodes.md) | Shortcode inventory (attrs, emitted HTML, classes, align×size matrices). Theme guide links; does not invent attrs. |
 | [`dev/theme-social-preview.md`](dev/theme-social-preview.md) | Canonical OG / `social_preview` contract. Condensed checklist here; full field table stays there. |
 | [`seo-settings.md`](seo-settings.md) | Operator-facing Social Previews UI. |
@@ -664,7 +664,7 @@ if (toggleBtn) {
 
 ### Editor constraints (dual-duty)
 
-- No `float` / vertical `margin` on `.cm-wysiwym-*-container` in editor scope; use auto-margins for align ([`traven-theme-development.md` §5](traven-theme-development.md)).
+- No `float` / vertical `margin` on `.cm-wysiwym-*-container` in editor scope; use auto-margins for align ([`traven-theme-development.md` §5](dev/traven-theme-development.md)).
 - Preview scope may use float for left/right images.
 - Base `.cm-editor` / `.traven-preview` typography must use `!important` (admin Tailwind + `traven.css` otherwise win) — see §7 *Admin editor gotchas*.
 - Define `--traven-font-display`, `--traven-font-body`, and `--traven-font-mono` on `:root`.
@@ -797,7 +797,7 @@ Reference: `themes/freedomware` (`styles.css` grid shell + chrome resets; `skin-
 ## 8. Shortcode styling guide
 
 **Inventory of classes and attributes:** [`traven-shortcodes.md`](traven-shortcodes.md).  
-**Dual-scope selectors and float rules:** [`traven-theme-development.md`](traven-theme-development.md) §3 and §6.
+**Dual-scope selectors and float rules:** [`traven-theme-development.md`](dev/traven-theme-development.md) §3 and §6.
 
 ### Canonical layout attributes
 
@@ -1243,7 +1243,7 @@ Viewport-wide images at native aspect ratio can become very tall (e.g. square so
 | Blockquote | `.traven-component-blockquote` (+ footer/cite / `.attribution`) | Distinct from pullquote |
 | Pullquote | `.traven-component-pullquote` | Heavier / editorial |
 | Native `blockquote` | `blockquote:not(.traven-component-pullquote)` | Still readable |
-| `[info]` / `[warning]` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component-shortcode` ([`traven-theme-development.md`](traven-theme-development.md) §4.4 / §6.5) |
+| `[info]` / `[warning]` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component-shortcode` ([`traven-theme-development.md`](dev/traven-theme-development.md) §4.4 / §6.5) |
 | GitHub alerts | `.traven-alert`, `.traven-alert-{note,tip,important,warning,caution}` | Optional `::before` labels |
 | `[highlight]` / `==mark==` | `mark` | Light + dark contrast |
 | Generic `[component="…"]` | `.traven-component` + name modifier | Sensible default |
@@ -1790,7 +1790,7 @@ Same 4×4 for image, video, and audio — see §8 and [`traven-shortcodes.md`](t
 
 ### B. Emitted class cheat sheet
 
-Editor widget containers and preview classes: [`traven-shortcodes.md`](traven-shortcodes.md) §15 and [`traven-theme-development.md`](traven-theme-development.md) §3. Do not maintain a third incomplete copy here.
+Editor widget containers and preview classes: [`traven-shortcodes.md`](traven-shortcodes.md) §15 and [`traven-theme-development.md`](dev/traven-theme-development.md) §3. Do not maintain a third incomplete copy here.
 
 ### C. Related docs index
 

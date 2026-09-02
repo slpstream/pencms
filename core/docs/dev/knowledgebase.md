@@ -34,8 +34,9 @@ Canonical guides — prefer these over restating chapters here:
 | Users + agent keys (operators) | [`users-and-access.md`](../users-and-access.md) |
 | Site authors / bylines | Sticky **C6** below; Twig contract in [`pencms-theme-development.md`](../pencms-theme-development.md) §5 |
 | MCP / agents | [`mcp_guide.md`](../mcp_guide.md), agent index [`llms.txt`](../llms.txt) |
-| TravenEditor API (vendored) | [`AI-and-TravenEditor-API-reference.md`](../AI-and-TravenEditor-API-reference.md) |
-| Host vs editor philosophy | [`AI-MCP-Traven.md`](../AI-MCP-Traven.md) |
+| TravenEditor API (vendored) | [`AI-and-TravenEditor-API-reference.md`](AI-and-TravenEditor-API-reference.md) |
+| Host vs editor philosophy | [`AI-MCP-Traven.md`](AI-MCP-Traven.md) |
+| Dual-scope CSS / editor skins | [`traven-theme-development.md`](traven-theme-development.md) |
 | Deploy | [`deploy_compose.md`](../deploy_compose.md), [`lan_https.md`](../lan_https.md) |
 | Traven editor internals | Sibling repo: `traven/docs/dev/knowledgebase.md` (do not duplicate) |
 | Active session handoffs | Ephemeral under `gitignore/` (e.g. admin half-legacy UX) — not canonical |

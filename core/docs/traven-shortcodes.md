@@ -1,6 +1,6 @@
 # Traven / PenCMS Shortcode Reference
 
-Theme-author inventory of shortcodes: syntax, attributes, emitted HTML, and CSS classes for the editor (WYSIWYM) and published preview. Use this for **classes and attrs**; dual-scope styling rules, float restrictions, and the full selector bible live in [`traven-theme-development.md`](traven-theme-development.md) (§1, §3, §4.4, §6).
+Theme-author inventory of shortcodes: syntax, attributes, emitted HTML, and CSS classes for the editor (WYSIWYM) and published preview. Use this for **classes and attrs**; dual-scope styling rules, float restrictions, and the full selector bible live in [`traven-theme-development.md`](dev/traven-theme-development.md) (§1, §3, §4.4, §6).
 
 ---
 
@@ -48,7 +48,7 @@ Emitted as classes: `.align-{value}`, `.size-{value}`.
 
 Typical skin widths (Traven docs; individual skins may differ slightly): `small` ~150px, `medium` ~300px, `large` ~600px, `full` 100%.
 
-**Editor vs preview:** do **not** float shortcode widgets in the editor (breaks CodeMirror geometry). Use auto-margins for left/right/center in `.cm-editor`; floats are fine under `.traven-preview`. Details: [`traven-theme-development.md` §4.4](traven-theme-development.md#44-no-floats-or-vertical-margins-in-the-editor).
+**Editor vs preview:** do **not** float shortcode widgets in the editor (breaks CodeMirror geometry). Use auto-margins for left/right/center in `.cm-editor`; floats are fine under `.traven-preview`. Details: [`traven-theme-development.md` §4.4](dev/traven-theme-development.md#44-no-floats-or-vertical-margins-in-the-editor).
 
 ---
 
@@ -598,7 +598,7 @@ Theme authors should implement all 16 combinations for **image**, **video**, and
 | Components / quotes / notices | `.cm-wysiwym-component-shortcode` (+ `.component-blockquote`, `.component-pullquote`, `.component-info`, `.component-warning`) |
 | `==highlight==` | `.cm-wysiwym-highlight` |
 
-Full child selectors, modal scope, and dark mode: [`traven-theme-development.md` §3](traven-theme-development.md#3-the-selector-reference).
+Full child selectors, modal scope, and dark mode: [`traven-theme-development.md` §3](dev/traven-theme-development.md#3-the-selector-reference).
 
 ---
 

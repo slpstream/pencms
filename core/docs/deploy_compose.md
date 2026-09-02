@@ -75,11 +75,8 @@ Then set each site’s **Domain** in **Settings → Sites** to `wiki.example.com
 Dynamic public uses Host → registry. Static trees are an export of the same site content:
 
 ```bash
-# One site → write into the output root (default site if --site omitted)
+# Export static production bundle for a site (default site if --site omitted)
 php frontend-php/cli-tools/generate-static.php --site=wiki --domain=wiki.example.com --output=dist
-
-# Every live registry site → dist/{site_id}/  (PenCMS Pro; Core refuses --all-sites)
-php frontend-php/cli-tools/generate-static.php --all-sites --output=dist
 ```
 
 Canonical links prefer `--domain`, else each site’s registry `domain`, else localhost. Per-site `web_root` / CDN is icebox (low priority); operators publish or sync each `dist/{id}/` tree as needed.

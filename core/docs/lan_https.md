@@ -47,10 +47,10 @@ Drop-in files live in [`deploy/lan/`](../../deploy/lan/):
 
 | File | Role |
 |---|---|
-| `nginx-pencms.conf` | TLS terminator; `/api`, `/.well-known`, `/oauth`, `/llms.txt` → FastAPI `:8008`; `/fonts/`, `/assets/vendor/`, `/assets/fonts/`, `/admin/css/` → disk; `/admin/js/` Core-on-disk then PHP (`PENCMS_PRO_ADMIN`); everything else `/` → PHP `:8009` |
+| `nginx-pencms.conf` | TLS terminator; `/api`, `/.well-known`, `/oauth`, `/llms.txt` → FastAPI `:8008`; `/fonts/`, `/assets/vendor/`, `/assets/fonts/`, `/admin/css/` → disk; `/admin/js/` on-disk then PHP; everything else `/` → PHP `:8009` |
 | `pencms-api.service` | uvicorn on `127.0.0.1:8008` (`--reload` for git-pull/edit LAN boxes; omit on a hands-off VPS). **`--reload` drops in-memory MCP sessions** — echo a fresh `Mcp-Session-Id` after the API restarts, or omit `--reload` if agents keep long Streamable HTTP sessions. REST `/api/v1/mcp/*` is unaffected. |
 | `pencms-php.service` | `php -S 127.0.0.1:8009` + `router.php` (`PHP_CLI_SERVER_WORKERS=8`) |
-| `pencms.env.example` | `JWT_ISSUER` / `MCP_RESOURCE_URL` / `CORS_ALLOW_ORIGINS` must be the **HTTPS** origin clients type. Optional `PYTHONPATH` + `PENCMS_PRO_ADMIN` load a sibling Pro overlay. |
+| `pencms.env.example` | `JWT_ISSUER` / `MCP_RESOURCE_URL` / `CORS_ALLOW_ORIGINS` must be the **HTTPS** origin clients type. |
 
 Copy `pencms.env.example` → `pencms.env` (mode `0600`), set a long `JWT_SECRET`, then either:
 
@@ -62,23 +62,6 @@ After editing a unit file **or `pencms.env`**, recopy the unit into `~/.config/s
 Enable the nginx site, `nginx -t`, reload. First browser visit: `https://$HOST/admin/setup.php` (bootstrap admin), then mint a site-scoped agent key.
 
 Pin `mcp>=1.12.0,<2` — `fastapi-mcp==0.4.0` crashes on MCP SDK 2.0.
-
-## Load PenCMS Pro on a LAN install
-
-Edition is overlay presence, not a `config.ini` flag. Core stays Core until the API can `import pencms_pro` and PHP can serve Users/Sites from the overlay admin tree. See [`editions.md`](./editions.md).
-
-1. Check out `pencms-pro` as a **sibling** of Core (example: `/home/user/pencms` + `/home/user/pencms-pro`).
-2. In `pencms.env` (not bash `export` — systemd `EnvironmentFile` is not a shell), set:
-
-   ```bash
-   PYTHONPATH=/home/user/pencms-pro
-   PENCMS_PRO_ADMIN=/home/user/pencms-pro/frontend-php/src/admin
-   ```
-
-   Both services must load that file. The API unit already does. The PHP unit must list `EnvironmentFile=` too, or Users/Sites PHP will 404 while `/api/config` says `"edition":"pro"`.
-3. Restart **both** units (`systemctl --user restart pencms-api pencms-php` or the system equivalents). `init_pro` failures fail API boot on purpose; a missing `PYTHONPATH` is a silent Core boot (`ImportError` swallowed).
-4. Recopy [`nginx-pencms.conf`](../../deploy/lan/nginx-pencms.conf) into the live nginx site and `nginx -t` + reload. `/admin/js/` is served from Core disk first; overlay scripts (`users.js`, `settings-sites.js`) fall through to PHP. Skipping this step 404s those scripts and Alpine reports `usersAdmin` / `sitesSettings` is not defined.
-5. Smoke: `GET /api/config` → `"edition":"pro"`; hard-refresh admin; sidebar Users and Sites; `GET /admin/js/users.js` is 200.
 
 ## Multisite (same as Compose)
 

@@ -1,194 +1,125 @@
-# Users and agent access (operator How-To)
+# Users and Agent Access (Operator How-To)
 
-**Core (2026-08-30):** one bootstrap operator, that operator’s profile, and
-AI agent keys. Adding further human logins (`Settings → Users`,
-`POST /api/users`) is a **Pro overlay** path — it is not a Core operator
-step.
+PenCMS is built from the ground up for the agentic era under a clear model: **Many agents via keys. One operator.**
 
-Give AI agents their own named keys from **Settings → AI**. Humans and
-agents share **one capability vocabulary** (string lists such as
-`write:posts`). Capabilities are **per site**. There is no own-vs-any
-split yet: a writer with `write:posts` on a site may edit any post on
-that site.
+The human operator sponsors and owns the machine — disk, Git repository, TLS origin, and cryptographic keys. Autonomous AI agents act as first-class authors and daily collaborators, publishing content through the Model Context Protocol (MCP) using named, revocable, site-scoped keys with fine-grained capability controls.
 
-The PHP admin only **hides** buttons and nav. The API is the root of
-trust. A hidden sidebar is not security.
+This architecture ensures that agents never need a human login form or administrative credentials, and the human sponsor always retains full provenance, oversight, and instant revocation power.
 
-This is **not** the public authors directory (`authors.yaml` / Settings →
-Site). CMS logins and bylines are separate.
-
-Connect an agent after minting a key: [`mcp_guide.md`](./mcp_guide.md).
-Give an agent its own site: [`agent-owned-site.md`](./agent-owned-site.md).
-Host deploy for agents: [`publish-agents.md`](./publish-agents.md).
-How editions load: [`editions.md`](./editions.md).
+> [!NOTE]
+> **CMS Accounts vs. Public Author Bylines**  
+> An operator account manages CMS infrastructure and agent permissions. Public post bylines and author bios are completely separate and managed under each site's authors directory (**Settings → Site → Authors** or `authors.yaml`). See [`mcp_guide.md`](./mcp_guide.md) for details on site author metadata.
 
 ---
 
-## Two doors
+## Access Architecture at a Glance
 
-| Who | Where you manage them | What they get |
+| Role | Where You Manage It | Access Method | Scope & Capabilities |
+| :--- | :--- | :--- | :--- |
+| **Human Operator** | Initial setup wizard, then **Settings → User** (profile) | Browser session (password + secure cookie / JWT) | Full instance administration, site configuration, key minting & revocation. |
+| **AI Agents** | **Settings → AI → Agent Keys** | Named API keys (`pen-sk-…`) / MCP stream over HTTP / OAuth | Strictly site-bound with granular capability presets (`read`, `write:posts`, `publish:content`, etc.). |
+
+---
+
+## 1. Managing the Operator Profile
+
+The initial operator account is created during setup and serves as the instance administrator:
+
+- **Profile & Credentials**: Manage your display name, username, and password from **Settings → User** in the admin sidebar.
+- **Security**: The operator holds administrative privileges (`role: admin`) required to mint, inspect, reassign, and revoke agent keys, configure site presentation, and manage storage settings.
+- **Zero-Knowledge Vault**: Sensitive third-party secrets (such as LLM API keys and web host credentials) are unlocked by the operator during interactive admin sessions and stored encrypted.
+
+---
+
+## 2. Provisioning Access for AI Agents
+
+Agents interact with PenCMS through the **Model Context Protocol (MCP)** at `/api/mcp`. To grant an agent access to a site, you mint a named, site-scoped key.
+
+### Minting an Agent Key
+
+1. Navigate to **Settings → AI → Agent Keys** in the admin sidebar (unlock your vault if prompted).
+2. Click **Generate New Key**.
+3. Fill in the key details:
+   - **Name**: A descriptive name identifying the agent (e.g. `blog-cursor`, `research-assistant`, or `{site}-{agent}`).
+   - **Site**: Choose the target site from the registry. Every agent key is bound to **exactly one site**. The agent's content tools can only inspect or modify files under `content/sites/{site_id}/`.
+   - **Scope Preset**: Select a capability preset (or customize individual scopes):
+
+| Preset | Scopes Included | Ideal Use Case |
 | :--- | :--- | :--- |
-| **Bootstrap operator (Core)** | Setup wizard, then **Settings → User** (profile) | Browser login, editor, site settings. One human. |
-| **Additional humans (Pro)** | **Settings → Users** | Extra logins, memberships, roles. Overlay only. |
-| **AI agents (Core)** | **Settings → AI** → Agent Keys | A `pen-sk-…` key bound to **one site** + scopes. MCP / OAuth — not a login form. |
+| **Read-Only** | `read` | Research or analytics agents that only search, list, and read articles. |
+| **Writer** | `read`, `write:posts`, `write:pages`, `write:media`, `write:authors`, `write:taxonomy` | Drafting and updating articles, creating taxonomy terms, uploading media. |
+| **Editor** | Writer + `delete:posts`, `delete:pages`, `delete:media`, `publish:content`, `write:seo` | Editorial assistants that can delete stubs, manage SEO tags, and approve/publish content. |
+| **Publisher** | Editor + `publish` | Agents authorized to trigger static builds and host deployments (also requires a Deploy Grant). |
+| **Legacy Read+Write** | `read`, `write` | One-way compatibility with monolithic tooling (expands to all write/delete and `publish:content`). |
 
-Only **install admins** (`role: admin`) can mint, list, reassign, or revoke agent keys. Creating other humans (`users:manage`) is Pro; that capability does **not** let them mint agent keys.
+4. Click **Create Key** and copy the generated secret (`pen-sk-…`). The secret is displayed **only once**.
+5. Connect your client:
+   - For automated scripts or CI: authenticate via `POST /api/auth/token` with `{"agent_key": "pen-sk-…"}` to obtain a short-lived Bearer token.
+   - For interactive OAuth clients (e.g., Claude Desktop, Cursor): select the key during the authorization prompt (labeled `site · name`).
 
-The first account created at setup is the **bootstrap admin**. It cannot be deleted, demoted, or suspended.
-
----
-
-## Additional humans (Pro overlay)
-
-Core ships a single bootstrap operator. There is no Core UI or API for
-inviting a second human. The **Users** sidebar item is hidden unless
-`edition === "pro"`.
-
-With the Pro overlay loaded you need **Settings → Users** in the sidebar
-(`users:manage`, or you are already an admin).
-
-1. Open **Settings → Users** → **Create User** (or **New**).
-2. Set **username** (no spaces), **display name**, and an initial **password**. There is no email invite — tell them the password yourself.
-3. Choose **role**:
-   - **author** — only the sites and capabilities you assign.
-   - **admin** — every site, every capability. Memberships are not required.
-4. For an **author**, pick a **site** (header registry / Settings → Sites) and a **preset**, or **Customize capabilities**.
-5. Click **Create user**. A YAML file appears under `data/users/{uuid}.yaml`.
-
-Created users (and anyone whose password you reset) must **change that password** before the editor unlocks. They can still open **GET `/api/auth/me`**. The header shows a change-password banner until they succeed.
-
-### After they log in
-
-- The **site switcher** lists only membership sites (admins see all).
-- Sidebar and in-page actions follow their **effective caps** for the active site (for example a Writer sees Posts / Pages / Media, not Theme or Publish).
-- They cannot raise their own role to admin, grant themselves `users:manage` / `manage:sites`, or mint agent keys.
+Full MCP connection instructions and curl examples are documented in [`mcp_guide.md`](./mcp_guide.md).
 
 ---
 
-## Human presets (per site) — Pro overlay
+## 3. Capability Vocabulary
 
-These presets apply when the overlay is loaded and you are assigning
-memberships on **Settings → Users**. Core’s bootstrap admin already has
-every capability.
+PenCMS uses a unified, explicit capability vocabulary for all content and management actions:
 
-Presets are stored as capability lists, not special role names.
-
-| Preset | Capabilities |
+| Capability | Scope & Meaning |
 | :--- | :--- |
-| **Writer** | `write:posts`, `write:pages`, `write:media`, `write:authors`, `write:taxonomy` |
-| **Editor** | Writer + `delete:posts`, `delete:pages`, `delete:media`, `publish:content`, `write:seo` |
-| **Publisher** | Editor + host `publish` (Deploy Grant still required for **agents**) |
-| **Site admin** | All **site-scoped** caps for that site, including `read`. Does **not** include install-wide `users:manage` or `manage:sites` unless the account **role** is `admin`. |
+| `read` | Agent list, search, and content inspection. Monolithic across site content. |
+| `write:posts` | Create and update standard blog posts (`page` flag absent). |
+| `delete:posts` | Delete blog posts (via MCP, applies to translation siblings). |
+| `write:pages` | Create and update static pages (`page: true` in frontmatter). |
+| `delete:pages` | Delete static pages. |
+| `write:media` / `delete:media` | Upload, update, and remove assets in the site media library. |
+| `publish:content` | Change content status in the editor (approve draft or mark as published). **Not** host deployment. |
+| `write:menus` | Create, reorder, and replace navigation menu items in `menus.yaml`. |
+| `write:authors` | Create and update site author profiles in `authors.yaml`. |
+| `write:seo` | Update site presentation, meta tags, and social card defaults. |
+| `write:theme` | Adjust active theme and theme style custom properties. |
+| `write:taxonomy` | Manage taxonomy vocabularies and controlled terms in `taxonomy.yaml`. |
+| `publish` | Build static production output and deploy to a configured host (SFTP or GitHub Pages). |
 
-You can tick extra caps on the checklist. Add further sites from the user’s **Edit** screen (site + preset, then **Add site**).
+### Important Distinction: `publish:content` vs. `publish`
 
-**Empty capabilities on a site remove that membership.** Do not save an empty list to mean “on the site with no caps.”
-
----
-
-## Edit, suspend, reset, delete (Pro overlay)
-
-On the user row or Edit screen:
-
-| Action | Effect |
-| :--- | :--- |
-| **Edit** | Display name, per-site capabilities, extra sites |
-| **Reset password** | You set a temporary password; they must change it on next login |
-| **Suspend** | `status: blocked`. Login and API calls return **403** with “Your account is suspended.” (`account_suspended`). Wrong password still looks like a normal login failure. |
-| **Activate** | Unblock |
-| **Delete** | Removes the YAML and **that user’s agent keys**. Posts/pages they wrote stay on disk (orphaned provenance). No reassign workflow. Not yourself, not bootstrap. |
-
-**Block** is not the same as **revoke**. Block stops login. Revoke (strip memberships or delete keys) can leave the account able to sign in with no sites.
+- **`publish:content`** controls **editorial status** within the CMS. An agent with `publish:content` can mark a draft article as published or approved in its frontmatter.
+- **`publish`** controls **host deployment**. It compiles the static `dist/` bundle and deploys it live to the public internet. Even with scope `publish`, an agent cannot deploy until the operator explicitly enrolls a **Deploy Grant** under **Publish → Settings**.
 
 ---
 
-## Capability vocabulary (shared)
+## 4. Agent-Assisted Bootstrap (Approve-Code)
 
-`write:*` means create **and** update. `delete:*` is separate. Never split `create:` / `update:`.
+You do not need to manually copy and paste API secrets into chat interfaces. PenCMS supports an automated, secure **approve-code** flow:
 
-| Capability | Means |
-| :--- | :--- |
-| `read` | Agent list/search/inspect. Monolithic — no `read:posts`. Human GET of posts/pages does **not** require `read`. |
-| `write:posts` / `delete:posts` | Blog posts (`page` flag absent) |
-| `write:pages` / `delete:pages` | Static pages (`page: true` in frontmatter). Same `/api/pages` router as posts. |
-| `write:media` / `delete:media` | Media library |
-| `publish:content` | Content **status**: approve / publish in the editor (`PATCH …/approve` and `PATCH …/publish`). **Not** host deploy. |
-| `write:menus` / `write:authors` / `write:seo` / `write:theme` / `write:taxonomy` | Navigation, `authors.yaml`, SEO/presentation, theme fork, vocabularies + terms (`taxonomy.yaml`). Human Structure UI stays admin-only. Not collections.yaml / Publishing Rules. |
-| `publish` | Host deploy of static `dist/` (Publish page / MCP `publish_site`). Agents also need a **Deploy Grant**. |
-| `users:manage` | User CRUD / memberships / suspend / password reset (install-wide) |
-| `manage:sites` | Create/rename/delete sites in the registry (install-wide). **Pro overlay** — Core unmounts HTTP CRUD; GET list + PATCH settings stay. |
+1. **Request**: The agent calls `POST /api/auth/agent/request-code` with its proposed name and target `site_id`. The API responds with a short alphanumeric user code.
+2. **Review & Approve**: In the admin UI, navigate to **Settings → AI → Agent Keys → Pending approvals**. The operator reviews the request and clicks **Approve** (or Deny).
+3. **Verify**: The agent calls `POST /api/auth/agent/verify-code` with the code. Upon operator approval, the API returns the permanent `pen-sk-…` key once for the agent to store locally in its secure configuration.
 
-**`publish:content` ≠ `publish`.** A copy editor can approve a draft without being allowed to deploy the live host.
-
-Legacy agent scope `write` expands one-way to every `write:*`, every `delete:*`, and `publish:content`. It never implies host `publish`, `users:manage`, or `manage:sites`. `write:posts` alone does **not** expand to `write` or `write:theme`.
+This allows agents to bootstrap themselves while keeping the human operator firmly in control of key issuance.
 
 ---
 
-## Control granular access for AI agents
+## 5. Key Lifecycle, Reassignment, and Revocation
 
-Agent keys are **admin-only**. Open **Settings → AI** → **Agent Keys** (unlock the Zero-Knowledge vault if prompted).
-
-### Mint a key
-
-1. **Name** the agent (unique per operator), e.g. `blog-cursor`. Prefer `{site}-{agent}`.
-2. Pick the **Site**. One key ↔ one site. Content tools only touch `content/sites/{site_id}/`.
-3. Pick a **scope preset** or **Custom**:
-
-| Preset | Typical use |
-| :--- | :--- |
-| **Read-Only** | `read` — search and inspect |
-| **Writer** | `read` + write posts/pages/media/authors/taxonomy |
-| **Editor** | Writer + delete + `publish:content` + SEO |
-| **Publisher** | Editor + host `publish` (still need a Deploy Grant) |
-| **Legacy Read+Write** | `read` + `write` (expands to all write/delete/`publish:content`, not host deploy) |
-| **Legacy Read+Write+Publish** | Legacy write + host `publish` |
-
-Agent Writer/Editor/Publisher presets **include `read`** so the agent can list and search. Human Writer does **not** need `read` for the admin editor.
-
-4. Click **Generate New Key**. Copy `pen-sk-…` immediately (shown once). OAuth Custom Connectors only need the key to **exist** in the list; scripts/CI need the secret.
-
-Then connect the client: [`mcp_guide.md`](./mcp_guide.md) (OAuth consent picks `site · name`, or `POST /api/auth/token` for automation).
-
-### Tighten or revoke
-
-| Control | Where | Effect |
+| Goal | How to Do It | Result |
 | :--- | :--- | :--- |
-| **Fewer scopes** | Mint a new key with a tighter preset (scopes are chosen at mint) | New tokens follow the new key; revoke the old one |
-| **Move to another site** | Agent Keys → Site dropdown → **Save** | Secret unchanged. **Existing JWTs keep the old site until they expire** (~15 minutes). Remint via token/OAuth refresh. |
-| **Revoke** | Agent Keys → revoke | That agent cannot call MCP. Does not delete human users. |
-| **Deploy Grant** | **Publish → Settings** | Separate knob for host deploy. Scope `publish` without a grant still cannot deploy. [`publish-agents.md`](./publish-agents.md) |
-
-Do **not** mint a god-key (`write` + `publish` + every site) for a draft-only helper. Prefer Writer or Read-Only on the one site it should touch.
-
-### Agent-assisted bootstrap (approve-code)
-
-An agent can request a named, site-bound key without you pasting a secret into chat:
-
-1. Agent calls `POST /api/auth/agent/request-code` and shows you a short **user code**.
-2. You **Approve** (or deny) under **Settings → AI → Agent Keys → Pending approvals**.
-3. Agent calls `POST /api/auth/agent/verify-code` and stores `pen-sk-…` once.
-
-You still sponsor issuance. Authors cannot approve codes.
+| **Tighten Scopes** | Mint a new key with tighter scopes and revoke the old one. | New sessions immediately reflect the reduced capabilities. |
+| **Move to Another Site** | Open **Settings → AI → Agent Keys**, edit the key, change the **Site** dropdown, and save. | The secret remains unchanged; new tokens are bound to the new site. (Existing tokens expire within 15 minutes). |
+| **Revoke Access** | Click **Revoke** next to any agent key. | The key is immediately invalidated. All future authentication attempts fail. |
+| **Revoke Host Deploy** | Toggle off the **Deploy Grant** under **Publish → Settings**. | The agent retains content editing permissions but is barred from deploying to the public web server. |
 
 ---
 
-## What the UI does not do
+## 6. Authentication API Reference
 
-- Forged `pen_role` / `pen_user_id` cookies can open admin HTML. Privileged APIs still return **403**.
-- Structure, AI settings, and Translations stay **admin-only** in the sidebar (those APIs have no extra v1 cap besides the AI **keys** panel). File Storage / SSH / install `config.ini` (`GET|PUT /api/storage/config`, restart, SSH keys, `GET|PUT /api/storage/general`, install `PUT /api/storage/theme`) require a human **admin** session — not hidden chrome, not `users:manage`.
-- Generic save of a post (`PUT`) does not require `publish:content`; the editor’s Published/Unpublished control does. Use **Editor** if they should change content status through the dedicated approve/publish actions.
+| Action | Endpoint | Auth Required | Description |
+| :--- | :--- | :--- | :--- |
+| Inspect Session | `GET /api/auth/me` | Cookie / Bearer JWT | Returns current operator session, accessible sites, and expanded capabilities. |
+| Mint Agent Token | `POST /api/auth/token` | JSON `{"agent_key": "pen-sk-…"}` | Exchanges an agent key for a short-lived Bearer JWT. |
+| Request Code | `POST /api/auth/agent/request-code` | Public | Initiates the zero-paste agent bootstrap handshake. |
+| Approve Code | `POST /api/auth/agent/approve` | Operator Admin | Confirms pending agent key issuance. |
+| Verify Code | `POST /api/auth/agent/verify-code` | Public | Exchanges approved user code for `pen-sk-…`. |
+| Mint Agent Key | `POST /api/auth/keys` | Operator Admin | Programmatically provisions a new named agent key. |
 
----
-
-## API (optional)
-
-Same rules as the UI. Cookie `pen_jwt` or Bearer JWT → user YAML. Never `pen_role`.
-
-| Task | Endpoint |
-| :--- | :--- |
-| Session (caps, sites) | `GET /api/auth/me` |
-| Create user | `POST /api/users` (`users:manage`) — **Pro overlay** |
-| Set one site’s caps | `PATCH /api/users/{uuid}/memberships/{site_id}` — `capabilities: []` **removes** the site — **Pro overlay** |
-| Mint agent key | `POST /api/auth/keys` (admin only) |
-
-Contract: [`../openapi.yaml`](../openapi.yaml) (`/auth/me`; `/users` is the Pro superset until the Phase 6 spec cut).
+For full specification and payload schemas, refer to [`core/openapi.yaml`](../openapi.yaml).

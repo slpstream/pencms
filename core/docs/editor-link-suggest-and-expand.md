@@ -10,7 +10,7 @@ Canonical reference for two related PenCMS editor features that both depend on *
 Handoff scratchpad (session notes): [`gitignore/link-suggest-expand-handoff.md`](../../gitignore/link-suggest-expand-handoff.md)  
 Expand product roadmap (design intent): [`gitignore/expand-embed-shortcode-roadmap.md`](../../gitignore/expand-embed-shortcode-roadmap.md)
 
-**Docs index:** This file is the canonical operator/agent reference. API option tables live in [`AI-and-TravenEditor-API-reference.md`](./AI-and-TravenEditor-API-reference.md). Host-vs-editor philosophy: [`AI-MCP-Traven.md`](./AI-MCP-Traven.md).
+**Docs index:** This file is the canonical operator/agent reference. API option tables live in [`AI-and-TravenEditor-API-reference.md`](dev/AI-and-TravenEditor-API-reference.md). Host-vs-editor philosophy: [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md).
 
 ---
 
@@ -119,7 +119,7 @@ new TravenEditor({
 - `editor.getSuggestLinks()` / `editor.getListHeadings()` / `editor.getListExpandTargets()` mirror `getUploadHandler()`.
 - Omit `bubbleToolbar` → default bubble (no Expand) for other consumers.
 
-See also: [`AI-and-TravenEditor-API-reference.md`](./AI-and-TravenEditor-API-reference.md).
+See also: [`AI-and-TravenEditor-API-reference.md`](dev/AI-and-TravenEditor-API-reference.md).
 
 ### PenCMS wiring
 
@@ -278,7 +278,7 @@ Shared catalog: `Alpine.store('app').getPublishedLinkCatalog()` (also warms on e
 
 Insert from MCP via `write_content_file` with the shortcode string (no cursor). See [`mcp_guide.md`](./mcp_guide.md).
 
-Principles (unchanged from [`AI-MCP-Traven.md`](./AI-MCP-Traven.md)):
+Principles (unchanged from [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md)):
 
 - MCP and AI tools stay in **PenCMS**, not Traven core.
 - Agents insert plain Markdown (`[text](url)` or `[expand slug="…"]`); Traven/PHP render as today.

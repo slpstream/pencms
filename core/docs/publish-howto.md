@@ -1,6 +1,6 @@
 # Publish to a host (operator How-To)
 
-Build the active Content site’s static `dist/` and deploy it to a public web host — SFTP or GitHub Pages — from **Publish** in the admin sidebar. Cloudflare Pages, Vercel, Netlify, and here.now are PenCMS Pro overlay adapters.
+Build the active Content site’s static `dist/` and deploy it to a public web host — via SFTP or GitHub Pages — from **Publish** in the admin sidebar.
 
 > **Quick Concept: Git Push vs. Web Host Deploy**
 > - **Git Content Push (`commit_and_push`)**: Saves markdown source files and version history to your Git repository. Updating Git does **not** automatically update the live HTML files on your public web server.
@@ -65,7 +65,7 @@ Classic `scp`/OpenSSH upload to `remote_path`. Fields: host, port, username, rem
 
 Orphan git push of `dist/` to a branch (default `gh-pages`). Set **Owner**, **Repo**, optional **Branch** and **CNAME**. Vault: GitHub PAT with repo contents write. Configure the repo’s Pages source to that branch at `/`.
 
-For every provider, interactive secrets live in the ZK vault; agentic deploys need a **Deploy Grant** ([`publish-agents.md`](./publish-agents.md)). Cloud deployers (Cloudflare Pages, Vercel, Netlify, here.now) ship with PenCMS Pro.
+For every provider, interactive secrets live in the ZK vault; agentic deploys need a **Deploy Grant** ([`publish-agents.md`](./publish-agents.md)).
 
 ---
 

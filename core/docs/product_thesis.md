@@ -102,14 +102,9 @@ If the answer to any is no, it is probably not PenCMS — or it belongs in fork/
 
 ---
 
-## Core / Pro editions
+## Fully Featured Open-Source CMS
 
-**Core** is a standalone MIT engine. **Pro**, under development, is a private overlay (`pencms_pro`) that registers extra routers, adapters, and admin views via hooks. Core never contains Pro source. Pro never forks Core files. Edition is overlay presence (`import pencms_pro` succeeded), not a config.ini flag. 
-
-### Anti-crippleware
-
-1. Core is a complete CMS: an operator can build, style, translate, and publish a real site (fork the starter theme, write, publish via SFTP or GitHub Pages) with zero Pro code.
-2. Core's agent door is the product's identity. 
+PenCMS is a complete, self-contained system. Operators can create, design, translate, and publish production websites — writing with live WYSIWYM previews, customizing Twig themes, automating workflows over MCP, and publishing statically via SFTP or GitHub Pages — with zero external proprietary dependencies. The agent door is first-class and central to the product's identity.
 
 ---
 

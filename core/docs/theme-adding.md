@@ -131,6 +131,6 @@ Manual capture (install theme cards): [`frontend-php/cli-tools/capture-theme-scr
 | Fullbleed **video** double-height gap (`padding-bottom` vs `aspect-ratio`) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Pitfall: fullbleed video* |
 | Video iframe must fill 16:9 container (absolute stretch) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Pitfall: video iframe* |
 | Shortcode attrs / emitted HTML / matrices | [`traven-shortcodes.md`](traven-shortcodes.md) |
-| Dual-scope CSS selector bible | [`traven-theme-development.md`](traven-theme-development.md) |
+| Dual-scope CSS selector bible | [`traven-theme-development.md`](dev/traven-theme-development.md) |
 | `social_preview` field contract | [`dev/theme-social-preview.md`](dev/theme-social-preview.md) |
 | Expand/embed host wiring | [`editor-link-suggest-and-expand.md`](editor-link-suggest-and-expand.md) |
