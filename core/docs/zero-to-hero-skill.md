@@ -13,20 +13,20 @@
 
 ## Bootstrap canvas
 
-| # | Action | Tool(s) | Status |
-|---|---|---|---|
-| 1 | Discover collections / taxonomy | `get_site_config` | **ready** |
-| 2 | Choose theme | `list_themes` → `update_site_presentation({ "theme": "…" })` | **ready** |
-| 3 | Read effective presentation | `get_site_presentation` | **ready** |
-| 4 | Set identity + Site Meta + Indexing (sparse) | `update_site_presentation` | **ready** |
-| 5 | Social overrides only if brand brief needs them | `get_site_presentation` then sparse `update_site_presentation` | **ready** |
-| 6 | Branding assets | `write_media_file` + path fields via `update_site_presentation` | **ready** |
-| 7 | Menus from empty `menus.yaml` | `list_menus` / `create_menu_item` / `replace_menu_slot` / … | **ready** |
-| 8 | Authors from empty `authors.yaml` | `list_authors` / `create_author` / … | **ready** |
-| 9 | Taxonomy bootstrap (vocabs + terms) | `get_taxonomy` / `replace_taxonomy` (before first posts). Cap `write:taxonomy`. Not collections.yaml / Publishing Rules. | **ready** |
-| 10 | First posts + per-page OG frontmatter | `create_post` (stub) / `write_content_file` | **ready** |
-| 11 | Extractive `summary` / optional `faqs` | After body: `get_site_prompts` `extractive_prompts` → `update_frontmatter_field`. Persist immediately. How-to: [`mcp_guide.md`](./mcp_guide.md#extractive-summary-and-faqs) | **ready** |
-| 12 | Git + host publish when ready | `commit_and_push` / `publish_site` | **ready** |
+| # | Action | Tool(s) |
+|---|---|---|
+| 1 | Discover collections / taxonomy | `get_site_config` |
+| 2 | Choose theme | `list_themes` → `update_site_presentation({ "theme": "…" })` |
+| 3 | Read effective presentation | `get_site_presentation` |
+| 4 | Set identity + Site Meta + Indexing (sparse) | `update_site_presentation` |
+| 5 | Social overrides only if brand brief needs them | `get_site_presentation` then sparse `update_site_presentation` |
+| 6 | Branding assets | `write_media_file` + path fields via `update_site_presentation` |
+| 7 | Menus from empty `menus.yaml` | `list_menus` / `create_menu_item` / `replace_menu_slot` / … |
+| 8 | Authors from empty `authors.yaml` | `list_authors` / `create_author` / … |
+| 9 | Taxonomy bootstrap (vocabs + terms) | `get_taxonomy` / `replace_taxonomy` (before first posts). Cap `write:taxonomy`. Not collections.yaml / Publishing Rules. |
+| 10 | First posts + per-page OG frontmatter | `create_post` (stub) / `write_content_file` |
+| 11 | Extractive `summary` / optional `faqs` | After body: `get_site_prompts` `extractive_prompts` → `update_frontmatter_field`. Persist immediately. How-to: [`mcp_guide.md`](./mcp_guide.md#extractive-summary-and-faqs) |
+| 12 | Git + host publish when ready | `commit_and_push` / `publish_site` |
 
 ## Rules
 

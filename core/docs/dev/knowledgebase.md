@@ -6,18 +6,6 @@ This is the PenCMS counterpart to Traven’s [`docs/dev/knowledgebase.md`](../..
 
 ---
 
-## Maintenance contract
-
-| Rule | Detail |
-| :--- | :--- |
-| **Audience** | Developers and agentic pair-programmers on PenCMS |
-| **Add an entry** | One gotcha = short title + 2–5 sentences (“why this bites”) + code/doc paths |
-| **Promote out** | If a sticky note grows into a full guide, move deep prose to `core/docs/*.md` and leave a one-liner + link here |
-| **Ephemeral notes** | Session handoffs stay under `gitignore/`. Link them when useful; never copy session prose into this file |
-| **Boundary** | Traven-core (CM6 decorations, Lezer, skins) → Traven KB. Host wiring (Alpine, PHP resolve, site identity, MCP binding) → here |
-
----
-
 ## 1. Doc map
 
 Canonical guides — prefer these over restating chapters here:
@@ -39,9 +27,8 @@ Canonical guides — prefer these over restating chapters here:
 | Dual-scope CSS / editor skins | [`traven-theme-development.md`](traven-theme-development.md) |
 | Deploy | [`deploy_compose.md`](../deploy_compose.md), [`lan_https.md`](../lan_https.md) |
 | Traven editor internals | Sibling repo: `traven/docs/dev/knowledgebase.md` (do not duplicate) |
-| Active session handoffs | Ephemeral under `gitignore/` (e.g. admin half-legacy UX) — not canonical |
 
-OpenAPI contract: [`core/openapi.yaml`](../../openapi.yaml). Early blueprint / brainstorm essays are historical; prefer the thesis when they conflict.
+OpenAPI contract: [`core/openapi.yaml`](../../openapi.yaml).
 
 ---
 
@@ -72,13 +59,12 @@ flowchart LR
 
 - One install · one operator · many sites · one MCP `aud`. Site isolation is agent key + JWT `site_id`, not a separate OAuth resource per site.
 - Public site identity: **Host** domain match first; `?site=` / cookie only when Host misses (admin preview).
-- Multisite backend is closed. Remaining work is admin half-legacy UX (`gitignore/admin_half_legacy_handoff.md`) — do not reopen Host / `aud` / god-keys topology.
 
 ---
 
 ## 3. Sticky notes
 
-Hard-won truths that are easy to rediscover the hard way. Append new ones under the matching group.
+Hard-won architectural truths and implementation details across the stack.
 
 ### A. Editor / expand / Alpine
 
@@ -251,7 +237,7 @@ One install-wide MCP `aud`; isolation is key + claim, not per-site OAuth resourc
 
 Tagline / hero / logo / sitename are per-site (registry / site assets). Unset site theme still falls back to install `[theme] active`; presentation text does **not** fall back to install defaults.
 
-**Lives:** half-legacy handoff (ephemeral); theme / `SiteRegistry` presentation resolution.
+**Lives:** Theme / `SiteRegistry` presentation resolution.
 
 #### B5. Content assets are site-scoped URLs
 
@@ -322,7 +308,7 @@ Three different things share the word “author” / “name”:
 
 **Storage:** `content/sites/{site_id}/authors.yaml`. Guest contributors are allowed — no CMS login / UserPublic UUID on author records. Bios are **plain text** (Site Settings → Authors tab).
 
-**API** (human admin; site via `X-Pen-Site-Id`): per-author CRUD — `GET|POST /api/authors/`, `GET|PUT|DELETE /api/authors/{slug}`, `POST /api/authors/{slug}/avatar`. **MCP** (agent JWT `site_id`): `list_authors`, `get_author`, `create_author`, `update_author`, `delete_author` in `mcp_authors.py`. Avatar upload remains REST-only (agent avatar MCP iceboxed / skipped).
+**API** (human admin; site via `X-Pen-Site-Id`): per-author CRUD — `GET|POST /api/authors/`, `GET|PUT|DELETE /api/authors/{slug}`, `POST /api/authors/{slug}/avatar`. **MCP** (agent JWT `site_id`): `list_authors`, `get_author`, `create_author`, `update_author`, `delete_author` in `mcp_authors.py`. Avatar upload remains REST-only via the admin API.
 
 **Editor:** Properties → Author is a site-scoped picker (posts only; hidden for pages). Selecting a site author copies `authors[].name` into frontmatter key **`author:`**. Custom… / Clear remain for one-offs and legacy bylines. Never write the byline into post `name`.
 
@@ -358,23 +344,6 @@ The editor AI sidebar `update_frontmatter_field` mutates the open Alpine form an
 
 **Lives:** `mcp_tools.update_frontmatter_field`; `ai-sidebar.js` `clientTools` + `update_frontmatter_field()`.
 
-### Scratchpad one-liners
-
-Paste into a session note when useful:
-
-> Expand: `text`=label, `heading`=section; runtime inserts panel after trigger (skip `<template>` for punct peel); editor `store.pages` empty — always `ensurePages()` / `listPages()` if length 0.
-
-> Dual-duty skin: set `--traven-font-display/body/mono`; force `.cm-editor`/`.traven-preview` fonts with `!important`; style `.post-detail-trumpet` / `.post-detail-title` / `.post-detail-deck` once in the skin (admin + publish) or the title strip stays unthemed.
-
-> Published chrome: scope prose to `.article-content` when `body` is `.traven-preview`; grid-align header/main/footer; `overflow-x: visible` on main for `100vw` fullbleed.
-
-> Multisite: Host first for public id; humans `X-Pen-Site-Id` (membership or admin), agents JWT `site_id`; key site PATCH needs remint; install General = `use_ai` only.
-
-> Authz: PHP cookies are chrome; JWT→YAML is root of trust; `publish:content` ≠ host `publish`; PUT does not sniff status; install storage/SSH/`config.ini` is `require_admin`.
-
-> Content/AI: `hero_title` for readers; post `name`=title not byline; byline key `author:` from site-author display name; `create_post` then write; `publish_at` is clock not status; menu `content_type` only on `type: content`.
-
-> Social: theme `social_preview` is complete; site YAML only sparse overrides; empty = inherit; `og_default_hero` ≠ `og_default_image`; OG fonts = theme TTF/OTF plus registry woff2 converted locally.
 
 ---
 

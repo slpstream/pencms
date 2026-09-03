@@ -22,4 +22,4 @@ Guides for developers who want to dig deeper into PenCMS internals — host wiri
 - **[Host vs editor philosophy](AI-MCP-Traven.md)** — Architecture rationale on host-owned MCP vs embedded editor.
 
 
-Feature-length operator and feature guides remain under [`core/docs/`](../). Operator SEO how-to: [`seo-settings.md`](../seo-settings.md). Traven CodeMirror / WYSIWYM internals live in the sibling Traven repo (`traven/docs/dev/knowledgebase.md`).
+Feature-length operator and feature guides are available under [Documentation](../index.php). Operator SEO how-to: [`seo-settings.md`](../seo-settings.md). Traven CodeMirror / WYSIWYM internals live in the Traven documentation (`traven/docs/dev/knowledgebase.md`).

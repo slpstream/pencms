@@ -550,8 +550,6 @@ The API includes an in-process Playwright inspect harness (`theme_render_inspect
 
 **`php -S` needs multiple workers.** The admin sidebar's inspect XHR is proxied through `router.php` to the API and holds a PHP worker for the duration of the call; Playwright then requests `/blog/` from that same PHP server. With the default single worker this deadlocks until the inspect call times out (`PREVIEW_UNREACHABLE` after ~15s, followed by a late homepage render in the log). Start the dev front with e.g. `PHP_CLI_SERVER_WORKERS=8 php -c php.ini -S 127.0.0.1:8009 -t public router.php`. Real servers (nginx/Apache/Caddy + FPM) are concurrent already. Text inspect (a11y/boxes/describe) also blocks image/font loads for speed; fingerprint and screenshot load pixels.
 
-Product plan (gitignore): `adding-vision-to-theme-customization_plan.md`.
-
 ---
 
 ## Related: editor link suggest + expand/embed

@@ -7,9 +7,6 @@ Canonical reference for two related PenCMS editor features that both depend on *
 | **Link suggestions** | Insert Link modal (Mod-K) typeahead of titles/slugs | Thin Traven hook + PenCMS `wizard4.js` |
 | **`[expand]` / `[embed]`** | In-place / always-on transclusion of another post | `traven-expand-embed` plugin + PenCMS resolver / ShortcodeProcessor |
 
-Handoff scratchpad (session notes): [`gitignore/link-suggest-expand-handoff.md`](../../gitignore/link-suggest-expand-handoff.md)  
-Expand product roadmap (design intent): [`gitignore/expand-embed-shortcode-roadmap.md`](../../gitignore/expand-embed-shortcode-roadmap.md)
-
 **Docs index:** This file is the canonical operator/agent reference. API option tables live in [`AI-and-TravenEditor-API-reference.md`](dev/AI-and-TravenEditor-API-reference.md). Host-vs-editor philosophy: [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md).
 
 ---

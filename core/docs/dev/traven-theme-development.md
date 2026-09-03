@@ -667,7 +667,7 @@ The shipping editorial and write themes define these; the default/colorful/dark 
 ## 7. Dark mode
 
 > [!IMPORTANT]
-> **PenCMS / Traven Status:** The Traven Editor light/dark toggle was **abandoned**, and dark variants in legacy skins are **dead code**. The editor currently offers **no dark toggle**, and PenCMS themes default to a **single mode**. Dark mode rules in skins are optional legacy reference only if a theme explicitly implements a user-requested dark variant on the published site.
+> **PenCMS Theming Policy:** The Traven Editor operates in a single default mode based on the active skin, and PenCMS themes default to a single mode. Dark mode rules in skins are optional reference for themes that implement a custom dark variant on the published site.
 
 Dark mode is **decoupled** between the editor and the surrounding page. If a theme implements an explicit dark variant, themes handle the resulting rules in two ways.
 

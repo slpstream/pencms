@@ -79,7 +79,7 @@ Dynamic public uses Host → registry. Static trees are an export of the same si
 php frontend-php/cli-tools/generate-static.php --site=wiki --domain=wiki.example.com --output=dist
 ```
 
-Canonical links prefer `--domain`, else each site’s registry `domain`, else localhost. Per-site `web_root` / CDN is icebox (low priority); operators publish or sync each `dist/{id}/` tree as needed.
+Canonical links prefer `--domain`, else each site’s registry `domain`, else localhost. Per-site `web_root` / CDN configuration is not required; operators publish or sync each `dist/{id}/` tree as needed.
 
 ### Scheduled posts and static rebuild
 
@@ -194,9 +194,13 @@ curl -sS "https://$PUBLIC_HOST/.well-known/oauth-authorization-server" | jq .
 
 Confirm `resource` / `issuer` match `MCP_RESOURCE_URL` / `JWT_ISSUER` in `.env`.
 
-## Fly / Render later
+## Alternative: Cloud & PaaS Platforms (Fly.io, Render)
 
-This recipe is the supported OSS path. The same [`deploy/Dockerfile`](../../deploy/Dockerfile) can be built on Fly or Render: set the same `JWT_*` / `CORS_*` env vars and put TLS at the platform edge (or keep Caddy). No separate `fly.toml` is required for v1.
+While this guide focuses on self-hosting with Docker Compose and Caddy, the API container ([`deploy/Dockerfile`](../../deploy/Dockerfile)) can also be deployed to container-based cloud platforms like Fly.io or Render:
+
+- **Environment Variables**: Configure the required `JWT_*` and `CORS_*` settings in your platform's environment dashboard.
+- **TLS Termination**: You can allow the cloud provider to terminate TLS at the edge or continue using Caddy as a reverse proxy.
+- **Deployment**: Standard container builds run directly from `deploy/Dockerfile` without requiring custom platform-specific configuration files.
 
 ## Related
 

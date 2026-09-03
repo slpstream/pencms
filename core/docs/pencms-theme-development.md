@@ -2,8 +2,7 @@
 
 Comprehensive blueprint for building **complete** PenCMS site themes: Twig chrome, dual-duty Traven content skins, shortcode coverage, and Social / OG defaults.
 
-**Quick-start only** (scaffold, switch, validate): [`theme-adding.md`](theme-adding.md).  
-**Printable scorecard** (keep in sync with §15): scratch copy under `gitignore/theme-compliance-checklist.md`.
+**Quick-start only** (scaffold, switch, validate): [`theme-adding.md`](theme-adding.md).
 
 ---
 
@@ -44,7 +43,7 @@ A theme that only styles chrome (header, cards, grid) is **incomplete**. Complet
 3. Ship dual-duty content CSS usable in the admin editor (`.cm-editor` + preview).
 4. Ship Social / OG defaults via `theme.json` → `social_preview`.
 
-Keeper examples: `starter` and `editorial` are the strongest baselines. `casper-lite` is kept and remediated (chrome OK today; historically missing `traven-preview` + content skin) — do not treat chrome-only prose as complete.
+Reference examples: `starter` and `editorial` are the strongest baselines. Ensure themes include both chrome styling and the `traven-preview` content skin.
 
 ---
 
@@ -425,7 +424,7 @@ html.cm-wysiwym-dark {
 ```
 
 - Both classes are required on post and page body wrappers (and on category/slug overrides that render body HTML).
-- Missing `traven-preview` means shortcode / skin rules do not apply — the historical `casper-lite` / chrome-only failure mode.
+- Missing `traven-preview` means shortcode / skin rules do not apply — ensure the container includes this class so editor and published content are styled properly.
 - Optional: also put `traven-preview` on `<body>` (starter pattern) when you want category theme tokens on the document root. Prefer the content wrapper for shortcode fidelity; use `body` only when chrome tokens need the same host class.
 
 ### Theme helpers
@@ -620,8 +619,8 @@ Mono-only / single-face themes still define all three — point `--traven-font-d
 > **PenCMS Theme Mode Policy:**
 > - **Single-mode by default:** Most themes on PenCMS should have **only one mode and no way to toggle**. Dark mode is **not first-class**.
 > - **Exception, not a requirement:** PenCMS themes can include a dark variant (e.g. `starter`) or be dark-first (e.g. `dark`), but this is the **exception, not the rule**. A dark mode variant should **only** be built if the user specifically asks for it at the time of building the theme, and it is **never** a requirement of the system or a preference in the documentation.
-> - **Traven Editor single-mode reality:** Traven Editor was originally planned to have a light/dark toggle, so legacy skins from Traven were built with dark variants. This feature was **abandoned**, however, and the editor currently offers **no dark toggle**. Dark variants in legacy Traven skins are **dead code**.
-> - **No admin editor toggle:** Even for themes like `starter` that incorporate a dark mode toggle on the published site, there is **no way inside the Traven Editor (`frontend-php/src/admin/admin-editor.php`) to switch between light and dark while editing**. Adding an editor toggle to admin chrome is **not on the approved roadmap for PenCMS and will not happen**. The editor always operates in one mode: the single default mode of the active theme skin.
+> - **Traven Editor single-mode:** The editor operates in a single default mode based on the active theme skin and does not offer an in-editor theme toggle.
+> - **No admin editor toggle:** Even if a published theme incorporates a public dark mode toggle, the admin editor always renders in the active theme's default skin mode.
 
 If a theme is specifically built with a user-requested dark mode variant, the published frontend may include a toggle. Place a FOUC script in `_head.html.twig` **before** stylesheets:
 
@@ -1534,20 +1533,13 @@ Exit **1** only on errors; warnings still exit **0**. Scaffold emits dual-duty s
 
 ### Scoring
 
-Use §15 (and the printable scratch checklist) scorecard. Target for keepers: pass all Required items; dual-duty Required for `starter` and `editorial`; `casper-lite` at least markup + skin + shortcodes Required after remediation.
+Use the §15 scorecard below to evaluate themes. Target: pass all Required items, with dual-duty required for complete editor and published styling parity.
 
 ---
 
 ## 15. Complete theme checklist
 
-Canonical checklist lives in two places that must stay in sync:
-
-1. This section of the public guide
-2. Scratch / printable copy: `gitignore/theme-compliance-checklist.md`
-
-Do not invent a third divergent list. When amending items, update both in the same session.
-
-Use this to score keeper themes (`starter`, `editorial`, `casper-lite`) and any new theme before calling it production-ready.
+Use this checklist to score themes and ensure they are production-ready before deployment.
 
 **Legend:** `[R]` Required · `[D]` Required for dual-duty / editor parity · `[O]` Optional / recommended
 
@@ -1693,7 +1685,7 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 
 ### 15.6 Fonts & theme media `[R]` / `[O]`
 
-- [ ] Reader fonts: self-hosted woff2 (or system stack with `supports.custom_fonts: false`) — **no Google Fonts `@import`** in production themes `[R]` for new themes; `[O]` migration for legacy keepers until S6
+- [ ] Reader fonts: self-hosted woff2 (or system stack with `supports.custom_fonts: false`) — **no Google Fonts `@import`** in production themes `[R]`
 - [ ] Dual-duty: `@font-face` for reader families is declared in `skin-{id}.css` with `url('../fonts/…')` (editor loads the skin; chrome-only faces cause system-font fallback in WYSIWYM) `[D]` / `[R]` when `supports.custom_fonts: true`
 - [ ] OG fonts: at least one TTF/OTF in `social_preview.og_fonts` **or** empty map with documented engine fallback `[R]`
 - [ ] `assets/images/defaulthero.jpg` present when `supports.hero_image: true` `[R]`

@@ -1,20 +1,17 @@
-# PenCMS product thesis
+# What PenCMS is
 
-**Status:** The north-star loop (named site-bound keys, MCP write, public feedback → files, LAN/VPS HTTPS) is **shipped**. 
+PenCMS provides a sovereign publishing loop: named site-bound keys, MCP write operations, public feedback stored as flat files, and LAN/VPS HTTPS deployment. 
 
 ---
 
-## One sentence
+## In a nutshell
 
 PenCMS is an **MIT-licensed, Markdown-and-Git CMS** with a **Python (FastAPI) brain** and a **PHP admin UI**, built so **humans and agents** can edit the same flat-file site — run **locally**, on **LAN HTTPS**, or on a **small VPS / PaaS**.
 
----
 
-## Brand 
-
-| Brand | Domain | Role |
+| Name | Domain | Role |
 |---|---|---|
-| **PenCMS** | [pencms.org](https://pencms.org) | Agent-and-human MIT-licensed content management system (used Traven as its editor) |
+| **PenCMS** | [pencms.org](https://pencms.org) | Agent-and-human MIT-licensed content management system (uses Traven as its editor) |
 | **Traven** | [traven.dev](https://traven.dev) | Human-only WYSIWYM Markdown editor (separate product; from same developers as PenCMS) |
 
 ---
@@ -57,7 +54,7 @@ An agent that updates a blog from reader feedback needs a **closed loop**, not v
 
 | Stage | Surface |
 |---|---|
-| **Ingest** | **Shipped.** Contact forms always ingest. **Reader comments are opt-in** (Site Settings toggle, default off). When on: live `/blog/` contact + per-post comment forms `POST /api/v1/feedback`. Contact writes canonical `fb-*` stub pages (`status: stub`) for the admin inbox and relay drain. Comments write `comments/c-*.md` beside the post (`visibility: pending` on public ingest). Live `/blog/` and static `dist/` show **visible** comment files under the article (not pending): `generate-static` / `publish_site` bakes the visible thread into post HTML. Static `dist/` POSTs new comments to `{feedback_relay_url or https://feedback.pencms.org}/submit` (PHP+SQLite queue); the install polls into the same files (`POST /api/v1/feedback/sync` / MCP `sync_remote_feedback`). Public `kind=comment` is refused while the knob is off. Not webmentions, not analytics, not a nested `feedback/` collection. |
+| **Ingest** | Contact forms always ingest. **Reader comments are opt-in** (Site Settings toggle, default off). When on: live `/blog/` contact + per-post comment forms `POST /api/v1/feedback`. Contact writes canonical `fb-*` stub pages (`status: stub`) for the admin inbox and relay drain. Comments write `comments/c-*.md` beside the post (`visibility: pending` on public ingest). Live `/blog/` and static `dist/` show **visible** comment files under the article (not pending): `generate-static` / `publish_site` bakes the visible thread into post HTML. Static `dist/` POSTs new comments to `{feedback_relay_url or https://feedback.pencms.org}/submit` (PHP+SQLite queue); the install polls into the same files (`POST /api/v1/feedback/sync` / MCP `sync_remote_feedback`). Public `kind=comment` is refused while the knob is off. Not webmentions, not analytics, not a nested `feedback/` collection. |
 | **Decide** | Agent policy (schedule, tools, prompts) **outside** PenCMS — same rule as translation automation. PenCMS does not run the daily loop. |
 | **Outgest** | MCP `create_post` / `write_content_file` / `commit_and_push` under a write-capable key; optional static host deploy via `publish_site` under scope `publish` + Deploy Grant ([`publish-agents.md`](./publish-agents.md)) |
 
@@ -89,14 +86,14 @@ If the answer to any is no, it is probably not PenCMS — or it belongs in fork/
 
 ---
 
-## Locked and shipped:
+## Core architecture
 
 1. **Python backend is the CMS** — auth, storage adapters, FTS cache, AI proxy, MCP, colocated OAuth AS, site registry.
 2. **PHP is the human admin / reference frontend** — not a second API implementation.
-3. **Agent door open** — PRM / AS metadata / PKCE; automation via `POST /api/auth/token`; granular scopes (`read`, `write:*`, `publish:content`, host `publish`; legacy `write` expands one-way); discovery via `llms.txt` / MCP guide. **Named, site-bound agent keys** (e.g. `blog-cursor`) and **approve-code bootstrap** (`/api/auth/agent/request-code` → admin approve → `verify-code` → store `pen-sk-…`) are shipped; OAuth remains primary for Custom Connectors. Streamable HTTP session DX that third-party clients need is shipped (`Mcp-Session-Id`, `initialize` `sessionId`, `Accept` compat). **One install-wide** `MCP_RESOURCE_URL` / JWT `aud`; site isolation is via key + JWT `site_id`, not per-site OAuth resources.
+3. **Agent door open** — PRM / AS metadata / PKCE; automation via `POST /api/auth/token`; granular scopes (`read`, `write:*`, `publish:content`, host `publish`; legacy `write` expands one-way); discovery via `llms.txt` / MCP guide. **Named, site-bound agent keys** (e.g. `blog-cursor`) and **approve-code bootstrap** (`/api/auth/agent/request-code` → admin approve → `verify-code` → store `pen-sk-…`) are supported; OAuth remains primary for Custom Connectors. Streamable HTTP session DX that third-party clients need is fully implemented (`Mcp-Session-Id`, `initialize` `sessionId`, `Accept` compat). **One install-wide** `MCP_RESOURCE_URL` / JWT `aud`; site isolation is via key + JWT `site_id`, not per-site OAuth resources.
 4. **Production URL honesty** — operators set `JWT_ISSUER` and `MCP_RESOURCE_URL` to the **HTTPS** URLs clients actually use. Localhost is for local agents and curl. For Custom Connectors and browser OAuth, use a reachable HTTPS origin: **LAN home server** (documented and field-tested with off-box agents), VPS/PaaS, or tunnel — not bare `http://127.0.0.1` for off-machine clients.
-5. **Packaging** — local run + **LAN HTTPS** native nginx+systemd ([`lan_https.md`](./lan_https.md)) + one clear cloud/VPS path: **Docker Compose + Caddy** ([`deploy_compose.md`](./deploy_compose.md)). CORS allowlist for admin origins. Same image can target Fly/Render later; Compose is the shipped VPS installer glue (API+Caddy; PHP admin is the native/LAN path until Compose grows it).
-6. **Feedback → files** — public contact forms write `fb-*` stubs on the bound site. **Reader comments are opt-in** (default off; one Site Settings toggle). When on, comments write `comments/c-*.md` beside the post; static sites drain `https://feedback.pencms.org` (or a self-hosted same-contract queue) via poll/MCP. Human admin inbox lists contact stubs. Public comment threads are **files beside the post** (no commenter accounts); live `/blog/` and static `dist/` show `visibility: visible` only. Human admin can approve / hide / delete comment files (Comments admin); the Feedback inbox remains `fb-*` contact stubs. Agents reply via MCP `create_comment` (immediately `visibility: visible`, `author_kind: agent`) — they must not `create_post` for a thread reply. CAPTCHA stays later. Keep no nested `feedback/` collection and no comments-as-WordPress.
+5. **Packaging** — local run + **LAN HTTPS** native nginx+systemd ([`lan_https.md`](./lan_https.md)) + one clear cloud/VPS path: **Docker Compose + Caddy** ([`deploy_compose.md`](./deploy_compose.md)). CORS allowlist for admin origins. Same image can target Fly/Render later; Docker Compose provides the VPS installer stack (FastAPI backend + Caddy reverse proxy; PHP admin is configured via the native/LAN environment).
+6. **Feedback → files** — public contact forms write `fb-*` stubs on the bound site. **Reader comments are opt-in** (default off; one Site Settings toggle). When on, comments write `comments/c-*.md` beside the post; static sites drain `https://feedback.pencms.org` (or a self-hosted same-contract queue) via poll/MCP. Human admin inbox lists contact stubs. Public comment threads are **files beside the post** (no commenter accounts); live `/blog/` and static `dist/` show `visibility: visible` only. Human admin can approve / hide / delete comment files (Comments admin); the Feedback inbox remains `fb-*` contact stubs. Agents reply via MCP `create_comment` (immediately `visibility: visible`, `author_kind: agent`) — they must not `create_post` for a thread reply. Comments and feedback are stored as flat files beside posts rather than in complex database tables.
 
 **OSS license:** MIT. Content and operator data stay on the user’s disk / Git.
 
@@ -108,7 +105,7 @@ PenCMS is a complete, self-contained system. Operators can create, design, trans
 
 ---
 
-## Architectural north stars (for future PRs)
+## Architectural north stars
 
 1. **Flat Markdown + YAML (+ Git) remain the source of truth.** Tools come and go; files stay.
 2. **One MCP tool catalog** — FastApiMCP / Streamable HTTP; no second hand-rolled session router; no stdio-first rewrite of the catalog.

@@ -14,43 +14,43 @@ Initializes a new editor instance.
 
 ### Options
 
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `element` | `HTMLElement` | *(Required)* | The DOM element inside which the WYSIWYM editor will mount. |
-| `sourceElement` | `HTMLElement` | `null` | Optional DOM element to mount the secondary raw editor for live sync. |
-| `initialValue` | `string` | `""` | The starting Markdown document string. |
-| `lineNumbers` | `boolean` | `false` | Show line numbers and folding gutters in the primary editor. |
-| `sourceLineNumbers`| `boolean` | `false` | Show line numbers and gutters in the raw sync editor. |
-| `lineWrapping` | `boolean` | `true` | Enable soft line wrapping in the primary editor. |
-| `sourceLineWrapping`| `boolean` | `true` | Enable soft line wrapping in the raw sync editor. |
-| `onChange` | `function` | `null` | Callback fired on change: `(value: string) => void`. |
-| `onSave` | `function` | `null` | Callback fired on Save command (Cmd+S / Ctrl+S): `(value: string) => void`. |
-| `onUploadImage` | `function` | `null` | Callback returning a promise of the uploaded image's URL: `(file: File) => Promise<string>`. |
-| `onSuggestLinks` | `function` | `null` | Optional host callback for Insert Link modal autocomplete: `(query: string) => Promise<{ title: string, url: string, slug?: string }[]>`. When omitted, the modal stays text + URL only. PenCMS returns published posts/pages with `url` set to the bare slug (Markdown `[title](slug)`); see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md). Also powers Expand/Embed slug typeahead when those plugin tools are loaded. |
-| `imageAspectOptions` | `Array<{ value: string, label: string }>` | `null` | Optional host-declared Aspect pills for the Edit/Insert Image modal (Traven ≥ 0.2.25). When set and non-empty, advanced mode shows an Aspect row; values are managed as `class` tokens on `[image]`. PenCMS loads this from the active theme’s `theme.json` `editor_image_aspect` via `window.PEN_EDITOR_IMAGE_ASPECT`. Omit / `[]` → modal unchanged. |
-| `onListHeadings` | `function` | `null` | Optional host callback for Expand/Embed Heading dropdown: `(slug: string) => Promise<{ title: string, level?: number }[]>`. Fallback when `onListExpandTargets` is omitted (Traven ≥ 0.2.21 + expand-embed ≥ 0.1.9). PenCMS implements via `store.getPageHeadings`. |
-| `onListExpandTargets` | `function` | `null` | Preferred Expand/Embed target picker: `(slug: string) => Promise<{ summary?: string\|null, deck?: string\|null, headings: { title: string, level?: number }[] }>`. Modal: Whole post \| Summary \| Deck \| sections → `source="summary"` / `source="deck"` or `heading=` (Traven ≥ 0.2.24 + expand-embed ≥ 0.1.12). PenCMS implements via `store.getPageExpandTargets`. |
-| `plugins` | `Array<TravenPlugin>` | `[]` | Additional host plugins registered at init (grammar via `getMarkdownConfig`, decorations, keymap, extensions, `onRegister`, HTML render). Core built-ins always load; host plugins append. Used by PenCMS for `[expand]`/`[embed]` (`ExpandEmbedPlugin`). |
-| `extraTools` | `object` | `null` | Optional map of toolbar tool definitions merged via `registerTools()` at init. Keys must also appear in `toolbar` (and/or `bubbleToolbar`) to show buttons (never added to `DEFAULT_TOOLBAR` / `DEFAULT_BUBBLE_TOOLBAR`). |
-| `onStatsUpdate` | `function` | `null` | Callback fired when document stats change: `(stats: { words: number, characters: number, readTime: number }) => void`. |
-| `theme` | `"light" \| "dark"`| `"light"` | Configures baseline cursor theme variables and dark mode class triggers. |
-| `caretColor` | `string` | `""` | Custom hex color for the editor caret overrides. |
-| `toolbar` | `Array<string> \| boolean`| `false` | A list of tool key strings defining the toolbar buttons layout, or `false` to disable the toolbar. |
-| `bubbleToolbar` | `Array<string>` | *(DEFAULT_BUBBLE_TOOLBAR)* | Optional tool keys for the Medium-style selection bubble. Omit to keep the default bubble. PenCMS splices `expand` after `link` only (Embed stays on the main toolbar). Separators (`"|"`) are skipped. Exported constant: `DEFAULT_BUBBLE_TOOLBAR`. |
-| `toolbarScope` | `string` | `"default"` | Optional localStorage scope for toolbar config persistence. Use distinct values for multi-editor pages. |
-| `vimMode` | `boolean` | `false` | Enables Vim keybindings and normal mode emulation in both editing panes. |
-| `readOnly` | `boolean` | `false` | Enables read-only mode for both primary and secondary editor panes. |
-| `keybindings` | `object` | `{}` | Key-value pairs overriding default tool keybindings (e.g. `{ bold: "Ctrl-Shift-b" }`). |
-| `katex` | `boolean \| string \| object` | `false` | Configures KaTeX loading. If `false` (default), only uses local preloaded `window.katex`. If `true`, loads from JSDelivr CDN. If a string or object, defines custom self-hosted paths (e.g. `{ js: "path/to/katex.js", css: "path/to/katex.css" }`). |
-| `components` | `Array<string \| object>` | *(Default presets)* | Pre-defined custom component schemas. |
-| `componentsUrl` | `string \| boolean` | `"assets/components.json"` | Path/URL to load custom component schemas, or `false` to disable. |
-| `toolbarMode` | `"static" \| "floating" \| "hybrid"` | `"static"` | Presentation layout mode for the toolbar. |
-| `bubbleHotkey` | `string` | `"Mod-."` | Keyboard hotkey to open the selection bubble. |
-| `gutterHotkey` | `string` | `"Mod-Shift-Enter"` | Keyboard hotkey to open the gutter plus menu. |
-| `bubbleAppearDelay`| `number` | `200` | Delay in ms between selection and selection bubble appearance. |
-| `autoLoadStyles` | `boolean` | `true` | Auto-inject core CSS from CDN/local bundle. Set to `false` for strict CSP environments. |
-| `codeLanguages` | `Array` | `null` | CodeMirror LanguageDescription array to enable syntax highlighting in fenced code blocks. |
-| `sanitizeHtml` | `function` | `null` | Optional custom HTML sanitization function: `(html: string) => string`. If provided, it takes precedence and `window.DOMPurify` auto-detection is skipped. |
+| Option | Description |
+| :--- | :--- |
+| `element`<br>`HTMLElement` · *Required* | The DOM element inside which the WYSIWYM editor will mount. |
+| `sourceElement`<br>`HTMLElement` · *Default:* `null` | Optional DOM element to mount the secondary raw editor for live sync. |
+| `initialValue`<br>`string` · *Default:* `""` | The starting Markdown document string. |
+| `lineNumbers`<br>`boolean` · *Default:* `false` | Show line numbers and folding gutters in the primary editor. |
+| `sourceLineNumbers`<br>`boolean` · *Default:* `false` | Show line numbers and gutters in the raw sync editor. |
+| `lineWrapping`<br>`boolean` · *Default:* `true` | Enable soft line wrapping in the primary editor. |
+| `sourceLineWrapping`<br>`boolean` · *Default:* `true` | Enable soft line wrapping in the raw sync editor. |
+| `onChange`<br>`function` · *Default:* `null` | Callback fired on change: `(value: string) => void`. |
+| `onSave`<br>`function` · *Default:* `null` | Callback fired on Save command (Cmd+S / Ctrl+S): `(value: string) => void`. |
+| `onUploadImage`<br>`function` · *Default:* `null` | Callback returning a promise of the uploaded image's URL: `(file: File) => Promise<string>`. |
+| `onSuggestLinks`<br>`function` · *Default:* `null` | Optional host callback for Insert Link modal autocomplete: `(query: string) => Promise<{ title: string, url: string, slug?: string }[]>`. When omitted, the modal stays text + URL only. PenCMS returns published posts/pages with `url` set to the bare slug (Markdown `[title](slug)`); see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md). Also powers Expand/Embed slug typeahead when those plugin tools are loaded. |
+| `imageAspectOptions`<br>`Array<{ value: string, label: string }>` · *Default:* `null` | Optional host-declared Aspect pills for the Edit/Insert Image modal (Traven ≥ 0.2.25). When set and non-empty, advanced mode shows an Aspect row; values are managed as `class` tokens on `[image]`. PenCMS loads this from the active theme’s `theme.json` `editor_image_aspect` via `window.PEN_EDITOR_IMAGE_ASPECT`. Omit / `[]` → modal unchanged. |
+| `onListHeadings`<br>`function` · *Default:* `null` | Optional host callback for Expand/Embed Heading dropdown: `(slug: string) => Promise<{ title: string, level?: number }[]>`. Fallback when `onListExpandTargets` is omitted (Traven ≥ 0.2.21 + expand-embed ≥ 0.1.9). PenCMS implements via `store.getPageHeadings`. |
+| `onListExpandTargets`<br>`function` · *Default:* `null` | Preferred Expand/Embed target picker: `(slug: string) => Promise<{ summary?: string\|null, deck?: string\|null, headings: { title: string, level?: number }[] }>`. Modal: Whole post \| Summary \| Deck \| sections → `source="summary"` / `source="deck"` or `heading=` (Traven ≥ 0.2.24 + expand-embed ≥ 0.1.12). PenCMS implements via `store.getPageExpandTargets`. |
+| `plugins`<br>`Array<TravenPlugin>` · *Default:* `[]` | Additional host plugins registered at init (grammar via `getMarkdownConfig`, decorations, keymap, extensions, `onRegister`, HTML render). Core built-ins always load; host plugins append. Used by PenCMS for `[expand]`/`[embed]` (`ExpandEmbedPlugin`). |
+| `extraTools`<br>`object` · *Default:* `null` | Optional map of toolbar tool definitions merged via `registerTools()` at init. Keys must also appear in `toolbar` (and/or `bubbleToolbar`) to show buttons (never added to `DEFAULT_TOOLBAR` / `DEFAULT_BUBBLE_TOOLBAR`). |
+| `onStatsUpdate`<br>`function` · *Default:* `null` | Callback fired when document stats change: `(stats: { words: number, characters: number, readTime: number }) => void`. |
+| `theme`<br>`"light" \| "dark"` · *Default:* `"light"` | Configures baseline cursor theme variables and dark mode class triggers. |
+| `caretColor`<br>`string` · *Default:* `""` | Custom hex color for the editor caret overrides. |
+| `toolbar`<br>`Array<string> \| boolean` · *Default:* `false` | A list of tool key strings defining the toolbar buttons layout, or `false` to disable the toolbar. |
+| `bubbleToolbar`<br>`Array<string>` · *Default:* `DEFAULT_BUBBLE_TOOLBAR` | Optional tool keys for the Medium-style selection bubble. Omit to keep the default bubble. PenCMS splices `expand` after `link` only (Embed stays on the main toolbar). Separators (`"|"`) are skipped. Exported constant: `DEFAULT_BUBBLE_TOOLBAR`. |
+| `toolbarScope`<br>`string` · *Default:* `"default"` | Optional localStorage scope for toolbar config persistence. Use distinct values for multi-editor pages. |
+| `vimMode`<br>`boolean` · *Default:* `false` | Enables Vim keybindings and normal mode emulation in both editing panes. |
+| `readOnly`<br>`boolean` · *Default:* `false` | Enables read-only mode for both primary and secondary editor panes. |
+| `keybindings`<br>`object` · *Default:* `{}` | Key-value pairs overriding default tool keybindings (e.g. `{ bold: "Ctrl-Shift-b" }`). |
+| `katex`<br>`boolean \| string \| object` · *Default:* `false` | Configures KaTeX loading. If `false` (default), only uses local preloaded `window.katex`. If `true`, loads from JSDelivr CDN. If a string or object, defines custom self-hosted paths (e.g. `{ js: "path/to/katex.js", css: "path/to/katex.css" }`). |
+| `components`<br>`Array<string \| object>` · *Default:* presets | Pre-defined custom component schemas. |
+| `componentsUrl`<br>`string \| boolean` · *Default:* `"assets/components.json"` | Path/URL to load custom component schemas, or `false` to disable. |
+| `toolbarMode`<br>`"static" \| "floating" \| "hybrid"` · *Default:* `"static"` | Presentation layout mode for the toolbar. |
+| `bubbleHotkey`<br>`string` · *Default:* `"Mod-."` | Keyboard hotkey to open the selection bubble. |
+| `gutterHotkey`<br>`string` · *Default:* `"Mod-Shift-Enter"` | Keyboard hotkey to open the gutter plus menu. |
+| `bubbleAppearDelay`<br>`number` · *Default:* `200` | Delay in ms between selection and selection bubble appearance. |
+| `autoLoadStyles`<br>`boolean` · *Default:* `true` | Auto-inject core CSS from CDN/local bundle. Set to `false` for strict CSP environments. |
+| `codeLanguages`<br>`Array` · *Default:* `null` | CodeMirror LanguageDescription array to enable syntax highlighting in fenced code blocks. |
+| `sanitizeHtml`<br>`function` · *Default:* `null` | Optional custom HTML sanitization function: `(html: string) => string`. If provided, it takes precedence and `window.DOMPurify` auto-detection is skipped. |
 
 ---
 

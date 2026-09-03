@@ -108,25 +108,27 @@ Tool results and status payloads never include host passwords or platform tokens
 | `409` concurrent run | Publish currently in progress | **WAIT & POLL.** Call `get_publish_site_status` every 5-10 seconds until status is `success` or `failed`. Do not spawn a new run. |
 | Remote host error in log | SFTP auth failed / host down | **STOP.** Report the sanitized log error to the human operator to verify host credentials or SSH keys. |
 
-#### Agent Execution Flowchart:
-```
-[Content Changes Ready] 
-          │
-          ▼
-[Call publish_site ({})]
-          │
-  ┌───────┴─────────────────────────────┐
-  ▼                                     ▼
-[Error Response?]                 [Success: task_id returned]
-  ├─ 403 scope missing ──► Stop & Notify Human   │
-  ├─ Grant not enrolled ─► Stop & Notify Human   ▼
-  └─ 409 concurrent ─────► Poll Status ──► [Call get_publish_site_status]
-                                                 │
-                                         ┌───────┴───────┐
-                                         ▼               ▼
-                                    [status: "running"] [status: "success"/"failed"]
-                                         │               │
-                                         └─ Wait 5s ─────┴─► Report result to user
+#### Agent Execution Flowchart
+
+```mermaid
+flowchart TD
+  Start(["Content Changes Ready"]) --> CallPublish["Call publish_site({})"]
+
+  CallPublish --> CheckResponse{Response?}
+
+  CheckResponse -->|"403 Forbidden"| StopScope["STOP: Notify Operator<br/>(Request 'publish' scope)"]
+  CheckResponse -->|"Deploy Grant Not Enrolled"| StopGrant["STOP: Notify Operator<br/>(Enroll Grant in Admin)"]
+  CheckResponse -->|"409 Concurrent"| WaitConcurrent["Wait & Poll Active Run"]
+  CheckResponse -->|"Success (task_id)"| PollStatus["Call get_publish_site_status"]
+
+  WaitConcurrent --> PollStatus
+
+  PollStatus --> CheckStatus{Status?}
+  CheckStatus -->|"status: 'running'"| Delay["Wait 5–10s"]
+  Delay --> PollStatus
+
+  CheckStatus -->|"status: 'success'"| DoneSuccess(["Report Success to Operator"])
+  CheckStatus -->|"status: 'failed'"| DoneFailed(["Report Sanitized Log Error"])
 ```
 
 ---
