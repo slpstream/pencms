@@ -1,0 +1,119 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name to release (e.g. v0.2.0)'
+        required: true
+        default: 'v0.2.0'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ -n "${{ github.event.inputs.tag_name }}" ]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "archive_base=pencms-${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Build release archives
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          ARCHIVE_BASE="${{ steps.tag.outputs.archive_base }}"
+          
+          # Create clean source tarball and zip distribution archives
+          git archive --format=tar.gz --prefix="${ARCHIVE_BASE}/" -o "${ARCHIVE_BASE}.tar.gz" HEAD
+          git archive --format=zip --prefix="${ARCHIVE_BASE}/" -o "${ARCHIVE_BASE}.zip" HEAD
+          
+          # Generate SHA256 checksums
+          sha256sum "${ARCHIVE_BASE}.tar.gz" "${ARCHIVE_BASE}.zip" > checksums.txt
+
+      - name: Determine release notes
+        id: release_notes
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          if [ -f ".github/release-notes-${TAG}.md" ]; then
+            echo "path=.github/release-notes-${TAG}.md" >> $GITHUB_OUTPUT
+          elif [ -f ".github/release-notes.md" ]; then
+            echo "path=.github/release-notes.md" >> $GITHUB_OUTPUT
+          else
+            echo "path=CHANGELOG.md" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: PenCMS ${{ steps.tag.outputs.tag }}
+          body_path: ${{ steps.release_notes.outputs.path }}
+          files: |
+            ${{ steps.tag.outputs.archive_base }}.tar.gz
+            ${{ steps.tag.outputs.archive_base }}.zip
+            checksums.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ -n "${{ github.event.inputs.tag_name }}" ]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Set lower case image repository
+        run: |
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}-api"
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push API Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          target: api
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+            ${{ env.IMAGE_NAME }}:latest

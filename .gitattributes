@@ -1,0 +1,5 @@
+# Git attributes for release export
+/.github export-ignore
+/.gitattributes export-ignore
+/.dockerignore export-ignore
+
