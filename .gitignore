@@ -106,6 +106,12 @@ venv/
 ENV/
 env/
 
+# Environment variables & secrets
+.env
+.env.*
+*.env
+!.env.example
+
 # PHP dependencies
 /vendor/
 composer.lock

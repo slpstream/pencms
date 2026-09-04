@@ -360,13 +360,13 @@ def test_social_preview_sparse_overrides(authed_client, isolated_content):
     create_site("social", "Social", theme="starter")
     data = _listed_site(authed_client, "social")
     assert data["og_accent_color"] is None
-    assert data["social_preview_defaults"]["og_accent_color"] == "#C12929"
-    assert data["social_preview_defaults"]["og_headline_style"] == "redacted"
-    assert "CourierPrime-Bold" in data["social_preview_defaults"]["og_fonts"]
+    assert data["social_preview_defaults"]["og_accent_color"] == "#2563EB"
+    assert data["social_preview_defaults"]["og_headline_style"] == "plain"
+    assert "Roboto-Bold" in data["social_preview_defaults"]["og_fonts"]
 
     resolved = resolve_social_preview(get_site("social"))
-    assert resolved["og_accent_color"] == "#C12929"
-    assert resolved["og_headline_style"] == "redacted"
+    assert resolved["og_accent_color"] == "#2563EB"
+    assert resolved["og_headline_style"] == "plain"
 
     resp = authed_client.patch(
         "/api/sites/social",
@@ -388,7 +388,7 @@ def test_social_preview_sparse_overrides(authed_client, isolated_content):
     assert body["twitter_card"] == "summary"
     assert body["og_default_image"] == "images/og-default.jpg"
     # Theme defaults still present for admin placeholders
-    assert body["social_preview_defaults"]["og_accent_color"] == "#C12929"
+    assert body["social_preview_defaults"]["og_accent_color"] == "#2563EB"
 
     site = get_site("social")
     assert site.og_accent_color == "#112233"
@@ -403,7 +403,7 @@ def test_social_preview_sparse_overrides(authed_client, isolated_content):
     assert resolved["og_accent_color"] == "#112233"
     assert resolved["og_headline_style"] == "plain"
     assert resolved["og_accent_bar"] is False
-    assert resolved["og_vignette_color"] == "#FF8000"  # still theme
+    assert resolved["og_vignette_color"] == "#64748B"  # still theme
 
     # Clear overrides → inherit theme again
     resp = authed_client.patch(
@@ -428,8 +428,8 @@ def test_social_preview_sparse_overrides(authed_client, isolated_content):
     assert site.og_accent_color is None
     assert site.og_accent_bar is None
     resolved = resolve_social_preview(site)
-    assert resolved["og_accent_color"] == "#C12929"
-    assert resolved["og_headline_style"] == "redacted"
+    assert resolved["og_accent_color"] == "#2563EB"
+    assert resolved["og_headline_style"] == "plain"
     assert resolved["og_accent_bar"] is True
 
 

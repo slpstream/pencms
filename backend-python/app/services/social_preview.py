@@ -110,10 +110,18 @@ ENGINE_DEFAULTS: Dict[str, Any] = {
 def themes_root() -> Path:
     """Resolve the themes directory from config.ini [theme] directory."""
     cp = configparser.ConfigParser()
-    cp.read(BASE_DIR / "config.ini")
+    ini_path = BASE_DIR / "config.ini"
+    if not ini_path.is_file():
+        app_root_ini = Path(__file__).resolve().parents[2] / "config.ini"
+        if app_root_ini.is_file():
+            ini_path = app_root_ini
+    cp.read(ini_path)
     raw = cp.get("theme", "directory", fallback="../frontend-php/src/blog/themes")
     path = Path(raw)
     if not path.is_absolute():
+        resolved = (ini_path.parent / path).resolve()
+        if resolved.is_dir():
+            return resolved
         path = (BASE_DIR / path).resolve()
     return path
 
@@ -121,7 +129,12 @@ def themes_root() -> Path:
 def install_active_theme() -> str:
     """Install-wide ``[theme] active`` fallback (default ``starter``)."""
     cp = configparser.ConfigParser()
-    cp.read(BASE_DIR / "config.ini")
+    ini_path = BASE_DIR / "config.ini"
+    if not ini_path.is_file():
+        app_root_ini = Path(__file__).resolve().parents[2] / "config.ini"
+        if app_root_ini.is_file():
+            ini_path = app_root_ini
+    cp.read(ini_path)
     raw = cp.get("theme", "active", fallback="starter").strip()
     return raw or "starter"
 

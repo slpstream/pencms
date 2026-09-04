@@ -112,6 +112,8 @@ def patch_paths(temp_data_root: Path) -> Iterator[None]:
     config.content_storage = content_provider
     config.assets_storage = assets_provider
     file_service.content_storage = content_provider
+    if "routers.mcp_tools" in sys.modules:
+        setattr(sys.modules["routers.mcp_tools"], "content_storage", content_provider)
 
     # Taxonomy / collections schema paths point at the project's real
     # `core/schemas/` so tests still validate the actual YAML files.

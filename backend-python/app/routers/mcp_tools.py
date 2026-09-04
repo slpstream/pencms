@@ -5,7 +5,8 @@ import uuid
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
-from config import COLLECTIONS_SCHEMA, CONTENT_DIR_PATH, REQUIRED_FIELDS, TAXONOMY, content_storage
+import config as app_config
+from config import COLLECTIONS_SCHEMA, CONTENT_DIR_PATH, REQUIRED_FIELDS, TAXONOMY
 from fastapi import APIRouter, BackgroundTasks, Body, Depends, Header, HTTPException, Request, status
 from pydantic import BaseModel
 from models.user import UserPublic
@@ -347,7 +348,7 @@ async def collect_media_path_warnings(
             )
             continue
         storage_path = join_site_assets_path(site_id, logical)
-        if content_storage is not None and not await content_storage.exists(storage_path):
+        if app_config.content_storage is not None and not await app_config.content_storage.exists(storage_path):
             warnings.append(
                 f"Media path not found in site library: '{raw}'. "
                 "Use relative_path from generate_media / list_media."
@@ -1069,9 +1070,9 @@ async def list_media(
 
     site_id = resolve_mcp_site_id(request)
     prefix = site_assets_prefix(site_id)
-    if content_storage is None or not await content_storage.exists(prefix):
+    if app_config.content_storage is None or not await app_config.content_storage.exists(prefix):
         return []
-    files = await content_storage.list_dir(prefix, recursive=True)
+    files = await app_config.content_storage.list_dir(prefix, recursive=True)
     result = []
     for f in files:
         storage_path = f if f.startswith(prefix) else f"{prefix}/{f}"
@@ -1706,10 +1707,10 @@ async def write_media_file(
     logical = sanitize_media_path(filename)
     storage_path = join_site_assets_path(site_id, logical)
     parent = "/".join(storage_path.split("/")[:-1])
-    if content_storage is not None:
+    if app_config.content_storage is not None:
         if parent:
-            await content_storage.mkdir(parent)
-        await content_storage.write_bytes(storage_path, content_bytes)
+            await app_config.content_storage.mkdir(parent)
+        await app_config.content_storage.write_bytes(storage_path, content_bytes)
     return {
         "filename": logical,
         "relative_path": logical,
@@ -2571,10 +2572,10 @@ async def generate_media(
             logical = sanitize_media_path(request.filename)
             storage_path = join_site_assets_path(site_id, logical)
             parent = "/".join(storage_path.split("/")[:-1])
-            if content_storage is not None:
+            if app_config.content_storage is not None:
                 if parent:
-                    await content_storage.mkdir(parent)
-                await content_storage.write_bytes(storage_path, image_data)
+                    await app_config.content_storage.mkdir(parent)
+                await app_config.content_storage.write_bytes(storage_path, image_data)
 
             public_url = public_asset_url(site_id, logical)
 

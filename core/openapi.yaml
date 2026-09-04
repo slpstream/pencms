@@ -15,7 +15,7 @@ info:
 
     Human admin routes under /api authorize from cookie `pen_jwt` or Bearer JWT →
     user YAML. Forgeable `pen_role` / `pen_user_id` cookies are not a root of trust.
-  version: 0.1.0
+  version: 0.2.0
 servers:
   - url: /api/v1
 paths:

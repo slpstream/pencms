@@ -9,9 +9,12 @@ PenCMS is the world's first-ever AI-native CMS made from the ground up for the a
 
 Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) backend and a PHP admin frontend, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
 
+[![Release](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://github.com/slpstream/pencms/releases)
+[![Bundles Traven](https://img.shields.io/badge/Traven%20Editor-v0.2.28-success.svg)](https://github.com/slpstream/traven/releases/tag/v0.2.28)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/slpstream/pencms)
 
->**Self-Hosting PenCMS?** Follow the step-by-step **[Quickstart Guide](core/docs/quickstart.md)** to get the Python Backend and PHP Frontend running on your machine in 5 minutes.
+> **Self-Hosting PenCMS?** Follow the step-by-step **[Quickstart Guide](core/docs/quickstart.md)** to get the Python Backend and PHP Frontend running on your machine in 5 minutes.
+> *PenCMS v0.2.0 explicitly bundles [Traven Editor](https://github.com/slpstream/traven) v0.2.28.*
 
 ---
 
@@ -36,7 +39,7 @@ pencms/
 │
 ├── backend-python/         # FastAPI CMS + MCP + OAuth (the product brain, its backend)
 │
-└── frontend-php/           # Admin UI client (Traven Editor integration)
+└── frontend-php/           # Admin UI client (bundles Traven Editor v0.2.28)
 ```
 
 ---
