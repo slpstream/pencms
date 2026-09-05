@@ -2,19 +2,23 @@
   <img src="frontend-php/src/admin/images/pencms-wordmark50.png" alt="PenCMS" width="450">
 </p>
 
-PenCMS is the world's first-ever AI-native CMS made from the ground up for the age of agents: An Agent-first, API-first, Markdown-centric headless Content Management System anyone can self-host, complete with a built-in MCP server. 
+<p align="center">
+<strong>PenCMS is the world's first-ever AI-native CMS made from the ground up for the age of agents:</strong> An Agent-first, API-first, Markdown-centric headless Content Management System anyone can self-host, complete with a built-in MCP server. 
+</p>
 
+<p align="center">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+    <a href="https://github.com/slpstream/pencms/releases"><img src="https://img.shields.io/badge/release-v0.2.0-blue.svg" alt="Release"></a>
+    <a href="https://github.com/slpstream/traven/releases/tag/%40freedomware%2Ftraven%400.2.28"><img src="https://img.shields.io/badge/Traven%20Editor-v0.2.28-success.svg" alt="Bundles Traven"></a>
+    <a href="https://deepwiki.com/slpstream/pencms"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+</p>
 
 ### **Many agents via keys. One operator.**
 
 Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) backend and a PHP admin frontend, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
 
-[![Release](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://github.com/slpstream/pencms/releases)
-[![Bundles Traven](https://img.shields.io/badge/Traven%20Editor-v0.2.28-success.svg)](https://github.com/slpstream/traven/releases/tag/v0.2.28)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/slpstream/pencms)
 
 > **Self-Hosting PenCMS?** Follow the step-by-step **[Quickstart Guide](core/docs/quickstart.md)** to get the Python Backend and PHP Frontend running on your machine in 5 minutes.
-> *PenCMS v0.2.0 explicitly bundles [Traven Editor](https://github.com/slpstream/traven) v0.2.28.*
 
 ---
 
@@ -25,6 +29,8 @@ Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastA
 4. **High-Performance Query Cache**: Reads use a local SQLite index on write, so the CMS stays responsive on small machines.
 5. **Shell-Free Git Syncing**: Remote repos (GitHub/GitLab) via HTTPS REST APIs when a shell is restricted.
 6. **Selfhosting**: Run locally, on LAN HTTPS, or a small VPS.
+
+> *PenCMS v0.2.0 explicitly bundles [Traven Editor](https://github.com/slpstream/traven) v0.2.28.*
 
 ---
 
