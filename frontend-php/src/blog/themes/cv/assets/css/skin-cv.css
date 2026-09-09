@@ -234,24 +234,24 @@
 }
 
 /* 5. Outer Figures & Component Inner Resets */
-.cm-wysiwym-figure-shortcode {
+.cm-wysiwym-figure {
   margin: 0 !important;
   box-sizing: border-box;
 }
 
-.cm-wysiwym-component-shortcode blockquote,
-.cm-wysiwym-component-shortcode p,
-.cm-wysiwym-figure-shortcode p {
+.cm-wysiwym-component blockquote,
+.cm-wysiwym-component p,
+.cm-wysiwym-figure p {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.cm-wysiwym-component-shortcode p + p,
-.cm-wysiwym-figure-shortcode p + p {
+.cm-wysiwym-component p + p,
+.cm-wysiwym-figure p + p {
   margin-top: 0.8em !important;
 }
 
-.cm-wysiwym-component-shortcode.component-blockquote {
+.cm-wysiwym-component.component-blockquote {
   overflow: hidden;
 }
 
@@ -262,18 +262,18 @@
 .cm-editor .cm-wysiwym-mermaid-container + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
 .cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
-.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode),
-.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component),
+.cm-editor .cm-wysiwym-component + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure),
+.cm-editor .cm-wysiwym-figure + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
 .cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
-.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
-.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
-.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child) {
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-container),
+.cm-editor .cm-wysiwym-image-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-container),
+.cm-editor .cm-wysiwym-video-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-container),
+.cm-editor .cm-wysiwym-audio-container + .cm-line:has(br:only-child) {
   height: 0.4em !important;
   min-height: 0.4em !important;
 }
@@ -318,7 +318,7 @@
 .traven-preview .traven-alert-warning { border-left: 4px solid #d97706; }
 
 /* Traven Component Shortcodes ([info], [warning], [pullquote], [component]) */
-.cm-wysiwym-component-shortcode,
+.cm-wysiwym-component,
 .traven-preview .traven-component {
   border: 1px solid var(--color-border);
   border-radius: 3px;
@@ -326,19 +326,19 @@
   background-color: var(--color-code-bg);
   color: var(--color-text);
 }
-.cm-wysiwym-component-shortcode { margin: 0 !important; }
+.cm-wysiwym-component { margin: 0 !important; }
 
-.cm-wysiwym-component-shortcode.component-info,
+.cm-wysiwym-component.component-info,
 .traven-preview .traven-component-info {
   border-left: 4px solid var(--color-accent);
 }
 
-.cm-wysiwym-component-shortcode.component-warning,
+.cm-wysiwym-component.component-warning,
 .traven-preview .traven-component-warning {
   border-left: 4px solid #d97706;
 }
 
-.cm-wysiwym-component-shortcode.component-pullquote {
+.cm-wysiwym-component.component-pullquote {
   border: none;
   border-top: 2px solid var(--color-accent);
   border-bottom: 2px solid var(--color-accent);
@@ -459,39 +459,39 @@ img.classic-markdown {
 
 /* Editor alignment — auto-margins only (§4.4); never float CM widgets */
 .align-left,
-.cm-wysiwym-image-shortcode-container.align-left,
+.cm-wysiwym-image-container.align-left,
 .cm-wysiwym-image-widget-container.align-left,
-.cm-wysiwym-video-shortcode-container.align-left,
-.cm-wysiwym-audio-shortcode-container.align-left,
-.cm-wysiwym-figure-shortcode.align-left {
+.cm-wysiwym-video-container.align-left,
+.cm-wysiwym-audio-container.align-left,
+.cm-wysiwym-figure.align-left {
   margin: 0 auto 0 0 !important;
   float: none !important;
 }
 .align-right,
-.cm-wysiwym-image-shortcode-container.align-right,
+.cm-wysiwym-image-container.align-right,
 .cm-wysiwym-image-widget-container.align-right,
-.cm-wysiwym-video-shortcode-container.align-right,
-.cm-wysiwym-audio-shortcode-container.align-right,
-.cm-wysiwym-figure-shortcode.align-right {
+.cm-wysiwym-video-container.align-right,
+.cm-wysiwym-audio-container.align-right,
+.cm-wysiwym-figure.align-right {
   margin: 0 0 0 auto !important;
   float: none !important;
 }
 .align-center,
-.cm-wysiwym-image-shortcode-container.align-center,
+.cm-wysiwym-image-container.align-center,
 .cm-wysiwym-image-widget-container.align-center,
-.cm-wysiwym-video-shortcode-container.align-center,
-.cm-wysiwym-audio-shortcode-container.align-center,
-.cm-wysiwym-figure-shortcode.align-center {
+.cm-wysiwym-video-container.align-center,
+.cm-wysiwym-audio-container.align-center,
+.cm-wysiwym-figure.align-center {
   display: block !important;
   margin: 0 auto !important;
   float: none !important;
 }
 .align-fullbleed,
-.cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-wysiwym-image-container.align-fullbleed,
 .cm-wysiwym-image-widget-container.align-fullbleed,
-.cm-wysiwym-video-shortcode-container.align-fullbleed,
-.cm-wysiwym-audio-shortcode-container.align-fullbleed,
-.cm-wysiwym-figure-shortcode.align-fullbleed {
+.cm-wysiwym-video-container.align-fullbleed,
+.cm-wysiwym-audio-container.align-fullbleed,
+.cm-wysiwym-figure.align-fullbleed {
   width: 100% !important;
   max-width: 100% !important;
   margin: 0 !important;
@@ -540,7 +540,7 @@ img.classic-markdown {
 .traven-preview figure.traven-image-figure.align-fullbleed { width: 100% !important; max-width: 100% !important; }
 
 /* Image / video / audio shortcode widgets — zero outer margin (§4.4) */
-.cm-wysiwym-image-shortcode-container,
+.cm-wysiwym-image-container,
 .cm-wysiwym-image-widget-container {
   margin: 0 !important;
   padding: 12px 0 !important;
@@ -548,8 +548,8 @@ img.classic-markdown {
 }
 
 /* Video & Audio Shortcode Fill Containers */
-.cm-wysiwym-video-shortcode-container,
-.cm-wysiwym-audio-shortcode-container {
+.cm-wysiwym-video-container,
+.cm-wysiwym-audio-container {
   margin: 0 !important;
   padding: 12px 0 !important;
   box-sizing: border-box;

@@ -133,7 +133,7 @@ Themes should style `.classic-markdown-figure .caption` / `figcaption.caption` a
 
 | Role | Selector |
 |---|---|
-| Editor widget | `.cm-wysiwym-image-shortcode-container` (+ `.align-*`, `.size-*`); meta: `.shortcode-meta`, `.meta-badge`; edit: `.image-edit-icon` |
+| Editor widget | `.cm-wysiwym-image-container` (+ `.align-*`, `.size-*`); meta: `.widget-meta`, `.meta-badge`; edit: `.image-edit-icon` |
 | Classic MD image widget | `.cm-wysiwym-image-widget-container` |
 | Preview / publish | `.traven-preview img.traven-image`, `figure.traven-image-figure`, `figcaption.traven-image-caption` |
 | Classic MD (PenCMS PHP) | `figure.classic-markdown-figure`, `img.classic-markdown`, `figcaption.caption` (alt-as-caption) |
@@ -181,7 +181,7 @@ YouTube is detected from watch/embed/v/`youtu.be` URLs (published embeds use **y
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-video-shortcode-container` (+ placeholder children: `.video-placeholder`, `.video-placeholder-icon-wrap`, `.video-placeholder-details`, `.video-placeholder-platform`, `.video-placeholder-url`; `.video-edit-icon`) |
+| Editor | `.cm-wysiwym-video-container` (+ placeholder children: `.video-placeholder`, `.video-placeholder-icon-wrap`, `.video-placeholder-details`, `.video-placeholder-platform`, `.video-placeholder-url`; `.video-edit-icon`) |
 | Preview / publish | `.traven-video-container` (typically 16:9 `aspect-ratio`), `figure.traven-video-figure`, `figcaption.traven-video-caption`, `video.traven-video` |
 
 ---
@@ -223,7 +223,7 @@ YouTube is detected from watch/embed/v/`youtu.be` URLs (published embeds use **y
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-audio-shortcode-container` (+ same placeholder shape as video; `.audio-edit-icon`) |
+| Editor | `.cm-wysiwym-audio-container` (+ same placeholder shape as video; `.audio-edit-icon`) |
 | Preview / publish | `.traven-audio-container`, `figure.traven-audio-figure`, `figcaption.traven-audio-caption`, `audio.traven-audio` |
 
 ---
@@ -252,7 +252,7 @@ Inner Markdown is compiled when restoring. `align` defaults to `center`.
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-figure-shortcode` (`.component-body`, `.figure-caption`, `.figure-edit-icon`) |
+| Editor | `.cm-wysiwym-figure` (`.component-body`, `.figure-caption`, `.figure-edit-icon`) |
 | Preview / publish | `.traven-preview .traven-figure` |
 
 ---
@@ -299,7 +299,7 @@ Style `cite` and `.component-body` for either skeleton.
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-component-shortcode.component-blockquote`, `.component-pullquote`; body `.component-body`; `cite` |
+| Editor | `.cm-wysiwym-component.component-blockquote`, `.component-pullquote`; body `.component-body`; `cite` |
 | Preview / publish | `.traven-component-blockquote`, `.traven-component-pullquote` |
 
 ---
@@ -342,7 +342,7 @@ Style `cite` and `.component-body` for either skeleton.
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-component-shortcode.component-info`, `.component-warning` |
+| Editor | `.cm-wysiwym-component.component-info`, `.component-warning` |
 | Preview / publish | `.traven-component-info`, `.traven-component-warning`, `.component-header`, `.component-title`, `.component-body`, `.component-toggle-icon` |
 
 ---
@@ -373,7 +373,7 @@ A starter example lives at `frontend-php/src/blog/themes/starter/components/news
 
 | Role | Selector |
 |---|---|
-| Editor | `.cm-wysiwym-component-shortcode` |
+| Editor | `.cm-wysiwym-component` |
 | Preview / publish | `.traven-component`, `.traven-component-{name}` |
 
 ---
@@ -559,12 +559,12 @@ Theme authors should implement all 16 combinations for **image**, **video**, and
 
 | Syntax | Editor container |
 |---|---|
-| `<Image />` | `.cm-wysiwym-image-shortcode-container` |
+| `<Image />` | `.cm-wysiwym-image-container` |
 | Legacy `![alt](src)` | `.cm-wysiwym-image-widget-container` |
-| `<Video />` | `.cm-wysiwym-video-shortcode-container` |
-| `<Audio />` | `.cm-wysiwym-audio-shortcode-container` |
-| `<Figure>` | `.cm-wysiwym-figure-shortcode` |
-| Components / quotes / notices | `.cm-wysiwym-component-shortcode` (+ `.component-blockquote`, `.component-pullquote`, `.component-info`, `.component-warning`) |
+| `<Video />` | `.cm-wysiwym-video-container` |
+| `<Audio />` | `.cm-wysiwym-audio-container` |
+| `<Figure>` | `.cm-wysiwym-figure` |
+| Components / quotes / notices | `.cm-wysiwym-component` (+ `.component-blockquote`, `.component-pullquote`, `.component-info`, `.component-warning`) |
 | `==highlight==` | `.cm-wysiwym-highlight` |
 
 Full child selectors, modal scope, and dark mode: [`traven-theme-development.md` §3](dev/traven-theme-development.md#3-the-selector-reference).

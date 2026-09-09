@@ -292,7 +292,7 @@ html.cm-wysiwym-dark,
 .traven-preview h2,
 .traven-preview h3,
 .traven-preview .traven-component-pullquote,
-.cm-wysiwym-component-shortcode,
+.cm-wysiwym-component,
 .traven-preview .traven-component,
 .traven-preview .traven-component-blockquote,
 .traven-preview .traven-component-info,
@@ -307,28 +307,28 @@ html.cm-wysiwym-dark,
   font-family: var(--traven-font-display) !important;
 }
 
-.cm-wysiwym-image-shortcode-container,
-.cm-wysiwym-video-shortcode-container,
-.cm-wysiwym-audio-shortcode-container,
-.cm-wysiwym-figure-shortcode,
+.cm-wysiwym-image-container,
+.cm-wysiwym-video-container,
+.cm-wysiwym-audio-container,
+.cm-wysiwym-figure,
 .traven-preview figure.traven-image-figure,
 .traven-preview figure.traven-video-figure,
 .traven-preview figure.traven-audio-figure,
 .traven-preview .traven-figure,
 .cm-wysiwym-image-caption,
-.cm-wysiwym-image-shortcode-container .shortcode-meta,
-.cm-wysiwym-video-shortcode-container .shortcode-meta,
-.cm-wysiwym-audio-shortcode-container .shortcode-meta,
-.cm-wysiwym-figure-shortcode .figure-caption,
+.cm-wysiwym-image-container .widget-meta,
+.cm-wysiwym-video-container .widget-meta,
+.cm-wysiwym-audio-container .widget-meta,
+.cm-wysiwym-figure .figure-caption,
 .traven-preview figcaption {
   font-family: inherit !important;
 }
 
 /* Font Family Inheritance on Nested Elements (The CSS Cascade Override) */
-.cm-wysiwym-component-shortcode.component-info,
-.cm-wysiwym-component-shortcode.component-info *,
-.cm-wysiwym-component-shortcode.component-warning,
-.cm-wysiwym-component-shortcode.component-warning *,
+.cm-wysiwym-component.component-info,
+.cm-wysiwym-component.component-info *,
+.cm-wysiwym-component.component-warning,
+.cm-wysiwym-component.component-warning *,
 .traven-preview .traven-component-info,
 .traven-preview .traven-component-info *,
 .traven-preview .traven-component-warning,
@@ -692,12 +692,12 @@ html.cm-wysiwym-dark,
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
 .cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
-.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
-.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
-.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-image-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-container),
+.cm-editor .cm-wysiwym-video-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-container),
+.cm-editor .cm-wysiwym-audio-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-container),
 .cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget) {
   height: 0.4em !important;
@@ -806,9 +806,9 @@ html.cm-wysiwym-dark,
 }
 
 /* Shortcode Widgets & Custom Components Layout Rules */
-.cm-wysiwym-video-shortcode-container,
-.cm-wysiwym-audio-shortcode-container,
-.cm-wysiwym-figure-shortcode {
+.cm-wysiwym-video-container,
+.cm-wysiwym-audio-container,
+.cm-wysiwym-figure {
   display: flex;
   flex-direction: column;
   max-width: 100%;
@@ -823,7 +823,7 @@ html.cm-wysiwym-dark,
   position: relative;
 }
 
-.cm-wysiwym-image-shortcode-container,
+.cm-wysiwym-image-container,
 .cm-wysiwym-image-widget-container {
   display: flex;
   flex-direction: column;
@@ -836,16 +836,16 @@ html.cm-wysiwym-dark,
   position: relative;
 }
 
-.cm-wysiwym-video-shortcode-container:hover,
-.cm-wysiwym-audio-shortcode-container:hover,
-.cm-wysiwym-figure-shortcode:hover {
+.cm-wysiwym-video-container:hover,
+.cm-wysiwym-audio-container:hover,
+.cm-wysiwym-figure:hover {
   box-shadow: var(--traven-widget-hover-shadow);
 }
 
 .cm-wysiwym-image-preview,
-.cm-wysiwym-image-shortcode-container img,
-.cm-wysiwym-video-shortcode-container img,
-.cm-wysiwym-audio-shortcode-container img {
+.cm-wysiwym-image-container img,
+.cm-wysiwym-video-container img,
+.cm-wysiwym-audio-container img {
   display: block;
   max-width: 100%;
   height: auto;
@@ -855,17 +855,17 @@ html.cm-wysiwym-dark,
   box-sizing: border-box;
 }
 
-.cm-wysiwym-image-shortcode-container.align-center img,
-.cm-wysiwym-image-shortcode-container.align-fullbleed img {
+.cm-wysiwym-image-container.align-center img,
+.cm-wysiwym-image-container.align-fullbleed img {
   width: 100% !important;
   max-width: 100% !important;
   height: auto !important;
   padding: 0 !important;
 }
 
-.cm-wysiwym-video-shortcode-container .shortcode-meta,
-.cm-wysiwym-audio-shortcode-container .shortcode-meta,
-.cm-wysiwym-figure-shortcode .figure-caption {
+.cm-wysiwym-video-container .widget-meta,
+.cm-wysiwym-audio-container .widget-meta,
+.cm-wysiwym-figure .figure-caption {
   font-size: 0.82em;
   color: var(--traven-muted);
   padding: 10px 16px;
@@ -875,7 +875,7 @@ html.cm-wysiwym-dark,
 }
 
 .cm-wysiwym-image-caption,
-.cm-wysiwym-image-shortcode-container .shortcode-meta {
+.cm-wysiwym-image-container .widget-meta {
   font-size: 0.82em;
   color: var(--traven-muted);
   padding: 10px 16px;
@@ -908,50 +908,50 @@ html.cm-wysiwym-dark,
   z-index: 10;
 }
 
-[class*="-shortcode-container"]:hover .image-edit-icon,
-[class*="-shortcode-container"]:hover .video-edit-icon,
-[class*="-shortcode-container"]:hover .audio-edit-icon,
-.cm-wysiwym-figure-shortcode:hover .figure-edit-icon,
-.cm-wysiwym-component-shortcode:hover .image-edit-icon {
+.cm-wysiwym-image-container:hover .image-edit-icon,
+.cm-wysiwym-video-container:hover .video-edit-icon,
+.cm-wysiwym-audio-container:hover .audio-edit-icon,
+.cm-wysiwym-figure:hover .figure-edit-icon,
+.cm-wysiwym-component:hover .image-edit-icon {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* Alignment and size classes in editor (auto-margins only, no float — CodeMirror §4.4) */
 .cm-editor .align-left,
-.cm-editor .cm-wysiwym-image-shortcode-container.align-left,
+.cm-editor .cm-wysiwym-image-container.align-left,
 .cm-editor .cm-wysiwym-image-widget-container.align-left,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-figure-shortcode.align-left {
+.cm-editor .cm-wysiwym-video-container.align-left,
+.cm-editor .cm-wysiwym-audio-container.align-left,
+.cm-editor .cm-wysiwym-figure.align-left {
   margin: 0 auto 0 0 !important;
   float: none !important;
 }
 .cm-editor .align-right,
-.cm-editor .cm-wysiwym-image-shortcode-container.align-right,
+.cm-editor .cm-wysiwym-image-container.align-right,
 .cm-editor .cm-wysiwym-image-widget-container.align-right,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-figure-shortcode.align-right {
+.cm-editor .cm-wysiwym-video-container.align-right,
+.cm-editor .cm-wysiwym-audio-container.align-right,
+.cm-editor .cm-wysiwym-figure.align-right {
   margin: 0 0 0 auto !important;
   float: none !important;
 }
 .cm-editor .align-center,
 .cm-editor .inline-image-center,
-.cm-editor .cm-wysiwym-image-shortcode-container.align-center,
+.cm-editor .cm-wysiwym-image-container.align-center,
 .cm-editor .cm-wysiwym-image-widget-container.align-center,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-figure-shortcode.align-center {
+.cm-editor .cm-wysiwym-video-container.align-center,
+.cm-editor .cm-wysiwym-audio-container.align-center,
+.cm-editor .cm-wysiwym-figure.align-center {
   margin: 0 auto !important;
   float: none !important;
 }
 .cm-editor .align-fullbleed,
-.cm-editor .cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-editor .cm-wysiwym-image-container.align-fullbleed,
 .cm-editor .cm-wysiwym-image-widget-container.align-fullbleed,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-fullbleed,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-fullbleed,
-.cm-editor .cm-wysiwym-figure-shortcode.align-fullbleed {
+.cm-editor .cm-wysiwym-video-container.align-fullbleed,
+.cm-editor .cm-wysiwym-audio-container.align-fullbleed,
+.cm-editor .cm-wysiwym-figure.align-fullbleed {
   width: 100% !important;
   margin: 0 !important;
   float: none !important;
@@ -980,7 +980,7 @@ html.cm-wysiwym-dark,
 }
 
 /* Custom Component Block Types styling */
-.cm-wysiwym-component-shortcode {
+.cm-wysiwym-component {
   display: flex;
   flex-direction: column;
   max-width: 100%;
@@ -991,20 +991,20 @@ html.cm-wysiwym-dark,
 }
 
 /* Reset margins for inner elements inside custom component blocks */
-.cm-wysiwym-component-shortcode blockquote,
-.cm-wysiwym-component-shortcode p,
-.cm-wysiwym-figure-shortcode p {
+.cm-wysiwym-component blockquote,
+.cm-wysiwym-component p,
+.cm-wysiwym-figure p {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.cm-wysiwym-component-shortcode p + p,
-.cm-wysiwym-figure-shortcode p + p {
+.cm-wysiwym-component p + p,
+.cm-wysiwym-figure p + p {
   margin-top: 0.8em !important;
 }
 
 /* Blockquote component in CodeMirror */
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote {
+.cm-editor .cm-wysiwym-component.component-blockquote {
   margin: 0 !important;
   padding: 0 0 1.2em 20px !important;
   border-left: 3px solid var(--traven-blockquote-border) !important;
@@ -1019,13 +1019,13 @@ html.cm-wysiwym-dark,
   overflow: hidden; /* prevent child margin collapse through the widget (§4.4) */
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote,
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote * {
+.cm-editor .cm-wysiwym-component.component-blockquote,
+.cm-editor .cm-wysiwym-component.component-blockquote * {
   font-family: var(--traven-font-body) !important;
   color: var(--traven-text) !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote p {
+.cm-editor .cm-wysiwym-component.component-blockquote p {
   font-size: 1.05em !important;
   font-style: italic !important;
   line-height: 1.55 !important;
@@ -1034,9 +1034,9 @@ html.cm-wysiwym-dark,
   padding: 0 !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote cite,
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote .attribution,
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote footer {
+.cm-editor .cm-wysiwym-component.component-blockquote cite,
+.cm-editor .cm-wysiwym-component.component-blockquote .attribution,
+.cm-editor .cm-wysiwym-component.component-blockquote footer {
   display: block !important;
   margin-top: 10px !important;
   text-align: right !important;
@@ -1049,7 +1049,7 @@ html.cm-wysiwym-dark,
 }
 
 /* Pullquote widget in CodeMirror */
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote {
+.cm-editor .cm-wysiwym-component.component-pullquote {
   margin: 0 auto !important;
   padding: 1.5rem 1rem !important;
   box-sizing: border-box !important;
@@ -1065,15 +1065,15 @@ html.cm-wysiwym-dark,
   max-width: 85% !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote,
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote * {
+.cm-editor .cm-wysiwym-component.component-pullquote,
+.cm-editor .cm-wysiwym-component.component-pullquote * {
   font-family: var(--traven-font-display) !important;
   text-align: center !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote p,
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote blockquote,
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .component-body p {
+.cm-editor .cm-wysiwym-component.component-pullquote p,
+.cm-editor .cm-wysiwym-component.component-pullquote blockquote,
+.cm-editor .cm-wysiwym-component.component-pullquote .component-body p {
   font-size: clamp(20px, 2.5vw, 24px) !important;
   line-height: 1.35 !important;
   font-style: italic !important;
@@ -1085,9 +1085,9 @@ html.cm-wysiwym-dark,
   max-width: none !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote cite,
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .attribution,
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote .author {
+.cm-editor .cm-wysiwym-component.component-pullquote cite,
+.cm-editor .cm-wysiwym-component.component-pullquote .attribution,
+.cm-editor .cm-wysiwym-component.component-pullquote .author {
   display: block !important;
   margin-top: 1rem !important;
   font-family: var(--traven-font-mono) !important;
@@ -1100,7 +1100,7 @@ html.cm-wysiwym-dark,
 }
 
 /* Custom left-border callout shapes */
-.cm-wysiwym-component-shortcode.component-info {
+.cm-wysiwym-component.component-info {
   background-color: var(--traven-info-bg) !important;
   border: none !important;
   border-left: 3px solid var(--traven-info-border) !important;
@@ -1109,7 +1109,7 @@ html.cm-wysiwym-dark,
   box-shadow: none !important;
 }
 
-.cm-wysiwym-component-shortcode.component-warning {
+.cm-wysiwym-component.component-warning {
   background-color: var(--traven-warning-bg) !important;
   border: none !important;
   border-left: 3px solid var(--traven-warning-border) !important;
@@ -1119,10 +1119,10 @@ html.cm-wysiwym-dark,
 }
 
 /* Collapse blank lines around all component / figure widgets (§4.7) */
-.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
-.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+.cm-editor .cm-wysiwym-component + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component),
+.cm-editor .cm-wysiwym-figure + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure) {
   height: 0.4em !important;
   min-height: 0.4em !important;
 }
@@ -1365,7 +1365,7 @@ html.cm-wysiwym-dark,
   box-shadow: none;
 }
 
-.traven-preview img.traven-image-shortcode,
+.traven-preview img.traven-image,
 .traven-preview .traven-audio-container audio {
   display: block;
   max-width: 100%;
@@ -1573,7 +1573,7 @@ figcaption.caption {
 .traven-component .component-header,
 .traven-component-header,
 .component-header,
-.cm-wysiwym-component-shortcode .component-header {
+.cm-wysiwym-component .component-header {
   font-family: var(--traven-font-display);
   font-weight: 700;
   font-size: 0.85em;
@@ -1590,7 +1590,7 @@ figcaption.caption {
   padding-bottom: 5px;
 }
 
-.cm-wysiwym-component-shortcode .component-header {
+.cm-wysiwym-component .component-header {
   padding-bottom: 10px;
   margin-bottom: 0 !important;
 }
@@ -1628,8 +1628,8 @@ details[open] summary.component-header::after {
 details:not([open]) .traven-component-header,
 details:not([open]) .traven-component .component-header,
 details:not([open]) .component-header,
-details.cm-wysiwym-component-shortcode:not([open]) .component-header,
-.cm-wysiwym-component-shortcode details:not([open]) .component-header {
+details.cm-wysiwym-component:not([open]) .component-header,
+.cm-wysiwym-component details:not([open]) .component-header {
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
 }

@@ -821,7 +821,7 @@ Reference: `themes/freedomware` (`styles.css` grid shell + chrome resets; `skin-
 
 **Why percentages:** A fixed `small` (e.g. 280px) plus `medium` at 50% collides on typical reading columns (~560px wide → 50% = 280px). Small images then look identical to medium regardless of alignment — a failure mode fixed across all keeper themes in 2026.
 
-Traven editor preview widgets may still use fixed pixel widths on `.cm-wysiwym-image-shortcode-container` for WYSIWYM chrome; **published** `<Image />` rules belong in `styles.css` (and overlay `skin-starter.css` copies when used).
+Traven editor preview widgets may still use fixed pixel widths on `.cm-wysiwym-image-container` for WYSIWYM chrome; **published** `<Image />` rules belong in `styles.css` (and overlay `skin-starter.css` copies when used).
 
 ### PenCMS `<Image />` (published HTML)
 
@@ -1095,7 +1095,7 @@ For hero and fullbleed images:
 }
 ```
 
-For standalone `img.traven-image-shortcode.align-fullbleed`, apply `aspect-ratio` + `object-fit: cover` on the `img` with `height: auto`.
+For standalone `img.traven-image.align-fullbleed`, apply `aspect-ratio` + `object-fit: cover` on the `img` with `height: auto`.
 
 #### Pitfall: fullbleed video — do not use `padding-bottom` for 16:9 on the figure
 
@@ -1203,7 +1203,7 @@ Put these rules in `skin-{id}.css` (dual-duty). Tailwind themes still need this 
 
 PenCMS PHP may emit gallery wrappers alongside Traven classes. Style **both** until unified:
 
-- Traven: `figure.traven-image-figure.align-fullbleed`, `img.traven-image-shortcode.align-fullbleed`
+- Traven: `figure.traven-image-figure.align-fullbleed`, `img.traven-image.align-fullbleed`
 - PenCMS gallery: `.gallery-single.align-fullbleed` (often with `.photo-wrapper` + `.caption`)
 
 #### Height: crop or preserve — also a theme choice
@@ -1250,7 +1250,7 @@ Viewport-wide images at native aspect ratio can become very tall (e.g. square so
 | Blockquote | `.traven-component-blockquote` (+ footer/cite / `.attribution`) | Distinct from pullquote |
 | Pullquote | `.traven-component-pullquote` | Heavier / editorial |
 | Native `blockquote` | `blockquote:not(.traven-component-pullquote)` | Still readable |
-| `<Callout>` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<div>` + inner `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component-shortcode` ([`traven-theme-development.md`](dev/traven-theme-development.md) §4.4 / §6.5) |
+| `<Callout>` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<div>` + inner `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component` ([`traven-theme-development.md`](dev/traven-theme-development.md) §4.4 / §6.5) |
 | GitHub alerts | `.traven-alert`, `.traven-alert-{note,tip,important,warning,caution}` | Optional `::before` labels |
 | `==mark==` | `mark` | Light + dark contrast |
 | Generic `<Component>` | `.traven-component` + name modifier | Sensible default; theme `components/{name}.twig` wins when present |
@@ -1610,7 +1610,7 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 - [ ] Base `.cm-editor` / `.traven-preview` stacks use `font-family` (and typically color/bg) with `!important` so admin Tailwind / `traven.css` do not win `[D]`
 - [ ] `.post-detail-trumpet` / `.post-detail-title` / `.post-detail-deck` styled once in the skin for admin + publish (verify in `admin-editor.php`, not only on published post); do not duplicate type in `styles.css` `[D]`
 - [ ] If published `.post-detail-title` is hollow (`color: transparent` + stroke / `background-clip: text`), override only `.hero-title-block.traven-preview .post-detail-title` to a solid fill + `caret-color` so the native `hero_title` textarea stays editable `[D]`
-- [ ] Editor widget classes for shortcodes styled (`.cm-wysiwym-image-shortcode-container`, `.cm-wysiwym-component-shortcode`, etc.)
+- [ ] Editor widget classes for shortcodes styled (`.cm-wysiwym-image-container`, `.cm-wysiwym-component`, etc.)
 - [ ] No float / vertical margin on editor shortcode containers; align via auto-margins
 - [ ] Dark mode rules for editor scope (optional, only if theme includes user-requested dark variant) `[O]`
 - [ ] Skin remains usable **without** loading `styles.css` (chrome)
@@ -1798,7 +1798,7 @@ Same table as §1 — start there for role vs this guide.
 
 1. **Add `traven-preview`:** Put `class="article-content traven-preview"` on every post/page body wrapper (and overrides that render HTML). Chrome-only `.article-content` rules are not enough for shortcodes.
 2. **Split chrome vs skin:** Move Traven shortcode / prose / alert rules into `assets/css/skin-{id}.css`. Keep listing cards and nav in chrome.
-3. **Ship PenCMS gallery rules in `styles.css`:** Add the §8 *PenCMS `[image]` / `.gallery-single`* blocks (sizes as %, default centering, classic markdown, mobile). Do not assume Traven `img.traven-image-shortcode` rules cover `[image]` shortcodes.
+3. **Ship PenCMS gallery rules in `styles.css`:** Add the §8 *PenCMS `[image]` / `.gallery-single`* blocks (sizes as %, default centering, classic markdown, mobile). Do not assume Traven `img.traven-image` rules cover `[image]` shortcodes.
 4. **Sync overlay base skins:** If using `editor_skin_base: ["starter"]`, update the **theme-local** `skin-starter.css` copy (percent sizes + gallery centering), not only the canonical `starter` theme folder.
 5. **Theme-owned skins only:** Treat `themes/{id}/assets/css/skin-*.css` as source of truth. Do not add skins under `public/assets/vendor/traven/skins/` (removed post-S8.5).
 6. **Declare `editor_skin`:** Match the personality skin stem in `theme.json`.

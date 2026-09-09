@@ -1532,10 +1532,10 @@ body.traven-preview .main-container .layout-grid-post .gallery-single.align-full
 
 body.traven-preview .main-container .layout-grid-post .gallery-single.align-fullbleed .photo-wrapper img,
 body.traven-preview .main-container .layout-grid-post figure.traven-image-figure.align-fullbleed img,
-body.traven-preview .main-container .layout-grid-post img.traven-image-shortcode.align-fullbleed,
+body.traven-preview .main-container .layout-grid-post img.traven-image.align-fullbleed,
 .main-container .layout-grid-post .traven-preview .gallery-single.align-fullbleed .photo-wrapper img,
 .main-container .layout-grid-post .traven-preview figure.traven-image-figure.align-fullbleed img,
-.main-container .layout-grid-post .traven-preview img.traven-image-shortcode.align-fullbleed {
+.main-container .layout-grid-post .traven-preview img.traven-image.align-fullbleed {
   width: 100% !important;
   height: 100% !important;
   max-height: 480px;
@@ -1571,10 +1571,10 @@ body.traven-preview .main-container .layout-grid-post img.traven-image-shortcode
 
   body.traven-preview .main-container .gallery-single.align-fullbleed .photo-wrapper img,
   body.traven-preview .main-container figure.traven-image-figure.align-fullbleed img,
-  body.traven-preview .main-container img.traven-image-shortcode.align-fullbleed,
+  body.traven-preview .main-container img.traven-image.align-fullbleed,
   .main-container .traven-preview .gallery-single.align-fullbleed .photo-wrapper img,
   .main-container .traven-preview figure.traven-image-figure.align-fullbleed img,
-  .main-container .traven-preview img.traven-image-shortcode.align-fullbleed {
+  .main-container .traven-preview img.traven-image.align-fullbleed {
     width: 100% !important;
     height: 100% !important;
     max-height: 360px;

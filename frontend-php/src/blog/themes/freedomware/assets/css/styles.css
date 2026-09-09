@@ -1558,7 +1558,7 @@ body.traven-preview .search-result-excerpt {
 .main-container figure.traven-image-figure.align-fullbleed,
 .main-container figure.traven-video-figure.align-fullbleed,
 .main-container figure.traven-audio-figure.align-fullbleed,
-.main-container img.traven-image-shortcode.align-fullbleed,
+.main-container img.traven-image.align-fullbleed,
 .main-container .traven-video-container.align-fullbleed,
 .main-container .traven-audio-container.align-fullbleed {
     width: 100vw !important;
@@ -1587,7 +1587,7 @@ body.traven-preview .search-result-excerpt {
 }
 
 .main-container figure.traven-image-figure.align-fullbleed img,
-.main-container img.traven-image-shortcode.align-fullbleed {
+.main-container img.traven-image.align-fullbleed {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 9;

@@ -341,31 +341,31 @@ html.cm-wysiwym-dark {
 
 /* 8. Widgets & Alignment */
 /* Image, Video, Audio, Component padding in editor (Zero Margin Rule) */
-.cm-editor .cm-wysiwym-image-shortcode-container,
-.cm-editor .cm-wysiwym-video-shortcode-container,
-.cm-editor .cm-wysiwym-audio-shortcode-container,
-.cm-editor .cm-wysiwym-component-shortcode,
-.cm-editor .cm-wysiwym-figure-shortcode {
+.cm-editor .cm-wysiwym-image-container,
+.cm-editor .cm-wysiwym-video-container,
+.cm-editor .cm-wysiwym-audio-container,
+.cm-editor .cm-wysiwym-component,
+.cm-editor .cm-wysiwym-figure {
   margin: 0 !important;
   padding: 1.5rem 0 !important;
   box-sizing: border-box;
 }
 
 /* Alignment Helpers */
-.cm-editor .cm-wysiwym-image-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-component-shortcode.align-left,
-.cm-editor .cm-wysiwym-figure-shortcode.align-left { margin: 0 auto 0 0 !important; }
+.cm-editor .cm-wysiwym-image-container.align-left,
+.cm-editor .cm-wysiwym-video-container.align-left,
+.cm-editor .cm-wysiwym-component.align-left,
+.cm-editor .cm-wysiwym-figure.align-left { margin: 0 auto 0 0 !important; }
 
-.cm-editor .cm-wysiwym-image-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-component-shortcode.align-right,
-.cm-editor .cm-wysiwym-figure-shortcode.align-right { margin: 0 0 0 auto !important; }
+.cm-editor .cm-wysiwym-image-container.align-right,
+.cm-editor .cm-wysiwym-video-container.align-right,
+.cm-editor .cm-wysiwym-component.align-right,
+.cm-editor .cm-wysiwym-figure.align-right { margin: 0 0 0 auto !important; }
 
-.cm-editor .cm-wysiwym-image-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-component-shortcode.align-center,
-.cm-editor .cm-wysiwym-figure-shortcode.align-center { margin: 0 auto !important; }
+.cm-editor .cm-wysiwym-image-container.align-center,
+.cm-editor .cm-wysiwym-video-container.align-center,
+.cm-editor .cm-wysiwym-component.align-center,
+.cm-editor .cm-wysiwym-figure.align-center { margin: 0 auto !important; }
 
 .article-content.traven-preview .align-left { float: left !important; margin: 1.5rem 1.5rem 1.5rem 0 !important; }
 .article-content.traven-preview .align-right { float: right !important; margin: 1.5rem 0 1.5rem 1.5rem !important; }
@@ -387,8 +387,8 @@ html.cm-wysiwym-dark {
 .size-full { width: 100% !important; }
 
 /* Fullbleed */
-.cm-editor .cm-wysiwym-image-shortcode-container.align-fullbleed,
-.cm-editor .cm-wysiwym-figure-shortcode.align-fullbleed {
+.cm-editor .cm-wysiwym-image-container.align-fullbleed,
+.cm-editor .cm-wysiwym-figure.align-fullbleed {
   width: 100% !important;
   max-width: 100% !important;
 }
@@ -425,18 +425,18 @@ figcaption.traven-audio-caption,
 }
 
 /* Components */
-.cm-editor .cm-wysiwym-component-shortcode blockquote,
-.cm-editor .cm-wysiwym-component-shortcode p,
-.cm-editor .cm-wysiwym-figure-shortcode p {
+.cm-editor .cm-wysiwym-component blockquote,
+.cm-editor .cm-wysiwym-component p,
+.cm-editor .cm-wysiwym-figure p {
   margin: 0 !important;
   padding: 0 !important;
 }
-.cm-editor .cm-wysiwym-component-shortcode p + p,
-.cm-editor .cm-wysiwym-figure-shortcode p + p {
+.cm-editor .cm-wysiwym-component p + p,
+.cm-editor .cm-wysiwym-figure p + p {
   margin-top: 0.8em !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote,
+.cm-editor .cm-wysiwym-component.component-blockquote,
 .article-content.traven-preview .traven-component-blockquote {
   font-size: var(--text-l) !important;
   line-height: var(--leading-standfirst) !important;
@@ -444,14 +444,14 @@ figcaption.traven-audio-caption,
   padding-left: 1rem !important;
   margin: 1.75rem 0 !important;
 }
-.cm-editor .cm-wysiwym-component-shortcode.component-blockquote {
+.cm-editor .cm-wysiwym-component.component-blockquote {
   margin: 0 !important;
   padding-top: 1.75rem !important;
   padding-bottom: 1.75rem !important;
   overflow: hidden;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode cite,
+.cm-editor .cm-wysiwym-component cite,
 .article-content.traven-preview .traven-component-blockquote cite {
   font-family: var(--font-sans) !important;
   font-size: var(--text-s) !important;
@@ -460,8 +460,8 @@ figcaption.traven-audio-caption,
   margin-top: 1rem;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-info,
-.cm-editor .cm-wysiwym-component-shortcode.component-warning,
+.cm-editor .cm-wysiwym-component.component-info,
+.cm-editor .cm-wysiwym-component.component-warning,
 .article-content.traven-preview .traven-component-info,
 .article-content.traven-preview .traven-component-warning {
   border: 1px solid var(--color-accent) !important;
@@ -470,8 +470,8 @@ figcaption.traven-audio-caption,
   background-color: var(--color-bg) !important;
   margin: 1.75rem 0 !important;
 }
-.cm-editor .cm-wysiwym-component-shortcode.component-info,
-.cm-editor .cm-wysiwym-component-shortcode.component-warning {
+.cm-editor .cm-wysiwym-component.component-info,
+.cm-editor .cm-wysiwym-component.component-warning {
   margin: 0 !important;
 }
 
@@ -496,18 +496,18 @@ figcaption.traven-audio-caption,
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
 .cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
-.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
-.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
-.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-image-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-container),
+.cm-editor .cm-wysiwym-video-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-container),
+.cm-editor .cm-wysiwym-audio-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-container),
 .cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
-.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
-.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+.cm-editor .cm-wysiwym-component + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component),
+.cm-editor .cm-wysiwym-figure + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure) {
   height: 0.4em !important;
   min-height: 0.4em !important;
 }

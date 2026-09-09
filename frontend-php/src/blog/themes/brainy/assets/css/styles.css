@@ -722,7 +722,7 @@ figure.traven-audio-figure .traven-audio-container {
 
 .traven-audio-container audio,
 figure.traven-audio-figure audio,
-audio.traven-audio-shortcode,
+audio.traven-audio,
 audio {
   width: 100% !important;
   max-width: 100% !important;
@@ -891,10 +891,10 @@ img.align-fullbleed,
 .traven-figure.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
-.traven-video-shortcode.align-fullbleed,
+.traven-video.align-fullbleed,
 .traven-audio-container.align-fullbleed,
 figure.traven-audio-figure.align-fullbleed,
-.traven-audio-shortcode.align-fullbleed {
+.traven-audio.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
   position: relative !important;
@@ -937,7 +937,7 @@ figure.align-fullbleed img,
 /* Fullbleed Videos: 16:9 aspect ratio */
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed .traven-video-container,
-.traven-video-shortcode.align-fullbleed {
+.traven-video.align-fullbleed {
   aspect-ratio: 16 / 9 !important;
   overflow: hidden !important;
   border-radius: 0;
@@ -947,8 +947,8 @@ figure.traven-video-figure.align-fullbleed .traven-video-container,
 .traven-video-container.align-fullbleed video,
 figure.traven-video-figure.align-fullbleed iframe,
 figure.traven-video-figure.align-fullbleed video,
-.traven-video-shortcode.align-fullbleed iframe,
-.traven-video-shortcode.align-fullbleed video {
+.traven-video.align-fullbleed iframe,
+.traven-video.align-fullbleed video {
   width: 100% !important;
   height: 100% !important;
   aspect-ratio: 16 / 9 !important;

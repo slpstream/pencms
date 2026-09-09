@@ -947,11 +947,11 @@ figcaption,
 figure.align-fullbleed,
 img.align-fullbleed,
 .traven-figure.align-fullbleed,
-.cm-wysiwym-image-shortcode-container.align-fullbleed,
+.cm-wysiwym-image-container.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
-.traven-video-shortcode.align-fullbleed,
-.cm-wysiwym-video-shortcode-container.align-fullbleed {
+.traven-video.align-fullbleed,
+.cm-wysiwym-video-container.align-fullbleed {
   width: calc(100% + 280px) !important;
   max-width: calc(100vw - 32px) !important;
   margin-left: calc(50% - min(480px, 50vw - 16px)) !important;
@@ -969,8 +969,8 @@ figure.traven-video-figure.align-fullbleed,
 .traven-figure.align-fullbleed .photo-wrapper,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed .traven-video-container,
-.traven-video-shortcode.align-fullbleed,
-.cm-wysiwym-video-shortcode-container.align-fullbleed {
+.traven-video.align-fullbleed,
+.cm-wysiwym-video-container.align-fullbleed {
   aspect-ratio: 16 / 9 !important;
   overflow: hidden !important;
   border-radius: 0.5rem;
@@ -982,15 +982,15 @@ figure.traven-video-figure.align-fullbleed .traven-video-container,
 .figure-full.align-fullbleed img,
 figure.align-fullbleed img,
 .traven-figure.align-fullbleed img,
-.cm-wysiwym-image-shortcode-container.align-fullbleed img,
+.cm-wysiwym-image-container.align-fullbleed img,
 .traven-video-container.align-fullbleed iframe,
 .traven-video-container.align-fullbleed video,
 figure.traven-video-figure.align-fullbleed iframe,
 figure.traven-video-figure.align-fullbleed video,
-.traven-video-shortcode.align-fullbleed iframe,
-.traven-video-shortcode.align-fullbleed video,
-.cm-wysiwym-video-shortcode-container.align-fullbleed iframe,
-.cm-wysiwym-video-shortcode-container.align-fullbleed video {
+.traven-video.align-fullbleed iframe,
+.traven-video.align-fullbleed video,
+.cm-wysiwym-video-container.align-fullbleed iframe,
+.cm-wysiwym-video-container.align-fullbleed video {
   width: 100% !important;
   height: 100% !important;
   aspect-ratio: 16 / 9 !important;

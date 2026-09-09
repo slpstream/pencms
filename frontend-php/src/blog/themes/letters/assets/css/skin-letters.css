@@ -399,39 +399,39 @@ html {
 
 /* ── Components / figures — outer margin 0, inner resets (§4.4, §4.8) ------- */
 
-.cm-wysiwym-component-shortcode {
+.cm-wysiwym-component {
   margin: 0 !important;
   box-sizing: border-box;
   padding: 16px 18px !important;
   position: relative;
 }
-.cm-wysiwym-component-shortcode blockquote,
-.cm-wysiwym-component-shortcode p,
-.cm-wysiwym-figure-shortcode p {
+.cm-wysiwym-component blockquote,
+.cm-wysiwym-component p,
+.cm-wysiwym-figure p {
   margin: 0 !important;
   padding: 0 !important;
 }
-.cm-wysiwym-component-shortcode p + p,
-.cm-wysiwym-figure-shortcode p + p {
+.cm-wysiwym-component p + p,
+.cm-wysiwym-figure p + p {
   margin-top: 0.8em !important;
 }
-.cm-wysiwym-component-shortcode.component-blockquote {
+.cm-wysiwym-component.component-blockquote {
   overflow: hidden;
 }
-.cm-wysiwym-figure-shortcode {
+.cm-wysiwym-figure {
   margin: 0 !important;
   padding: 12px 0;
   box-sizing: border-box;
 }
 
-.cm-wysiwym-component-shortcode.component-info {
+.cm-wysiwym-component.component-info {
   background-color: var(--lt-code-bg) !important;
   border: 1px solid var(--lt-border) !important;
   border-left: 4px solid var(--lt-wax) !important;
   border-radius: var(--lt-radius) !important;
   color: var(--lt-text) !important;
 }
-.cm-wysiwym-component-shortcode.component-warning {
+.cm-wysiwym-component.component-warning {
   background-color: var(--lt-mark) !important;
   border: 1px solid var(--lt-border) !important;
   border-left: 4px solid var(--lt-wax) !important;
@@ -439,7 +439,7 @@ html {
   color: var(--lt-text) !important;
 }
 /* Editor pullquote — no float (§4); preview floats below */
-.cm-wysiwym-component-shortcode.component-pullquote {
+.cm-wysiwym-component.component-pullquote {
   border: none !important;
   border-left: none !important;
   padding: 8px 12px !important;
@@ -451,7 +451,7 @@ html {
   float: none !important;
   width: 100% !important;
 }
-.cm-wysiwym-component-shortcode.component-pullquote::before {
+.cm-wysiwym-component.component-pullquote::before {
   content: "\201C";
   display: block;
   text-align: left;
@@ -463,7 +463,7 @@ html {
   color: var(--lt-wax);
   margin: 0 0 -0.28em;
 }
-.cm-wysiwym-component-shortcode.component-pullquote::after {
+.cm-wysiwym-component.component-pullquote::after {
   content: "\201D";
   display: block;
   text-align: right;
@@ -475,20 +475,20 @@ html {
   color: var(--lt-wax);
   margin: 0.35em 0 0;
 }
-.cm-wysiwym-component-shortcode.component-pullquote,
-.cm-wysiwym-component-shortcode.component-pullquote * {
+.cm-wysiwym-component.component-pullquote,
+.cm-wysiwym-component.component-pullquote * {
   font-size: 1.28em;
   line-height: 1.15 !important;
   color: var(--lt-muted) !important;
   text-align: center;
 }
-.cm-wysiwym-component-shortcode.component-pullquote::before {
+.cm-wysiwym-component.component-pullquote::before {
   text-align: left !important;
   font-size: 2.75em !important;
   line-height: 0.55 !important;
   color: var(--lt-wax) !important;
 }
-.cm-wysiwym-component-shortcode.component-pullquote::after {
+.cm-wysiwym-component.component-pullquote::after {
   text-align: right !important;
   font-size: 2.75em !important;
   line-height: 0.55 !important;
@@ -497,9 +497,9 @@ html {
 
 /* ── Media widgets — editor: no float, vertical via padding (§4.4) ---------- */
 
-.cm-wysiwym-image-shortcode-container,
-.cm-wysiwym-video-shortcode-container,
-.cm-wysiwym-audio-shortcode-container {
+.cm-wysiwym-image-container,
+.cm-wysiwym-video-container,
+.cm-wysiwym-audio-container {
   max-width: 100%;
   margin: 0 !important;
   padding: 12px 0;
@@ -512,24 +512,24 @@ html {
 .size-large  { width: 70% !important; }
 .size-full   { width: 100% !important; }
 
-.cm-editor .cm-wysiwym-image-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-left,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-left {
+.cm-editor .cm-wysiwym-image-container.align-left,
+.cm-editor .cm-wysiwym-video-container.align-left,
+.cm-editor .cm-wysiwym-audio-container.align-left {
   margin: 0 auto 0 0 !important;
 }
-.cm-editor .cm-wysiwym-image-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-right,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-right {
+.cm-editor .cm-wysiwym-image-container.align-right,
+.cm-editor .cm-wysiwym-video-container.align-right,
+.cm-editor .cm-wysiwym-audio-container.align-right {
   margin: 0 0 0 auto !important;
 }
-.cm-editor .cm-wysiwym-image-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-center,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-center {
+.cm-editor .cm-wysiwym-image-container.align-center,
+.cm-editor .cm-wysiwym-video-container.align-center,
+.cm-editor .cm-wysiwym-audio-container.align-center {
   margin: 0 auto !important;
 }
-.cm-editor .cm-wysiwym-image-shortcode-container.align-fullbleed,
-.cm-editor .cm-wysiwym-video-shortcode-container.align-fullbleed,
-.cm-editor .cm-wysiwym-audio-shortcode-container.align-fullbleed {
+.cm-editor .cm-wysiwym-image-container.align-fullbleed,
+.cm-editor .cm-wysiwym-video-container.align-fullbleed,
+.cm-editor .cm-wysiwym-audio-container.align-fullbleed {
   width: 100% !important;
   margin: 0 !important;
   border: none !important;
@@ -639,18 +639,18 @@ html {
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
 .cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
-.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
-.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
-.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container),
+.cm-editor .cm-wysiwym-image-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-container),
+.cm-editor .cm-wysiwym-video-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-container),
+.cm-editor .cm-wysiwym-audio-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-container),
 .cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
-.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
-.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode) {
+.cm-editor .cm-wysiwym-component + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component),
+.cm-editor .cm-wysiwym-figure + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure) {
   height: 0.4em !important;
   min-height: 0.4em !important;
 }
@@ -902,15 +902,15 @@ span.dropcap {
 }
 .traven-preview .traven-component-info .component-header,
 .traven-preview .traven-component-warning .component-header,
-.cm-wysiwym-component-shortcode.component-info .component-header,
-.cm-wysiwym-component-shortcode.component-warning .component-header {
+.cm-wysiwym-component.component-info .component-header,
+.cm-wysiwym-component.component-warning .component-header {
   margin-bottom: 0.5rem !important;
   padding-bottom: 0 !important;
 }
 .traven-preview .traven-component-info .component-title,
 .traven-preview .traven-component-warning .component-title,
-.cm-wysiwym-component-shortcode.component-info .component-title,
-.cm-wysiwym-component-shortcode.component-warning .component-title {
+.cm-wysiwym-component.component-info .component-title,
+.cm-wysiwym-component.component-warning .component-title {
   font-size: 1.05em !important;
   font-weight: 700 !important;
   line-height: 1.3 !important;
@@ -1033,7 +1033,7 @@ details:not([open]) .component-body {
 
 /* ── Shortcodes: images — album print / Polaroid mat ------------------------ */
 
-.traven-preview img.traven-image-shortcode,
+.traven-preview img.traven-image,
 .traven-preview figure.traven-image-figure {
   max-width: 100%;
   height: auto;
@@ -1104,7 +1104,7 @@ details:not([open]) .component-body {
 }
 .traven-preview .photo-wrapper img,
 .traven-preview figure.traven-image-figure > img,
-.traven-preview img.traven-image-shortcode {
+.traven-preview img.traven-image {
   display: block;
   width: 100%;
   height: auto;
@@ -1125,11 +1125,11 @@ details:not([open]) .component-body {
   border-radius: 0;
 }
 /* Bare image shortcodes without a figure wrapper still get a small mat */
-.traven-preview .essay-body > img.traven-image-shortcode,
-.traven-preview .article-content > img.traven-image-shortcode,
-.traven-preview.essay-body > img.traven-image-shortcode,
-.traven-preview.article-content > img.traven-image-shortcode,
-.traven-preview p > img.traven-image-shortcode {
+.traven-preview .essay-body > img.traven-image,
+.traven-preview .article-content > img.traven-image,
+.traven-preview.essay-body > img.traven-image,
+.traven-preview.article-content > img.traven-image,
+.traven-preview p > img.traven-image {
   background: var(--lt-print-mat);
   border: 1px solid var(--lt-print-edge);
   box-shadow: var(--lt-print-shadow);

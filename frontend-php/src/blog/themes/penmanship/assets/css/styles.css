@@ -1406,10 +1406,10 @@ figure.align-fullbleed,
 img.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
-.traven-video-shortcode.align-fullbleed,
+.traven-video.align-fullbleed,
 .traven-audio-container.align-fullbleed,
 figure.traven-audio-figure.align-fullbleed,
-.traven-audio-shortcode.align-fullbleed,
+.traven-audio.align-fullbleed,
 .traven-figure.align-fullbleed {
   width: calc(100% + 280px) !important;
   max-width: calc(100vw - 32px) !important;
@@ -1448,7 +1448,7 @@ figure.align-fullbleed img {
 /* Video breakout 16:9 aspect ratio & sizing */
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed .traven-video-container,
-.traven-video-shortcode.align-fullbleed {
+.traven-video.align-fullbleed {
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
@@ -1459,8 +1459,8 @@ figure.traven-video-figure.align-fullbleed .traven-video-container,
 .traven-video-container.align-fullbleed video,
 figure.traven-video-figure.align-fullbleed iframe,
 figure.traven-video-figure.align-fullbleed video,
-.traven-video-shortcode.align-fullbleed iframe,
-.traven-video-shortcode.align-fullbleed video {
+.traven-video.align-fullbleed iframe,
+.traven-video.align-fullbleed video {
   width: 100% !important;
   height: 100% !important;
   aspect-ratio: 16 / 9;
@@ -1472,7 +1472,7 @@ figure.traven-video-figure.align-fullbleed video,
 /* Audio breakout player sizing */
 .traven-audio-container.align-fullbleed,
 figure.traven-audio-figure.align-fullbleed,
-.traven-audio-shortcode.align-fullbleed {
+.traven-audio.align-fullbleed {
   box-sizing: border-box;
   padding: 16px 20px;
   background-color: var(--traven-code-bg);
@@ -1482,7 +1482,7 @@ figure.traven-audio-figure.align-fullbleed,
 
 .traven-audio-container.align-fullbleed audio,
 figure.traven-audio-figure.align-fullbleed audio,
-.traven-audio-shortcode.align-fullbleed audio {
+.traven-audio.align-fullbleed audio {
   width: 100% !important;
   display: block;
 }
@@ -1514,10 +1514,10 @@ figure.traven-audio-figure.align-fullbleed audio,
   img.align-fullbleed,
   .traven-video-container.align-fullbleed,
   figure.traven-video-figure.align-fullbleed,
-  .traven-video-shortcode.align-fullbleed,
+  .traven-video.align-fullbleed,
   .traven-audio-container.align-fullbleed,
   figure.traven-audio-figure.align-fullbleed,
-  .traven-audio-shortcode.align-fullbleed,
+  .traven-audio.align-fullbleed,
   .traven-figure.align-fullbleed {
     width: 100% !important;
     max-width: 100% !important;

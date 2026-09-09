@@ -350,8 +350,8 @@
 }
 
 /* Traven Audio & Media Shortcodes */
-.traven-preview .traven-audio-shortcode,
-.traven-audio-shortcode {
+.traven-preview .traven-audio,
+.traven-audio {
   background: var(--traven-code-bg);
   border: 1px solid var(--traven-border);
   padding: 0.75rem 1rem;
@@ -696,7 +696,7 @@ details.traven-component summary.component-header::-webkit-details-marker {
   margin: 0 !important;
 }
 
-.cm-editor .cm-wysiwym-figure-shortcode {
+.cm-editor .cm-wysiwym-figure {
   margin: 0 !important;
 }
 
@@ -732,10 +732,10 @@ details.traven-component summary.component-header::-webkit-details-marker {
 }
 
 /* 4. Component inner reset */
-.cm-editor .cm-wysiwym-component-shortcode blockquote,
-.cm-editor .cm-wysiwym-component-shortcode p,
-.cm-editor .cm-wysiwym-figure-shortcode blockquote,
-.cm-editor .cm-wysiwym-figure-shortcode p {
+.cm-editor .cm-wysiwym-component blockquote,
+.cm-editor .cm-wysiwym-component p,
+.cm-editor .cm-wysiwym-figure blockquote,
+.cm-editor .cm-wysiwym-figure p {
   margin: 0;
 }
 
@@ -750,18 +750,18 @@ details.traven-component summary.component-header::-webkit-details-marker {
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-mermaid-container),
 .cm-editor .cm-wysiwym-table-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-table-widget),
-.cm-editor .cm-wysiwym-component-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component-shortcode),
-.cm-editor .cm-wysiwym-figure-shortcode + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure-shortcode),
+.cm-editor .cm-wysiwym-component + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-component),
+.cm-editor .cm-wysiwym-figure + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-figure),
 .cm-editor .cm-wysiwym-block-math-widget + .cm-line:has(br:only-child),
 .cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-block-math-widget),
-.cm-editor .cm-wysiwym-image-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-shortcode-container),
-.cm-editor .cm-wysiwym-video-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-shortcode-container),
-.cm-editor .cm-wysiwym-audio-shortcode-container + .cm-line:has(br:only-child),
-.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-shortcode-container) {
+.cm-editor .cm-wysiwym-image-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-image-container),
+.cm-editor .cm-wysiwym-video-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-video-container),
+.cm-editor .cm-wysiwym-audio-container + .cm-line:has(br:only-child),
+.cm-editor .cm-line:has(br:only-child):has(+ .cm-wysiwym-audio-container) {
   height: 0.4em !important;
   min-height: 0.4em !important;
 }

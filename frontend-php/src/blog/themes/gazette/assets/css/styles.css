@@ -1073,7 +1073,7 @@ html.cm-wysiwym-dark .traven-alert-caution *,
 }
 
 /* Pullquote Component ------------------------------------------------------ */
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote,
+.cm-editor .cm-wysiwym-component.component-pullquote,
 .article-content.traven-preview .traven-component-pullquote,
 .traven-component-pullquote {
   float: right !important;
@@ -1089,7 +1089,7 @@ html.cm-wysiwym-dark .traven-alert-caution *,
   text-align: center !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote p,
+.cm-editor .cm-wysiwym-component.component-pullquote p,
 .article-content.traven-preview .traven-component-pullquote p,
 .traven-component-pullquote p,
 .traven-component-pullquote .component-body p {
@@ -1102,7 +1102,7 @@ html.cm-wysiwym-dark .traven-alert-caution *,
   margin: 0 !important;
 }
 
-.cm-editor .cm-wysiwym-component-shortcode.component-pullquote cite,
+.cm-editor .cm-wysiwym-component.component-pullquote cite,
 .article-content.traven-preview .traven-component-pullquote cite,
 .traven-component-pullquote cite {
   font-family: var(--font-sans) !important;
@@ -1117,7 +1117,7 @@ html.cm-wysiwym-dark .traven-alert-caution *,
 }
 
 @media (max-width: 600px) {
-  .cm-editor .cm-wysiwym-component-shortcode.component-pullquote,
+  .cm-editor .cm-wysiwym-component.component-pullquote,
   .article-content.traven-preview .traven-component-pullquote,
   .traven-component-pullquote {
     float: none !important;
