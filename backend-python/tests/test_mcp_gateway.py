@@ -891,7 +891,7 @@ def test_write_content_file_media_path_soft_warnings(authed_client):
         )
 
     try:
-        # Missing body shortcode path
+        # Missing body MDX image path
         resp = authed_client.put(
             "/api/v1/mcp/pages/media-warn-body",
             json={

@@ -306,7 +306,7 @@ document.addEventListener('alpine:init', () => {
          * Published (live) pages suitable for internal links and wikilink expand/embed targets.
          * @param {string} [query]
          * @param {number} [limit=12]
-         * @returns {Promise<Array<{slug, title, hero_title, name, suggested_text, markdown_link, wikilink, expand_shortcode}>>}
+         * @returns {Promise<Array<{slug, title, hero_title, name, suggested_text, markdown_link, wikilink}>>}
          */
         async getPublishedLinkCatalog(query = '', limit = 12) {
             const pages = await this.ensurePages();
@@ -344,8 +344,6 @@ document.addEventListener('alpine:init', () => {
                     suggested_text,
                     markdown_link: `[${suggested_text}](${slug})`,
                     wikilink,
-                    // Deprecated alias — use `wikilink`.
-                    expand_shortcode: wikilink,
                 });
                 if (results.length >= limit) break;
             }

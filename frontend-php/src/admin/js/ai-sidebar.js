@@ -173,7 +173,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "attach_image_to_post",
       description:
-        "Write an attached image to the post's media gallery and return its public URL. Use this when the user asks you to include an attached image in the post (e.g. 'add this image to the post', 'include this in the media gallery'). This tool does NOT insert the image into the body text — you must separately call write_content_file to add the image shortcode to the body. The user must have attached images in the current turn for this tool to work.",
+        "Write an attached image to the post's media gallery and return its public URL. Use this when the user asks you to include an attached image in the post (e.g. 'add this image to the post', 'include this in the media gallery'). This tool does NOT insert the image into the body text — you must separately call write_content_file to add an MDX <Image src=\"…\" /> to the body. The user must have attached images in the current turn for this tool to work.",
       parameters: {
         type: "object",
         properties: {
@@ -362,7 +362,7 @@ const TOOL_DEFINITIONS = [
           syntax_guide: {
             type: "string",
             description:
-              "Document-specific formatting rules, shortcodes, or conventions to follow. This is populated by the system or editor context to guide the generated syntax.",
+              "Document-specific formatting rules, MDX components / wikilinks / conventions to follow. This is populated by the system or editor context to guide the generated syntax.",
           },
         },
         required: ["slug", "frontmatter", "body"],
@@ -510,7 +510,7 @@ const TOOL_DEFINITIONS = [
           syntax_guide: {
             type: "string",
             description:
-              "Document-specific formatting rules, shortcodes, or conventions to follow. This is populated by the system or editor context to guide the generated syntax.",
+              "Document-specific formatting rules, MDX components / wikilinks / conventions to follow. This is populated by the system or editor context to guide the generated syntax.",
           },
         },
         required: ["new_text"],
@@ -4135,7 +4135,7 @@ When writing or updating frontmatter, follow these rules exactly:
       return String(value ?? "").replace(/[\[\]|]/g, "");
     },
 
-    _buildExpandEmbedShortcode({ mode, slug, text, heading, source }) {
+    _buildExpandEmbedWikilink({ mode, slug, text, heading, source }) {
       const m = mode === "embed" ? "!" : ">";
       const cleanSlug = String(slug || "").trim();
       let ref = cleanSlug;
@@ -4246,7 +4246,7 @@ When writing or updating frontmatter, follow these rules exactly:
         };
       }
 
-      const shortcode = this._buildExpandEmbedShortcode({
+      const wikilink = this._buildExpandEmbedWikilink({
         mode,
         slug,
         text: mode === "expand" || text ? text : null,
@@ -4261,14 +4261,14 @@ When writing or updating frontmatter, follow these rules exactly:
               "placement=selection but there is no active selection. Use placement=cursor or select text first.",
           };
         }
-        const result = await this.replace_selection({ new_text: shortcode });
+        const result = await this.replace_selection({ new_text: wikilink });
         if (result && result.error) return result;
-        return { ok: true, shortcode, placement: "selection", slug, mode, source };
+        return { ok: true, wikilink, placement: "selection", slug, mode, source };
       }
 
-      const result = await this.insert_at_cursor({ content: shortcode });
+      const result = await this.insert_at_cursor({ content: wikilink });
       if (result && result.error) return result;
-      return { ok: true, shortcode, placement: "cursor", slug, mode, source };
+      return { ok: true, wikilink, placement: "cursor", slug, mode, source };
     },
 
     async check_expand_refs(args) {

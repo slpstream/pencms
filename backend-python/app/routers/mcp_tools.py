@@ -89,8 +89,6 @@ def _catalog_row_from_page(page) -> Dict[str, Any]:
         "suggested_text": suggested_text,
         "markdown_link": f"[{suggested_text}]({slug})",
         "wikilink": f"[[>{slug}|{_escape_wikilink_text(suggested_text)}]]",
-        # Deprecated alias — use `wikilink`.
-        "expand_shortcode": f"[[>{slug}|{_escape_wikilink_text(suggested_text)}]]",
     }
 
 
@@ -230,12 +228,6 @@ def _iter_mdx_image_attrs(body: str) -> List[str]:
     return out
 
 
-# Deprecated alias — use _iter_mdx_image_attrs.
-def _iter_image_shortcode_attrs(body: str) -> List[str]:
-    """Return the attribute blob inside each <Image ...> MDX tag."""
-    return _iter_mdx_image_attrs(body)
-
-
 def _parse_image_src_attr(attrs: str) -> Optional[str]:
     """Quoted src value, or '' for empty unquoted src=. None if absent / unquoted path."""
     lower = attrs.lower()
@@ -274,12 +266,6 @@ def _extract_mdx_image_srcs(body: str) -> List[str]:
         if src is not None and src.strip():
             out.append(src.strip())
     return out
-
-
-# Deprecated alias — use _extract_mdx_image_srcs.
-def _extract_image_shortcode_srcs(body: str) -> List[str]:
-    """Return non-empty src values from <Image ...> tags in body markdown."""
-    return _extract_mdx_image_srcs(body)
 
 
 def _has_empty_markdown_image(body: str) -> bool:

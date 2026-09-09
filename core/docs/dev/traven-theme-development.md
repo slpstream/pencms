@@ -2,7 +2,7 @@
 
 Guide for theme designers, UI/UX designers, and front-end engineers who want to build Traven themes from scratch, customize an existing skin, or ship a Traven-aware theme for a CMS or static site.
 
-Traven's skinning model is intentionally decoupled: themes are **plain CSS files** with no JavaScript and no build step. The editor engine and the shortcode widgets are class-driven, so every visual decision — fonts, colors, borders, spacing, alignment, and dark-mode behavior — lives in your theme. The trade-off is that the WYSIWYM (live) editor and the HTML preview share the same content but use **two different DOM scopes**, and a complete theme must style both.
+Traven's skinning model is intentionally decoupled: themes are **plain CSS files** with no JavaScript and no build step. The editor engine and the MDX component widgets are class-driven, so every visual decision — fonts, colors, borders, spacing, alignment, and dark-mode behavior — lives in your theme. The trade-off is that the WYSIWYM (live) editor and the HTML preview share the same content but use **two different DOM scopes**, and a complete theme must style both.
 
 This document is a comprehensive guide to styling Traven, detailing the side-by-side skin comparisons, the canonical selector reference, a "what every theme must include" QA checklist, and recipes for styling elements in both the editor and preview DOM scopes (including the raw Markdown pane, Vim's fat cursor, scrollbars, and LaTeX math widgets).
 
@@ -12,7 +12,7 @@ This document is a comprehensive guide to styling Traven, detailing the side-by-
 1.  **Duplicate a Base Theme**: Copy `packages/core/assets/skins/skin-light.css` and rename it (e.g., `skin-forest.css`).
 2.  **Define Fonts and Variables**: Import your preferred typography (e.g., from Google Fonts, or locally loaded for better reader privacy and no telemetry) and update the main CSS color variables.
 3.  **Adjust Editor Typography**: Map heading styles and inline code elements. Make sure to apply `!important` to headings padding.
-4.  **Set Up Shortcode Styles**: Target the CodeMirror widget containers (`.cm-wysiwym-*`) and the HTML Preview equivalents (`.traven-preview *`) using the cheat sheet selectors.
+4.  **Set Up MDX Component Styles**: Target the CodeMirror widget containers (`.cm-wysiwym-*`) and the HTML Preview equivalents (`.traven-preview *`) using the cheat sheet selectors.
 5.  **Test Dark Mode**: Ensure variables and overrides resolve correctly when `.cm-wysiwym-dark` is toggled.
 6.  **Load the Skin**: Link your stylesheet in the `<head>` of your host application:
     ```html
@@ -71,7 +71,6 @@ graph TD
 > PenCMS packaging details: [`pencms-theme-development.md`](../pencms-theme-development.md) §6.
 
 ---
-
 
 ## 2. The eight shipping skins, side by side
 
@@ -145,19 +144,19 @@ The list below covers every selector a complete theme should consider. Anything 
 | `.cm-wysiwym-codeblock-line` | One line inside a fenced code block. Use `-first` / `-last` modifiers for rounded corners. |
 | `.cm-wysiwym-collapsed-fence` | A fence line whose text is hidden but the empty container still occupies space. **Set `height: 0 !important`.** |
 | `.cm-wysiwym-image-widget-container` | Legacy plain `![alt](src)` Markdown image widget. |
-| `.cm-wysiwym-image-container` | Advanced `[image ...]` shortcode widget. Same alignment helpers (`.align-left`, etc.) as the preview. |
+| `.cm-wysiwym-image-container` | Advanced `<Image />` widget. Same alignment helpers (`.align-left`, etc.) as the preview. |
 | `.cm-wysiwym-image-caption` | Caption text under the legacy image widget. |
-| `.cm-wysiwym-image-container .widget-meta` | The meta row under the advanced shortcode widget. |
-| `.cm-wysiwym-image-container .meta-badge` | "Tag name" pill (`[IMAGE]`, etc.). Use `.tag-name` for the first badge. |
+| `.cm-wysiwym-image-container .widget-meta` | The meta row under the advanced Image widget. |
+| `.cm-wysiwym-image-container .meta-badge` | "Tag name" pill (`IMAGE`, etc.). Use `.tag-name` for the first badge. |
 | `.cm-wysiwym-image-uploading` | Optimistic upload pill (green dashed border). |
-| `.cm-wysiwym-video-container` | `[video]` widget. |
+| `.cm-wysiwym-video-container` | `<Video />` widget. |
 | `.cm-wysiwym-video-container .video-placeholder`, `.video-placeholder-icon-wrap`, `.video-placeholder-details`, `.video-placeholder-platform`, `.video-placeholder-url` | Pieces of the video placeholder card. |
-| `.cm-wysiwym-audio-container` | `[audio]` widget, same shape as the video container. |
-| `.cm-wysiwym-component` | Generic `[component]` block, plus variants `.component-blockquote`, `.component-pullquote`, `.component-info`, `.component-warning`. |
+| `.cm-wysiwym-audio-container` | `<Audio />` widget, same shape as the video container. |
+| `.cm-wysiwym-component` | Generic `<Component>` / `<Callout>` / `<Quote>` block, plus variants `.component-blockquote`, `.component-pullquote`, `.component-info`, `.component-warning`. |
 | `.cm-wysiwym-component .component-body` | Inner body container. |
 | `.cm-wysiwym-component .component-body p` | Paragraphs inside the body. |
 | `.cm-wysiwym-component cite` | The "— Author, Source" line on blockquote components. |
-| `.cm-wysiwym-figure` | `[figure]` widget. Contains `.component-body` and `.figure-caption`. |
+| `.cm-wysiwym-figure` | `<Figure>` widget. Contains `.component-body` and `.figure-caption`. |
 | `.cm-wysiwym-table-row` | GFM table source line in raw editing mode. |
 | `.cm-wysiwym-table-widget` | Rendered WYSIWYM table (when the cursor is outside). Style `.cm-wysiwym-table-widget table`, `th`, `td` normally. |
 | `.cm-wysiwym-inline-math-widget` | Live LaTeX inline equation. |
@@ -174,6 +173,8 @@ All block widgets have an absolute-positioned icon that appears on hover:
 * `.cm-wysiwym-figure .figure-edit-icon`
 
 Style them like 24 × 24 px round buttons with a subtle border, hidden by `opacity: 0` and shown on `:hover` of the parent.
+
+> **Skin upgrade from ≤ 0.2.28:** widget and preview classes dropped the `shortcode` token. `.cm-wysiwym-image-shortcode-container` → `.cm-wysiwym-image-container` (same for video/audio); `.cm-wysiwym-component-shortcode` → `.cm-wysiwym-component`; `.cm-wysiwym-figure-shortcode` → `.cm-wysiwym-figure`; `.shortcode-meta` → `.widget-meta`; `.traven-image-shortcode` → `.traven-image` (same for video/audio/figure). Markdown `![alt](src)` still uses `.cm-wysiwym-image-widget-container`. JS widget class names (`ImageShortcodeWidget`, `ShortcodePlugin`) are unchanged.
 
 #### Syntax highlighting (optional)
 The CodeMirror Markdown highlighter tags tokens with classes in two parallel namespaces: `tok-*` and `cmt-*`. Style both for safety. The complete list is short:
@@ -223,35 +224,34 @@ Targets compiled HTML. Almost all of these are standard selectors nested inside 
 | `.traven-preview > h1:first-child`, `> h2:first-child`, `> h3:first-child` | First-child headings — match the editor's `padding-top` to avoid a visual jump. |
 | `.traven-preview p` | Paragraphs. `line-height` and `margin-bottom` only. |
 | `.traven-preview ul`, `ol`, `li` | Lists. `padding-left`, `li::marker` (color). |
-| `.traven-preview blockquote:not(.traven-component-pullquote)` | Native blockquotes. (The `:not()` keeps the `[pullquote]` shortcode from picking these styles up.) |
+| `.traven-preview blockquote:not(.traven-component-pullquote)` | Native blockquotes. (The `:not()` keeps `<Pullquote>` from picking these styles up.) |
 | `.traven-preview pre`, `.traven-preview code` | Code blocks and inline code. |
 | `.traven-preview a` | Links. |
 | `.traven-preview mark` | `==highlight==` output. |
 | `.traven-preview hr` | Horizontal rule. |
 | `.traven-preview table`, `th`, `td` | GFM tables. Set `height: 38px` on `th`/`td` to keep blank cells from collapsing. |
-| `.traven-preview img.traven-image` | The advanced image shortcode, no caption. |
-| `.traven-preview figure.traven-image-figure` | The advanced image shortcode, with caption. |
+| `.traven-preview img.traven-image` | The advanced `<Image />` tag, no caption. |
+| `.traven-preview figure.traven-image-figure` | The advanced `<Image />` tag, with caption. |
 | `.traven-preview figure.traven-image-figure figcaption.traven-image-caption` | Caption text. |
-| `.traven-preview .traven-video-container`, `figure.traven-video-figure` | `[video]` output. |
+| `.traven-preview .traven-video-container`, `figure.traven-video-figure` | `<Video />` output. |
 | `.traven-preview figure.traven-video-figure .traven-video-container`, `figcaption.traven-video-caption` | Inner video container + caption. |
-| `.traven-preview .traven-audio-container`, `figure.traven-audio-figure` | `[audio]` output. |
+| `.traven-preview .traven-audio-container`, `figure.traven-audio-figure` | `<Audio />` output. |
 | `.traven-preview .traven-audio-figure figcaption.traven-audio-caption` | Audio caption. |
-| `.traven-preview .traven-component` | Generic `[component]` card wrapper. |
-| `.traven-preview .traven-component-blockquote` | The `[quote]` / `[blockquote]` / `[component="blockquote"]` block. |
+| `.traven-preview .traven-component` | Generic `<Component>` card wrapper. |
+| `.traven-preview .traven-component-blockquote` | The `<Quote>` / `<Blockquote>` block. |
 | `.traven-preview .traven-component-blockquote::before` | Decorative opening quote (the editorial/write themes draw it with a `::before`; default/colorful/dark omit it). |
 | `.traven-preview .traven-component-blockquote footer`, `cite` | The optional citation. |
-| `.traven-preview .traven-component-pullquote` | The `[pullquote]` block. Optional decorative `::before` / `::after`. |
-| `.traven-preview .traven-component-info` | The `[info]` notice block. |
-| `.traven-preview .traven-component-warning` | The `[warning]` notice block. |
-| `.traven-preview .traven-component .component-header`, `.component-title` | Info/warning title row. Style weight/case; `padding-bottom` when open; zero when `details:not([open])`. Editor: padding, never vertical margin (§4.4). |
-| `.traven-preview .traven-figure` | The `[figure]` block wrapper. |
+| `.traven-preview .traven-component-pullquote` | The `<Pullquote>` block. Optional decorative `::before` / `::after`. |
+| `.traven-preview .traven-component-info` | The `<Callout type="info">` notice block. |
+| `.traven-preview .traven-component-warning` | The `<Callout type="warning">` notice block. |
+| `.traven-preview .traven-figure` | The `<Figure>` block wrapper. |
 | `.traven-preview .traven-figure-caption` | The caption inside `.traven-figure`. |
 | `.traven-preview .traven-figure.align-fullbleed` | Breakout. Same `100vw / calc(50% - 50vw)` pattern as images — **requires a centered containing block**. On PenCMS published pages with sidebars, override/scope in chrome CSS; see [`pencms-theme-development.md`](../pencms-theme-development.md) §8. |
-| `.traven-preview figure.traven-image-figure figcaption.traven-image-caption` | Caption of the `[image]` figure. |
+| `.traven-preview figure.traven-image-figure figcaption.traven-image-caption` | Caption of the `<Image />` figure. |
 
 #### Alignment helpers (shared between editor and preview)
 
-Every shortcode accepts `align="left|right|center|fullbleed"` and `size="small|medium|large|full"`. Both the editor widget and the preview HTML emit these as classes, so a single rule typically covers both scopes:
+Every media component accepts `align="left|right|center|fullbleed"` and `size="small|medium|large|full"`. Both the editor widget and the preview HTML emit these as classes, so a single rule typically covers both scopes:
 
 ```css
 .cm-wysiwym-image-container.align-left,
@@ -349,7 +349,7 @@ A blank Markdown line directly after a heading renders as a full-height empty `.
 Apply the same pattern around blockquotes (`+ .cm-line:has(br:only-child)` before *and* after) and after code-block fences (see [§4.5](#45-fenced-code-blocks)).
 
 ### 4.4 No floats or vertical margins in the editor
-Block widgets (`.cm-wysiwym-image-container`, `.cm-wysiwym-video-container`, `.cm-wysiwym-audio-container`, `.cm-wysiwym-figure`, and the component shortcode variants) are rendered as CodeMirror block decorations. CodeMirror's coordinate mapping assumes they sit in the normal document flow.
+Block widgets (`.cm-wysiwym-image-container`, `.cm-wysiwym-video-container`, `.cm-wysiwym-audio-container`, `.cm-wysiwym-figure`, and the component widget variants) are rendered as CodeMirror block decorations. CodeMirror's coordinate mapping assumes they sit in the normal document flow.
 
 * **No `float: left` or `float: right`** — floated elements wrap text around themselves, which CodeMirror doesn't expect. The result: mouse clicks below a floated widget land on the wrong line.
 * **No `margin-top` or `margin-bottom`** — same family of issues as [§4.1](#41-never-use-vertical-margins-on-line-elements).
@@ -438,7 +438,7 @@ Reduce the preview's blockquote vertical neighbors with a `:has()` selector to m
 }
 ```
 
-The same pattern is used around the `[component="blockquote"]` and `[info]`/`[warning]` blocks. (Search your theme for `:has(+ .traven-` to see them.)
+The same pattern is used around `<Quote>` and `<Callout type="info|warning">` blocks. (Search your theme for `:has(+ .traven-` to see them.)
 
 ### 5.3 Tables
 The live table widget (`.cm-wysiwym-table-widget table`) and the preview table (`.traven-preview table`) should share the same border colors, padding, and minimum cell height. All shipping themes set `height: 38px` on `th` and `td` so that an empty cell never collapses to zero.
@@ -454,7 +454,7 @@ In Traven, the default starter skin (`skin-starter.css` which is bundled inside 
   font-family: var(--traven-font-body) !important;
 }
 ```
-If your custom theme has elements that wrap nested paragraphs — such as standard blockquotes, blockquote components (`[component="blockquote"]`), and notice blocks (`[info]`, `[warning]`) — those nested paragraph tags will ignore the parent container's custom font declarations. Instead, they will inherit the starter skin's default body typeface (e.g. `Georgia`), breaking visual consistency.
+If your custom theme has elements that wrap nested paragraphs — such as standard blockquotes, `<Quote>` components, and callout blocks (`<Callout type="info">`, `<Callout type="warning">`) — those nested paragraph tags will ignore the parent container's custom font declarations. Instead, they will inherit the starter skin's default body typeface (e.g. `Georgia`), breaking visual consistency.
 
 #### The Fix
 To enforce your theme's custom typography on all nested structures, apply the `font-family` declaration using a selector targeting both the parent container and all its descendants (using `*`) along with `!important`:
@@ -475,11 +475,11 @@ This ensures the cascade correctly forces nested block contents to render using 
 
 ---
 
-## 6. Shortcode markup reference (cheat sheet)
+## 6. MDX component markup reference (cheat sheet)
 
 The fallback renderer emits **zero inline styles**; every visual decision is delegated to your theme. This section is a copy of the canonical markup in `docs/dev/shortcodestyles.css`, condensed for theme authors. Use the comment blocks in that file as your authoritative reference.
 
-### 6.1 `[image ...]`
+### 6.1 `<Image />`
 
 ```html
 <!-- No caption -->
@@ -498,15 +498,15 @@ The fallback renderer emits **zero inline styles**; every visual decision is del
 * **Alignment:** `align-left` / `align-right` / `align-center` / `align-fullbleed`
 * **Sizes:** `size-small` (~150 px), `size-medium` (~300 px), `size-large` (~600 px), `size-full` (100%)
 
-For `align-fullbleed`, the standard viewport breakout is:
+For `align-fullbleed`, use the standard 100vw breakout:
 
 ```css
 .traven-preview img.traven-image.align-fullbleed,
 .traven-preview figure.traven-image-figure.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
   border-radius: 0 !important;
   display: block !important;
   float: none !important;
@@ -516,7 +516,7 @@ For `align-fullbleed`, the standard viewport breakout is:
 
 This is correct in a **centered** preview pane *if* the theme wants wall-to-wall viewport fullbleed. PenCMS does **not** require that look — a wider-than-column stage that keeps full source height (casper-lite-style) is equally valid. Published templates also use `.traven-preview` on the article (and often `<body>`), so skin rules run inside site chrome. If you do use viewport math with asymmetric sidebars, the breakout fails (flush-left, gutter on the right). Fix in theme chrome or pick a non-viewport interpretation. Details: [`pencms-theme-development.md`](../pencms-theme-development.md) §8 *Fullbleed on published pages*. Do not paper over viewport math with JavaScript.
 
-### 6.2 `[video ...]`
+### 6.2 `<Video />`
 
 ```html
 <!-- YouTube / Vimeo / direct file, no caption -->
@@ -539,7 +539,7 @@ This is correct in a **centered** preview pane *if* the theme wants wall-to-wall
 * **Preview wrapper:** `.traven-preview .traven-video-container` (16:9 `aspect-ratio`), `.traven-preview figure.traven-video-figure`.
 * **Caption:** `figcaption.traven-video-caption`.
 
-### 6.3 `[audio ...]`
+### 6.3 `<Audio />`
 
 ```html
 <div class="traven-audio-container align-[a] size-[s] [custom]">
@@ -557,7 +557,7 @@ This is correct in a **centered** preview pane *if* the theme wants wall-to-wall
 
 Same alignment helpers as image/video.
 
-### 6.4 `[figure ...]...[/figure]`
+### 6.4 `<Figure>…</Figure>`
 
 Wraps arbitrary block content (tables, code blocks, images, etc.) in a captioned figure.
 
@@ -571,20 +571,18 @@ Wraps arbitrary block content (tables, code blocks, images, etc.) in a captioned
 * **Editor wrapper:** `.cm-wysiwym-figure` (with `.component-body` and `.figure-caption`).
 * **Preview wrapper:** `.traven-preview .traven-figure`.
 
-### 6.5 `[component]...[/component]` and its aliases
+### 6.5 `<Quote>`, `<Callout>`, `<Pullquote>`, and `<Component>`
 
-The `[component]` shortcode has a structural base class plus one variant class derived from the `name` attribute. Aliases normalize to the same variants:
+These tags share a structural base class plus one variant class derived from the resolved name:
 
 | Author writes | Compiles to |
 | :--- | :--- |
-| `[component name="blockquote"]...[/component]` | `.traven-component-blockquote` |
-| `[quote]...[/quote]`, `[blockquote]...[/blockquote]` | `.traven-component-blockquote` |
-| `[component="blockquote"]...[/component]` | `.traven-component-blockquote` |
-| `[pullquote]...[/pullquote]` | `.traven-component-pullquote` |
-| `[info]...[/info]`, `[component="info"]...[/component]` | `.traven-component-info` |
-| `[warning]...[/warning]`, `[component="warning"]...[/component]` | `.traven-component-warning` |
-| `[component="my-card"]...[/component]` | `.traven-component.traven-component-my-card` |
-| `[highlight]...[/highlight]` | `<mark>...</mark>` |
+| `<Quote>…</Quote>`, `<Blockquote>…</Blockquote>` | `.traven-component-blockquote` |
+| `<Pullquote>…</Pullquote>` | `.traven-component-pullquote` |
+| `<Callout type="info">…</Callout>` | `.traven-component-info` |
+| `<Callout type="warning">…</Callout>` | `.traven-component-warning` |
+| `<Component name="my-card">…</Component>` | `.traven-component.traven-component-my-card` |
+| `==highlight==` | `<mark>...</mark>` |
 
 HTML output by variant:
 
@@ -598,17 +596,10 @@ HTML output by variant:
 <!-- Pullquote -->
 <blockquote class="traven-component-pullquote"><p>Editorial emphasis.</p></blockquote>
 
-<!-- Info / Warning notice (non-collapsible) -->
+<!-- Info / Warning notice -->
 <div class="traven-component traven-component-info">
-  <div class="component-header"><span class="component-title">Title</span></div>
-  <div class="component-body"><p>Heads-up text…</p></div>
+  <p>Heads-up text…</p>
 </div>
-
-<!-- Collapsible info -->
-<details class="traven-component traven-component-info" open>
-  <summary class="component-header"><span class="component-title">Title</span></summary>
-  <div class="component-body"><p>…</p></div>
-</details>
 
 <!-- Generic / unknown name -->
 <div class="traven-component traven-component-my-card">
@@ -616,7 +607,7 @@ HTML output by variant:
 </div>
 ```
 
-The editorial and write themes draw the `[info]` and `[warning]` blocks with the "hand-drawn" border radius:
+The editorial and write themes draw the info and warning callout blocks with the "hand-drawn" border radius:
 
 ```css
 .traven-preview .traven-component-info,
@@ -627,26 +618,6 @@ The editorial and write themes draw the `[info]` and `[warning]` blocks with the
 ```
 
 The other themes use clean rounded rectangles. Either is a valid aesthetic — pick one and stay consistent.
-
-**Headers are required, not optional.** Unstyled `.component-title` / `.component-header` render as body copy glued to the card body — a recurring miss. Style them in **both** `.traven-preview` and `.cm-editor .cm-wysiwym-component`:
-
-```css
-.traven-preview .traven-component .component-title,
-.cm-editor .cm-wysiwym-component .component-title {
-  font-weight: 700;           /* and/or text-transform: uppercase */
-}
-.traven-preview .traven-component .component-header,
-.cm-editor .cm-wysiwym-component .component-header {
-  margin: 0 !important;       /* never vertical margin on the editor widget */
-  padding-bottom: 0.75rem;    /* gap under the title when open */
-}
-details.traven-component:not([open]) > summary.component-header,
-.cm-editor details.cm-wysiwym-component:not([open]) .component-header {
-  padding-bottom: 0 !important;
-}
-```
-
-Do **not** comma-group those preview rules with `.cm-wysiwym-component` if the shared block also sets `margin` or `float` — that is the GOTCHAS §5 selector trap. Preview may use `margin` on the **card**; the editor widget stays `margin: 0` + padding.
 
 ### 6.6 LaTeX math (when enabled)
 
@@ -669,7 +640,7 @@ The shipping editorial and write themes define these; the default/colorful/dark 
 > [!IMPORTANT]
 > **PenCMS Theming Policy:** The Traven Editor operates in a single default mode based on the active skin, and PenCMS themes default to a single mode. Dark mode rules in skins are optional reference for themes that implement a custom dark variant on the published site.
 
-Dark mode is **decoupled** between the editor and the surrounding page. If a theme implements an explicit dark variant, themes handle the resulting rules in two ways.
+Dark mode is **decoupled** between the editor and the surrounding page. The editor's toggle adds a `.cm-wysiwym-dark` class to its own host DOM nodes (and, in split-pane setups, to the preview container too). Themes handle the resulting rules in two ways.
 
 ### 7.1 The minimal approach (used by the default skin)
 Define light values at the top of the stylesheet and re-declare the same selectors with the dark prefix for the dark variants. The shipping pattern is to keep both halves of every selector adjacent, e.g.:
@@ -906,13 +877,13 @@ The minimum viable skin is short:
 .traven-preview a    { color: #8a5a2c; text-decoration: underline; }
 .traven-preview hr   { border: none; border-top: 1px solid #e6dfd1; margin: 24px 0; }
 .traven-preview mark { background-color: rgba(247, 200, 80, 0.45); border-radius: 3px; padding: 1px 4px; }
-/* …and one block per preview shortcode, mirroring the editor rules. */
+/* …and one block per preview MDX component, mirroring the editor rules. */
 
 /* 12. Dark mode — re-declare each rule under .cm-editor.cm-wysiwym-dark
    and .traven-preview.cm-wysiwym-dark, or use CSS variables (see §7.2). */
 ```
 
-That is the entire skeleton. A real theme fills in the remaining shortcodes, the bullet list marker, the frontmatter / table styles, the syntax highlighting tokens, the modal overlay overrides, and the dark variants.
+That is the entire skeleton. A real theme fills in the remaining MDX components, the bullet list marker, the frontmatter / table styles, the syntax highlighting tokens, the modal overlay overrides, and the dark variants.
 
 ### 8.3 Theme checklist
 Use this when reviewing a finished theme before publishing it.
@@ -927,9 +898,8 @@ Use this when reviewing a finished theme before publishing it.
 * [ ] `.cm-fat-cursor` has `opacity: 0.6 !important`.
 * [ ] All four image alignments and four image sizes work in both scopes.
 * [ ] All four video and audio alignments and four sizes work in both scopes.
-* [ ] The `[component]` aliases (`blockquote`, `pullquote`, `info`, `warning`) are styled.
-* [ ] Info/warning `.component-header` / `.component-title` are bold (and/or uppercase); padding under the title when open; none when collapsed; editor uses padding, not vertical margin (§4.4).
-* [ ] A `[component="my-custom-card"]` (generic / unknown) picks up the `.traven-component` + `.traven-component-my-custom-card` styling.
+* [ ] Quote, Pullquote, Callout info, and Callout warning variants are styled.
+* [ ] A `<Component name="my-custom-card">` (generic / unknown) picks up the `.traven-component` + `.traven-component-my-custom-card` styling.
 * [ ] `figcaption.traven-image-caption`, `figcaption.traven-video-caption`, `figcaption.traven-audio-caption`, `.traven-figure-caption` are styled.
 * [ ] First-child heading `margin-top` matches the editor's `padding-top` (§5.1).
 * [ ] `.traven-preview` first-child blockquote neighbors have reduced margins (§5.2).
@@ -995,7 +965,7 @@ If you just want to recolor or restyle a few elements without forking the file:
    }
    ```
 
-4. If you need a custom alignment or size (say `size-hero`), add the new utility classes to your overrides and add the corresponding attribute to the toolbar modal for that shortcode.
+4. If you need a custom alignment or size (say `size-hero`), add the new utility classes to your overrides and add the corresponding attribute to the toolbar modal for that component.
 
 ---
 
@@ -1053,8 +1023,8 @@ document.fonts.ready.then(() => {
 You can sanity-check a finished skin without writing tests:
 
 1. **Static check.** Open the file and grep for the rules in the [§8.3](#83-theme-checklist) checklist. Any miss is a bug.
-2. **Visual check.** Load the theme in one of the demos (`demo-inline.php`, `demo-form.php`, `demo-hybrid.php`, `demo-unified.php`, `demo-editorial.php`). The default dropdown at the top will list the new file automatically. Toggle dark mode, scroll a long document, and visit each shortcode.
-3. **Cursor accuracy.** Click around headings, blockquotes, and the shortcode widgets. The cursor should land precisely on the character under the mouse. If it doesn't, you almost certainly introduced a vertical margin or a `float` somewhere — see [§4](#4-codemirror-6-layout-engine-rules).
+2. **Visual check.** Load the theme in one of the demos (`demo-inline.php`, `demo-form.php`, `demo-hybrid.php`, `demo-unified.php`, `demo-editorial.php`). The default dropdown at the top will list the new file automatically. Toggle dark mode, scroll a long document, and visit each MDX component.
+3. **Cursor accuracy.** Click around headings, blockquotes, and the MDX component widgets. The cursor should land precisely on the character under the mouse. If it doesn't, you almost certainly introduced a vertical margin or a `float` somewhere — see [§4](#4-codemirror-6-layout-engine-rules).
 4. **Preview parity.** Toggle the preview tab (or open the split-pane demo) and compare. Headings should align; first-child headings should not jump; blockquote spacing should match the editor.
 5. **Build pipeline.** The theme is referenced by `<link>` tags in the demo pages only. The `dist/traven.css` bundle (built from `src/style.css`) provides **only** the dark-mode base styles and the math / Vim / scrollbar rules; the live themes live entirely in `packages/core/assets/skins/`. So you can iterate on a theme without ever running `npm run build`.
 
@@ -1091,8 +1061,8 @@ When you build a new theme, picking a "donor" from this table gets you 80% of th
 * **Scope** — a wrapper class that isolates CSS so the same selectors can mean different things in the live editor vs. the preview. The two scopes are `.cm-editor` and `.traven-preview`.
 * **Skin** — a single CSS file under `packages/core/assets/skins/` that styles a theme. Auto-discovered, hot-swappable at runtime.
 * **Toolbar** — a separate concern, governed by `packages/core/assets/toolbars/*.css`. Toolbar styles, presets, and JS runtime toggles live in their own files; see `../toolbars.md`.
-* **Shortcode** — a Traven-extended Markdown construct (`[image]`, `[video]`, `[audio]`, `[figure]`, `[component]`) parsed by a custom Lezer grammar in `src/*.js`. Shortcodes compile to clean semantic HTML in the preview.
-* **Decoration** — a CodeMirror 6 visual transformation of a range. Inlined in `wysiwym.js`. Decorations can be marks (`.cm-wysiwym-bold`) or block-replacement widgets (the `[image]` card).
+* **MDX component** — a capitalized tag (`<Image />`, `<Video />`, `<Audio />`, `<Figure>`, `<Quote>`, `<Callout>`, `<Component>`) parsed by `src/mdx-parser.js`. Components compile to clean semantic HTML in the preview.
+* **Decoration** — a CodeMirror 6 visual transformation of a range. Inlined in `wysiwym.js`. Decorations can be marks (`.cm-wysiwym-bold`) or block-replacement widgets (the `<Image />` card).
 * **Dark class** — `.cm-wysiwym-dark` toggled on the editor host DOM by `setTheme("dark")` and on the preview container by the demo's theme switcher.
 
 ---
@@ -1101,9 +1071,9 @@ When you build a new theme, picking a "donor" from this table gets you 80% of th
 
 * `../toolbars.md` — toolbar presets, sheets, dynamic toggles, and styles.
 * `../customization-styling.md` — skin customization, CSS button selectors table, and how to hide buttons.
-* `shortcodes-architecture.md` — what each shortcode compiles to, attribute parsing, and how to register a brand-new shortcode (parser, widget, and skin).
-* `shortcodes.md` — technical blueprint for adding custom shortcode support, including the regex/scanner pattern used in `wysiwym.js`.
-* `../installation-setup.md` — how to wire the editor into a host page.
-* `../api-reference.md` — full constructor options and instance methods (notably `setTheme()`, `setVimMode()`, `getUploadHandler()`).
-* `shortcodestyles.css` — the canonical copy-paste cheat sheet for every shortcode's HTML output and CSS variables, kept in sync with the cheat sheet summary in [§6](#6-shortcode-markup-reference-cheat-sheet).
+* `building-custom-shortcodes.md` — technical blueprint for adding custom MDX tags via `mdx-parser.js` and `component-plugin.js` (upstream Traven docs).
+* [`../traven-shortcodes.md`](../traven-shortcodes.md) — PenCMS authoring reference for built-in MDX components and wikilinks.
+* `../installation-setup.md` — how to wire the editor into a host page (upstream Traven docs).
+* [`AI-and-TravenEditor-API-reference.md`](AI-and-TravenEditor-API-reference.md) — constructor options and instance methods (notably `setTheme()`, `setVimMode()`, `getUploadHandler()`).
+* `shortcodestyles.css` — the canonical copy-paste cheat sheet for every component's HTML output and CSS variables, kept in sync with the cheat sheet summary in [§6](#6-mdx-component-markup-reference-cheat-sheet).
 * `knowledgebase.md` §2 and §6 — the engineering rules behind this guide (CodeMirror 6 pitfalls, dark-mode parity tips, list-parsing constraints). Read this if you plan to extend the editor itself.

@@ -268,7 +268,7 @@ Shared catalog: `Alpine.store('app').getPublishedLinkCatalog()` (also warms on e
 | `suggest_internal_links` | Same enrich shape; `query` required; live_only listing. |
 | `check_expand_refs` | `{ markdown? }` or `{ slug? }` — validates target slugs. |
 
-Insert from MCP via `write_content_file` with the shortcode string (no cursor). See [`mcp_guide.md`](./mcp_guide.md).
+Insert from MCP via `write_content_file` with the wikilink string (no cursor). See [`mcp_guide.md`](./mcp_guide.md).
 
 Principles (unchanged from [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md)):
 

@@ -793,7 +793,7 @@ Reference: `themes/freedomware` (`styles.css` grid shell + chrome resets; `skin-
 
 ---
 
-## 8. Shortcode styling guide
+## 8. MDX / component styling guide
 
 **Inventory of classes and attributes:** [`traven-shortcodes.md`](traven-shortcodes.md).  
 **Dual-scope selectors and float rules:** [`traven-theme-development.md`](dev/traven-theme-development.md) §3 and §6.
@@ -858,21 +858,21 @@ Legacy `<Figure>` output used `.figure-full` with the same size/align class patt
 
 #### Required CSS blocks (`styles.css`)
 
-Every new theme must ship **all** of the following in `assets/css/styles.css` (copy from `starter` as the baseline):
+Every new theme must ship **all** of the following in `assets/css/styles.css` (copy from `starter` as the baseline). Prefer current `figure.traven-image-figure` / `img.traven-image` selectors; keep `.gallery-single` / `.figure-full` for **legacy** published HTML:
 
-1. **Container** — `.gallery-single`, `.figure-full`: flex column, vertical margin, `clear: both`.
+1. **Container** — `figure.traven-image-figure` (and legacy `.gallery-single`, `.figure-full`): flex column, vertical margin, `clear: both`.
 2. **Default centering** — center the outer block unless floated left/right (see pitfall below).
-3. **`.photo-wrapper`** — overflow, border/frame per theme personality; `img { width: 100%; height: auto; }`.
+3. **Inner frame** — `img.traven-image { width: 100%; height: auto; }`; legacy `.photo-wrapper` overflow/border/frame per theme personality.
 4. **Classic markdown** — `img.classic-markdown`, `.classic-markdown-figure`, nested margin reset.
-5. **Sizes** — percentage widths on `.gallery-single.img--*`, `.gallery-single.size-*`, `.figure-full…`, plus bare `.img--*` / `.size-*` fallbacks.
-6. **Align** — `.align-left` / `.inline-image-left`, `.align-right` / `.inline-image-right`, `.align-center` / `.inline-image-center` (float + auto margins).
+5. **Sizes** — percentage widths on `figure.traven-image-figure.size-*` / `img.traven-image.size-*`, plus legacy `.gallery-single.img--*` / `.gallery-single.size-*` / `.figure-full…` and bare `.img--*` / `.size-*` fallbacks.
+6. **Align** — `.align-left` / `.align-right` / `.align-center` (and legacy `.inline-image-*` twins) with float + auto margins.
 7. **Mobile** — `@media (max-width: 640px)`: sizes → `width: 100%`, floats cleared.
 
 Do **not** put fullbleed breakout rules in this block if your theme already has a dedicated fullbleed section — keep fullbleed styling separate and tested (§8 *Fullbleed on published pages*).
 
 #### Centering pitfall — `align` is optional
 
-`align="center"` is **not** added unless the author sets `align` on the shortcode. A “centered small” image may be emitted as:
+`align="center"` is **not** added unless the author sets `align` on `<Image />`. New body markup is `figure.traven-image-figure` / `img.traven-image` (see above). Legacy published HTML may still look like:
 
 ```html
 <div class="gallery-single img--small size-small">…</div>
@@ -880,27 +880,33 @@ Do **not** put fullbleed breakout rules in this block if your theme already has 
 
 with **no** `.align-center`. Relying only on `.align-center { margin: auto }` leaves small images left-flush.
 
-**Required pattern** — default-center non-floated gallery blocks:
+**Required pattern** — default-center non-floated image blocks (legacy `.gallery-single` **and** current `figure.traven-image-figure` / `img.traven-image`):
 
 ```css
 .gallery-single.inline-image-center,
 .gallery-single.align-center,
-.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+figure.traven-image-figure.align-center,
+figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+img.traven-image.align-center,
+img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   float: none;
   margin-left: auto;
   margin-right: auto;
 }
 ```
 
-Also include `.inline-image-center` alongside `.align-center` in align utility rules.
+Also include `.inline-image-center` alongside `.align-center` in align utility rules (legacy).
 
 #### Size pitfall — scope the outer block, not the `img`
 
-Width constraints must apply to **`.gallery-single` / `.figure-full`**, not only to `img` or `.photo-wrapper`. The inner `img` should fill the wrapper (`width: 100%`). If the outer block stays `width: 100%` of the column, every size looks like `full`.
+Width constraints must apply to **`figure.traven-image-figure` / `img.traven-image`** (and legacy **`.gallery-single` / `.figure-full`**), not only to an inner frame. The inner `img` should fill the wrapper (`width: 100%`). If the outer block stays `width: 100%` of the column, every size looks like `full`.
 
 Use scoped selectors for specificity over stale skin utilities:
 
 ```css
+figure.traven-image-figure.size-small,
+img.traven-image.size-small,
 .gallery-single.img--small, .gallery-single.size-small,
 .figure-full.img--small, .figure-full.size-small {
   width: 30%;
@@ -1099,7 +1105,7 @@ For standalone `img.traven-image.align-fullbleed`, apply `aspect-ratio` + `objec
 
 #### Pitfall: fullbleed video — do not use `padding-bottom` for 16:9 on the figure
 
-Published `[video]` / `[youtube]` markup puts **align/size on the figure**, not on the inner player box:
+Published `<Video />` markup puts **align/size on the figure**, not on the inner player box:
 
 ```html
 <figure class="traven-video-figure align-fullbleed size-full">
@@ -1197,14 +1203,14 @@ YouTube/Vimeo iframes have a small intrinsic size when the shortcode omits `widt
 
 Symptom: large black letterbox with a small YouTube chrome centered at the top, for every size (full, fullbleed, medium, large). Fixed in keeper skins `starter`, `academic`, and `casper-lite`; already correct in `editorial` / `modern` / `dark` / `colorful`.
 
-Put these rules in `skin-{id}.css` (dual-duty). Tailwind themes still need this vanilla block in the skin — utility classes on Twig chrome do not style shortcode HTML emitted inside `.traven-preview`.
+Put these rules in `skin-{id}.css` (dual-duty). Tailwind themes still need this vanilla block in the skin — utility classes on Twig chrome do not style MDX/component HTML emitted inside `.traven-preview`.
 
 #### Markup to style
 
-PenCMS PHP may emit gallery wrappers alongside Traven classes. Style **both** until unified:
+Body `<Image />` emits Traven Session 5 classes. Legacy published posts may still have gallery wrappers — style those for old content only:
 
-- Traven: `figure.traven-image-figure.align-fullbleed`, `img.traven-image.align-fullbleed`
-- PenCMS gallery: `.gallery-single.align-fullbleed` (often with `.photo-wrapper` + `.caption`)
+- Current: `figure.traven-image-figure.align-fullbleed`, `img.traven-image.align-fullbleed`
+- Legacy gallery (historical body HTML / chrome galleries): `.gallery-single.align-fullbleed` (often with `.photo-wrapper` + `.caption`)
 
 #### Height: crop or preserve — also a theme choice
 
@@ -1634,15 +1640,15 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 - [ ] If using the classic `100vw` / `calc(50% - 50vw)` breakout: article column is **centered** at every layout where breakout is enabled (asymmetric sidebar grids will flush-left + right-gutter — see §8 Fullbleed)
 - [ ] Fullbleed verified on the **published** post template across the sidebar / multi-column breakpoint (not only in the admin editor)
 - [ ] No horizontal scrollbar / page-chrome shift from fullbleed; `body.traven-preview` does not inherit content-skin horizontal padding
-- [ ] PenCMS `.gallery-single.align-fullbleed` (if emitted) matches Traven figure/img fullbleed treatment
+- [ ] Legacy PenCMS `.gallery-single.align-fullbleed` (if present in old content or chrome galleries) matches Traven figure/img fullbleed treatment
 - [ ] Legacy `![alt](src)` remains readable (sensible default `img` rules)
-- [ ] Standard Markdown captioned images (`figure.classic-markdown-figure`) style the caption (`.caption` / `figcaption.caption`) to match the font-size, font-weight, color, and placement of shortcode image captions.
+- [ ] Standard Markdown captioned images (`figure.classic-markdown-figure`) style the caption (`.caption` / `figcaption.caption`) to match the font-size, font-weight, color, and placement of `<Image />` captions.
 - [ ] Reset margins on the nested image (`.classic-markdown-figure img.classic-markdown { margin: 0 auto; }`) and set vertical margins on the container `.classic-markdown-figure` to prevent excessive caption gap.
 
 #### Video & audio
 
-- [ ] `[video]` / `[youtube]`: container/figure + caption classes styled
-- [ ] `[audio]`: container/figure + caption styled
+- [ ] `<Video />` / YouTube: container/figure + caption classes styled
+- [ ] `<Audio />`: container/figure + caption styled
 - [ ] Align × size coverage for video (all 4 × 4, or document intentional subset with validator exemption — default expectation is full matrix)
 - [ ] Align × size coverage for audio (same)
 - [ ] Video iframe/video **fills** `.traven-video-container` (`position: relative` + `aspect-ratio: 16 / 9` on container; absolute `width/height: 100%` on iframe/video) — no black letterbox with a tiny player (see §8 *Pitfall: video iframe*)
@@ -1651,17 +1657,17 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 
 #### Figure
 
-- [ ] `[figure]` → `.traven-figure` + `.traven-figure-caption` styled `[R]` (fixture includes figure; also style PenCMS legacy `.figure-full` / `.caption` until PHP matches Traven)
+- [ ] `<Figure>` → `.traven-figure` + `.traven-figure-caption` styled `[R]` (fixture includes figure; also style PenCMS legacy `.figure-full` / `.caption` until old content is gone)
 
 #### Quotes & components
 
-- [ ] Blockquote shortcode → `.traven-component-blockquote` (+ footer/cite) styled distinctly from pullquote
-- [ ] Pullquote → `.traven-component-pullquote` styled **heavier / distinct** from blockquote and from native `blockquote`
+- [ ] `<Quote>` / blockquote component → `.traven-component-blockquote` (+ footer/cite) styled distinctly from pullquote
+- [ ] `<Pullquote>` → `.traven-component-pullquote` styled **heavier / distinct** from blockquote and from native `blockquote`
 - [ ] Native Markdown `blockquote` still styled (`blockquote:not(.traven-component-pullquote)` pattern)
-- [ ] `[info]` → `.traven-component-info` styled
-- [ ] `[warning]` → `.traven-component-warning` styled
+- [ ] `<Callout type="info">` / info → `.traven-component-info` styled
+- [ ] `<Callout type="warning">` / warning → `.traven-component-warning` styled
 - [ ] Info/warning **headers**: `.component-header` / `.component-title` are bold (and/or uppercase). Open state has padding under the title; `details:not([open])` does not. Editor widgets use padding, not vertical margin.
-- [ ] Generic `[component="…"]` → `.traven-component` (+ name modifier) has a sensible default `[O]` strongly recommended
+- [ ] Generic `<Component name="…">` → `.traven-component` (+ name modifier) has a sensible default `[O]` strongly recommended
 
 #### GitHub alerts
 
@@ -1674,7 +1680,7 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 
 #### Highlight
 
-- [ ] `mark` / highlight shortcode readable in base mode (and optional dark mode if built)
+- [ ] `mark` / highlight markup readable in base mode (and optional dark mode if built)
 
 ### 15.5 PenCMS integrations `[R]`
 
@@ -1796,10 +1802,10 @@ Same table as §1 — start there for role vs this guide.
 
 ### D. Migration notes
 
-1. **Add `traven-preview`:** Put `class="article-content traven-preview"` on every post/page body wrapper (and overrides that render HTML). Chrome-only `.article-content` rules are not enough for shortcodes.
-2. **Split chrome vs skin:** Move Traven shortcode / prose / alert rules into `assets/css/skin-{id}.css`. Keep listing cards and nav in chrome.
-3. **Ship PenCMS gallery rules in `styles.css`:** Add the §8 *PenCMS `[image]` / `.gallery-single`* blocks (sizes as %, default centering, classic markdown, mobile). Do not assume Traven `img.traven-image` rules cover `[image]` shortcodes.
-4. **Sync overlay base skins:** If using `editor_skin_base: ["starter"]`, update the **theme-local** `skin-starter.css` copy (percent sizes + gallery centering), not only the canonical `starter` theme folder.
+1. **Add `traven-preview`:** Put `class="article-content traven-preview"` on every post/page body wrapper (and overrides that render HTML). Chrome-only `.article-content` rules are not enough for MDX/component HTML.
+2. **Split chrome vs skin:** Move Traven component / prose / alert rules into `assets/css/skin-{id}.css`. Keep listing cards and nav in chrome.
+3. **Ship published image rules in `styles.css`:** Add the §8 *PenCMS `<Image />` / `img.traven-image`* blocks (sizes as %, default centering, classic markdown, mobile), plus **legacy** `.gallery-single` rules for historical body HTML. Do not assume Traven preview-only rules cover published chrome.
+4. **Sync overlay base skins:** If using `editor_skin_base: ["starter"]`, update the **theme-local** `skin-starter.css` copy (percent sizes + image centering), not only the canonical `starter` theme folder.
 5. **Theme-owned skins only:** Treat `themes/{id}/assets/css/skin-*.css` as source of truth. Do not add skins under `public/assets/vendor/traven/skins/` (removed post-S8.5).
 6. **Declare `editor_skin`:** Match the personality skin stem in `theme.json`.
 7. **Complete `social_preview`:** Copy a filled block from §11 / `dev/theme-social-preview.md`; ship TTF or empty `og_fonts` + engine fallback; add `defaulthero` when heroes are supported.

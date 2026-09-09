@@ -1,10 +1,8 @@
 """Unit tests for ReDoS-safe markdown/MDX/wikilink parsers in mcp_tools."""
 
 from routers.mcp_tools import (
-    _extract_image_shortcode_srcs,
     _extract_mdx_image_srcs,
     _has_empty_media_refs,
-    _iter_image_shortcode_attrs,
     _iter_mdx_image_attrs,
     _markdown_heading,
     _parse_expand_embed_refs,
@@ -48,11 +46,6 @@ def test_extract_quoted_image_srcs_skips_empty():
         "images/content/a.png",
         "images/content/b.png",
     ]
-    # Deprecated aliases keep working.
-    assert _extract_image_shortcode_srcs(body) == [
-        "images/content/a.png",
-        "images/content/b.png",
-    ]
 
 
 def test_has_empty_media_quoted_src():
@@ -75,7 +68,7 @@ def test_image_tag_case_unclosed_and_nested_close():
     assert _iter_mdx_image_attrs(
         '<Image no close <Image src="y.png">'
     ) == [' no close <Image src="y.png"']
-    assert _iter_image_shortcode_attrs('<Image src="y.png">') == [' src="y.png"']
+    assert _iter_mdx_image_attrs('<Image src="y.png">') == [' src="y.png"']
     assert _extract_mdx_image_srcs("<Image never closed") == []
     assert not _has_empty_media_refs("<Image never closed")
 
