@@ -38,8 +38,8 @@ Comprehensive blueprint for building **complete** PenCMS site themes: Twig chrom
 
 A theme that only styles chrome (header, cards, grid) is **incomplete**. Complete themes:
 
-1. Style Traven shortcodes under `.traven-preview` (editor + published).
-2. Style PenCMS PHP `[image]` output (`.gallery-single`, `.classic-markdown`) on the published site in `styles.css` (§8).
+1. Style Traven components under `.traven-preview` (editor + published).
+2. Style PenCMS PHP `<Image />` output (`img.traven-image`, `.classic-markdown`) on the published site in `styles.css` (§8).
 3. Ship dual-duty content CSS usable in the admin editor (`.cm-editor` + preview).
 4. Ship Social / OG defaults via `theme.json` → `social_preview`.
 
@@ -91,8 +91,8 @@ Themes land under `frontend-php/src/blog/themes/{theme-id}/`. Switch the active 
 
 1. Valid `theme.json` with `supports`, `variables`, complete `social_preview`, and `editor_skin` id.
 2. Mandatory templates + partials (§4).
-3. `assets/css/skin-{id}.css` covering dual scopes + Traven shortcode matrix (§6–§8).
-4. `assets/css/styles.css` for chrome **and** PenCMS PHP gallery / classic-markdown published rules (§8 *PenCMS `[image]` / `.gallery-single`*).
+3. `assets/css/skin-{id}.css` covering dual scopes + Traven component matrix (§6–§8).
+4. `assets/css/styles.css` for chrome **and** PenCMS PHP component / classic-markdown published rules (§8).
 5. Post/page bodies wrap HTML in `class="article-content traven-preview"`.
 6. Link the core font registry (`publicAsset('fonts/fonts.css')`) for Style Settings / registry fonts; keep theme-local woff2/`@font-face` only for private identity faces. Ship at least one OG-usable TTF/OTF under `assets/fonts/` **or** explicit empty `og_fonts` → engine fallback.
 7. `assets/images/defaulthero.jpg` when `supports.hero_image` is true.
@@ -467,7 +467,7 @@ ThemeEngine owns the language-sensitive document plumbing in both dynamic previe
 - ThemeEngine replaces the document `<html lang>` and injects the exact published detail-page `<link rel="alternate" hreflang="…">` set into `<head>`. Do not build a second peer-discovery path or emit draft/missing alternates in Twig.
 - Listing rows carry their actual `language` and `is_fallback`. Always call `contentUrl(dossier)` so translated rows use `/<lang>/<slug>/` and fallback rows continue to use the default URL. Use `archiveUrl()` for archive links.
 - Dynamic public entry points and static generation supply `canonical_url` for default and localized detail, home, search, and archive renders. ThemeEngine injects the canonical link centrally; use the context for OG metadata and do not reconstruct locale paths in Twig.
-- `[link]` resolves an exact localized sibling when one is live and otherwise links to the real default URL. `[expand]` / `[embed]` request the exact current locale and silently omit a missing peer rather than mixing body languages; their reader CTA comes from `strings.readMore`.
+- `[[slug|Label]]` links resolve an exact localized sibling when one is live and otherwise link to the real default URL. `[[>…]]` / `[[!…]]` request the exact current locale and silently omit a missing peer rather than mixing body languages; their reader CTA comes from `strings.readMore`.
 - Generated reading-time chrome uses `strings.minuteRead`, and datelines use `IntlDateFormatter` for the current locale when PHP Intl is available.
 - The shared `language-switcher` partial is progressive enhancement and strictly opt-in. Themes may include it where appropriate; a complete theme is not required to force switcher chrome. SEO alternates remain present without it or without JavaScript.
 - Search documents include `lang` only on active multilingual sites. RSS and generated public-site `llms.txt` remain default-language-only; themes must not advertise localized variants that do not exist.
@@ -542,11 +542,11 @@ For `post`, category is read from frontmatter. For `archive` / `page`, the key i
 
 | File | Owns | Must not own |
 |---|---|---|
-| `skin-{id}.css` | Prose, Traven shortcode classes, alerts, dual-scope editor widgets, content dark mode, caption tone | Site header grid, post-card listing chrome |
-| `styles.css` | Layout grid, header/nav/footer, cards, sidebars, chrome dark tweaks, **PenCMS PHP shortcode layout** (`.gallery-single`, `.classic-markdown`, size/align on published HTML) | Traven-only shortcode rules with no PenCMS gallery fallback; fullbleed breakout (theme-specific — see §8) |
+| `skin-{id}.css` | Prose, Traven component classes, alerts, dual-scope editor widgets, content dark mode, caption tone | Site header grid, post-card listing chrome |
+| `styles.css` | Layout grid, header/nav/footer, cards, sidebars, chrome dark tweaks, **PenCMS PHP component layout** (`img.traven-image`, `.classic-markdown`, size/align on published HTML) | Traven-only component rules with no PenCMS fallback; fullbleed breakout (theme-specific — see §8) |
 
 > [!IMPORTANT]
-> **PenCMS `[image]` is not the same markup as Traven `img.traven-image-shortcode`.** Both can appear in content. A complete published theme must style **both** paths until PHP unifies them (see §8 — *PenCMS `[image]` / `.gallery-single`*).
+> **PenCMS `<Image />` emits the same markup as Traven** (`img.traven-image` / `figure.traven-image-figure`). One skin covers both paths (see §8).
 
 > [!WARNING]
 > **Tailwind CSS & framework Preflight gotcha (editor ≠ published):**
@@ -558,7 +558,7 @@ For `post`, category is read from frontmatter. For `archive` / `page`, the key i
 >
 > **Risks to watch if you use Tailwind (or similar):**
 >
-> 1. **Preflight / base resets** — Published pages get global rules the editor never sees (e.g. `html`/`body` color like `#0f172a`, unstyled `figcaption` / `mark`). Override content tokens on `.traven-preview` and `.traven-preview p` (`color: var(--traven-text) !important`; `font-weight: 400 !important`) and style captions for **both** Traven (`figcaption.traven-image-caption`) and PenCMS PHP (`.gallery-single .caption`, `.figure-full .caption`, `.classic-markdown-figure .caption`, `figcaption.caption`).
+> 1. **Preflight / base resets** — Published pages get global rules the editor never sees (e.g. `html`/`body` color like `#0f172a`, unstyled `figcaption` / `mark`). Override content tokens on `.traven-preview` and `.traven-preview p` (`color: var(--traven-text) !important`; `font-weight: 400 !important`) and style captions for **both** Traven (`figcaption.traven-image-caption`) and classic Markdown (`.classic-markdown-figure .caption`, `figcaption.caption`).
 > 2. **`@font-face` must live in the skin** — Admin resolve loads `assets/css/skin-*.css` only. Faces declared solely in chrome `styles.css`, or inside a `<style type="text/tailwindcss">` block, **do not register in the editor**. The skin will name e.g. `"Inter"` and silently fall back to `-apple-system` / system UI while the published page paints the real webfont — same hex/weight, visibly different “ink.” Put self-hosted `@font-face { src: url('../fonts/….woff2') }` at the top of `skin-{id}.css` (see `editorial` / `modern` / remediated `casper-lite`). Keep chrome free to *reference* those families; do not make chrome the only place faces are defined.
 > 3. **Do not treat Tailwind Play / `type="text/tailwindcss"` as a font host** — `@font-face` inside deferred Tailwind compilation is unreliable (FOUT / missing faces). Use a real stylesheet `<link>` for the skin (as `_header` does with `theme.linkCss('css/skin-….css')`).
 >
@@ -807,46 +807,54 @@ Reference: `themes/freedomware` (`styles.css` grid shell + chrome resets; `skin-
 
 - Theme-only extras (`xsmall`, `xlarge`) are **non-canonical** — optional extensions; never required for compliance.
 - Fullbleed is an **alignment**, not a size. `size="full"` is column-width 100%; `align="fullbleed"` is a stronger breakout whose exact look is **theme-defined** (viewport wall-to-wall, wider stage, etc. — PenCMS does not prescribe one). See **Fullbleed on published pages** below.
-- Emitted as classes: `.align-{value}`, `.size-{value}`, and (PenCMS PHP only) `.img--{value}` duplicate on the same node.
+- Emitted as classes: `.align-{value}`, `.size-{value}`.
 
-**Published size scale (PenCMS `.gallery-single` / `.figure-full`)** — use **percentages of the article column**, not mixed fixed pixels + percentages. Keeper themes (`starter`, `editorial`, `academic`, `colorful`, `dark`, `modern`) share this scale:
+**Published size scale (`<Image />` / `<Video />` / `<Audio />`)** — use **percentages of the article column**, not mixed fixed pixels + percentages. Keeper themes (`starter`, `editorial`, `academic`, `colorful`, `dark`, `modern`) share this scale:
 
 | `size` | Width | Notes |
 |---|---|---|
 | `xsmall` (optional) | 20% | Theme extension only |
 | `small` | 30% | Must be visibly smaller than `medium` |
-| `medium` | 50% | Default when `size` omitted in `[image]` |
+| `medium` | 50% | Default when `size` omitted in `<Image />` |
 | `large` | 70% | Must stay narrower than `full` / fullbleed |
 | `full` / `xlarge` | 100% | Column width — not viewport breakout |
 
 **Why percentages:** A fixed `small` (e.g. 280px) plus `medium` at 50% collides on typical reading columns (~560px wide → 50% = 280px). Small images then look identical to medium regardless of alignment — a failure mode fixed across all keeper themes in 2026.
 
-Traven editor preview widgets may still use fixed pixel widths on `.cm-wysiwym-image-shortcode-container` for WYSIWYM chrome; **published** `.gallery-single` rules belong in `styles.css` (and overlay `skin-starter.css` copies when used).
+Traven editor preview widgets may still use fixed pixel widths on `.cm-wysiwym-image-shortcode-container` for WYSIWYM chrome; **published** `<Image />` rules belong in `styles.css` (and overlay `skin-starter.css` copies when used).
 
-### PenCMS `[image]` / `.gallery-single` (published HTML)
+### PenCMS `<Image />` (published HTML)
 
-PenCMS PHP (`ShortcodeProcessor`) emits **gallery wrappers**, not Traven `figure.traven-image-figure` nodes. Style this path in **`styles.css`** (and mirror generic `.size-*` / align utilities in the content skin for editor parity).
+PenCMS PHP (`ComponentProcessor`) emits Traven Session 5 markup — `img.traven-image` or `figure.traven-image-figure` + `figcaption.traven-image-caption`. Style this path in **`styles.css`** (and mirror generic `.size-*` / align utilities in the content skin for editor parity).
 
 #### Emitted markup
 
 ```html
-<div class="gallery-single align-center inline-image-center img--medium size-medium">
-  <div class="photo-wrapper">
-    <img src="…" alt="…">
-  </div>
-  <span class="caption">Optional caption</span>
-</div>
+<figure class="traven-image-figure align-center size-medium">
+  <img class="traven-image" src="…" alt="…">
+  <figcaption class="traven-image-caption">Optional caption</figcaption>
+</figure>
 ```
 
 | Piece | Detail |
 |---|---|
-| Outer block | `.gallery-single` (always) |
+| Outer block (new) | `figure.traven-image-figure` with caption, else bare `img.traven-image` |
+| Size classes (new) | `.size-{size}` on the outer figure / container / img |
+| Align classes (new) | `.align-{align}` on the outer figure / container / img |
+| Inner frame (new) | `img.traven-image` (`width: 100%` of the wrapper); video/audio use `.traven-video-container` / `.traven-audio-container` |
+| Caption (new) | `figcaption.traven-image-caption` |
+
+> **Legacy mapping:** body markup published before the MDX migration uses `.gallery-single` / `.figure-full` + `.photo-wrapper` + `span.caption` with duplicated `.img--{size}` classes. The CSS recipes below keep that historical output styled; apply the same rules to the new selectors above (e.g. every `.gallery-single.size-small` rule needs a `figure.traven-image-figure.size-small` / `img.traven-image.size-small` counterpart). Do not reintroduce `.gallery-single` from new `<Image />` output.
+
+| Legacy piece | Detail |
+|---|---|
+| Outer block (legacy) | `.gallery-single` (always) |
 | Size classes | **Both** `.img--{size}` and `.size-{size}` on the **outer** div |
 | Align classes | Only when `align="…"` is set: `.align-{align}` **and** `.inline-image-{align}` |
 | Inner frame | `.photo-wrapper` → `img` (img is always `width: 100%` of the wrapper) |
 | Caption | `span.caption` (not `figcaption`) |
 
-`[figure]` uses `.figure-full` with the same size/align class pattern when attrs are present.
+Legacy `<Figure>` output used `.figure-full` with the same size/align class pattern when attrs are present.
 
 #### Required CSS blocks (`styles.css`)
 
@@ -1232,21 +1240,21 @@ Viewport-wide images at native aspect ratio can become very tall (e.g. square so
 
 ### What every complete theme must style
 
-| Shortcode / surface | Preview targets (contract) | Notes |
+| Component / surface | Preview targets (contract) | Notes |
 |---|---|---|
-| `[image]` | `img.traven-image-shortcode`, `figure.traven-image-figure`, `figcaption.traven-image-caption` | Full 4×4 align×size; **also** PenCMS PHP `.gallery-single` + `.photo-wrapper` + `span.caption` (§8) |
+| `<Image />` | `img.traven-image`, `figure.traven-image-figure`, `figcaption.traven-image-caption` | Full 4×4 align×size (§8) |
 | Legacy `![alt](src)` | sensible default `img` | No layout attrs |
-| `[video]` / `[youtube]` | `.traven-video-container`, `figure.traven-video-figure`, captions | Same align×size matrix; **required** absolute fill inside 16:9 container (§8 *Pitfall: video iframe*) |
-| `[audio]` | `.traven-audio-container`, figure + caption | Same matrix |
-| `[figure]` | `.traven-figure`, `.traven-figure-caption` | Pair tag; legacy PHP may emit `.figure-full` |
+| `<Video />` | `.traven-video-container`, `figure.traven-video-figure`, captions | Same align×size matrix; **required** absolute fill inside 16:9 container (§8 *Pitfall: video iframe*) |
+| `<Audio />` | `.traven-audio-container`, figure + caption | Same matrix |
+| `<Figure>` | `.traven-figure` | Pair tag; inner Markdown compiled |
 | Blockquote | `.traven-component-blockquote` (+ footer/cite / `.attribution`) | Distinct from pullquote |
 | Pullquote | `.traven-component-pullquote` | Heavier / editorial |
 | Native `blockquote` | `blockquote:not(.traven-component-pullquote)` | Still readable |
-| `[info]` / `[warning]` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component-shortcode` ([`traven-theme-development.md`](dev/traven-theme-development.md) §4.4 / §6.5) |
+| `<Callout>` | `.traven-component-info` / `-warning`, **plus** `.component-header` / `.component-title` | Collapsible uses `<div>` + inner `<details>` / `<summary class="component-header">`. Titles must be styled (weight / case). Gap under the title is `padding-bottom` on the header **when open**; zero it on `details:not([open])`. Editor: padding only, never vertical `margin` on `.cm-wysiwym-component-shortcode` ([`traven-theme-development.md`](dev/traven-theme-development.md) §4.4 / §6.5) |
 | GitHub alerts | `.traven-alert`, `.traven-alert-{note,tip,important,warning,caution}` | Optional `::before` labels |
-| `[highlight]` / `==mark==` | `mark` | Light + dark contrast |
-| Generic `[component="…"]` | `.traven-component` + name modifier | Sensible default |
-| `[expand]` / `[embed]` | `.traven-expand-*`, `.traven-embed*` | Load CSS/JS assets (§12); optional `--traven-expand-*` tokens (§12) |
+| `==mark==` | `mark` | Light + dark contrast |
+| Generic `<Component>` | `.traven-component` + name modifier | Sensible default; theme `components/{name}.twig` wins when present |
+| `[[>…]]` / `[[!…]]` | `.traven-expand-*`, `.traven-embed*` | Load CSS/JS assets (§12); optional `--traven-expand-*` tokens (§12) |
 | Mermaid / KaTeX | fences / `$` / `$$` | Footer auto-render hooks, not skin-only |
 
 ### Align × size matrix
@@ -1263,15 +1271,15 @@ fullbleed  ✓        ✓       ✓      ✓   (size still applied inside breako
 
 Editor vs preview: do **not** float shortcode widgets in the editor; use auto-margins. Floats are fine under `.traven-preview`.
 
-### Example shortcodes
+### Example components
 
 ```markdown
-[image src="..." alt="..." align="center" size="medium" caption="Optional"]
-[video src="https://www.youtube.com/watch?v=…" align="center" size="large"]
-[audio src="..." align="center" size="large" caption="…"]
-[pullquote]Editorial emphasis.[/pullquote]
-[blockquote author="…" source="…"]Attributed quote.[/blockquote]
-[info title="Note"]Helpful context.[/info]
+<Image src="..." alt="..." align="center" size="medium" caption="Optional" />
+<Video src="https://www.youtube.com/watch?v=…" align="center" size="large" />
+<Audio src="..." align="center" size="large" caption="…" />
+<Pullquote>Editorial emphasis.</Pullquote>
+<Quote author="…" source="…">Attributed quote.</Quote>
+<Callout type="info" title="Note">Helpful context.</Callout>
 > [!WARNING]
 > Urgent attention needed.
 ```
@@ -1444,7 +1452,7 @@ When rendering dropdowns in primary/secondary navigation:
 
 #### Expand/embed panel styling (optional)
 
-Vendor file `frontend-php/public/assets/vendor/traven/expand-embed.css` ships default reader styling for `[expand]` nutshells and `[embed]` blocks. **Do not fork** that file for routine theme tweaks — override CSS custom properties in `styles.css` or `skin-{id}.css` instead.
+Vendor file `frontend-php/public/assets/vendor/traven/expand-embed.css` ships default reader styling for `[[>…]]` expand nutshells and `[[!…]]` embed blocks. **Do not fork** that file for routine theme tweaks — override CSS custom properties in `styles.css` or `skin-{id}.css` instead.
 
 **Default:** The expanded panel (`.traven-expand-panel`) uses a **transparent** background so it inherits the article/canvas background where it opens. Border and callout arrow outline use neutral slate defaults.
 
@@ -1609,19 +1617,17 @@ Copy a row per theme. Use `pass` / `fail` / `partial` / `n/a`.
 - [ ] Framework / Tailwind isolation `[D]` when chrome uses Preflight or similar: body `color` / `font-weight` and captions match between `.cm-editor` and `.traven-preview` (see §6 warning)
 - [ ] Custom reader `@font-face` rules live in `skin-{id}.css` (not only in chrome / Tailwind-inlined CSS) so the admin editor resolves the same family as published HTML `[D]`
 
-### 15.4 Shortcodes `[R]`
+### 15.4 Components `[R]`
 
 #### Images
 
-- [ ] `[image]` / `figure.traven-image-figure` / `img.traven-image-shortcode` styled
-- [ ] PenCMS PHP path: `.gallery-single`, `.photo-wrapper`, `span.caption` styled in `styles.css` `[R]`
+- [ ] `<Image />` / `figure.traven-image-figure` / `img.traven-image` styled
 - [ ] Captions: `figcaption.traven-image-caption` styled
 - [ ] All **four aligns** work: left, right, center, fullbleed
 - [ ] All **four sizes** work: small, medium, large, full
 - [ ] **Size scale uses column percentages** (30% / 50% / 70% / 100% for small/medium/large/full) — not mixed fixed `small` px + `%` medium `[R]`
-- [ ] Size widths apply to **outer** `.gallery-single` / `.figure-full`, not only inner `img` `[R]`
-- [ ] **Default centering** for `.gallery-single` without left/right align (do not require `.align-center` class) `[R]`
-- [ ] `.inline-image-center` included wherever `.align-center` is defined `[R]`
+- [ ] Size widths apply to the **outer** figure/container, not only inner `img` `[R]`
+- [ ] **Default centering** for `<Image />` without left/right align (do not require `.align-center` class) `[R]`
 - [ ] Overlay themes: theme-local `skin-starter.css` (or base skin) `.size-*` utilities match published percentages `[R]` when `editor_skin_base` is set
 - [ ] Fullbleed uses a deliberate breakout past `size="full"` (viewport, wider stage, or other documented design) — not an accidental duplicate of column-full
 - [ ] Fullbleed look is intentional for **this** theme (PenCMS does not require wall-to-wall or cropping; `editorial` and `casper-lite`-style stage+full-height are both valid — see §8 Fullbleed)
@@ -1740,7 +1746,7 @@ Complete object present with valid values (see [`dev/theme-social-preview.md`](d
 ### 15.10 Golden fixture QA `[R]`
 
 Fixture: `pencms-data/content/sites/default/demo-markdown/index.md`  
-**S3 landed:** full image align×size matrix (16 cells; diagonal captions); video/audio align/size spot-checks; one `[figure]`; one `[expand]` + one `[embed]`.
+**S3 landed:** full image align×size matrix (16 cells; diagonal captions); video/audio align/size spot-checks; one `<Figure>`; one `[[>…]]` + one `[[!…]]`.
 
 - [ ] Page opens under the theme without layout collapse
 - [ ] Image align × size matrix cells are visually distinct (not all identical widths — especially **small vs medium**)

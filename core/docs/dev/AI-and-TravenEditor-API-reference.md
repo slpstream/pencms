@@ -2,7 +2,7 @@
 
 This document provides a detailed reference of the options, methods, formatting helpers, and events available on the `TravenEditor` instance.
 
-For PenCMS-specific host features (link suggestions, `[expand]` / `[embed]`), see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).
+For PenCMS-specific host features (link suggestions, `[[>…]]` / `[[!…]]`), see [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).
 
 For the API of PenCMS, please consult the Swagger docs for the Python/FastAPI backend: `http://127.0.0.1:8008/api/docs`
 
@@ -30,7 +30,7 @@ Initializes a new editor instance.
 | `imageAspectOptions`<br>`Array<{ value: string, label: string }>` · *Default:* `null` | Optional host-declared Aspect pills for the Edit/Insert Image modal (Traven ≥ 0.2.25). When set and non-empty, advanced mode shows an Aspect row; values are managed as `class` tokens on `[image]`. PenCMS loads this from the active theme’s `theme.json` `editor_image_aspect` via `window.PEN_EDITOR_IMAGE_ASPECT`. Omit / `[]` → modal unchanged. |
 | `onListHeadings`<br>`function` · *Default:* `null` | Optional host callback for Expand/Embed Heading dropdown: `(slug: string) => Promise<{ title: string, level?: number }[]>`. Fallback when `onListExpandTargets` is omitted (Traven ≥ 0.2.21 + expand-embed ≥ 0.1.9). PenCMS implements via `store.getPageHeadings`. |
 | `onListExpandTargets`<br>`function` · *Default:* `null` | Preferred Expand/Embed target picker: `(slug: string) => Promise<{ summary?: string\|null, deck?: string\|null, headings: { title: string, level?: number }[] }>`. Modal: Whole post \| Summary \| Deck \| sections → `source="summary"` / `source="deck"` or `heading=` (Traven ≥ 0.2.24 + expand-embed ≥ 0.1.12). PenCMS implements via `store.getPageExpandTargets`. |
-| `plugins`<br>`Array<TravenPlugin>` · *Default:* `[]` | Additional host plugins registered at init (grammar via `getMarkdownConfig`, decorations, keymap, extensions, `onRegister`, HTML render). Core built-ins always load; host plugins append. Used by PenCMS for `[expand]`/`[embed]` (`ExpandEmbedPlugin`). |
+| `plugins`<br>`Array<TravenPlugin>` · *Default:* `[]` | Additional host plugins registered at init (grammar via `getMarkdownConfig`, decorations, keymap, extensions, `onRegister`, HTML render). Core built-ins always load; host plugins append. Used by PenCMS for `[[>…]]`/`[[!…]]` (`ExpandEmbedPlugin`). |
 | `extraTools`<br>`object` · *Default:* `null` | Optional map of toolbar tool definitions merged via `registerTools()` at init. Keys must also appear in `toolbar` (and/or `bubbleToolbar`) to show buttons (never added to `DEFAULT_TOOLBAR` / `DEFAULT_BUBBLE_TOOLBAR`). |
 | `onStatsUpdate`<br>`function` · *Default:* `null` | Callback fired when document stats change: `(stats: { words: number, characters: number, readTime: number }) => void`. |
 | `theme`<br>`"light" \| "dark"` · *Default:* `"light"` | Configures baseline cursor theme variables and dark mode class triggers. |
@@ -305,7 +305,7 @@ A convenience helper function to compile a Markdown string directly into HTML wi
 import { renderMarkdown, TravenPlugin } from "@freedomware/traven";
 import { ExpandEmbedPlugin } from "@freedomware/traven-expand-embed";
 
-const html = renderMarkdown("# Hello\n\n[expand slug=\"other\"]", [
+const html = renderMarkdown("# Hello\n\n[[>other|Read more]]", [
   new ExpandEmbedPlugin({ resolve: ({ slug }) => hostLookup(slug) }),
 ]);
 ```

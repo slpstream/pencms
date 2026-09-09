@@ -164,7 +164,7 @@ collections:
         type: list
         required: false
         default: []
-        description: "Optional Q&A pairs for this post/page. Each item is {q, a} strings. Empty list [] is valid and default (poetry, most news). Do not derive from [expand] or headings. Not every URL should have FAQs."
+        description: "Optional Q&A pairs for this post/page. Each item is {q, a} strings. Empty list [] is valid and default (poetry, most news). Do not derive from [[>…]] expands or headings. Not every URL should have FAQs."
 
       - name: trumpet
         type: string

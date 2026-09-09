@@ -2,8 +2,10 @@
 
 namespace Dossier;
 
+require_once __DIR__ . '/ContentUrls.php';
+
 /**
- * Resolves [expand]/[embed] targets for the active site.
+ * Resolves [[slug]] / [[!slug]] / [[>slug]] targets for the active site.
  *
  * Returns rendered HTML for a published post (optionally sliced by heading,
  * or frontmatter summary/deck when source=summary|deck), or null when the
@@ -130,7 +132,7 @@ class ExpandResolver {
      */
     private function appendReadMore(string $html, string $slug): string {
         $href = htmlspecialchars(
-            ShortcodeProcessor::resolveContentUrl($slug),
+            ContentUrls::resolveContentUrl($slug),
             ENT_QUOTES,
             'UTF-8'
         );

@@ -41,7 +41,7 @@ Admin theme cards look for a root-level `screenshot.webp` (not a `theme.json` fi
 > Prefer **plain vanilla CSS** for `assets/css/skin-{id}.css` + chrome when you control the theme in-house — that is how `starter`, `editorial`, `academic`, `colorful`, `dark`, and `modern` stay pixel-aligned between TravenEditor and published HTML. Independent designers may use Tailwind (or another framework) for chrome, but then they inherit Preflight / reset drift and must put **all dual-duty rules** (and any theme-local `@font-face` for private fonts) **in the skin**, not only in Tailwind-compiled `styles.css`. Registry families load via `publicAsset('fonts/fonts.css')` — see [`pencms-theme-development.md`](pencms-theme-development.md) §6 / §9.
 
 > [!IMPORTANT]
-> **PenCMS `[image]` shortcodes (published output):** Traven editor classes (`img.traven-image-shortcode`) are not the same as PHP gallery markup (`.gallery-single` + `.photo-wrapper`). New themes must copy the **§8 *PenCMS `[image]` / `.gallery-single`* CSS blocks** into `assets/css/styles.css` — percentage sizes (30% / 50% / 70%), default centering for non-floated gallery blocks, and classic-markdown figure rules. Use `starter` as the reference implementation. Fullbleed stays theme-specific; do not skip the rest of the image matrix.
+> **PenCMS `<Image />` (published output):** `ComponentProcessor` emits the same Traven Session 5 markup as the editor (`img.traven-image` / `figure.traven-image-figure`). New themes must ship the **§8 image CSS blocks** into `assets/css/styles.css` — percentage sizes (30% / 50% / 70%), default centering for non-floated blocks, and classic-markdown figure rules. Use `starter` as the reference implementation. Fullbleed stays theme-specific; do not skip the rest of the image matrix.
 
 > [!WARNING]
 > **Video players (required in every skin):** `.traven-video-container` needs `position: relative` + `aspect-ratio: 16 / 9`, and the inner `iframe`/`video` must be `position: absolute; width/height: 100%`. `max-width: 100%` alone leaves a black letterbox with a tiny YouTube thumbnail. Put this in `skin-{id}.css` even if chrome uses Tailwind. Details: [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Pitfall: video iframe*.
@@ -125,12 +125,12 @@ Manual capture (install theme cards): [`frontend-php/cli-tools/capture-theme-scr
 |---|---|
 | Complete theme blueprint (layers A/B/C, dual-duty, shortcodes, OG, checklist) | [`pencms-theme-development.md`](pencms-theme-development.md) |
 | Operator-tunable style tokens (`style` block in `theme.json`) | [`pencms-theme-development.md`](pencms-theme-development.md) §4.2 |
-| PenCMS `[image]` / `.gallery-single` (sizes, centering, classic markdown) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *PenCMS `[image]` / `.gallery-single`* |
+| PenCMS `<Image />` (sizes, centering, classic markdown) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 |
 | Fullbleed on published pages (centered-column prerequisite, sidebar grids) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Fullbleed on published pages* |
 | Fullbleed **stage** recipe (asymmetric sidebars / casper-lite) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Wider-than-column stage* |
 | Fullbleed **video** double-height gap (`padding-bottom` vs `aspect-ratio`) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Pitfall: fullbleed video* |
 | Video iframe must fill 16:9 container (absolute stretch) | [`pencms-theme-development.md`](pencms-theme-development.md) §8 — *Pitfall: video iframe* |
-| Shortcode attrs / emitted HTML / matrices | [`traven-shortcodes.md`](traven-shortcodes.md) |
+| Component attrs / emitted HTML / matrices | [`traven-shortcodes.md`](traven-shortcodes.md) |
 | Dual-scope CSS selector bible | [`traven-theme-development.md`](dev/traven-theme-development.md) |
 | `social_preview` field contract | [`dev/theme-social-preview.md`](dev/theme-social-preview.md) |
 | Expand/embed host wiring | [`editor-link-suggest-and-expand.md`](editor-link-suggest-and-expand.md) |

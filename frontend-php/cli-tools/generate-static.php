@@ -19,7 +19,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/core/PostRenderer.php';
 require_once __DIR__ . '/../src/core/DossierDiscovery.php';
-require_once __DIR__ . '/../src/core/ShortcodeProcessor.php';
+require_once __DIR__ . '/../src/core/ContentUrls.php';
 require_once __DIR__ . '/../src/core/InternalAPIClient.php';
 require_once __DIR__ . '/../src/core/ThemeEngine.php';
 require_once __DIR__ . '/../src/core/TaxonomySlug.php';
@@ -34,7 +34,7 @@ require_once __DIR__ . '/../src/core/StaticSeo.php';
 
 use Dossier\PostRenderer;
 use Dossier\DossierDiscovery;
-use Dossier\ShortcodeProcessor;
+use Dossier\ContentUrls;
 use Dossier\InternalAPIClient;
 use Dossier\ThemeEngine;
 use Dossier\RssFeedBuilder;
@@ -498,12 +498,12 @@ function buildStaticSite(
     foreach ($allPagesAndPosts as $d) {
         $lookupTable[$d['slug']] = $d['section'];
     }
-    ShortcodeProcessor::$linkLookup = $lookupTable;
+    ContentUrls::$linkLookup = $lookupTable;
 
     // 3. Render Home Page
     echo "📄 Rendering Home Page...\n";
     $theme = ThemeEngine::fromConfig($configPath, true, './', $siteId, $presentation);
-    ShortcodeProcessor::$basePath = './';
+    ContentUrls::$basePath = './';
 
     $homeHtml = $theme->render('index', [
         'dossiers' => $allDossiers,
@@ -586,7 +586,7 @@ function buildStaticSite(
         mkdir($dossierDir, 0777, true);
 
         $theme = ThemeEngine::fromConfig($configPath, true, '../', $siteId, $presentation);
-        ShortcodeProcessor::$basePath = '../';
+        ContentUrls::$basePath = '../';
 
         try {
             $pageData = $renderer->renderPage($section, $slug);
@@ -683,7 +683,7 @@ function buildStaticSite(
                 $siteId,
                 $presentation
             );
-            ShortcodeProcessor::$basePath = $relativeRoot;
+            ContentUrls::$basePath = $relativeRoot;
 
             try {
                 $pageData = $renderer->renderPage(

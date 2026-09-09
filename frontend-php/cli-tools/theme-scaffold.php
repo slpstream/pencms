@@ -381,7 +381,7 @@ file_put_contents(
     $targetDir . '/assets/css/skin-' . $themeName . '.css',
     "/* Dual-duty content skin: {$themeName}\n" .
     " * Scopes: .cm-editor (admin WYSIWYM) + .traven-preview (published HTML)\n" .
-    " * Expand shortcode / alert / align×size rules per pencms-theme-development.md.\n" .
+    " * Expand/embed + wikilink / alert / align×size rules per pencms-theme-development.md.\n" .
     " */\n\n" .
     ".cm-editor {\n" .
     "    font-family: system-ui, sans-serif;\n" .

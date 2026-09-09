@@ -540,7 +540,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "update_frontmatter_field",
       description:
-        "Update a single metadata/frontmatter field of the current post (e.g. status, category, date, publish_at, deck, summary, faqs, hero_image, hero_title, trumpet, author, pinned). faqs is a list of {q, a} strings; pass [] to clear. Empty list is valid. Do not derive faqs from [expand] or headings. To schedule a future go-live, set status to 'published' AND publish_at to a UTC ISO-8601 datetime ending in Z (two calls, or use write_content_file with both fields). Note: The public title/headline printed on the post page is 'hero_title'. The 'name' field is strictly the internal/SEO post title (somewhat akin to a slug or folder identifier). When the user asks to change the title/headline of the post, you MUST update 'hero_title' (not 'name'). For byline attribution use key 'author' with a site author display name from list_authors/create_author — never put a person name in 'name'. Do NOT set pinned to true unless the operator explicitly asks to pin a post. Automatically snapshots state to the undo stack.",
+        "Update a single metadata/frontmatter field of the current post (e.g. status, category, date, publish_at, deck, summary, faqs, hero_image, hero_title, trumpet, author, pinned). faqs is a list of {q, a} strings; pass [] to clear. Empty list is valid. Do not derive faqs from [[>…]] expands or headings. To schedule a future go-live, set status to 'published' AND publish_at to a UTC ISO-8601 datetime ending in Z (two calls, or use write_content_file with both fields). Note: The public title/headline printed on the post page is 'hero_title'. The 'name' field is strictly the internal/SEO post title (somewhat akin to a slug or folder identifier). When the user asks to change the title/headline of the post, you MUST update 'hero_title' (not 'name'). For byline attribution use key 'author' with a site author display name from list_authors/create_author — never put a person name in 'name'. Do NOT set pinned to true unless the operator explicitly asks to pin a post. Automatically snapshots state to the undo stack.",
       parameters: {
         type: "object",
         properties: {
@@ -581,7 +581,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "suggest_internal_links",
       description:
-        "Suggest published internal pages for Markdown links OR [expand]/[embed] Nutshell shortcodes. Returns live-published targets only (respects publish_at). Each result includes suggested_text (good default for link label / expand text=), markdown_link, and expand_shortcode stub. For Nutshells prefer insert_expand_embed after picking a slug; for normal navigation use [text](slug) — do not force expand for every suggestion.",
+        "Suggest published internal pages for Markdown links OR [[>…]] / [[!…]] Nutshell wikilinks. Returns live-published targets only (respects publish_at). Each result includes suggested_text (good default for link label / expand text), markdown_link, and wikilink stub. For Nutshells prefer insert_expand_embed after picking a slug; for normal navigation use [text](slug) — do not force expand for every suggestion.",
       parameters: {
         type: "object",
         properties: {
@@ -599,7 +599,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "insert_expand_embed",
       description:
-        "Build a valid [expand] or [embed] shortcode and insert it at the selection or cursor. Validates the slug against the live published catalog (refuses unpublished/missing). Prefer this over hand-writing shortcodes. text= is the visible label; heading= is only an optional section slice on the target — never put the spoken label in heading. source=\"summary\" uses frontmatter summary; source=\"deck\" uses frontmatter deck (each with Read more). Never combine source with heading.",
+        "Build a valid [[>…]] expand or [[!…]] embed wikilink and insert it at the selection or cursor. Validates the slug against the live published catalog (refuses unpublished/missing). Prefer this over hand-writing wikilinks. The label goes after | (e.g. [[>slug|visible label]]); heading is an optional #Section suffix for a section slice on the target — never put the spoken label in the heading. ^summary uses frontmatter summary; ^deck uses frontmatter deck (each with Read more). Never combine a source with a heading.",
       parameters: {
         type: "object",
         properties: {
@@ -644,7 +644,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "check_expand_refs",
       description:
-        "Validate [expand]/[embed] shortcodes in the current open document (main + partials) or in an optional markdown string. Flags missing or unpublished target slugs. Heading misses are not broken (PHP falls back to the whole post).",
+        "Validate [[>…]] / [[!…]] wikilinks in the current open document (main + partials) or in an optional markdown string. Flags missing or unpublished target slugs. Heading misses are not broken (PHP falls back to the whole post).",
       parameters: {
         type: "object",
         properties: {
@@ -706,7 +706,7 @@ const TOOL_DEFINITIONS = [
     function: {
       name: "generate_media",
       description:
-        "Generate an image via a configured model preset and store it in the media library. Returns relative_path / use_for_embedding (copy these into [image src=\"...\"] shortcodes and frontmatter fields like hero_image / main_image — never invent filenames) and public_url (chat preview only: ![alt](public_url)). The image is saved automatically; do NOT call attach_image_to_post for these.",
+        "Generate an image via a configured model preset and store it in the media library. Returns relative_path / use_for_embedding (copy these into <Image src=\"...\" /> tags and frontmatter fields like hero_image / main_image — never invent filenames) and public_url (chat preview only: ![alt](public_url)). The image is saved automatically; do NOT call attach_image_to_post for these.",
       parameters: {
         type: "object",
         properties: {
@@ -1500,43 +1500,43 @@ These rules determine which tool to call for an edit. When in doubt, default to 
 - **Site authors & bylines:** Prefer \`list_authors\` and reuse an existing \`authors[].name\`. If missing, call \`create_author\` then set the open post’s byline with \`update_frontmatter_field\` key \`author\` = that display **name** (not the slug). Author tools manage plain-text bios; \`update_frontmatter_field\` / \`write_content_file\` only set the byline string — they do not replace bio CRUD. Do not invent slug-only bylines; do not raw-write \`authors.yaml\`.
 - **Composite documents** → prefer \`write_content_file\` with the full \`body\` (and \`partials\` if fragment edits are needed) rather than mixing inline tools across fragments.
 - **Suggesting internal links or Nutshells** → call \`suggest_internal_links\` to find live-published posts/pages. For a normal link, insert \`[label](slug)\` (or use \`markdown_link\` from the result). For a Nutshell/expand/embed: call \`insert_expand_embed\` (after \`list_page_headings\` if they named a section). Optionally call \`check_expand_refs\` after writing. Never invent slugs; never force expand when the user asked for a normal link.
-- **Attaching user-uploaded images to the post** → call \`attach_image_to_post\` with the correct \`image_index\` (shown in the \`<attached_images>\` list) and a \`filename\`. This writes the image to the media gallery. It does NOT insert the image into the body — you must separately call \`write_content_file\` with the image shortcode (e.g. \`[image src="..." ...]\`) to add it to the post body. Only call this tool when the user explicitly asks you to include an attached image in the post or media gallery.
-- **AI-generated images** → after calling \`generate_media\`, the image is already saved in the media gallery. Do NOT call \`attach_image_to_post\` for AI-generated images — that tool is only for user-uploaded attachments. **After generate_media, copy \`relative_path\` (or \`use_for_embedding\`) verbatim** into \`[image src="..."]\` via \`write_content_file\` **and** into frontmatter fields like \`hero_image\` / \`main_image\` — never invent basenames (e.g. \`hero.jpg\`) and never put \`public_url\` in body or frontmatter. If you want to show or preview the generated image directly to the user in your chat message response, use standard Markdown image syntax: \`![alt_text](public_url)\` (using the \`public_url\` returned by the tool).
+- **Attaching user-uploaded images to the post** → call \`attach_image_to_post\` with the correct \`image_index\` (shown in the \`<attached_images>\` list) and a \`filename\`. This writes the image to the media gallery. It does NOT insert the image into the body — you must separately call \`write_content_file\` with an MDX image tag (e.g. \`<Image src="..." />\`) to add it to the post body. Only call this tool when the user explicitly asks you to include an attached image in the post or media gallery.
+- **AI-generated images** → after calling \`generate_media\`, the image is already saved in the media gallery. Do NOT call \`attach_image_to_post\` for AI-generated images — that tool is only for user-uploaded attachments. **After generate_media, copy \`relative_path\` (or \`use_for_embedding\`) verbatim** into \`<Image src="..." />\` via \`write_content_file\` **and** into frontmatter fields like \`hero_image\` / \`main_image\` — never invent basenames (e.g. \`hero.jpg\`) and never put \`public_url\` in body or frontmatter. If you want to show or preview the generated image directly to the user in your chat message response, use standard Markdown image syntax: \`![alt_text](public_url)\` (using the \`public_url\` returned by the tool).
 - \`get_document_outline\` and \`get_selection_context\` are for grounding when context is ambiguous — the document body and frontmatter below are already in your prompt, so you usually do not need them before a write.
 
 ## Your Specialties
 - Writing compelling, readable markdown content
 - SEO optimization: meta descriptions (150-160 chars), title tags, header hierarchy, keyword placement
-- Recommending internal linking and Nutshells (\`[expand]\` / \`[embed]\`): identifying opportunities to link to or in-place expand other published pages
+- Recommending internal linking and Nutshells (\`[[>…]]\` / \`[[!…]]\`): identifying opportunities to link to or in-place expand other published pages
 - Content structure: logical heading flow, scannable paragraphs, effective use of lists
 - Readability improvements: active voice, concise sentences, clear transitions
 - Frontmatter optimization
 - Markdown formatting best practices
 
 ## Editor Syntax Conventions (use these instead of standard Markdown)
-PenCMS extends standard Markdown with custom shortcodes. Always prefer these custom shortcodes over standard Markdown where applicable:
-- Images: [image src="..." align="center" size="full" alt="..." caption="..."] (supports size="full|medium|small", align="center|left|right")
-  * **Note on Image Display contexts:** Use the \`[image src="relative_path"]\` custom shortcode syntax ONLY when writing/updating the post body (e.g. via \`write_content_file\`). Copy the same \`relative_path\` into frontmatter \`hero_image\` / \`main_image\` when setting those fields. For showing/rendering images inline in your assistant chat replies to the user, use standard Markdown image syntax \`![alt](public_url)\` with the returned \`public_url\`.
-- Video/Audio: [video src="..." align="center" size="medium" caption="..."] (or [youtube src="..." ...]) and [audio src="..." caption="..."]
-- Quotes/Blockquotes: Use [quote author="..." source="..."]...[/quote] or [blockquote author="..." source="..."]...[/blockquote] for citations.
-- Pullquotes: Use [pullquote]...[/pullquote] for large, magazine-style pull-out quotes.
+PenCMS extends standard Markdown with MDX components and wikilinks. Always prefer these over standard Markdown where applicable:
+- Images: <Image src="..." align="center" size="full" alt="..." caption="..." /> (supports size="full|medium|small", align="center|left|right")
+  * **Note on Image Display contexts:** Use the \`<Image src="relative_path" />\` MDX syntax ONLY when writing/updating the post body (e.g. via \`write_content_file\`). Copy the same \`relative_path\` into frontmatter \`hero_image\` / \`main_image\` when setting those fields. For showing/rendering images inline in your assistant chat replies to the user, use standard Markdown image syntax \`![alt](public_url)\` with the returned \`public_url\`.
+- Video/Audio: <Video src="..." align="center" size="medium" caption="..." /> and <Audio src="..." caption="..." />
+- Quotes/Blockquotes: Use <Quote author="..." source="...">...</Quote> for citations.
+- Pullquotes: Use <Pullquote>...</Pullquote> for large, magazine-style pull-out quotes.
 - Notice Callouts (Info & Warning Boxes):
-  - Component shortcodes (Preferred for blocks with titles or collapsible content):
-    * [info title="..." collapsible="true"]...[/info] for tips, notes, or info callouts.
-    * [warning title="..." collapsible="false"]...[/warning] for critical alerts or warnings.
+  - MDX components (Preferred for blocks with titles or collapsible content):
+    * <Callout type="info" title="..." collapsible="true">...</Callout> for tips, notes, or info callouts.
+    * <Callout type="warning" title="..." collapsible="false">...</Callout> for critical alerts or warnings.
   - GitHub-style Alert Callouts (Alternative):
     > [!NOTE]
     > Useful info...
     (Supported types: [!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION])
-- Highlights: Use ==highlighted text== or [highlight]highlighted text[/highlight] to highlight inline or block text.
-- **Internal links vs Nutshells (expand / embed):** When the user says "nutshell", "expand in place", "click to reveal", or wants a phrase to open another post without leaving the page, use \`[expand]\` — not a normal Markdown link. When they want another post always visible inline, use \`[embed]\`.
-  - Normal navigation link: \`[Link Text](slug)\` (slug only — never invent paths).
-  - Expand (Nutshell, collapsed until clicked): \`[expand slug="target-slug" text="visible label"]\`
-  - Expand a **section** of the target: \`[expand slug="target-slug" text="visible label" heading="Exact Section Heading"]\`
-  - Expand the target’s **Summary** nutshell: \`[expand slug="target-slug" text="visible label" source="summary"]\` (frontmatter summary + Read more; never combine with \`heading\`)
-  - Expand the target’s **Deck** nutshell: \`[expand slug="target-slug" text="visible label" source="deck"]\` (frontmatter deck + Read more; never combine with \`heading\`)
-  - Embed (always visible): \`[embed slug="target-slug"]\` or with a section: \`[embed slug="target-slug" heading="Exact Section Heading"]\`. Optional \`text\` only affects the editor chip, not the public embed body.
-  - **\`text\`** = clickable / chip label (what the reader sees). **\`heading\`** = optional section to slice inside the target — never put display copy in \`heading\`. **\`source="summary"\`** / **\`source="deck"\`** = distinct frontmatter nutshell bodies (no cross-fallback).
+- Highlights: Use ==highlighted text== to highlight inline or block text.
+- **Internal links vs Nutshells (expand / embed):** When the user says "nutshell", "expand in place", "click to reveal", or wants a phrase to open another post without leaving the page, use an expand wikilink — not a normal Markdown link. When they want another post always visible inline, use an embed wikilink.
+  - Normal navigation link: \`[Link Text](slug)\` (slug only — never invent paths). Internal reference form: \`[[slug|Link Text]]\`.
+  - Expand (Nutshell, collapsed until clicked): \`[[>target-slug|visible label]]\`
+  - Expand a **section** of the target: \`[[>target-slug#Exact Section Heading|visible label]]\`
+  - Expand the target’s **Summary** nutshell: \`[[>target-slug^summary|visible label]]\` (frontmatter summary + Read more; never combine with a heading)
+  - Expand the target’s **Deck** nutshell: \`[[>target-slug^deck|visible label]]\` (frontmatter deck + Read more; never combine with a heading)
+  - Embed (always visible): \`[[!target-slug]]\` or with a section: \`[[!target-slug#Exact Section Heading]]\`.
+  - **label after \`|\`** = clickable text (what the reader sees). **\`#Heading\`** = optional section to slice inside the target — never put display copy in the heading. **\`^summary\`** / **\`^deck\`** = distinct frontmatter nutshell bodies (no cross-fallback).
   - Nutshell workflow: \`suggest_internal_links\` → (optional) \`list_page_headings\` when they ask for a section, or \`source: "summary"\` / \`source: "deck"\` for a nutshell → \`insert_expand_embed\` → optional \`check_expand_refs\`. Example: "put Finland as a nutshell next to the Santa text" → suggest Finland/Christmas slug → \`insert_expand_embed\` with mode=expand, text="Finland".
 
 ### Heading Convention
@@ -1712,7 +1712,7 @@ When writing or updating frontmatter, follow these rules exactly:
 
         if (preventEmptyMedia) {
           guardrailsBlock += `- **Media Integrity**: You must never write empty image \`src=""\` or placeholder image links. If image paths are unknown, use a valid placeholder image path or ask the user.\n`;
-          guardrailsBlock += `- **Media paths after generate_media**: Always use the returned \`relative_path\` (or \`use_for_embedding\`) in \`[image src]\`, \`hero_image\`, and \`main_image\` — never invent filenames; never paste \`public_url\` into body or frontmatter.\n`;
+          guardrailsBlock += `- **Media paths after generate_media**: Always use the returned \`relative_path\` (or \`use_for_embedding\`) in \`<Image src>\`, \`hero_image\`, and \`main_image\` — never invent filenames; never paste \`public_url\` into body or frontmatter.\n`;
         }
         guardrailsBlock += `- **Quality Review**: When the user asks to review, evaluate, or check if a post is ready for publishing, call the \`review_post\` tool with the current slug.\n`;
         guardrailsBlock += "\n";
@@ -2165,13 +2165,13 @@ When writing or updating frontmatter, follow these rules exactly:
         if (functionName === "write_content_file") {
           if (preventEmptyMedia && args.body) {
             if (
-              /\[image[^\]]*src=(["'])\s*\1/.test(args.body) ||
-              /\[image\s+[^\]]*src=\s*\]/.test(args.body) ||
+              /<Image\b[^>]*src=(["'])\s*\1/.test(args.body) ||
+              /<Image\b[^>]*src=\s*\/?>/.test(args.body) ||
               /!\[.*?\]\(\s*\)/.test(args.body)
             ) {
               return {
                 error:
-                  "Integrity Violation: Image source path cannot be empty. Ensure all [image src=\"...\"] shortcodes have a valid path.",
+                  "Integrity Violation: Image source path cannot be empty. Ensure all <Image src=\"...\" /> tags have a valid path.",
               };
             }
           }
@@ -3156,7 +3156,7 @@ When writing or updating frontmatter, follow these rules exactly:
         expand:
           "Expand the selected content with more detail, supporting information, and examples. Return ONLY the expanded markdown content, nothing else.",
         links:
-          "Suggest relevant internal links or Nutshell ([expand]/[embed]) options for the current text focus. Use suggest_internal_links, then for Nutshells call insert_expand_embed (and list_page_headings if a section is needed). For normal links use [text](slug).",
+          "Suggest relevant internal links or Nutshell ([[>…]]/[[!…]]) options for the current text focus. Use suggest_internal_links, then for Nutshells call insert_expand_embed (and list_page_headings if a section is needed). For normal links use [text](slug).",
         generate_image:
           "Generate a high-quality contextual image for this post. Analyze the content to construct a detailed generation prompt, save the image with a clean filename, and return the image URL so it can be added to the post.",
         attach_images:
@@ -3655,7 +3655,7 @@ When writing or updating frontmatter, follow these rules exactly:
       }
       if (image_index >= (this.attachedImages || []).length) {
         return {
-          error: `image_index ${image_index} is out of range. The user has ${this.attachedImages?.length || 0} attached image(s). Note: this tool is for user-uploaded attachments only. If you used generate_media to create an AI image, it is already in the media gallery — use its relative_path directly in the [image src="..."] shortcode.`,
+          error: `image_index ${image_index} is out of range. The user has ${this.attachedImages?.length || 0} attached image(s). Note: this tool is for user-uploaded attachments only. If you used generate_media to create an AI image, it is already in the media gallery — use its relative_path directly in the <Image src="..." /> tag.`,
         };
       }
       if (!filename || typeof filename !== "string") {
@@ -4131,61 +4131,56 @@ When writing or updating frontmatter, follow these rules exactly:
       }
     },
 
-    _escapeShortcodeAttr(value) {
-      return String(value ?? "")
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"');
+    _escapeWikilinkText(value) {
+      return String(value ?? "").replace(/[\[\]|]/g, "");
     },
 
     _buildExpandEmbedShortcode({ mode, slug, text, heading, source }) {
-      const m = mode === "embed" ? "embed" : "expand";
-      const parts = [`${m} slug="${this._escapeShortcodeAttr(slug)}"`];
-      if (text != null && String(text).trim() !== "") {
-        parts.push(`text="${this._escapeShortcodeAttr(String(text).trim())}"`);
-      }
-      const src =
-        source != null && String(source).trim() !== ""
-          ? String(source).trim()
-          : null;
-      if (src) {
-        parts.push(`source="${this._escapeShortcodeAttr(src)}"`);
+      const m = mode === "embed" ? "!" : ">";
+      const cleanSlug = String(slug || "").trim();
+      let ref = cleanSlug;
+      if (source != null && String(source).trim() !== "") {
+        ref += `^${String(source).trim()}`;
       } else if (heading != null && String(heading).trim() !== "") {
-        parts.push(
-          `heading="${this._escapeShortcodeAttr(String(heading).trim())}"`,
-        );
+        ref += `#${String(heading).trim()}`;
       }
-      return `[${parts.join(" ")}]`;
+      const label =
+        text != null && String(text).trim() !== ""
+          ? this._escapeWikilinkText(String(text).trim())
+          : "";
+      if (m === "!" && label === "") {
+        return `[[!${ref}]]`;
+      }
+      return `[[${m}${ref}|${label}]]`;
     },
 
     _parseExpandEmbedRefs(text) {
       const refs = [];
-      const re = /\[(expand|embed)\s*([^\]]*)\]/gi;
+      const re = /\[\[([!>]?)([^\]\n]*)\]\]/g;
       let m;
       while ((m = re.exec(text || "")) !== null) {
-        const mode = m[1].toLowerCase();
-        const attr = m[2] || "";
-        let slug = "";
+        const mode = m[1] === "!" ? "embed" : m[1] === ">" ? "expand" : "link";
+        const inner = m[2] || "";
+        const pipe = inner.indexOf("|");
+        const head = pipe === -1 ? inner : inner.slice(0, pipe);
+        let slug = head;
         let heading = null;
-        const slugMatch = attr.match(
-          /(?:^|\s)slug\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/i,
-        );
-        const defMatch = attr.match(
-          /^\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/,
-        );
-        const headMatch = attr.match(
-          /heading\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/i,
-        );
-        if (slugMatch) slug = slugMatch[1] || slugMatch[2] || slugMatch[3] || "";
-        else if (defMatch)
-          slug = defMatch[1] || defMatch[2] || defMatch[3] || "";
-        if (headMatch)
-          heading = headMatch[1] || headMatch[2] || headMatch[3] || null;
-        if (slug.includes("#")) {
-          const parts = slug.split("#");
-          slug = parts[0];
-          if (!heading) heading = parts.slice(1).join("#") || null;
+        let source = null;
+        const hash = head.indexOf("#");
+        const caret = head.indexOf("^");
+        let cut = head.length;
+        if (hash !== -1) cut = Math.min(cut, hash);
+        if (caret !== -1) cut = Math.min(cut, caret);
+        slug = head.slice(0, cut).trim();
+        if (hash !== -1) {
+          const end = caret !== -1 && caret > hash ? caret : head.length;
+          heading = head.slice(hash + 1, end).trim() || null;
         }
-        refs.push({ mode, slug: String(slug || "").trim(), heading });
+        if (caret !== -1) {
+          const src = head.slice(caret + 1).match(/^[a-z]+/);
+          source = src ? src[0] : null;
+        }
+        refs.push({ mode, slug: String(slug || "").trim(), heading, source });
       }
       return refs;
     },
@@ -4502,7 +4497,7 @@ When writing or updating frontmatter, follow these rules exactly:
                   </div>
                   ${
                     resObj.relative_path || resObj.use_for_embedding
-                      ? `<div class="text-[9px] font-mono text-steel-muted max-w-[12rem] break-all leading-snug" title="Use this path in [image src] / hero_image">Embed path: ${
+                      ? `<div class="text-[9px] font-mono text-steel-muted max-w-[12rem] break-all leading-snug" title="Use this path in <Image src> / hero_image">Embed path: ${
                           resObj.relative_path || resObj.use_for_embedding
                         }</div>`
                       : ""

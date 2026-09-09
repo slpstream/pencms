@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+* **PenCMS authoring is MDX + wikilinks; `[shortcode]` pipeline retired.** Post bodies now compile `<Image />`, `<Video />`, `<Audio />`, `<Figure>`, `<Quote>`, `<Callout>`, and `<Component name="…">` (new `ComponentProcessor.php`, Session 5 classes, `youtube-nocookie` embeds, theme `components/{name}.twig` slots) plus `[[slug]]` / `[[slug|Label]]` / `[[!slug]]` / `[[>slug]]` internal links and transclusion (new `WikilinkProcessor.php` with real content URLs). Processing runs **before** CommonMark; `ShortcodeProcessor.php` and `PostRenderer::transcodeLegacyLinks()` are deleted, so single brackets are pure CommonMark again. Legacy `[image]` / `[expand]` / `[embed]` / `[link]` leftovers render as plain text. Shared URL helpers live in `ContentUrls.php`.
+* **Agents author `<Image />` and wikilinks.** AI sidebar tools, MCP `suggest_internal_links` / `check_expand_refs` / `generate_media` copy, media integrity checks, search indexing, reading time, and reference health all use the new syntax (`suggest_internal_links` returns `wikilink`; `expand_shortcode` remains as a deprecated alias).
+
+---
+
 ## [0.2.0] - 2026-09-04
 
 ### Inaugural Public Release

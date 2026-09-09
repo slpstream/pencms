@@ -13,7 +13,7 @@ Canonical guides — prefer these over restating chapters here:
 | Topic | Doc |
 | :--- | :--- |
 | Product north star | [`product_thesis.md`](../product_thesis.md) |
-| Link suggest + `[expand]` / `[embed]` | [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md) |
+| Link suggest + `[[>…]]` / `[[!…]]` | [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md) |
 | Shortcodes (attrs / HTML / classes) | [`traven-shortcodes.md`](../traven-shortcodes.md) |
 | Themes (blueprint) | [`pencms-theme-development.md`](../pencms-theme-development.md) |
 | Themes (scaffold / switch / validate) | [`theme-adding.md`](../theme-adding.md) |
@@ -68,22 +68,22 @@ Hard-won architectural truths and implementation details across the stack.
 
 ### A. Editor / expand / Alpine
 
-#### A1. `text` vs `heading` on expand/embed
+#### A1. label vs `#Heading` on expand/embed wikilinks
 
 These look similar in the modal but do different jobs:
 
-- `heading` = which **section** of the target post to pull (resolver slice). Leave blank → whole post.
-- `text` = what the **reader/editor sees** as the link/chip label.
+- `#Heading` = which **section** of the target post to pull (resolver slice). Leave blank → whole post.
+- `|label` = what the **reader/editor sees** as the link/chip label.
 
 Example:
 
 ```markdown
-[expand slug="christmas-in-finland" text="Click to expand…" heading="Rovaniemi: The Official Home of Santa Claus"]
+[[>christmas-in-finland#Rovaniemi: The Official Home of Santa Claus|Click to expand…]]
 ```
 
-Without `text`, older UI misused `heading` as the label (and risked slicing the wrong section). Label fallback: `text` → `heading` → post `hero_title` / `name` / `title` (PHP) → `slug`.
+Without a label, older UI misused the heading as the label (and risked slicing the wrong section). Label fallback: text → `heading` → post `hero_title` / `name` / `title` (PHP) → `slug`.
 
-**Lives:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md); `ExpandResolver::resolveDisplayTitle()`; `ShortcodeProcessor.php`; AI tool copy in `ai-sidebar.js`.
+**Lives:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md); `ExpandResolver::resolveDisplayTitle()`; `WikilinkProcessor.php`; AI tool copy in `ai-sidebar.js`.
 
 #### A2. Runtime: insert-after-trigger + punct peel
 
@@ -91,7 +91,7 @@ Public expand is not “after the paragraph.” PHP emits phrasing-safe `<button
 
 Trailing punctuation is special: PHP emits `button` + `<template>` + `. So…`, so the period lives **after** the inert template. The runtime skips `<template>`, peels `/^([.,:;!?])(\s)/` into `.traven-expand-punct` beside the button, then places the panel after that — so commas/periods aren’t orphaned under the bubble.
 
-**Lives:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md) §2; `ShortcodeProcessor.php`; `frontend-php/public/assets/vendor/traven/expand-embed-runtime.js`.
+**Lives:** [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md) §2; `WikilinkProcessor.php`; `frontend-php/public/assets/vendor/traven/expand-embed-runtime.js`.
 
 #### A3. Editor `store.pages` is empty until `listPages()`
 
@@ -122,11 +122,11 @@ Nesting stops at **depth 2** (`ExpandResolver::MAX_DEPTH`).
 
 **Lives:** `ExpandResolver.php`; `ExpandReferenceHealth.php`; [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md) Failure modes.
 
-#### A7. `[expand]` / `[embed]` are not Twig micro-components
+#### A7. `[[>…]]` / `[[!…]]` are not Twig micro-components
 
-Micro-components are `[component name="…"]…[/component]` → `_name.html.twig` with `{{ slot | raw }}`. Expand/embed are separate shortcodes + Traven plugin + PHP resolver.
+Micro-components are `<Component name="…">…</Component>` → `components/{name}.twig` with `{{ slot | raw }}`. Expand/embed are separate wikilinks + Traven plugin + PHP resolver.
 
-**Lives:** [`traven-shortcodes.md`](../traven-shortcodes.md) (generic `[component]`); [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).
+**Lives:** [`traven-shortcodes.md`](../traven-shortcodes.md) (generic `<Component>`); [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).
 
 #### A8. Expand fragments skip dropcap
 
@@ -279,9 +279,9 @@ Never set `content_type` on taxonomy / system / custom / label targets — a fre
 
 **Lives:** [`mcp_guide.md`](../mcp_guide.md); `ai-sidebar-navigation.js`.
 
-#### C5. AI images: `relative_path` in `[image]` / frontmatter, not `attach_image_to_post`
+#### C5. AI images: `relative_path` in `<Image>` / frontmatter, not `attach_image_to_post`
 
-`generate_media` already saved the file; `attach_image_to_post` is for user-uploaded chat attachments only. Chat preview uses Markdown `![alt](public_url)`; post body uses `[image src="relative_path"]`. The same `relative_path` (also returned as `use_for_embedding`) must be copied into frontmatter image fields (`hero_image`, `main_image`) — never invent basenames like `hero.jpg`. `write_content_file` normalizes `/api/assets/raw/...` public URL forms to site-relative paths before persist, and soft-warns via `media_path_warnings` when referenced paths are still missing (write still succeeds).
+`generate_media` already saved the file; `attach_image_to_post` is for user-uploaded chat attachments only. Chat preview uses Markdown `![alt](public_url)`; post body uses `<Image src="relative_path" />`. The same `relative_path` (also returned as `use_for_embedding`) must be copied into frontmatter image fields (`hero_image`, `main_image`) — never invent basenames like `hero.jpg`. `write_content_file` normalizes `/api/assets/raw/...` public URL forms to site-relative paths before persist, and soft-warns via `media_path_warnings` when referenced paths are still missing (write still succeeds).
 
 **Normalize is case-sensitive on purpose.** Only the exact lowercase prefixes `/api/assets/raw/sites/.../assets/` and `/api/assets/raw/images/content/` are rewritten. A mangled `/API/assets/RAW/...` is left untouched and soft-warned as missing/invalid — do not widen to case-insensitive matching without an explicit decision.
 
@@ -360,7 +360,7 @@ The editor AI sidebar `update_frontmatter_field` mutates the open Alpine form an
 | Column width header/main/footer | CSS grid shell; KB sticky **A13** |
 | Site authors / byline picker | `wizard4.js` (picker); `settings-site.js`; `author_service.py`; `ThemeEngine.php` |
 | AI sidebar tools / prompts | `frontend-php/src/admin/js/ai-sidebar.js` |
-| Expand resolve / shortcodes | `frontend-php/src/core/ExpandResolver.php`, `ShortcodeProcessor.php`, `ExpandReferenceHealth.php` |
+| Expand resolve / wikilinks | `frontend-php/src/core/ExpandResolver.php`, `WikilinkProcessor.php`, `ExpandReferenceHealth.php` |
 | Expand public runtime | `frontend-php/public/assets/vendor/traven/expand-embed-runtime.js` |
 | Public site context | `frontend-php/src/core/PublicSiteContext.php`, `SiteRegistry.php` |
 | Social / OG theme defaults + site overrides | `social_preview.py`; `SiteRegistry::resolveSocialPreview()`; `cli-tools/og-image-maker.py`; `settings-seo.js` |

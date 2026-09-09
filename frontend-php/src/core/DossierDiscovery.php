@@ -5,6 +5,8 @@ namespace Dossier;
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/InternalAPIClient.php';
 require_once __DIR__ . '/TaxonomySlug.php';
+require_once __DIR__ . '/WikilinkProcessor.php';
+require_once __DIR__ . '/ComponentProcessor.php';
 
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
@@ -227,43 +229,43 @@ class DossierDiscovery
             return '1 MIN READ';
         }
 
-        // Strip [expand …] markers entirely — that content is lazy-loaded
+        // Strip [[>…]] expand markers entirely — that content is lazy-loaded
         // behind a click and shouldn't count toward reading time.
-        $text = preg_replace('/\[expand\s+[^\]]*\]/i', '', $text);
+        $text = preg_replace('/\[\[>[^\]\n]*\]\]/', '', $text);
 
-        // Resolve [embed slug="…"] markers: look up each embedded page's
+        // Resolve [[!…]] embed markers: look up each embedded page's
         // raw markdown from the pre-built map (zero extra API calls).
-        // When a heading="…" attribute is present, slice to just that
-        // section — mirrors ExpandResolver::sliceByHeading().
-        $text = preg_replace_callback('/\[embed\s+([^\]]*)\]/i', function ($m) use ($contentBySlug) {
-            $attrStr = $m[1];
-            if (!preg_match('/slug\s*=\s*["\']?([^\s"\']+)/i', $attrStr, $sm)) {
-                return '';
+        // A #Heading suffix slices to just that section —
+        // mirrors ExpandResolver::sliceByHeading().
+        $self = $this;
+        $text = preg_replace_callback('/\[\[[!>]?[^\]\n]*\]\]/', function ($m) use ($contentBySlug, $self) {
+            $parsed = WikilinkProcessor::parseWikilinkAttrs($m[0]);
+            $mode = $parsed['mode'] ?? 'link';
+            $slug = trim((string) ($parsed['slug'] ?? ''));
+            if ($mode === 'expand' || $slug === '') {
+                return $mode === 'link' && $slug !== '' ? ($parsed['text'] ?? $slug) : '';
             }
-            $slug = trim($sm[1], "\"' ");
+            if ($mode === 'link') {
+                return $parsed['text'] ?? $slug;
+            }
             if (!isset($contentBySlug[$slug])) {
                 return '';
             }
             $body = $contentBySlug[$slug];
-
-            // Heading-aware slicing
-            $heading = null;
-            if (preg_match('/heading\s*=\s*"([^"]*)"/i', $attrStr, $hm)) {
-                $heading = trim($hm[1]);
-            } elseif (preg_match('/heading\s*=\s*\'([^\']*)\'/i', $attrStr, $hm)) {
-                $heading = trim($hm[1]);
-            }
-            if ($heading !== null && $heading !== '') {
-                $sliced = $this->sliceMarkdownByHeading($body, $heading);
+            $heading = $parsed['heading'] ?? null;
+            if (is_string($heading) && $heading !== '') {
+                $sliced = $self->sliceMarkdownByHeading($body, $heading);
                 if ($sliced !== null) {
                     $body = $sliced;
                 }
             }
-
             return ' ' . $body;
         }, $text);
 
-        // Strip any residual HTML / shortcode syntax, then count words
+        // Strip MDX component tags (keep inner text) so word counts match readers.
+        $text = ComponentProcessor::flattenForMarkdown($text);
+
+        // Strip any residual HTML, then count words
         $plain = strip_tags($text);
         $wordCount = str_word_count($plain);
         $mins = (int) ceil($wordCount / 200);

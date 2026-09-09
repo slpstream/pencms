@@ -33,8 +33,8 @@ Draft checklist for blank-site setup (theme, identity, SEO, menus, authors, taxo
 
 ## Expand / embed (Nutshell)
 - `suggest_internal_links` — live-published link/expand targets
-- `check_expand_refs` — validate `[expand]`/`[embed]` slugs in markdown or a page
-- Insert shortcodes with `write_content_file` (no MCP cursor tool). See [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md).
+- `check_expand_refs` — validate `[[>…]]`/`[[!…]]` slugs in markdown or a page
+- Insert wikilinks with `write_content_file` (no MCP cursor tool). See [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md).
 
 ## Exact-language siblings
 - Discover with `get_translation_config` + `list_translation_gaps`. If optional `automation_policy.enabled` is true, use a target bound to this key and match its exact `operation` and non-secret `model`.

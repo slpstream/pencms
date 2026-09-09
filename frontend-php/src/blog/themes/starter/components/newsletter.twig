@@ -1,0 +1,15 @@
+{# Named MDX component slot: themes/{active}/components/{name}.twig
+   Renders `<Component name="newsletter">…inner markdown…</Component>`.
+
+   Available variables:
+     slot            compiled inner HTML
+     component_name  sanitized component name ("newsletter")
+     …any MDX attributes merged in (e.g. title)
+     theme           ThemeEngine instance
+#}
+<div class="traven-component traven-component-newsletter">
+  {% if title is defined and title != '' %}
+    <div class="component-header"><span class="component-title">{{ title }}</span></div>
+  {% endif %}
+  <div class="component-body">{{ slot|raw }}</div>
+</div>

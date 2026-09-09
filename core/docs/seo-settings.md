@@ -128,10 +128,10 @@ PenCMS injects Schema.org JSON-LD in the theme engine (`ThemeEngine::injectJsonL
 | Home | `WebSite` with nested `publisher` `Organization` (`logo` when a public URL exists; `sameAs` from site social links), `inLanguage`, and `potentialAction` `SearchAction` targeting `/search/?q={search_term_string}` (localized homes use `/<lang>/search/`) |
 | Post | `BlogPosting` plus `BreadcrumbList`. `datePublished` / `dateModified` (same source as `article:modified_time`: `updated` or `modified_at`, else the published date), `inLanguage`. Matched byline from `authors.yaml` emits Person `url` (`website`), `description` (`bio`), `jobTitle` (`role`), and `image` when a public avatar URL exists. Unmatched byline stays name-only. |
 | Page (`page: true`) | `WebPage` plus `BreadcrumbList` — not `BlogPosting`. `inLanguage`. |
-| Post / page with non-empty `faqs` | `FAQPage` in addition to `BlogPosting` or `WebPage`. `mainEntity` questions and answers are the same strings as the visible `<dt>` / `<dd>` list. Empty or missing `faqs` emits no `FAQPage` and no `.pen-qa` chrome. Never derived from `[expand]`, headings, or `llms.txt`. |
+| Post / page with non-empty `faqs` | `FAQPage` in addition to `BlogPosting` or `WebPage`. `mainEntity` questions and answers are the same strings as the visible `<dt>` / `<dd>` list. Empty or missing `faqs` emits no `FAQPage` and no `.pen-qa` chrome. Never derived from `[[>…]]`, headings, or `llms.txt`. |
 | Search / category archives | none in this wave |
 
-Empty `faqs: []` is valid. Poetry, a two-paragraph news brief, and most posts should ship with no Q&A — that is success, not a missing checkbox. Do **not** generate FAQ from `[expand]` / accordion shortcodes (those are transclusion), from heading heuristics, or from a hidden agent-only blob. Agents already have the full markdown corpus.
+Empty `faqs: []` is valid. Poetry, a two-paragraph news brief, and most posts should ship with no Q&A — that is success, not a missing checkbox. Do **not** generate FAQ from `[[>…]]` / `[[!…]]` transclusion (those are separate posts), from heading heuristics, or from a hidden agent-only blob. Agents already have the full markdown corpus.
 
 MCP agents persist `summary` / `faqs` immediately (no wand preview): [`mcp_guide.md` Extractive summary and FAQs](./mcp_guide.md#extractive-summary-and-faqs). Human Magic Wand and dashboard fill stay preview-or-batch UI.
 

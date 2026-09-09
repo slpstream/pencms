@@ -2,13 +2,13 @@
 
 require_once __DIR__ . '/../core/DossierDiscovery.php';
 require_once __DIR__ . '/../core/InternalAPIClient.php';
-require_once __DIR__ . '/../core/ShortcodeProcessor.php';
+require_once __DIR__ . '/../core/ContentUrls.php';
 require_once __DIR__ . '/../core/ThemeEngine.php';
 require_once __DIR__ . '/../core/PublicSiteContext.php';
 require_once __DIR__ . '/../core/LocalizedList.php';
 
 use Dossier\DossierDiscovery;
-use Dossier\ShortcodeProcessor;
+use Dossier\ContentUrls;
 use Dossier\PublicSiteContext;
 use Dossier\LocalizedList;
 
@@ -18,7 +18,7 @@ $theme = $ctx->newThemeEngine();
 
 $asset_path = $api->getAssetBaseUrl();
 $theme->setContentBaseUrl($asset_path);
-ShortcodeProcessor::$basePath = $asset_path;
+ContentUrls::$basePath = $asset_path;
 
 $discovery = new DossierDiscovery($api);
 $p = $ctx->presentation;

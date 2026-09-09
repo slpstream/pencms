@@ -1,5 +1,6 @@
 import base64
 import json
+import re
 import subprocess
 import uuid
 from typing import Any, Dict, List, Optional
@@ -63,8 +64,8 @@ class CheckExpandRefsRequest(BaseModel):
     slug: Optional[str] = None
 
 
-def _escape_shortcode_attr(value: str) -> str:
-    return value.replace("\\", "\\\\").replace('"', '\\"')
+def _escape_wikilink_text(value: str) -> str:
+    return str(value).replace("[", "").replace("]", "").replace("|", "")
 
 
 def _catalog_row_from_page(page) -> Dict[str, Any]:
@@ -87,71 +88,66 @@ def _catalog_row_from_page(page) -> Dict[str, Any]:
         "name": name,
         "suggested_text": suggested_text,
         "markdown_link": f"[{suggested_text}]({slug})",
-        "expand_shortcode": (
-            f'[expand slug="{_escape_shortcode_attr(slug)}" '
-            f'text="{_escape_shortcode_attr(suggested_text)}"]'
-        ),
+        "wikilink": f"[[>{slug}|{_escape_wikilink_text(suggested_text)}]]",
+        # Deprecated alias — use `wikilink`.
+        "expand_shortcode": f"[[>{slug}|{_escape_wikilink_text(suggested_text)}]]",
     }
 
 
 def _parse_expand_embed_refs(text: str) -> List[Dict[str, Any]]:
-    """Scan markdown for [expand]/[embed] shortcodes (slug-only health)."""
-    import re
+    """Scan markdown for [[>…]] / [[!…]] / [[…]] wikilinks (slug-only health).
 
+    Linear scan; only complete same-line [[…]] spans count. Extras mirror
+    Traven parseWikilinkAttrs: #Heading → heading, ^[a-z]+ → source, first |
+    starts the label.
+    """
     refs: List[Dict[str, Any]] = []
     raw = text or ""
-    lower = raw.lower()
     i = 0
+    n = len(raw)
     while True:
-        pos_expand = lower.find("[expand", i)
-        pos_embed = lower.find("[embed", i)
-        if pos_expand == -1 and pos_embed == -1:
+        open_idx = raw.find("[[", i)
+        if open_idx == -1:
             break
-        if pos_embed == -1 or (pos_expand != -1 and pos_expand < pos_embed):
-            mode = "expand"
-            end_kw = pos_expand + len("[expand")
-        else:
+        line_end = raw.find("\n", open_idx)
+        if line_end == -1:
+            line_end = n
+        close = raw.find("]]", open_idx + 2)
+        if close == -1 or close > line_end:
+            # Incomplete wikilink on this line — skip past the opener and
+            # keep scanning (a later line may hold a valid wikilink).
+            i = open_idx + 2
+            continue
+        inner = raw[open_idx + 2 : close]
+        mode = "link"
+        if inner.startswith("!"):
             mode = "embed"
-            end_kw = pos_embed + len("[embed")
-        close = raw.find("]", end_kw)
-        if close == -1:
-            break
-        attr = raw[end_kw:close]
-        slug = ""
+            inner = inner[1:]
+        elif inner.startswith(">"):
+            mode = "expand"
+            inner = inner[1:]
+        inner = inner.strip()
+        # First | starts the label; slug + extras are left of it.
+        pipe = inner.find("|")
+        head = inner[:pipe] if pipe != -1 else inner
+        hash_idx = head.find("#")
+        caret_idx = head.find("^")
+        cut = len(head)
+        if hash_idx != -1:
+            cut = min(cut, hash_idx)
+        if caret_idx != -1:
+            cut = min(cut, caret_idx)
+        slug = head[:cut].strip()
         heading = None
-        slug_m = re.search(
-            r'(?:^|\s)slug\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s\]]+))',
-            attr,
-            re.IGNORECASE,
-        )
-        def_m = re.match(
-            r'^\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s\]]+))',
-            attr,
-        )
-        head_m = re.search(
-            r'heading\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s\]]+))',
-            attr,
-            re.IGNORECASE,
-        )
-        if slug_m:
-            slug = slug_m.group(1) or slug_m.group(2) or slug_m.group(3) or ""
-        elif def_m:
-            slug = def_m.group(1) or def_m.group(2) or def_m.group(3) or ""
-        if head_m:
-            heading = head_m.group(1) or head_m.group(2) or head_m.group(3) or None
-        if "#" in slug:
-            parts = slug.split("#", 1)
-            slug = parts[0]
-            if not heading:
-                heading = parts[1] or None
-        refs.append(
-            {
-                "mode": mode,
-                "slug": (slug or "").strip(),
-                "heading": heading,
-            }
-        )
-        i = close + 1
+        source = None
+        if hash_idx != -1:
+            end = caret_idx if caret_idx != -1 and caret_idx > hash_idx else len(head)
+            heading = head[hash_idx + 1 : end].strip() or None
+        if caret_idx != -1:
+            m = re.match(r"[a-z]+", head[caret_idx + 1 :])
+            source = m.group(0) if m else None
+        refs.append({"mode": mode, "slug": slug, "heading": heading, "source": source})
+        i = close + 2
     return refs
 
 
@@ -214,24 +210,30 @@ def _normalize_media_fields_in_frontmatter(fm: Dict[str, Any]) -> Dict[str, Any]
     return out
 
 
-def _iter_image_shortcode_attrs(body: str) -> List[str]:
-    """Return the attribute blob inside each [image ...] shortcode."""
+def _iter_mdx_image_attrs(body: str) -> List[str]:
+    """Return the attribute blob inside each <Image ...> MDX tag."""
     text = body or ""
     lower = text.lower()
     out: List[str] = []
     start = 0
-    needle = "[image"
+    needle = "<image"
     nlen = len(needle)
     while True:
         idx = lower.find(needle, start)
         if idx == -1:
             break
-        close = text.find("]", idx + nlen)
+        close = text.find(">", idx + nlen)
         if close == -1:
             break
         out.append(text[idx + nlen : close])
         start = close + 1
     return out
+
+
+# Deprecated alias — use _iter_mdx_image_attrs.
+def _iter_image_shortcode_attrs(body: str) -> List[str]:
+    """Return the attribute blob inside each <Image ...> MDX tag."""
+    return _iter_mdx_image_attrs(body)
 
 
 def _parse_image_src_attr(attrs: str) -> Optional[str]:
@@ -258,17 +260,26 @@ def _parse_image_src_attr(attrs: str) -> Optional[str]:
             return attrs[pos + 1 : end]
         if attrs[pos:].strip() == "":
             return ""
+        if attrs[pos:].strip() == "/":
+            # Self-closing <Image src= /> with no value.
+            return ""
         start = idx + 1
 
 
-def _extract_image_shortcode_srcs(body: str) -> List[str]:
-    """Return non-empty src values from [image ...] shortcodes in body markdown."""
+def _extract_mdx_image_srcs(body: str) -> List[str]:
+    """Return non-empty src values from <Image ...> tags in body markdown."""
     out: List[str] = []
-    for attrs in _iter_image_shortcode_attrs(body):
+    for attrs in _iter_mdx_image_attrs(body):
         src = _parse_image_src_attr(attrs)
         if src is not None and src.strip():
             out.append(src.strip())
     return out
+
+
+# Deprecated alias — use _extract_mdx_image_srcs.
+def _extract_image_shortcode_srcs(body: str) -> List[str]:
+    """Return non-empty src values from <Image ...> tags in body markdown."""
+    return _extract_mdx_image_srcs(body)
 
 
 def _has_empty_markdown_image(body: str) -> bool:
@@ -294,11 +305,11 @@ def _has_empty_markdown_image(body: str) -> bool:
 
 
 def _has_empty_media_refs(body: str) -> bool:
-    """True if body has an empty [image src] or empty markdown image URL."""
+    """True if body has an empty <Image src> or empty markdown image URL."""
     text = body or ""
     if _has_empty_markdown_image(text):
         return True
-    for attrs in _iter_image_shortcode_attrs(text):
+    for attrs in _iter_mdx_image_attrs(text):
         src = _parse_image_src_attr(attrs)
         if src is not None and not src.strip():
             return True
@@ -310,14 +321,14 @@ async def collect_media_path_warnings(
     body: str,
     frontmatter: Optional[Dict[str, Any]] = None,
 ) -> List[str]:
-    """Soft-check image paths referenced in body shortcodes and frontmatter.
+    """Soft-check image paths referenced in body <Image> tags and frontmatter.
 
     Returns warning strings; never raises. Skips empty values and http(s) URLs.
     """
     from services.site_service import join_site_assets_path
 
     candidates: List[str] = []
-    candidates.extend(_extract_image_shortcode_srcs(body or ""))
+    candidates.extend(_extract_mdx_image_srcs(body or ""))
     fm = frontmatter or {}
     for key in ("hero_image", "main_image"):
         val = fm.get(key)
@@ -336,7 +347,7 @@ async def collect_media_path_warnings(
             warnings.append(
                 f"Media path looks like a public_url API path ('{raw}'). "
                 "Use the site-relative relative_path from generate_media / list_media "
-                "in shortcodes and frontmatter (e.g. hero_image)."
+                "in <Image> tags and frontmatter (e.g. hero_image)."
             )
             continue
         try:
@@ -937,11 +948,11 @@ async def mcp_suggest_internal_links(
     limit: int = 8,
     current_user: UserPublic = Depends(get_current_user),
 ) -> Dict[str, Any]:
-    """Suggest live-published pages for Markdown links or [expand]/[embed] targets.
+    """Suggest live-published pages for Markdown links or [[>…]] / [[!…]] targets.
 
     Filters to status=published with publish_at null or past. Returns enriched
-    rows (suggested_text, markdown_link, expand_shortcode). Prefer insert via
-    write_content_file with the shortcode string — there is no MCP cursor insert.
+    rows (suggested_text, markdown_link, wikilink). Prefer insert via
+    write_content_file with the wikilink string — there is no MCP cursor insert.
     """
     site_id = resolve_mcp_site_id(request)
     q = (query or "").strip().lower()
@@ -980,7 +991,7 @@ async def mcp_suggest_internal_links(
         "query_used": query.strip(),
         "results": results,
         "usage_hint": (
-            "For Nutshells insert [expand slug=\"…\" text=\"…\"] via "
+            "For Nutshells insert [[>slug|…]] via "
             "write_content_file; for normal links use markdown_link / [text](slug)."
         ),
         "site_id": site_id,
@@ -997,7 +1008,7 @@ async def mcp_check_expand_refs(
     body: CheckExpandRefsRequest = Body(...),
     current_user: UserPublic = Depends(get_current_user),
 ) -> Dict[str, Any]:
-    """Validate [expand]/[embed] target slugs in markdown or a page body.
+    """Validate [[>…]] / [[!…]] target slugs in markdown or a page body.
 
     Heading misses are not broken (resolver falls back to the whole post).
     Only missing/unpublished slugs are flagged.
@@ -1590,7 +1601,7 @@ async def write_content_file(
             if _has_empty_media_refs(body):
                 raise HTTPException(
                     status_code=400,
-                    detail="Integrity Violation: Image source path cannot be empty. Ensure all [image src=\"...\"] shortcodes have a valid path. Use the relative_path returned by generate_media or list_media to verify correct paths."
+                    detail="Integrity Violation: Image source path cannot be empty. Ensure all <Image src=\"...\" /> tags have a valid path. Use the relative_path returned by generate_media or list_media to verify correct paths."
                 )
 
         media_path_warnings = await collect_media_path_warnings(
@@ -2587,7 +2598,7 @@ async def generate_media(
                 "site_id": site_id,
                 "message": (
                     f"Saved {logical}. Use relative_path "
-                    f"(or use_for_embedding) in shortcodes and frontmatter — "
+                    f"(or use_for_embedding) in <Image> tags and frontmatter — "
                     f"do not invent filenames. public_url is for chat preview only."
                 ),
             }

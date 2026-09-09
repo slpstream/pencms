@@ -5,14 +5,14 @@ declare(strict_types=1);
 require_once __DIR__ . '/../src/core/LocalizedDetail.php';
 require_once __DIR__ . '/../src/core/PublicSiteContext.php';
 require_once __DIR__ . '/../src/core/PostRenderer.php';
-require_once __DIR__ . '/../src/core/ShortcodeProcessor.php';
+require_once __DIR__ . '/../src/core/ContentUrls.php';
 
 use Dossier\InternalAPIClient;
 use Dossier\ExpandResolver;
 use Dossier\LocalizedDetail;
 use Dossier\PostRenderer;
 use Dossier\PublicSiteContext;
-use Dossier\ShortcodeProcessor;
+use Dossier\ContentUrls;
 
 $passed = 0;
 $failed = 0;
@@ -243,21 +243,21 @@ check(
     'localized expand requests an exact live sibling'
 );
 
-ShortcodeProcessor::$basePath = '/api/assets/raw/';
+ContentUrls::$basePath = '/api/assets/raw/';
 check(
-    ShortcodeProcessor::resolveContentUrl('about') === 'post.php?slug=about',
+    ContentUrls::resolveContentUrl('about') === 'post.php?slug=about',
     'default dynamic content URL remains query-based'
 );
 
 define('STATIC_BUILD', true);
-ShortcodeProcessor::$basePath = LocalizedDetail::staticRelativeRoot();
+ContentUrls::$basePath = LocalizedDetail::staticRelativeRoot();
 check(
-    ShortcodeProcessor::resolveAsset('images/content/photo.jpg')
+    ContentUrls::resolveAsset('images/content/photo.jpg')
         === '../../images/content/photo.jpg',
     'localized static asset uses additional URL depth'
 );
 check(
-    ShortcodeProcessor::resolveContentUrl('other') === '../../other/',
+    ContentUrls::resolveContentUrl('other') === '../../other/',
     'localized static content link reaches site root'
 );
 

@@ -1,11 +1,11 @@
-# Link suggestions & `[expand]` / `[embed]`
+# Link suggestions & `[[>…]]` / `[[!…]]` wikilinks
 
 Canonical reference for two related PenCMS editor features that both depend on **host knowledge of the active site’s posts**. Traven stays storage-agnostic; PenCMS owns catalogs, URLs, and published-file resolution.
 
 | Feature | Operator / author experience | Lives in |
 | :--- | :--- | :--- |
 | **Link suggestions** | Insert Link modal (Mod-K) typeahead of titles/slugs | Thin Traven hook + PenCMS `wizard4.js` |
-| **`[expand]` / `[embed]`** | In-place / always-on transclusion of another post | `traven-expand-embed` plugin + PenCMS resolver / ShortcodeProcessor |
+| **`[[>…]]` / `[[!…]]`** | In-place / always-on transclusion of another post | `traven-expand-embed` plugin + PenCMS resolver / WikilinkProcessor |
 
 **Docs index:** This file is the canonical operator/agent reference. API option tables live in [`AI-and-TravenEditor-API-reference.md`](dev/AI-and-TravenEditor-API-reference.md). Host-vs-editor philosophy: [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md).
 
@@ -24,7 +24,7 @@ flowchart LR
   end
 
   subgraph pluginPkg ["@freedomware/traven-expand-embed"]
-    Grammar["[expand]/[embed] grammar"]
+    Grammar["[[>]]/[[!]] wikilink grammar"]
     Card["WYSIWYM inline chip"]
     Shell["button+template / embed div"]
     Runtime["initExpandEmbed runtime"]
@@ -34,7 +34,7 @@ flowchart LR
   subgraph pencms [PenCMS host]
     Wizard["wizard4.js catalog + URLs"]
     Resolver["ExpandResolver.php"]
-    Shortcodes["ShortcodeProcessor"]
+    Shortcodes["WikilinkProcessor"]
     Health["ExpandReferenceHealth + save toast"]
   end
 
@@ -71,7 +71,7 @@ When the expand-embed plugin tools are registered, PenCMS appends **Expand** (ac
 1. Click Expand or Embed.
 2. Type a title/slug in **Post / page** — same `onSuggestLinks` typeahead as Link.
 3. Optionally choose a **Target** from the dropdown (Whole post | Summary if summary non-empty | Deck if deck non-empty | sections from `onListExpandTargets`). Without that hook, falls back to **Heading** via `onListHeadings` (Whole post + sections) or free-text.
-4. Insert → `[expand slug="…"]` / `[embed slug="…" heading="…"]` / `[expand slug="…" source="summary"]` / `[expand slug="…" source="deck"]`.
+4. Insert → `[[>slug|label]]` / `[[!slug#Heading]]` / `[[>slug^summary|label]]` / `[[>slug^deck|label]]`.
 
 The **selection bubble** opts in **Expand only** after Link (via Traven `bubbleToolbar`). Embed stays on the main toolbar — it is a different authoring action and is not shown on the bubble.
 
@@ -135,51 +135,46 @@ The AI sidebar tool `suggest_internal_links` ([`ai-sidebar.js`](../../frontend-p
 
 ---
 
-## 2. `[expand]` / `[embed]` shortcodes
+## 2. `[[>…]]` / `[[!…]]` wikilinks
 
-Site-only transclusion (Nutshell-like): authors reference another post by **slug** (stable filename). No cross-site / CORS embedding.
+Site-only transclusion (Nutshell-like): authors reference another post by **slug** (stable filename). No cross-site / CORS embedding. Extras parse left-to-right after the slug: `#Heading` slices a section, `^summary` / `^deck` selects a frontmatter nutshell, first `|` starts the label.
 
 ### Author syntax
 
-Self-closing, attribute-based (not pair tags):
-
 ```markdown
-[expand slug="the-spark-that-lit-nanterre" text="the spark"]
-[expand slug="the-spark-that-lit-nanterre" text="Click for more" heading="The Spark that lit Nanterre"]
-[expand slug="christmas-in-finland" text="Finland" source="summary"]
-[expand slug="christmas-in-finland" text="Finland" source="deck"]
-[expand slug="the-spark-that-lit-nanterre"]
-[expand="the-spark-that-lit-nanterre#the-spark-that-lit-nanterre"]
-
-[embed slug="the-spark-that-lit-nanterre" text="Sanremo"]
-[embed="other-post"]
+[[>the-spark-that-lit-nanterre|the spark]]
+[[>the-spark-that-lit-nanterre#The Spark that lit Nanterre|Click for more]]
+[[>christmas-in-finland^summary|Finland]]
+[[>christmas-in-finland^deck|Finland]]
+[[>the-spark-that-lit-nanterre|the spark]]
+[[!the-spark-that-lit-nanterre]]
+[[!other-post#Section]]
 ```
 
-| Attribute | Meaning |
+| Part | Meaning |
 | :--- | :--- |
 | `slug` | Load-bearing id (entry filename / id). |
-| `text` | Optional **visible link/chip label** (independent of section). |
-| `heading` | Optional **section** within the target (or composite partial title/id) — does not set the link label when `text` is present. |
-| `source` | Optional body source. `source="summary"` uses frontmatter `summary`; `source="deck"` uses frontmatter `deck`. Each appends an inline **Read more** link (same URL rules as `[link]` / Markdown slugs: `post.php?slug=…` in preview, `{basePath}{slug}/` in static; `target="_blank"` `rel="noopener"`). Empty chosen field → silent omit (no cross-field or whole-post fallback). Do **not** combine with `heading`. |
-| Shorthand `="slug#heading"` | Same as `slug` + `heading`. |
+| `\|label` | Optional **visible link/chip label** (independent of section). |
+| `#Heading` | Optional **section** within the target (or composite partial title/id) — does not set the link label when a label is present. |
+| `^summary` / `^deck` | Optional body source. `^summary` uses frontmatter `summary`; `^deck` uses frontmatter `deck`. Each appends an inline **Read more** link (same URL rules as wikilink hrefs: `post.php?slug=…` in preview, `{basePath}{slug}/` in static; `target="_blank"` `rel="noopener"`). Empty chosen field → silent omit (no cross-field or whole-post fallback). Do **not** combine with a heading. |
 
-**Label resolution** (expand trigger + editor chip): `text` → `heading` → post `hero_title`/`name`/`title` (PHP) → `slug`.
+**Label resolution** (expand trigger + editor chip): text → `heading` → post `hero_title`/`name`/`title` (PHP) → `slug`.
 
-| Shortcode | Reader behavior |
+| Form | Reader behavior |
 | :--- | :--- |
-| `[expand]` | Collapsed by default → inline `<button class="traven-expand-trigger">` + `<template>` body; `initExpandEmbed()` inserts a bordered panel **immediately after the trigger** (next line under the link, with a callout arrow; trailing `.`/`,` after the `<template>` stay with the trigger; no `<details>` / chevron). |
-| `[embed]` | Always visible → `<div class="traven-embed">`. |
+| `[[>…]]` | Collapsed by default → inline `<button class="traven-expand-trigger">` + `<template>` body; `initExpandEmbed()` inserts a bordered panel **immediately after the trigger** (next line under the link, with a callout arrow; trailing `.`/`,` after the `<template>` stay with the trigger; no `<details>` / chevron). |
+| `[[!…]]` | Always visible → `<div class="traven-embed">`. |
 
 ### Failure modes
 
 | Case | Reader | Author |
 | :--- | :--- | :--- |
-| Slug missing / unpublished / future `publish_at` | **Silent omit** (empty) | Save toast warns (client catalog); `ExpandReferenceHealth` for server-side checks |
+| Slug missing / unpublished / future `publish_at` | **Silent omit** (empty) | Save toast warns (client catalog); `ExpandReferenceHealth` (wikilink scan) for server-side checks |
 | Heading missing but slug OK | **Whole-post fallback** | Prefer fixing the heading; not treated as hard fail |
-| `source="summary"` but empty / missing summary | **Silent omit** (no deck / whole-post fallback) | Fill Summary in the editor |
-| `source="deck"` but empty / missing deck | **Silent omit** (no summary / whole-post fallback) | Fill Deck in the editor |
-| `source` + `heading` together | **Silent omit** | Use one or the other |
-| Unknown `source` | **Silent omit** | Only `source="summary"` or `source="deck"` |
+| `^summary` but empty / missing summary | **Silent omit** (no deck / whole-post fallback) | Fill Summary in the editor |
+| `^deck` but empty / missing deck | **Silent omit** (no summary / whole-post fallback) | Fill Deck in the editor |
+| source + heading together | **Silent omit** | Use one or the other |
+| Unknown `^source` | **Silent omit** | Only `^summary` or `^deck` |
 
 Recursion: nested expand/embed resolves up to **depth 2**, then stops (cycle / fan-out guard).
 
@@ -189,15 +184,15 @@ Recursion: nested expand/embed resolves up to **depth 2**, then stops (cycle / f
   `frontend-php/public/assets/vendor/traven/expand-embed.js` (+ `.css`, + `expand-embed-runtime.js` for public pages).
 - Loaded in [`_admin-head.php`](../../frontend-php/src/admin/includes/_admin-head.php); exposes `window.ExpandEmbedPlugin`, `window.expandEmbedTools`, `window.EXPAND_EMBED_TOOLBAR`, `window.DEFAULT_BUBBLE_TOOLBAR`, and calls `registerTools(expandEmbedTools)`.
 - `wizard4.js` passes `plugins: [new ExpandEmbedPlugin({ resolve: null })]`, `extraTools`, `toolbar` with Expand+Embed after Link, and `bubbleToolbar` with **Expand only** after Link.  
-  Editor shows an **inline link-like chip** (`text` → `heading` → slug); **public/preview PHP** resolves real HTML (avoids duplicating host render in the browser).
+  Editor shows an **inline link-like chip** (label → `heading` → slug); **public/preview PHP** resolves real HTML (avoids duplicating host render in the browser).
 - Insert modals: **Link Text** (pre-filled from selection), Post/page typeahead, **Target** dropdown when `onListExpandTargets` is set (Whole post | Summary if summary non-empty | Deck if deck non-empty | sections); otherwise Heading via `onListHeadings` or free-text. Typeahead pick fills Link Text from the post title when empty.
 
 ### Public / static render (host)
 
 | File | Role |
 | :--- | :--- |
-| [`ExpandResolver.php`](../../frontend-php/src/core/ExpandResolver.php) | `slug` (+ optional heading or `source=deck`) → published HTML; deck branch appends Read more; `resolveDisplayTitle()` for label fallback (`hero_title` → `name` → `title`). |
-| [`ShortcodeProcessor.php`](../../frontend-php/src/core/ShortcodeProcessor.php) | Matches `[expand]`/`[embed]` after Markdown→HTML; parses `source=`; builds phrasing-safe expand trigger+template / embed `<div>` wrappers. |
+| [`ExpandResolver.php`](../../frontend-php/src/core/ExpandResolver.php) | `slug` (+ optional heading or `^deck`/`^summary` source) → published HTML; nutshell branch appends Read more; `resolveDisplayTitle()` for label fallback (`hero_title` → `name` → `title`). |
+| [`WikilinkProcessor.php`](../../frontend-php/src/core/WikilinkProcessor.php) | Matches `[[>…]]` / `[[!…]]` / `[[…]]` before Markdown→HTML; validates source/heading combos; builds phrasing-safe expand trigger+template / embed `<div>` wrappers / real-href links. |
 | [`ExpandReferenceHealth.php`](../../frontend-php/src/core/ExpandReferenceHealth.php) | Scan markdown for broken refs (`check($markdown, $siteId)`). |
 | Theme heads | Load `expand-embed.css` + `expand-embed-runtime.js` (`initExpandEmbed` auto-runs) — starter, editorial, casper-lite (and archived trees under `themes/_deprecated/`). |
 
@@ -251,14 +246,14 @@ Do **not** hand-edit the minified vendor bundle.
 
 ## 4. AI Assistant + MCP tools
 
-Expand/embed remain **plain Markdown shortcodes** (PHP/Traven render). PenCMS now ships first-class tools so agents suggest, insert, and validate them without improvising attrs.
+Expand/embed remain **plain Markdown wikilinks** (PHP/Traven render). PenCMS now ships first-class tools so agents suggest, insert, and validate them without improvising syntax.
 
 ### AI sidebar (`ai-sidebar.js`)
 
 | Tool | Role |
 | :--- | :--- |
-| `suggest_internal_links` | Live-published catalog (status + `publish_at`); optional FTS merge. Returns `suggested_text`, `markdown_link`, `expand_shortcode`, `usage_hint`. |
-| `insert_expand_embed` | Builds `[expand]`/`[embed]`, refuses unpublished slugs, inserts via selection/cursor. Accepts optional `source: "summary"` or `source: "deck"`; rejects `source` + `heading` together. |
+| `suggest_internal_links` | Live-published catalog (status + `publish_at`); optional FTS merge. Returns `suggested_text`, `markdown_link`, `wikilink`, `usage_hint`. |
+| `insert_expand_embed` | Builds `[[>…]]`/`[[!…]]`, refuses unpublished slugs, inserts via selection/cursor. Accepts optional `source: "summary"` or `source: "deck"`; rejects `source` + `heading` together. |
 | `list_page_headings` | H1–H3 (+ composite partial titles) for real `heading=` values. |
 | `check_expand_refs` | Flags missing/unpublished expand targets in the open doc or a markdown string. |
 
@@ -278,7 +273,7 @@ Insert from MCP via `write_content_file` with the shortcode string (no cursor). 
 Principles (unchanged from [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md)):
 
 - MCP and AI tools stay in **PenCMS**, not Traven core.
-- Agents insert plain Markdown (`[text](url)` or `[expand slug="…"]`); Traven/PHP render as today.
+- Agents insert plain Markdown (`[text](url)` or `[[>slug|label]]`); Traven/PHP render as today.
 - Respect active site (`X-Pen-Site-Id` for human MCP; JWT `site_id` for agents).
 
 ---
@@ -286,9 +281,9 @@ Principles (unchanged from [`AI-MCP-Traven.md`](dev/AI-MCP-Traven.md)):
 ## 5. Quick smoke checklist
 
 1. **Link suggest:** Editor → Mod-K → type a published title → pick → Insert → markdown link uses bare slug (`[Title](slug)`). Typeahead list is fully visible (not clipped by the modal).
-2. **Expand chip + Link Text:** Select a word → Expand (main toolbar **or** selection bubble) → Link Text pre-filled; insert with `text="…"`. Chip/trigger show `text`, not the slug. Bubble shows Expand after Link and **does not** show Embed; main toolbar still has both Expand and Embed.
-3. **Target dropdown (Summary / Deck):** Expand → pick a published post with non-empty Summary and/or Deck → Target lists Whole post | **Summary** (if summary set) | **Deck** (if deck set) | sections. Summary writes `source="summary"`; Deck writes `source="deck"`. Both fields set → both rows. Published page shows the chosen field HTML with an inline **Read more** link (preview: `post.php?slug=…`; static: relative slug path). Empty chosen field → that row absent; matching `source=` silently omits on the reader (no cross-fallback).
-4. **Heading / section:** Choosing a section still writes `heading="…"` (no `source`). Heading miss → whole-post fallback (unchanged).
-5. **AI `source`:** `insert_expand_embed` with `source: "summary"` or `source: "deck"` emits the matching attr; combining with `heading` returns an error.
-6. **Broken ref:** `[expand slug="does-not-exist"]` → empty on public; save shows warning toast in admin.
+2. **Expand chip + Link Text:** Select a word → Expand (main toolbar **or** selection bubble) → Link Text pre-filled; insert writes `[[>slug|text]]`. Chip/trigger show the label, not the slug. Bubble shows Expand after Link and **does not** show Embed; main toolbar still has both Expand and Embed.
+3. **Target dropdown (Summary / Deck):** Expand → pick a published post with non-empty Summary and/or Deck → Target lists Whole post | **Summary** (if summary set) | **Deck** (if deck set) | sections. Summary writes `^summary`; Deck writes `^deck`. Both fields set → both rows. Published page shows the chosen field HTML with an inline **Read more** link (preview: `post.php?slug=…`; static: relative slug path). Empty chosen field → that row absent; matching source silently omits on the reader (no cross-fallback).
+4. **Heading / section:** Choosing a section still writes `#Heading` (no source). Heading miss → whole-post fallback (unchanged).
+5. **AI `source`:** `insert_expand_embed` with `source: "summary"` or `source: "deck"` emits the matching suffix; combining with `heading` returns an error.
+6. **Broken ref:** `[[>does-not-exist|label]]` → empty on public; save shows warning toast in admin.
 7. **Draft target:** Unpublished slug → not in link suggestions; expand omits on public.

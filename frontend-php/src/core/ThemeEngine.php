@@ -293,9 +293,9 @@ class ThemeEngine
 
         $instance->initTwig($configPath);
 
-        // Auto-register this theme engine in ShortcodeProcessor
-        if (class_exists('Dossier\ShortcodeProcessor')) {
-            ShortcodeProcessor::setThemeEngine($instance);
+        // Auto-register this theme engine for content/asset URL helpers
+        if (class_exists('Dossier\ContentUrls')) {
+            ContentUrls::setThemeEngine($instance);
         }
 
         return $instance;
@@ -2286,6 +2286,45 @@ HTML;
         })($path, $mergedData);
 
         return ob_get_clean() ?: '';
+    }
+
+    /**
+     * Render a named MDX `<Component name="…">` slot from
+     * `themes/{active}/components/{name}.twig` (or `.html.twig`).
+     * Returns null when the theme ships no such component — the caller
+     * falls back to the generic `.traven-component` card.
+     *
+     * @param array<string,string> $attrs
+     */
+    public function renderNamedComponent(string $name, array $attrs = [], string $slotHtml = ''): ?string
+    {
+        $clean = strtolower(trim($name));
+        if ($clean === '' || !preg_match('/^[a-z0-9_-]+$/', $clean)) {
+            return null;
+        }
+        $relPaths = [
+            'components/' . $clean . '.html.twig',
+            'components/' . $clean . '.twig',
+        ];
+        $found = null;
+        foreach ($relPaths as $rel) {
+            if (file_exists($this->themeDir() . '/' . $rel)) {
+                $found = $rel;
+                break;
+            }
+        }
+        if ($found === null) {
+            return null;
+        }
+        $mergedData = array_merge($this->currentPageData, $attrs, [
+            'theme' => $this,
+            'slot' => $slotHtml,
+            'component_name' => $clean,
+        ]);
+        if ($this->twig) {
+            return $this->twig->render($found, $mergedData);
+        }
+        return null;
     }
 
     /**

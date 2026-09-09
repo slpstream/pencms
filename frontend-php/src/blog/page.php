@@ -30,7 +30,7 @@ $invalidLanguageQuery = $hasLanguageQuery
 
 $asset_path = $api->getAssetBaseUrl();
 $theme->setContentBaseUrl($asset_path);
-\Dossier\ShortcodeProcessor::$basePath = $asset_path;
+\Dossier\ContentUrls::$basePath = $asset_path;
 
 $renderer = new PostRenderer($api, !empty($ctx->presentation['comments_enabled']));
 $sitename = $ctx->presentation['sitename'];

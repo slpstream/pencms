@@ -3,7 +3,9 @@
 namespace Dossier;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/ShortcodeProcessor.php';
+require_once __DIR__ . '/ContentUrls.php';
+require_once __DIR__ . '/ComponentProcessor.php';
+require_once __DIR__ . '/WikilinkProcessor.php';
 require_once __DIR__ . '/PreviewUrl.php';
 require_once __DIR__ . '/template-helpers.php';
 require_once __DIR__ . '/InternalAPIClient.php';
@@ -57,7 +59,7 @@ class PostRenderer {
         if (!is_string($actualLanguage) || trim($actualLanguage) === '') {
             $actualLanguage = null;
         }
-        ShortcodeProcessor::setLanguage($actualLanguage);
+        ContentUrls::setLanguage($actualLanguage);
         $isComposite = $page['composite'] ?? false;
         
         $posts = [];
@@ -354,8 +356,11 @@ class PostRenderer {
         }
 
         $finalMarkdown = implode("\n", $markdown);
-        $finalMarkdown = $this->transcodeLegacyLinks($finalMarkdown);
-        return ShortcodeProcessor::processForMarkdown($finalMarkdown);
+        // Agent dump: flatten MDX + wikilinks to readable Markdown (never shortcodes)
+        [$stashed, $codePlaceholders] = $this->stashCodeSpans($finalMarkdown);
+        $stashed = ComponentProcessor::flattenForMarkdown($stashed);
+        $stashed = WikilinkProcessor::flattenForMarkdown($stashed);
+        return $this->unstashCodeSpans($stashed, $codePlaceholders);
     }
 
     private function restoreMath($html, $placeholders) {
@@ -368,7 +373,7 @@ class PostRenderer {
     /**
      * Add classic-markdown class to CommonMark <img> tags and, for block images
      * with caption-worthy alt text, wrap as figure + figcaption.caption (matches
-     * Traven WYSIWYM alt-as-caption UX; shortcodes run later and are untouched).
+     * Traven WYSIWYM alt-as-caption UX; MDX <Image /> restores later and is untouched).
      */
     private function enhanceClassicMarkdownImages($html) {
         // Block images: CommonMark wraps lone images in <p> — replace the paragraph
@@ -450,13 +455,7 @@ class PostRenderer {
     }
 
     private function renderHtml($markdown) {
-        $mathPlaceholders = [];
-        $markdown = $this->preprocessMarkdown($markdown, $mathPlaceholders);
-        $markdown = $this->transcodeLegacyLinks($markdown);
-        $html = $this->converter->convert($markdown)->getContent();
-        $html = $this->restoreMath($html, $mathPlaceholders);
-        $html = $this->enhanceClassicMarkdownImages($html);
-        $html = ShortcodeProcessor::process($html);
+        $html = $this->convertMarkdownWithComponents($markdown);
         $html = $this->postprocessHtml($html);
         return apply_dropcap($html);
     }
@@ -466,27 +465,70 @@ class PostRenderer {
      * Skips dropcap so nested expands don't steal styling from the host post.
      */
     public function renderMarkdownFragment(string $markdown): string {
-        $mathPlaceholders = [];
-        $markdown = $this->preprocessMarkdown($markdown, $mathPlaceholders);
-        $markdown = $this->transcodeLegacyLinks($markdown);
-        $html = $this->converter->convert($markdown)->getContent();
-        $html = $this->restoreMath($html, $mathPlaceholders);
-        $html = $this->enhanceClassicMarkdownImages($html);
-        $html = ShortcodeProcessor::process($html);
+        $html = $this->convertMarkdownWithComponents($markdown);
         $html = $this->postprocessHtml($html);
         return $html;
     }
 
     private function renderPlainHtml($markdown) {
-        $mathPlaceholders = [];
-        $markdown = $this->preprocessMarkdown($markdown, $mathPlaceholders);
-        $markdown = $this->transcodeLegacyLinks($markdown);
-        $html = $this->converter->convert($markdown)->getContent();
-        $html = $this->restoreMath($html, $mathPlaceholders);
-        $html = $this->enhanceClassicMarkdownImages($html);
-        $html = ShortcodeProcessor::process($html);
+        $html = $this->convertMarkdownWithComponents($markdown);
         $html = $this->postprocessHtml($html);
         return preg_replace('/^<p>(.*?)<\/p>$/s', '$1', trim($html));
+    }
+
+    /**
+     * Blueprint pipeline (§4.1): stash code → extract MDX → wikilinks →
+     * CommonMark → restore components. Code spans are restored before
+     * CommonMark so fenced/inline code still renders as <code>.
+     */
+    private function convertMarkdownWithComponents(string $markdown): string {
+        if ($markdown === '') {
+            return '';
+        }
+        $mathPlaceholders = [];
+        $markdown = $this->preprocessMarkdown($markdown, $mathPlaceholders);
+
+        [$stashed, $codePlaceholders] = $this->stashCodeSpans($markdown);
+        [$withoutMdx, $components] = ComponentProcessor::extract($stashed);
+        $withWiki = WikilinkProcessor::process($withoutMdx, $this->api);
+        $restored = $this->unstashCodeSpans($withWiki, $codePlaceholders);
+
+        $html = $this->converter->convert($restored)->getContent();
+        $html = $this->restoreMath($html, $mathPlaceholders);
+        $html = $this->enhanceClassicMarkdownImages($html);
+        $self = $this;
+        $html = ComponentProcessor::restore($html, $components, function (string $inner) use ($self) {
+            return $self->renderMarkdownFragment($inner);
+        });
+        return $html;
+    }
+
+    /**
+     * Stash fenced code blocks + inline code spans so MDX/wikilink scans skip them.
+     * @return array{0:string,1:array<string,string>}
+     */
+    private function stashCodeSpans(string $markdown): array {
+        $placeholders = [];
+        $idx = 0;
+        $markdown = preg_replace_callback('/(^(?:```|~~~)[a-zA-Z0-9-]*\s*$.*?^(?:```|~~~)\s*$)/ms', function ($m) use (&$placeholders, &$idx) {
+            $key = "%%PENCODE_" . $idx++ . "%%";
+            $placeholders[$key] = $m[1];
+            return $key;
+        }, $markdown) ?? $markdown;
+        $markdown = preg_replace_callback('/(`+[^`\n]*?`+)/s', function ($m) use (&$placeholders, &$idx) {
+            $key = "%%PENCODE_" . $idx++ . "%%";
+            $placeholders[$key] = $m[1];
+            return $key;
+        }, $markdown) ?? $markdown;
+        return [$markdown, $placeholders];
+    }
+
+    /** @param array<string,string> $placeholders */
+    private function unstashCodeSpans(string $markdown, array $placeholders): string {
+        if ($placeholders === []) {
+            return $markdown;
+        }
+        return str_replace(array_keys($placeholders), array_values($placeholders), $markdown);
     }
 
     private function postprocessHtml($html) {
@@ -531,11 +573,11 @@ class PostRenderer {
             $beforeSrc = $matches[1];
             $src = $matches[2];
             $afterSrc = $matches[3];
-            // Skip paths already resolved by ShortcodeProcessor or absolute URLs
+            // Skip already-resolved absolute / rooted paths
             if (preg_match('~^(\.\./|\./|https?://|data:)~', $src)) {
                 return $matches[0];
             }
-            $resolvedSrc = ShortcodeProcessor::resolveAsset($src);
+            $resolvedSrc = ContentUrls::resolveAsset($src);
             return '<img' . $beforeSrc . 'src="' . htmlspecialchars($resolvedSrc) . '"' . $afterSrc;
         }, $html);
 
@@ -612,15 +654,6 @@ class PostRenderer {
         }
 
         return $markdown;
-    }
-
-    private function transcodeLegacyLinks($content) {
-        if (empty($content)) return '';
-        return preg_replace_callback('/(?<!\!)\[([^\]]+)\]\(([^\)]+)\)/', function($matches) {
-            $text = $matches[1];
-            $url = $matches[2];
-            return "[link=\"{$url}\"]{$text}[/link]";
-        }, $content);
     }
 }
 

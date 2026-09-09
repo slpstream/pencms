@@ -163,13 +163,41 @@ class SearchIndexBuilder
             $text = substr($text, strlen($m[0]));
         }
 
-        // Strip shortcodes like [shortcode ...]...[/shortcode] and {{ ... }}
+        // Strip {{ ... }} template markers
         $text = preg_replace('/\{\{[^}]*\}\}/', ' ', $text) ?? $text;
-        $text = preg_replace('/\[[^\]]+\]/', ' ', $text) ?? $text;
 
-        // Images / links → alt or link text
+        // Stash fenced + inline code so MDX/wikilink flattening skips them
+        $codePlaceholders = [];
+        $codeIdx = 0;
+        $text = preg_replace_callback('/(```[\s\S]*?```|~~~[\s\S]*?~~~)/', function ($m) use (&$codePlaceholders, &$codeIdx) {
+            $key = "%%SEARCHCODE_" . $codeIdx++ . "%%";
+            $codePlaceholders[$key] = $m[1];
+            return $key;
+        }, $text) ?? $text;
+        $text = preg_replace_callback('/(`[^`\n]+`)/', function ($m) use (&$codePlaceholders, &$codeIdx) {
+            $key = "%%SEARCHCODE_" . $codeIdx++ . "%%";
+            $codePlaceholders[$key] = $m[1];
+            return $key;
+        }, $text) ?? $text;
+
+        // Flatten MDX components (<Image /> → ![alt](src), containers → inner text)
+        $text = ComponentProcessor::flattenForMarkdown($text);
+
+        // Flatten wikilinks ([[slug|Label]] → [Label](url)) so link text survives
+        $text = WikilinkProcessor::flattenForMarkdown($text);
+
+        // Restore code (backticks stripped by the rules below)
+        if ($codePlaceholders !== []) {
+            $text = str_replace(array_keys($codePlaceholders), array_values($codePlaceholders), $text);
+        }
+
+        // Images / links → alt or link text (single brackets are pure CommonMark)
         $text = preg_replace('/!\[([^\]]*)\]\([^)]+\)/', '$1', $text) ?? $text;
         $text = preg_replace('/\[([^\]]+)\]\([^)]+\)/', '$1', $text) ?? $text;
+
+        // Leftover MDX tag fragments / wikilink markers that never parsed
+        $text = preg_replace('/<\/?[A-Z][A-Za-z0-9_.-]*(?:\s[^<>]*)?\/?>/', ' ', $text) ?? $text;
+        $text = str_replace(['[[', ']]'], ' ', $text);
 
         // Headings, emphasis, code fences, inline code, blockquotes
         $text = preg_replace('/^#{1,6}\s+/m', '', $text) ?? $text;

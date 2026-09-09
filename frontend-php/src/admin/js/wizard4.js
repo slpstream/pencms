@@ -1824,7 +1824,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Author safeguard: warn when [expand]/[embed] targets are missing
+         * Author safeguard: warn when [[>…]] / [[!…]] targets are missing
          * from the published catalog of the active Content site.
          */
         async _warnBrokenExpandRefs(content, partials) {
@@ -1833,24 +1833,23 @@ document.addEventListener('alpine:init', () => {
                 Object.values(partials).forEach((v) => blobs.push(v || ''));
             }
             const text = blobs.join('\n');
-            const re = /\[(expand|embed)\s*([^\]]*)\]/gi;
+            const re = /\[\[([!>]?)([^\]\n]*)\]\]/g;
             const refs = [];
             let m;
             while ((m = re.exec(text)) !== null) {
-                const mode = m[1].toLowerCase();
-                const attr = m[2] || '';
-                let slug = '';
+                const mode = m[1] === '!' ? 'embed' : m[1] === '>' ? 'expand' : 'link';
+                const head = (m[2] || '').split('|')[0];
+                let slug = head;
                 let heading = null;
-                const slugMatch = attr.match(/(?:^|\s)slug\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/i);
-                const defMatch = attr.match(/^\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/);
-                const headMatch = attr.match(/heading\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/i);
-                if (slugMatch) slug = slugMatch[1] || slugMatch[2] || slugMatch[3] || '';
-                else if (defMatch) slug = defMatch[1] || defMatch[2] || defMatch[3] || '';
-                if (headMatch) heading = headMatch[1] || headMatch[2] || headMatch[3] || null;
-                if (slug.includes('#')) {
-                    const parts = slug.split('#');
-                    slug = parts[0];
-                    if (!heading) heading = parts.slice(1).join('#') || null;
+                const hash = head.indexOf('#');
+                const caret = head.indexOf('^');
+                let cut = head.length;
+                if (hash !== -1) cut = Math.min(cut, hash);
+                if (caret !== -1) cut = Math.min(cut, caret);
+                slug = head.slice(0, cut).trim();
+                if (hash !== -1) {
+                    const end = caret !== -1 && caret > hash ? caret : head.length;
+                    heading = head.slice(hash + 1, end).trim() || null;
                 }
                 if (slug) refs.push({ mode, slug, heading });
             }
@@ -2223,19 +2222,19 @@ document.addEventListener('alpine:init', () => {
 
         applyShortcodeEdit() {
             const a = this.shortcodeModal.attrs;
-            let shortcode = '[image';
-            if (a.src)     shortcode += ` src="${a.src}"`;
-            if (a.alt)     shortcode += ` alt="${a.alt}"`;
-            if (a.caption) shortcode += ` caption="${a.caption}"`;
-            if (a.class)   shortcode += ` class="${a.class}"`;
-            if (a.size)    shortcode += ` size="${a.size}"`;
-            shortcode += ']';
+            let tag = '<Image';
+            if (a.src)     tag += ` src="${a.src}"`;
+            if (a.alt)     tag += ` alt="${a.alt}"`;
+            if (a.caption) tag += ` caption="${a.caption}"`;
+            if (a.class)   tag += ` class="${a.class}"`;
+            if (a.size)    tag += ` size="${a.size}"`;
+            tag += ' />';
 
             const editorRef = _editors.lastActive || _editors.main;
             if (editorRef) {
-                editorRef.replaceSelection(shortcode);
+                editorRef.replaceSelection(tag);
                 editorRef.focus();
-                this.showToast(this.shortcodeModal.mode === 'insert' ? 'Shortcode inserted.' : 'Shortcode updated.');
+                this.showToast(this.shortcodeModal.mode === 'insert' ? 'Image inserted.' : 'Image updated.');
             }
             this.shortcodeModal.open = false;
         },

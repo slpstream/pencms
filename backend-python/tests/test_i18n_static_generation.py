@@ -35,7 +35,7 @@ def _page(
     translated = language != "en"
     if language == "fr":
         title = "Dossier français"
-        body = 'Corps français.\n\n[image src="images/content/photo.jpg" alt="Photo"]'
+        body = 'Corps français.\n\n<Image src="images/content/photo.jpg" alt="Photo" />'
     elif language == "de":
         title = "Dossier deutsch"
         body = "Deutscher Inhalt."
@@ -56,10 +56,10 @@ def _page(
         body = "Unlisted post body."
     else:
         title = "Default dossier"
-        body = 'English body.\n\n[image src="images/content/photo.jpg" alt="Photo"]'
+        body = 'English body.\n\n<Image src="images/content/photo.jpg" alt="Photo" />'
     body += (
-        '\n\n[link slug="translated"]Exact link[/link] '
-        '[link slug="default-only"]Fallback link[/link]'
+        '\n\n[[translated|Exact link]] '
+        '[[default-only|Fallback link]]'
     )
     frontmatter = {
         "name": title,

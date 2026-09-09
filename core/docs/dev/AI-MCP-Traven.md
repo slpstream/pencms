@@ -93,7 +93,7 @@ PenCMS now uses Traven’s generic hooks for site-aware editing without putting 
 
 * **Link suggestions** — `onSuggestLinks` in the Insert Link modal (published posts/pages for the active Content site).
 * **Heading picker** — `onListHeadings` for Expand/Embed section dropdown once a slug is chosen.
-* **`[expand]` / `[embed]`** — loaded as `ExpandEmbedPlugin` via `options.plugins`; public HTML resolved by PHP (`ExpandResolver` / `ShortcodeProcessor`).
+* **`[[>…]]` / `[[!…]]`** — loaded as `ExpandEmbedPlugin` via `options.plugins`; public HTML resolved by PHP (`ExpandResolver` / `WikilinkProcessor`).
 * **AI / MCP catalog tools** — `suggest_internal_links`, `insert_expand_embed` / `list_page_headings` / `check_expand_refs` (sidebar); MCP exposes `suggest_internal_links` + `check_expand_refs` (insert via `write_content_file`). Shared live-published catalog (`publish_at`-aware) lives in PenCMS only.
 
 Canonical usage and architecture: [`editor-link-suggest-and-expand.md`](../editor-link-suggest-and-expand.md).

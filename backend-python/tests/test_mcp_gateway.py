@@ -785,7 +785,7 @@ def test_write_content_file_enforces_guardrails(authed_client):
         "/api/v1/mcp/pages/guardrail-test",
         json={
             "frontmatter": {"name": "Test Post", "status": "draft", "category": "summer"},
-            "body": "Body [image src=\"\" align=\"center\"]. text"
+            "body": "Body <Image src=\"\" align=\"center\" />. text"
         }
     )
     assert resp.status_code == 400
@@ -797,7 +797,7 @@ def test_write_content_file_enforces_guardrails(authed_client):
         "/api/v1/mcp/pages/guardrail-test",
         json={
             "frontmatter": {"name": "Test Post", "status": "draft", "category": "summer"},
-            "body": "Body [image src=\"/api/assets/raw/images/content/photo.jpg\" align=\"center\"]. text"
+            "body": "Body <Image src=\"/api/assets/raw/images/content/photo.jpg\" align=\"center\" />. text"
         }
     )
     assert resp.status_code == 200
@@ -900,7 +900,7 @@ def test_write_content_file_media_path_soft_warnings(authed_client):
                     "status": "draft",
                     "category": "summer",
                 },
-                "body": 'Hello [image src="does-not-exist.png" alt="x"].',
+                "body": 'Hello <Image src="does-not-exist.png" alt="x" />.',
             },
         )
         assert resp.status_code == 200, resp.text
@@ -955,7 +955,7 @@ def test_write_content_file_media_path_soft_warnings(authed_client):
                     "hero_image": "images/content/media-warn-ok.png",
                 },
                 "body": (
-                    'Ok [image src="images/content/media-warn-ok.png" alt="ok"].'
+                    'Ok <Image src="images/content/media-warn-ok.png" alt="ok" />.'
                 ),
             },
         )
@@ -976,8 +976,8 @@ def test_write_content_file_media_path_soft_warnings(authed_client):
                     ),
                 },
                 "body": (
-                    'Ok [image src="/api/assets/raw/sites/default/assets/'
-                    'images/content/media-warn-ok.png" alt="ok"].'
+                    'Ok <Image src="/api/assets/raw/sites/default/assets/'
+                    'images/content/media-warn-ok.png" alt="ok" />.'
                 ),
             },
         )
@@ -1004,7 +1004,7 @@ def test_write_content_file_media_path_soft_warnings(authed_client):
         # punctuation, and order untouched — guards against over-helpful
         # refactors that pass a looser "still contains path" check).
         typo_src = "Images/Content/Typo-Does-NOT-Exist_xyz.jpg"
-        body_in = f'Bad [image src="{typo_src}" alt="typo"].'
+        body_in = f'Bad <Image src="{typo_src}" alt="typo" />.'
         resp = authed_client.put(
             "/api/v1/mcp/pages/media-warn-typo",
             json={
@@ -1041,17 +1041,17 @@ def test_normalize_public_media_paths_leaves_typos_untouched():
     # (not merely "still looks similar" after re-casing / reordering).
     typo = "Images/Content/Typo-Does-NOT-Exist_xyz.jpg"
     assert normalize_public_media_paths(typo) == typo
-    body_typo = f'[image src="{typo}" alt="x"]'
+    body_typo = f'<Image src="{typo}" alt="x" />'
     assert normalize_public_media_paths(body_typo) == body_typo
     mixed = (
-        'A [image src="/api/assets/raw/sites/default/assets/'
-        'images/content/ok.png"] and '
-        f'[image src="{typo}"].'
+        'A <Image src="/api/assets/raw/sites/default/assets/'
+        'images/content/ok.png" alt="x" /> and '
+        f'<Image src="{typo}" />.'
     )
     out = normalize_public_media_paths(mixed)
     assert out == (
-        'A [image src="images/content/ok.png"] and '
-        f'[image src="{typo}"].'
+        'A <Image src="images/content/ok.png" alt="x" /> and '
+        f'<Image src="{typo}" />.'
     )
 
 

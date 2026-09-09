@@ -353,13 +353,13 @@ The PenCMS MCP Gateway exposes one live tool catalog tagged with `["mcp"]`.
 | `list_collection_entries` | `read` | Lists pages in a collection with exact/merged language selection. | `collection_name`, `page`, `limit`, `language`, `fallback` |
 | `read_page_metadata` | `read` | Returns exact-language frontmatter, sibling metadata, and an opaque `version` token. | `slug`, `language` (optional) |
 | `read_page_content` | `read` | Returns an exact-language Markdown body/partials and an opaque `version` token. | `slug`, `language` (optional) |
-| `update_frontmatter_field` | `write:posts` / `write:pages` | Patch **one** YAML frontmatter field (`deck`, `summary`, `faqs`, `hero_title`, `category`, `status`, `author`, …). `faqs` is a list of `{q, a}` strings; `[]` is valid and is **not** derived from `[expand]`. Body and other keys stay on disk. Same merge, caps, and `ai_publish_autonomy` as `write_content_file`. Extractive fill does **not** need publishing autonomy (that gate is `status` only). Remote MCP only — the editor AI sidebar still uses its local form+save tool of the same name. | `slug`, `key`, `value`, optional `expected_version`, `force`, `language` |
+| `update_frontmatter_field` | `write:posts` / `write:pages` | Patch **one** YAML frontmatter field (`deck`, `summary`, `faqs`, `hero_title`, `category`, `status`, `author`, …). `faqs` is a list of `{q, a}` strings; `[]` is valid and is **not** derived from `[[>…]]` expands. Body and other keys stay on disk. Same merge, caps, and `ai_publish_autonomy` as `write_content_file`. Extractive fill does **not** need publishing autonomy (that gate is `status` only). Remote MCP only — the editor AI sidebar still uses its local form+save tool of the same name. | `slug`, `key`, `value`, optional `expected_version`, `force`, `language` |
 | `search_content` | `read` | Executes site- and language-scoped FTS5 search. | `query`, `limit`, `language` (optional) |
 | `get_translation_config` | `read` | Returns active/default languages, labels, pause state, and optional per-target operation/model/named-key/review policy with binding health. Never returns secrets. | None |
 | `list_translation_gaps` | `read` | Returns exact coverage totals and missing/draft/review/rejected rows; fallback never counts. | `language` (optional) |
 | `list_translation_runs` | `read` | Lists recent bounded, body-free external run telemetry for the bound site. | `limit` |
-| `suggest_internal_links` | `read` | Suggest live-published pages (status + `publish_at`) for Markdown links or `[expand]`/`[embed]` targets. Returns `suggested_text`, `markdown_link`, `expand_shortcode`. Insert Nutshells via `write_content_file` with the shortcode string. | `query`, `limit` |
-| `check_expand_refs` | `read` | Validate `[expand]`/`[embed]` target slugs in a markdown string or page body (`slug`). Flags missing/unpublished targets only (heading misses are not broken). | `markdown` and/or `slug` |
+| `suggest_internal_links` | `read` | Suggest live-published pages (status + `publish_at`) for Markdown links or `[[>…]]`/`[[!…]]` targets. Returns `suggested_text`, `markdown_link`, `wikilink`. Insert Nutshells via `write_content_file` with the wikilink string. | `query`, `limit` |
+| `check_expand_refs` | `read` | Validate `[[>…]]`/`[[!…]]` target slugs in a markdown string or page body (`slug`). Flags missing/unpublished targets only (heading misses are not broken). | `markdown` and/or `slug` |
 | `list_media` | `read` | Lists assets in **this site's** media library (`content/sites/{id}/assets/…`), returning logical filenames and public URLs. | None |
 | `review_post` | `read` | Evaluates a post against a quality checklist using the configured LLM. Returns a structured scorecard with overall score, criteria-specific feedback, top improvements, and raw LLM text. | `slug`, `checklist` (optional), `model` (optional) |
 | `get_publish_status` | `read` | Checks the status of a background git push task. | `task_id` (optional) |
@@ -377,7 +377,7 @@ The PenCMS MCP Gateway exposes one live tool catalog tagged with `["mcp"]`.
 | `review_translation_sibling` | `publish:content` | Approve/reject through shared publication rules. Approve **publishes**. Agent tokens cannot self-review (Autonomous agents set `status` on write instead). Not host deploy. | `slug`, `language`, `decision` |
 | `report_translation_run` | `write` (legacy) | Starts/updates external, bounded, body-free telemetry; enabled policy validates operation/targets/key and snapshots non-secret model/review metadata. It does not schedule or execute translation. Requires stored `write` (no granular telemetry cap). | `run_id`, `mode`, `target_languages`, `run_status`, `counts`, `error` |
 | `write_media_file` | `write:media` | Uploads a media asset via Base64 into **this site's** assets tree. Guarded against directory traversal. | `filename`, `content_base64` |
-| `generate_media` | `write:media` | Generates an image via the configured AI provider and stores it in **this site's** media library. Returns `relative_path` / `use_for_embedding` (copy into `[image src="..."]` and frontmatter like `hero_image` — never invent filenames) and `public_url` (chat preview only). | `prompt`, `filename`, `preset` (optional), `alt_text` (optional) |
+| `generate_media` | `write:media` | Generates an image via the configured AI provider and stores it in **this site's** media library. Returns `relative_path` / `use_for_embedding` (copy into `<Image src="...">` and frontmatter like `hero_image` — never invent filenames) and `public_url` (chat preview only). | `prompt`, `filename`, `preset` (optional), `alt_text` (optional) |
 | `split_section` | `write:posts` / `write:pages` | Splits a section or text of a page into a new child fragment, converting the page into a composite document. Cap from the existing document. | `slug`, `source_slug`, `new_fragment_slug`, `split_marker` (optional) |
 | `merge_sections` | `write:posts` / `write:pages` | Merges one or more child fragments back into a target fragment or the main index of a composite page. Cap from the existing document. | `slug`, `fragment_slugs`, `into_slug` |
 | `move_section` | `write:posts` / `write:pages` | Reorders sections (articles/fragments) within a composite page. Cap from the existing document. | `slug`, `heading_path`, `before_or_after`, `target_heading_path` |
@@ -529,7 +529,7 @@ Agents already are an LLM. There is no MCP `extract_summary` / `extract_faqs` to
 
 1. `read_page_content` (you need the body).
 2. Follow `extractive_prompts.summary` / `extractive_prompts.faqs` from `get_site_prompts` (or `get_site_config`). No new facts. If the piece is not Q&A-shaped, FAQ → `[]`.
-3. `update_frontmatter_field` with `key=summary` or `key=faqs`. Write empty-only unless the operator asked to replace. `[]` is a valid FAQ value and is **not** derived from `[expand]`.
+3. `update_frontmatter_field` with `key=summary` or `key=faqs`. Write empty-only unless the operator asked to replace. `[]` is a valid FAQ value and is **not** derived from `[[>…]]` expands.
 4. Needs `write:posts` / `write:pages` and `ai_metadata_scope` ≠ `body_only`. **Does not** need publishing autonomy (that gate is `status` only).
 5. Then publish later if autonomy allows — see Creating new posts above.
 
@@ -554,11 +554,11 @@ The API includes an in-process Playwright inspect harness (`theme_render_inspect
 
 ## Related: editor link suggest + expand/embed
 
-PenCMS’s admin editor supports **link suggestions** (Insert Link typeahead) and **`[expand]` / `[embed]`** shortcodes for site-owned post transclusion. MCP agents can:
+PenCMS’s admin editor supports **link suggestions** (Insert Link typeahead) and **`[[>…]]` / `[[!…]]`** wikilinks for site-owned post transclusion. MCP agents can:
 
 1. Call `suggest_internal_links` for live-published targets.
-2. Optionally call `check_expand_refs` after drafting shortcodes.
-3. Insert via `write_content_file` (plain Markdown shortcodes — there is no MCP cursor/`insert_expand_embed`).
+2. Optionally call `check_expand_refs` after drafting wikilinks.
+3. Insert via `write_content_file` (plain Markdown wikilinks — there is no MCP cursor/`insert_expand_embed`).
 
 The AI sidebar additionally has `insert_expand_embed` and `list_page_headings` for in-editor Nutshell workflows. Full product notes: [`editor-link-suggest-and-expand.md`](./editor-link-suggest-and-expand.md).
 

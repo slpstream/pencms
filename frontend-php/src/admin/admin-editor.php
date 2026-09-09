@@ -2160,7 +2160,7 @@ include "includes/_admin-head.php";
                     </div>
                     <div class="bg-canvas border border-border p-3">
                         <code class="text-[10px] font-mono text-rust break-all"
-                            x-text="'[image' + (shortcodeModal.attrs.src ? ' src=&quot;' + shortcodeModal.attrs.src + '&quot;' : '') + (shortcodeModal.attrs.alt ? ' alt=&quot;' + shortcodeModal.attrs.alt + '&quot;' : '') + (shortcodeModal.attrs.caption ? ' caption=&quot;' + shortcodeModal.attrs.caption + '&quot;' : '') + (shortcodeModal.attrs.class ? ' class=&quot;' + shortcodeModal.attrs.class + '&quot;' : '') + (shortcodeModal.attrs.size ? ' size=&quot;' + shortcodeModal.attrs.size + '&quot;' : '') + ']'"></code>
+                            x-text="'<Image' + (shortcodeModal.attrs.src ? ' src=&quot;' + shortcodeModal.attrs.src + '&quot;' : '') + (shortcodeModal.attrs.alt ? ' alt=&quot;' + shortcodeModal.attrs.alt + '&quot;' : '') + (shortcodeModal.attrs.caption ? ' caption=&quot;' + shortcodeModal.attrs.caption + '&quot;' : '') + (shortcodeModal.attrs.class ? ' class=&quot;' + shortcodeModal.attrs.class + '&quot;' : '') + (shortcodeModal.attrs.size ? ' size=&quot;' + shortcodeModal.attrs.size + '&quot;' : '') + ' />'"></code>
                     </div>
                 </div>
             </template>

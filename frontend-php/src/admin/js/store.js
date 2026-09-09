@@ -303,10 +303,10 @@ document.addEventListener('alpine:init', () => {
         },
 
         /**
-         * Published (live) pages suitable for internal links and expand/embed targets.
+         * Published (live) pages suitable for internal links and wikilink expand/embed targets.
          * @param {string} [query]
          * @param {number} [limit=12]
-         * @returns {Promise<Array<{slug, title, hero_title, name, suggested_text, markdown_link, expand_shortcode}>>}
+         * @returns {Promise<Array<{slug, title, hero_title, name, suggested_text, markdown_link, wikilink, expand_shortcode}>>}
          */
         async getPublishedLinkCatalog(query = '', limit = 12) {
             const pages = await this.ensurePages();
@@ -334,7 +334,8 @@ document.addEventListener('alpine:init', () => {
                     if (!hay.includes(q)) continue;
                 }
 
-                const esc = (s) => String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                const esc = (s) => String(s).replace(/[\[\]|]/g, '');
+                const wikilink = `[[>${slug}|${esc(suggested_text)}]]`;
                 results.push({
                     slug,
                     title,
@@ -342,7 +343,9 @@ document.addEventListener('alpine:init', () => {
                     name: name || null,
                     suggested_text,
                     markdown_link: `[${suggested_text}](${slug})`,
-                    expand_shortcode: `[expand slug="${esc(slug)}" text="${esc(suggested_text)}"]`,
+                    wikilink,
+                    // Deprecated alias — use `wikilink`.
+                    expand_shortcode: wikilink,
                 });
                 if (results.length >= limit) break;
             }
