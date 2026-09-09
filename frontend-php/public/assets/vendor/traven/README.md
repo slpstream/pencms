@@ -1,12 +1,12 @@
 # Vendored Traven Editor
 
 * **Package:** `@freedomware/traven` and `@freedomware/traven-expand-embed`
-* **Version:** `v0.2.28`
+* **Version:** `v0.3.0`
 * **Upstream:** [slpstream/traven](https://github.com/slpstream/traven)
 * **Releases:** [Traven Releases](https://github.com/slpstream/traven/releases)
 * **npm:** [@freedomware/traven](https://www.npmjs.com/package/@freedomware/traven)
 
-> **PenCMS v0.2.0 bundles Traven Editor v0.2.28.**
+> **PenCMS v0.2.0 bundles Traven Editor v0.3.0.**
 
 ## Bundle Contents
 

@@ -9,7 +9,7 @@
 <p align="center">
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
     <a href="https://github.com/slpstream/pencms/releases"><img src="https://img.shields.io/badge/release-v0.2.0-blue.svg" alt="Release"></a>
-    <a href="https://github.com/slpstream/traven/releases/tag/%40freedomware%2Ftraven%400.2.28"><img src="https://img.shields.io/badge/Traven%20Editor-v0.2.28-success.svg" alt="Bundles Traven"></a>
+    <a href="https://github.com/slpstream/traven/releases/tag/%40freedomware%2Ftraven%400.3.0"><img src="https://img.shields.io/badge/Traven%20Editor-v0.3.0-success.svg" alt="Bundles Traven"></a>
     <a href="https://deepwiki.com/slpstream/pencms"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 </p>
 
@@ -30,7 +30,7 @@ Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastA
 5. **Shell-Free Git Syncing**: Remote repos (GitHub/GitLab) via HTTPS REST APIs when a shell is restricted.
 6. **Selfhosting**: Run locally, on LAN HTTPS, or a small VPS.
 
-> *PenCMS v0.2.0 explicitly bundles [Traven Editor](https://github.com/slpstream/traven) v0.2.28.*
+> *PenCMS v0.2.0 explicitly bundles [Traven Editor](https://github.com/slpstream/traven) v0.3.0.*
 
 ---
 
@@ -45,7 +45,7 @@ pencms/
 │
 ├── backend-python/         # FastAPI CMS + MCP + OAuth (the product brain, its backend)
 │
-└── frontend-php/           # Admin UI client (bundles Traven Editor v0.2.28)
+└── frontend-php/           # Admin UI client (bundles Traven Editor v0.3.0)
 ```
 
 ---
