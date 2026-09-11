@@ -826,15 +826,32 @@ img.traven-image.align-right:not(.size-small):not(.size-medium):not(.size-large)
 .traven-preview figure.traven-image-figure.align-fullbleed,
 .traven-preview img.traven-image.align-fullbleed,
 figure.traven-image-figure.align-fullbleed,
-img.traven-image.align-fullbleed {
+img.traven-image.align-fullbleed,
+.article-content .align-fullbleed,
+.article-content figure.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
   margin-left: calc(50% - 50vw) !important;
   margin-right: calc(50% - 50vw) !important;
   border-radius: 0 !important;
   display: block !important;
   float: none !important;
   clear: both !important;
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px !important;
+  text-align: center !important;
 }
 
 .gallery-single.align-fullbleed .photo-wrapper img,

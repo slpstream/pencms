@@ -276,6 +276,15 @@ figcaption {
     margin-top: 0.5rem !important;
 }
 
+/* Fullbleed breakout spacing in article content & preview */
+.article-content .align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed {
+    margin-top: 1.5em !important;
+    margin-bottom: 1.5em !important;
+}
+
 mark {
     background-color: rgba(254, 240, 138, 0.75);
     border-radius: 0.25rem;

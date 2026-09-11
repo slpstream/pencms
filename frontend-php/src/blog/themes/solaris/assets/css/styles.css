@@ -1512,19 +1512,26 @@ body.traven-preview .search-result-excerpt {
 .gallery-single .caption,
 .figure-full .caption,
 .classic-markdown-figure .caption,
+figcaption.traven-image-caption,
 figcaption.caption {
   font-size: 0.85rem;
   color: var(--solaris-text-muted);
   text-align: center;
   margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
   line-height: 1.4;
 }
 
 .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
 .gallery-single.align-center,
-.gallery-single.inline-image-center {
+.gallery-single.inline-image-center,
+.traven-preview figure.traven-image-figure.align-center,
+.article-content figure.traven-image-figure.align-center,
+figure.traven-image-figure.align-center {
   margin-left: auto !important;
   margin-right: auto !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
   float: none !important;
 }
 
@@ -1571,9 +1578,12 @@ body.traven-preview .main-container figure.align-fullbleed,
 .article-content .align-fullbleed,
 .article-content .gallery-single.align-fullbleed,
 .article-content figure.align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
 .article-content img.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
   margin-left: calc(50% - 50vw) !important;
   margin-right: calc(50% - 50vw) !important;
   float: none !important;
@@ -1582,6 +1592,19 @@ body.traven-preview .main-container figure.align-fullbleed,
   position: relative;
   left: auto;
   transform: none;
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px 12px !important;
+  text-align: center !important;
 }
 
 .gallery-single.align-fullbleed .photo-wrapper,

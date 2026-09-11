@@ -887,6 +887,38 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
   max-width: 50%;
 }
 
+/* Image Centering (Preview Scope) */
+.traven-preview .align-center,
+.traven-preview .inline-image-center,
+.traven-preview figure.align-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview .traven-image-figure.align-center,
+.traven-preview img.align-center,
+.traven-preview img.traven-image.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+figure.traven-image-figure.align-center,
+figure.align-center {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  float: none !important;
+  display: block !important;
+  clear: both !important;
+  text-align: center;
+}
+
+/* Image Images inside Preview Figures */
+.traven-preview figure.traven-image-figure img,
+.traven-preview img.traven-image,
+figure.traven-image-figure img,
+img.traven-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
 /* Image Alignments (Editor Scope - Auto margins, no vertical margin/float) */
 .cm-wysiwym-image-container.align-left {
   margin: 0 auto 0 0 !important;
@@ -898,7 +930,15 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
   max-width: 50%;
 }
 
-/* Float Size Specificity Rules */
+.cm-wysiwym-image-container.align-center {
+  margin: 0 auto !important;
+  float: none !important;
+  display: block !important;
+  clear: both !important;
+  text-align: center;
+}
+
+/* Float & Centered Size Specificity Rules */
 .traven-preview .align-left.size-small,
 .traven-preview .align-left.img--small,
 .traven-preview .align-left.img-30,
@@ -907,10 +947,18 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
 .traven-preview .align-right.img--small,
 .traven-preview .align-right.img-30,
 .traven-preview .inline-image-right.size-small,
+.traven-preview .align-center.size-small,
+.traven-preview .align-center.img--small,
+.traven-preview .align-center.img-30,
+.traven-preview .inline-image-center.size-small,
 .traven-preview figure.align-left.size-small,
 .traven-preview figure.align-right.size-small,
+.traven-preview figure.align-center.size-small,
+.traven-preview figure.traven-image-figure.size-small,
+.traven-preview figure.size-small,
 .cm-wysiwym-image-container.align-left.size-small,
-.cm-wysiwym-image-container.align-right.size-small {
+.cm-wysiwym-image-container.align-right.size-small,
+.cm-wysiwym-image-container.align-center.size-small {
   width: 30% !important;
   max-width: 30% !important;
 }
@@ -923,17 +971,57 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
 .traven-preview .align-right.img--medium,
 .traven-preview .align-right.img-50,
 .traven-preview .inline-image-right.size-medium,
+.traven-preview .align-center.size-medium,
+.traven-preview .align-center.img--medium,
+.traven-preview .align-center.img-50,
+.traven-preview .inline-image-center.size-medium,
 .traven-preview figure.align-left.size-medium,
 .traven-preview figure.align-right.size-medium,
+.traven-preview figure.align-center.size-medium,
+.traven-preview figure.traven-image-figure.size-medium,
+.traven-preview figure.size-medium,
 .cm-wysiwym-image-container.align-left.size-medium,
-.cm-wysiwym-image-container.align-right.size-medium {
+.cm-wysiwym-image-container.align-right.size-medium,
+.cm-wysiwym-image-container.align-center.size-medium {
   width: 50% !important;
   max-width: 50% !important;
 }
 
-/* Fullbleed Images - Fixed 16:9 Aspect Ratio (Preview Scope) */
+.traven-preview .align-left.size-large,
+.traven-preview .align-left.img--large,
+.traven-preview .align-left.img-70,
+.traven-preview .inline-image-left.size-large,
+.traven-preview .align-right.size-large,
+.traven-preview .align-right.img--large,
+.traven-preview .align-right.img-70,
+.traven-preview .inline-image-right.size-large,
+.traven-preview .align-center.size-large,
+.traven-preview .align-center.img--large,
+.traven-preview .align-center.img-70,
+.traven-preview .inline-image-center.size-large,
+.traven-preview figure.align-left.size-large,
+.traven-preview figure.align-right.size-large,
+.traven-preview figure.align-center.size-large,
+.traven-preview figure.traven-image-figure.size-large,
+.traven-preview figure.size-large,
+.cm-wysiwym-image-container.align-left.size-large,
+.cm-wysiwym-image-container.align-right.size-large,
+.cm-wysiwym-image-container.align-center.size-large {
+  width: 70% !important;
+  max-width: 70% !important;
+}
+
+.traven-preview .align-center.size-full,
+.traven-preview figure.size-full,
+.traven-preview figure.traven-image-figure.size-full {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Fullbleed Images (Preview Scope) */
 .traven-preview .align-fullbleed,
 .traven-preview figure.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
 .traven-preview img.align-fullbleed {
   width: calc(100% + 280px) !important;
   max-width: calc(100vw - 32px) !important;
@@ -943,9 +1031,21 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
   clear: both !important;
   margin-top: 2rem !important;
   margin-bottom: 2rem !important;
-  border-radius: 6px;
+}
+
+/* Standalone fullbleed image in preview gets aspect ratio */
+.traven-preview img.align-fullbleed {
   aspect-ratio: 16 / 9 !important;
-  overflow: hidden !important;
+  object-fit: cover !important;
+  border-radius: 6px;
+}
+
+/* Fullbleed figures containing captions must not clip captions */
+.traven-preview figure.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed {
+  aspect-ratio: auto !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
 }
 
 /* Fullbleed Images - Editor Scope (Zero vertical margin) */
@@ -960,10 +1060,31 @@ html.cm-wysiwym-dark .traven-preview .traven-component-warning summary.component
 
 .traven-preview .align-fullbleed img,
 .traven-preview figure.align-fullbleed img,
+.traven-preview figure.traven-image-figure.align-fullbleed img,
 .cm-wysiwym-image-container.align-fullbleed img {
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9 !important;
   object-fit: cover !important;
+  border-radius: 6px;
+  display: block;
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview figure.align-fullbleed figcaption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+figure.align-fullbleed figcaption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px 12px !important;
+  text-align: center !important;
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Exclude Audio from 16:9 Aspect Ratio */

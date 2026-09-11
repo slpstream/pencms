@@ -1321,5 +1321,30 @@ body.traven-preview .launch-discussion .pen-feedback__title,
   color: var(--color-accent);
 }
 
+/* Fullbleed breakout spacing in article content & preview */
+.article-content .align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview figure.align-fullbleed,
+figure.traven-image-figure.align-fullbleed,
+figure.align-fullbleed {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px !important;
+  text-align: center !important;
+}
+
+
 
 

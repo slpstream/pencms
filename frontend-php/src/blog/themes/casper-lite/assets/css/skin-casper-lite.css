@@ -1368,9 +1368,12 @@ img.classic-markdown {
 /* Casper-style wide stage — break out past the reading column, not viewport wall-to-wall.
  * post.html.twig uses lg:grid-cols-3 (2/3 content + 1/3 sidebar), so 100vw / calc(-50vw + 50%)
  * flush-lefts and underlaps the sidebar. Keep breakout within the column + grid gap. */
-.traven-preview .align-fullbleed {
+.traven-preview .align-fullbleed,
+.article-content .align-fullbleed {
   width: calc(100% + 2rem) !important;
   max-width: none !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 1.5em !important;
   margin-left: -1rem !important;
   margin-right: -1rem !important;
   border-radius: 0 !important;
@@ -1379,7 +1382,8 @@ img.classic-markdown {
 }
 
 @media (min-width: 640px) {
-  .traven-preview .align-fullbleed {
+  .traven-preview .align-fullbleed,
+  .article-content .align-fullbleed {
     width: calc(100% + 4rem) !important;
     margin-left: -2rem !important;
     margin-right: -2rem !important;
@@ -1389,11 +1393,24 @@ img.classic-markdown {
 @media (min-width: 1024px) {
 
   /* gap-12 = 3rem between content and sidebar — stay inside that budget on the right */
-  .traven-preview .align-fullbleed {
+  .traven-preview .align-fullbleed,
+  .article-content .align-fullbleed {
     width: calc(100% + 3rem) !important;
     margin-left: -1.5rem !important;
     margin-right: -1.5rem !important;
   }
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+.article-content .align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px !important;
+  text-align: center !important;
 }
 
 /* Components rendering inside preview */

@@ -445,8 +445,18 @@ body.page-front .site-header {
   /* Equal side columns so the article column is centered in .main-container
      (and thus in the viewport). Asymmetric 2.5/6/3.5 broke the classic
      full-bleed calc(-50vw + 50%) math above this breakpoint. */
-  .layout-grid.layout-grid-with-nav.layout-grid-post {
+  .layout-grid.layout-grid-post {
     grid-template-columns: 3fr 6fr 3fr;
+  }
+
+  .layout-grid.layout-grid-post:not(.layout-grid-with-nav) > :first-child {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  .layout-grid.layout-grid-post:not(.layout-grid-with-nav) > .sidebar-column {
+    grid-column: 3;
+    min-width: 0;
   }
 }
 
@@ -623,6 +633,12 @@ body.page-front .site-header {
 .post-body {
   max-width: 840px;
   margin-bottom: 48px;
+}
+
+.layout-grid-post .post-body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 /* Apply editor-like typography & widgets to render correctly */
@@ -1204,8 +1220,14 @@ figcaption,
  * It is NOT true for the 2-column 8fr/4fr feed layout, so those stay at
  * column width.
  */
+body.traven-preview .main-container .align-fullbleed,
 body.traven-preview .main-container .gallery-single.align-fullbleed,
-.main-container .traven-preview .gallery-single.align-fullbleed {
+body.traven-preview .main-container img.align-fullbleed,
+body.traven-preview .main-container figure.align-fullbleed,
+.main-container .traven-preview .align-fullbleed,
+.main-container .traven-preview .gallery-single.align-fullbleed,
+.main-container .traven-preview img.align-fullbleed,
+.main-container .traven-preview figure.align-fullbleed {
   width: 100% !important;
   max-width: 100% !important;
   margin-left: 0 !important;
@@ -1217,23 +1239,58 @@ body.traven-preview .main-container .gallery-single.align-fullbleed,
 
 @media (max-width: 1023px) {
 
+  body.traven-preview .main-container .align-fullbleed,
   body.traven-preview .main-container .gallery-single.align-fullbleed,
-  .main-container .traven-preview .gallery-single.align-fullbleed {
+  body.traven-preview .main-container img.align-fullbleed,
+  body.traven-preview .main-container figure.align-fullbleed,
+  .main-container .traven-preview .align-fullbleed,
+  .main-container .traven-preview .gallery-single.align-fullbleed,
+  .main-container .traven-preview img.align-fullbleed,
+  .main-container .traven-preview figure.align-fullbleed {
     width: 100vw !important;
     max-width: 100vw !important;
     margin-left: calc(50% - 50vw) !important;
     margin-right: calc(50% - 50vw) !important;
+    float: none !important;
+    clear: both !important;
+    border-radius: 0 !important;
   }
 }
 
 @media (min-width: 1024px) {
 
+  body.traven-preview .main-container .layout-grid-post .align-fullbleed,
   body.traven-preview .main-container .layout-grid-post .gallery-single.align-fullbleed,
-  .main-container .layout-grid-post .traven-preview .gallery-single.align-fullbleed {
+  body.traven-preview .main-container .layout-grid-post img.align-fullbleed,
+  body.traven-preview .main-container .layout-grid-post figure.align-fullbleed,
+  .main-container .layout-grid-post .traven-preview .align-fullbleed,
+  .main-container .layout-grid-post .traven-preview .gallery-single.align-fullbleed,
+  .main-container .layout-grid-post .traven-preview img.align-fullbleed,
+  .main-container .layout-grid-post .traven-preview figure.align-fullbleed {
     width: 100vw !important;
     max-width: 100vw !important;
     margin-left: calc(50% - 50vw) !important;
     margin-right: calc(50% - 50vw) !important;
+    float: none !important;
+    clear: both !important;
+    border-radius: 0 !important;
+    position: relative;
+    left: auto;
+    transform: none;
+  }
+
+  body.traven-preview .main-container .layout-grid-post .gallery-single.align-fullbleed .photo-wrapper img,
+  body.traven-preview .main-container .layout-grid-post figure.traven-image-figure.align-fullbleed img,
+  body.traven-preview .main-container .layout-grid-post img.traven-image.align-fullbleed,
+  .main-container .layout-grid-post .traven-preview .gallery-single.align-fullbleed .photo-wrapper img,
+  .main-container .layout-grid-post .traven-preview figure.traven-image-figure.align-fullbleed img,
+  .main-container .layout-grid-post .traven-preview img.traven-image.align-fullbleed {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px;
+    object-fit: cover !important;
+    object-position: center;
+    aspect-ratio: 16 / 9;
   }
 }
 

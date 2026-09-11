@@ -1368,32 +1368,66 @@ body.traven-preview {
   float: none;
 }
 
-.traven-preview img.traven-image.align-fullbleed,
 .traven-preview figure.traven-image-figure.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
-  margin-left: calc(-50vw + 50%) !important;
-  margin-right: calc(-50vw + 50%) !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
   border-radius: 0 !important;
   display: block !important;
   float: none !important;
   clear: both !important;
-  /* Match public full-bleed crop: 16:9 letterbox capped at hero height */
-  aspect-ratio: 16 / 9;
-  max-height: 500px;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  box-sizing: border-box;
 }
 
 .traven-preview img.traven-image.align-fullbleed {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  border-radius: 0 !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
   height: auto !important;
+  aspect-ratio: 16 / 9;
+  max-height: 500px;
   object-fit: cover !important;
   object-position: center;
 }
 
 .traven-preview figure.traven-image-figure.align-fullbleed img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  max-height: 500px;
+  object-fit: cover !important;
   object-position: center;
+  display: block !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption {
+  font-family: inherit !important;
+  font-size: 0.82em;
+  color: #64748b;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  padding: 0 16px;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .traven-preview img.traven-image.size-small,
@@ -1428,6 +1462,7 @@ body.traven-preview {
   font-size: 0.82em;
   color: #64748b;
   margin-top: 8px;
+  padding: 0 8px;
   text-align: center;
   line-height: 1.4;
 }

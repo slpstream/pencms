@@ -1344,7 +1344,7 @@
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  margin: 12px auto;
+  margin: 1.5rem auto;
   display: block;
 }
 
@@ -1362,14 +1362,18 @@
 
 .traven-preview img.traven-image.align-center,
 .traven-preview figure.traven-image-figure.align-center {
-  margin: 12px auto;
+  margin: 1.5rem auto !important;
   display: block;
 }
 
 .traven-preview img.traven-image.align-fullbleed,
-.traven-preview figure.traven-image-figure.align-fullbleed {
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview .align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
   margin-left: calc(-50vw + 50%) !important;
   margin-right: calc(-50vw + 50%) !important;
   border-radius: 0 !important;
@@ -1406,13 +1410,29 @@
   display: block;
 }
 
-.traven-preview figure.traven-image-figure figcaption.traven-image-caption {
+.traven-preview figure.traven-image-figure figcaption.traven-image-caption,
+.traven-preview figcaption.traven-image-caption,
+.traven-preview figcaption.caption {
   font-family: inherit !important;
   font-size: 0.85em;
   color: #6B7280;
   margin-top: 8px;
+  padding-bottom: 10px;
   text-align: center;
   line-height: 1.35;
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption,
+.traven-preview .align-fullbleed .traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 6px 16px 12px !important;
+  text-align: center !important;
 }
 
 /* Video preview styles */

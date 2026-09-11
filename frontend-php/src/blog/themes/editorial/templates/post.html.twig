@@ -3,7 +3,7 @@
 
 {% set secondary_items = menu('secondary') %}
 <main class="main-container">
-    <div class="layout-grid{% if secondary_items is not empty %} layout-grid-with-nav layout-grid-post{% endif %}">
+    <div class="layout-grid layout-grid-post{% if secondary_items is not empty %} layout-grid-with-nav{% endif %}">
         {% if secondary_items is not empty %}
             <aside class="sidebar-column sidebar-column-nav">
                 {{ theme.partial('sidebar-secondary') | raw }}

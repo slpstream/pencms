@@ -1569,6 +1569,9 @@ details.traven-component:not([open]) summary.component-header {
 
 /* Fullbleed Images, Video & Audio Breakout */
 .marut-article-card .align-fullbleed,
+.marut-article-card figure.align-fullbleed,
+.marut-article-card figure.traven-image-figure.align-fullbleed,
+.marut-article-card .traven-image-figure.align-fullbleed,
 .marut-article-card .inline-image-fullbleed,
 .marut-article-card .inline-video-fullbleed,
 .marut-article-card .inline-audio-fullbleed,
@@ -1577,13 +1580,23 @@ details.traven-component:not([open]) summary.component-header {
 .marut-article-card figure.traven-video-figure.align-fullbleed,
 .marut-article-card .traven-video-container.align-fullbleed,
 .article-content .align-fullbleed,
+.article-content figure.align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
+.article-content .traven-image-figure.align-fullbleed,
 .article-content .inline-image-fullbleed,
 .article-content .inline-video-fullbleed,
 .article-content .inline-audio-fullbleed,
 .article-content figure.traven-audio-figure.align-fullbleed,
 .article-content .traven-audio-container.align-fullbleed,
 .article-content figure.traven-video-figure.align-fullbleed,
-.article-content .traven-video-container.align-fullbleed {
+.article-content .traven-video-container.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview .traven-image-figure.align-fullbleed,
+figure.traven-image-figure.align-fullbleed,
+figure.align-fullbleed,
+.align-fullbleed {
   width: calc(100% + (2 * var(--card-padding-x, 2rem))) !important;
   max-width: calc(100% + (2 * var(--card-padding-x, 2rem))) !important;
   margin-left: calc(-1 * var(--card-padding-x, 2rem)) !important;
@@ -1619,15 +1632,18 @@ figure.traven-audio-figure.align-fullbleed audio,
   border-radius: 0 !important;
 }
 
+.align-fullbleed img,
 .align-fullbleed .photo-wrapper img,
 .inline-image-fullbleed .photo-wrapper img,
 .align-fullbleed > img,
 .inline-image-fullbleed > img,
 img.align-fullbleed,
-img.inline-image-fullbleed {
+img.inline-image-fullbleed,
+figure.traven-image-figure.align-fullbleed img,
+figure.align-fullbleed img {
   display: block !important;
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
   aspect-ratio: 16 / 9 !important;
   object-fit: cover !important;
   object-position: center !important;
@@ -1640,6 +1656,122 @@ img.inline-image-fullbleed {
 .classic-markdown-figure,
 figure {
   margin-bottom: 1.75rem;
+}
+
+/* Image Float Alignments */
+.traven-preview .align-left,
+.traven-preview .inline-image-left,
+.align-left,
+.inline-image-left,
+.alignleft,
+figure.align-left,
+figure.alignleft,
+figure.traven-image-figure.align-left,
+.traven-image-figure.align-left {
+  float: left !important;
+  margin: 0.5rem 1.5rem 1rem 0 !important;
+  max-width: 50%;
+}
+
+.traven-preview .align-right,
+.traven-preview .inline-image-right,
+.align-right,
+.inline-image-right,
+.alignright,
+figure.align-right,
+figure.alignright,
+figure.traven-image-figure.align-right,
+.traven-image-figure.align-right {
+  float: right !important;
+  margin: 0.5rem 0 1rem 1.5rem !important;
+  max-width: 50%;
+}
+
+/* Image Centering */
+.traven-preview .align-center,
+.traven-preview .inline-image-center,
+.traven-preview figure.align-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview .traven-image-figure.align-center,
+.traven-preview img.align-center,
+.traven-preview img.traven-image.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+.traven-preview .gallery-single.inline-image-center,
+.traven-preview .gallery-single.align-center,
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+.gallery-single.inline-image-center,
+.gallery-single.align-center,
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+.article-content figure.traven-image-figure.align-center,
+figure.traven-image-figure.align-center,
+figure.align-center,
+.align-center {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  float: none !important;
+  clear: both !important;
+  text-align: center;
+}
+
+figure.traven-image-figure img,
+.traven-image-figure img,
+img.traven-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Size classes */
+.size-small:not(.align-fullbleed),
+.img--small:not(.align-fullbleed),
+.img-30:not(.align-fullbleed),
+figure.size-small:not(.align-fullbleed),
+figure.align-center.size-small:not(.align-fullbleed),
+.align-left.size-small,
+.align-right.size-small,
+.align-center.size-small,
+figure.traven-image-figure.size-small:not(.align-fullbleed) {
+  width: 30% !important;
+  max-width: 30% !important;
+}
+
+.size-medium:not(.align-fullbleed),
+.img--medium:not(.align-fullbleed),
+.img-50:not(.align-fullbleed),
+figure.size-medium:not(.align-fullbleed),
+figure.align-center.size-medium:not(.align-fullbleed),
+.align-left.size-medium,
+.align-right.size-medium,
+.align-center.size-medium,
+figure.traven-image-figure.size-medium:not(.align-fullbleed) {
+  width: 50% !important;
+  max-width: 50% !important;
+}
+
+.size-large:not(.align-fullbleed),
+.img--large:not(.align-fullbleed),
+.img-70:not(.align-fullbleed),
+figure.size-large:not(.align-fullbleed),
+figure.align-center.size-large:not(.align-fullbleed),
+.align-left.size-large,
+.align-right.size-large,
+.align-center.size-large,
+figure.traven-image-figure.size-large:not(.align-fullbleed) {
+  width: 70% !important;
+  max-width: 70% !important;
+}
+
+.size-full:not(.align-fullbleed),
+.img--full:not(.align-fullbleed),
+.img-100:not(.align-fullbleed),
+figure.size-full:not(.align-fullbleed),
+figure.align-center.size-full:not(.align-fullbleed),
+figure.traven-image-figure.size-full:not(.align-fullbleed) {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 img.classic-markdown {

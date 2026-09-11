@@ -280,7 +280,7 @@
   --card-bg: color-mix(in srgb, var(--color-bg) 72%, black);
 }
 
-.cm-editor,
+.cm-editor:not(.raw-editor-mount *),
 .traven-preview {
   font-family: var(--traven-font-body) !important;
   font-size: 17.5px !important;
@@ -355,25 +355,25 @@
   color: color-mix(in srgb, var(--color-text) 82%, transparent) !important;
 }
 
-.cm-editor .cm-selectionBackground,
-.cm-editor .cm-native-selection,
-.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+.cm-editor:not(.raw-editor-mount *) .cm-selectionBackground,
+.cm-editor:not(.raw-editor-mount *) .cm-native-selection,
+.cm-editor:not(.raw-editor-mount *).cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
   background: var(--traven-selection) !important;
 }
-.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+.cm-editor:not(.raw-editor-mount *).cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
   background: var(--traven-selection-focused) !important;
 }
-.cm-editor .cm-cursor {
+.cm-editor:not(.raw-editor-mount *) .cm-cursor {
   border-left-color: var(--color-accent) !important;
 }
-.cm-editor .cm-fat-cursor {
+.cm-editor:not(.raw-editor-mount *) .cm-fat-cursor {
   background: var(--color-accent) !important;
   opacity: 0.6 !important;
 }
-.cm-editor .cm-activeLine {
+.cm-editor:not(.raw-editor-mount *) .cm-activeLine {
   background-color: var(--traven-active-line) !important;
 }
-.cm-editor .cm-activeLineGutter {
+.cm-editor:not(.raw-editor-mount *) .cm-activeLineGutter {
   background-color: transparent !important;
   color: var(--color-accent) !important;
   font-weight: 600;
@@ -462,43 +462,64 @@
   color: var(--earth) !important;
   font-style: italic !important;
 }
-.cm-editor .tok-keyword,
-.cm-editor .cmt-keyword {
+.cm-editor:not(.raw-editor-mount *) .tok-keyword,
+.cm-editor:not(.raw-editor-mount *) .cmt-keyword {
   color: var(--torch) !important;
 }
-.cm-editor .tok-string,
-.cm-editor .cmt-string {
+.cm-editor:not(.raw-editor-mount *) .tok-string,
+.cm-editor:not(.raw-editor-mount *) .cmt-string {
   color: var(--bone) !important;
 }
-.cm-editor .tok-number,
-.cm-editor .cmt-number,
-.cm-editor .tok-boolean,
-.cm-editor .cmt-boolean {
+.cm-editor:not(.raw-editor-mount *) .tok-number,
+.cm-editor:not(.raw-editor-mount *) .cmt-number,
+.cm-editor:not(.raw-editor-mount *) .tok-boolean,
+.cm-editor:not(.raw-editor-mount *) .cmt-boolean {
   color: var(--torch) !important;
 }
-.cm-editor .tok-variableName,
-.cm-editor .cmt-variableName {
+.cm-editor:not(.raw-editor-mount *) .tok-variableName,
+.cm-editor:not(.raw-editor-mount *) .cmt-variableName {
   color: var(--bone) !important;
 }
-.cm-editor .tok-propertyName,
-.cm-editor .cmt-propertyName {
+.cm-editor:not(.raw-editor-mount *) .tok-propertyName,
+.cm-editor:not(.raw-editor-mount *) .cmt-propertyName {
   color: var(--torch) !important;
 }
-.cm-editor .tok-operator,
-.cm-editor .cmt-operator {
+.cm-editor:not(.raw-editor-mount *) .tok-operator,
+.cm-editor:not(.raw-editor-mount *) .cmt-operator {
   color: var(--bone) !important;
 }
-.cm-editor .tok-url,
-.cm-editor .cmt-url,
-.cm-editor .tok-link,
-.cm-editor .cmt-link {
+.cm-editor:not(.raw-editor-mount *) .tok-url,
+.cm-editor:not(.raw-editor-mount *) .cmt-url,
+.cm-editor:not(.raw-editor-mount *) .tok-link,
+.cm-editor:not(.raw-editor-mount *) .cmt-link {
   color: var(--torch) !important;
 }
 
 .raw-editor-mount {
   font-family: var(--traven-font-mono) !important;
-  color: var(--traven-text) !important;
-  background: var(--traven-bg) !important;
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+.raw-editor-mount .cm-editor,
+.raw-editor-mount .cm-scroller,
+.raw-editor-mount .cm-content,
+.raw-editor-mount .cm-line {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+.raw-editor-mount .cm-activeLine,
+body.raw-markdown-active .raw-editor-mount .cm-activeLine {
+  background-color: #f1f5f9 !important;
+  color: #1e293b !important;
+}
+.raw-editor-mount .cm-activeLineGutter,
+body.raw-markdown-active .raw-editor-mount .cm-activeLineGutter {
+  background-color: transparent !important;
+  color: #cc4a0a !important;
+}
+.raw-editor-mount .cm-selectionBackground,
+body.raw-markdown-active .raw-editor-mount .cm-selectionBackground {
+  background-color: rgba(204, 74, 10, 0.15) !important;
 }
 
 /* ==========================================================================
@@ -818,6 +839,10 @@
   border: 1px solid var(--rule);
   max-width: 100%;
   height: auto;
+}
+
+.cm-editor .cm-wysiwym-image-caption {
+  text-align: center;
 }
 
 /* ==========================================================================
@@ -1315,6 +1340,8 @@ details[open] > summary.component-header::before { content: "▾"; }
   display: block;
 }
 
+.traven-preview figure.traven-image-figure figcaption.traven-image-caption,
+.traven-preview figure.classic-markdown-figure figcaption.caption,
 .traven-preview .gallery-single .caption,
 .traven-preview .figure-full .caption,
 .traven-preview .classic-markdown-figure .caption,
@@ -1323,13 +1350,14 @@ details[open] > summary.component-header::before { content: "▾"; }
 .traven-preview figcaption.traven-video-caption,
 .traven-preview figcaption.traven-audio-caption,
 .traven-preview .traven-figure-caption,
-.traven-preview span.caption {
+.traven-preview span.caption,
+.traven-preview .traven-image-caption {
   font-family: var(--font-grotesk);
   font-size: 11.5px;
   line-height: 1.5 !important;
   letter-spacing: 0.08em;
   color: color-mix(in srgb, var(--color-muted) 80%, transparent);
-  text-align: left;
+  text-align: center;
   margin-top: 10px;
   margin-bottom: 0;
   padding-top: 10px;

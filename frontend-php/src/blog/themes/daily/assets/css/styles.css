@@ -1164,14 +1164,65 @@ img.classic-markdown {
   margin: 1.5rem auto;
   clear: both;
 }
-.gallery-single .caption, .figure-full .caption,
-.classic-markdown-figure .caption, figcaption.caption {
+.classic-markdown-figure img.classic-markdown,
+.classic-markdown-figure img {
+  display: block;
+  margin: 0 auto;
+}
+figure.traven-image-figure,
+.traven-image-figure {
+  display: block;
+  margin: 1.5rem auto;
+  clear: both;
+}
+figure.traven-image-figure img.traven-image,
+figure.traven-image-figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+img.traven-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.gallery-single .caption,
+.figure-full .caption,
+.classic-markdown-figure .caption,
+figcaption.caption,
+figcaption.traven-image-caption,
+figcaption.traven-figure-caption,
+figcaption.traven-video-caption,
+figcaption.traven-audio-caption,
+.traven-image-caption,
+.traven-figure-caption,
+.traven-video-caption,
+.traven-audio-caption,
+figure.traven-image-figure figcaption,
+figure:not(.hero) figcaption {
   font-family: var(--font-ui);
   font-size: 0.85rem;
+  line-height: 1.4;
   color: var(--color-muted);
   text-align: center;
-  margin-top: 10px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  display: block;
 }
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed .traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 16px;
+  text-align: center;
+}
+.gallery-single.img--xsmall, .gallery-single.size-xsmall,
+.figure-full.img--xsmall, .figure-full.size-xsmall,
+.img--xsmall, .size-xsmall { width: 20%; max-width: 100%; }
 .gallery-single.img--small, .gallery-single.size-small,
 .figure-full.img--small, .figure-full.size-small,
 .img--small, .size-small { width: 30%; max-width: 100%; }
@@ -1183,13 +1234,15 @@ img.classic-markdown {
 .img--large, .size-large { width: 70%; max-width: 100%; }
 .gallery-single.img--xlarge, .gallery-single.size-xlarge,
 .figure-full.img--xlarge, .figure-full.size-xlarge,
-.img--xlarge, .size-xlarge { width: 100%; }
+.img--xlarge, .size-xlarge, .size-full { width: 100%; }
 
-.story .align-left, .story .inline-image-left {
+.story .align-left, .story .inline-image-left,
+.align-left, .inline-image-left {
   float: left;
   margin: 8px 24px 24px 0 !important;
 }
-.story .align-right, .story .inline-image-right {
+.story .align-right, .story .inline-image-right,
+.align-right, .inline-image-right {
   float: right;
   margin: 8px 0 24px 24px !important;
 }
@@ -1197,6 +1250,15 @@ img.classic-markdown {
   margin-left: auto !important;
   margin-right: auto !important;
   float: none !important;
+}
+.align-fullbleed {
+  width: calc(100% + 2rem) !important;
+  max-width: none !important;
+  margin-left: -1rem !important;
+  margin-right: -1rem !important;
+  border-radius: 0 !important;
+  float: none !important;
+  clear: both !important;
 }
 
 @media (max-width: 1100px) {

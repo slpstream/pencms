@@ -140,6 +140,10 @@ img { max-width: 100%; height: auto; border-radius: var(--radius); }
 }
 .skip-link:focus { left: var(--space-2); }
 
+html {
+  overflow-x: clip;
+}
+
 main, .main-container {
   width: 100%;
   max-width: var(--page-max);
@@ -1428,4 +1432,81 @@ body.traven-preview .gazette-discussion .pen-feedback__title,
   font-family: var(--font-serif);
   font-size: var(--text-s);
   color: var(--color-accent);
+}
+
+/* Fullbleed Breakout & Caption Spacing -------------------------------------- */
+.article-content .align-fullbleed,
+.article-content figure.traven-image-figure.align-fullbleed,
+.article-content figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview figure.align-fullbleed,
+figure.traven-image-figure.align-fullbleed,
+figure.align-fullbleed,
+.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  display: block !important;
+  float: none !important;
+  clear: both !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 899px) {
+  .article-content .align-fullbleed,
+  .article-content figure.traven-image-figure.align-fullbleed,
+  .article-content figure.align-fullbleed,
+  .traven-preview .align-fullbleed,
+  .traven-preview figure.traven-image-figure.align-fullbleed,
+  .traven-preview figure.align-fullbleed,
+  figure.traven-image-figure.align-fullbleed,
+  figure.align-fullbleed,
+  .align-fullbleed {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+  }
+}
+
+.article-content figure.traven-image-figure.align-fullbleed img,
+.article-content figure.align-fullbleed img,
+.article-content img.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed img,
+.traven-preview figure.align-fullbleed img,
+.traven-preview img.align-fullbleed,
+figure.traven-image-figure.align-fullbleed img,
+figure.align-fullbleed img,
+.align-fullbleed img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Fullbleed image caption styling: readable measure, centered, and clean spacing */
+.article-content figure.traven-image-figure.align-fullbleed figcaption,
+.article-content figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+figure.traven-image-figure.align-fullbleed figcaption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.align-fullbleed figcaption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 8px 16px 14px !important;
+  text-align: center !important;
+  display: block !important;
+  line-height: 1.4 !important;
 }
