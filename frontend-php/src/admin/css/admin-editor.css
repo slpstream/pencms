@@ -228,10 +228,15 @@ body.raw-markdown-active .raw-editor-mount .cm-gutterElement {
     padding: 0 16px 0 8px !important;
 }
 
+body.raw-markdown-active .raw-editor-mount .cm-activeLine,
+.raw-editor-mount .cm-editor .cm-activeLine,
 .raw-editor-mount .cm-activeLine {
-    background-color: rgba(241, 245, 249, 0.6) !important;
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
 }
 
+body.raw-markdown-active .raw-editor-mount .cm-activeLineGutter,
+.raw-editor-mount .cm-editor .cm-activeLineGutter,
 .raw-editor-mount .cm-activeLineGutter {
     background-color: transparent !important;
     color: var(--accent-color, #cc4a0a) !important;
@@ -239,6 +244,8 @@ body.raw-markdown-active .raw-editor-mount .cm-gutterElement {
     opacity: 1;
 }
 
+body.raw-markdown-active .raw-editor-mount .cm-selectionBackground,
+.raw-editor-mount .cm-editor .cm-selectionBackground,
 .raw-editor-mount .cm-selectionBackground {
     background-color: rgba(204, 74, 10, 0.15) !important;
 }
