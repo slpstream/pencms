@@ -15,7 +15,6 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.44.0
 watchdog==6.0.0
-python-arango>=8.1.0
 python-multipart
 Pillow
 fonttools
