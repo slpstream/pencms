@@ -2019,7 +2019,9 @@ img.classic-markdown {
 .gallery-single .caption,
 .figure-full .caption,
 .classic-markdown-figure .caption,
-figcaption.caption {
+figcaption.caption,
+figcaption.traven-image-caption,
+.traven-preview figcaption.traven-image-caption {
   font-family: var(--font-body);
   font-size: 0.85rem;
   color: var(--violet);
@@ -2027,7 +2029,7 @@ figcaption.caption {
   margin-top: 10px;
   line-height: 1.4;
   padding: 0 8px 12px;
-  transform: rotate(1.2deg);
+  transform: rotate(-1.2deg);
 }
 
 .gallery-single.img--xsmall,
@@ -2081,16 +2083,24 @@ figcaption.caption {
 
 .gallery-single.align-left,
 .gallery-single.inline-image-left,
-.figure-full.align-left {
-  float: left;
-  margin: 8px 24px 24px 0 !important;
+.figure-full.align-left,
+figure.traven-image-figure.align-left,
+img.traven-image.align-left {
+  float: left !important;
+  margin: 8px 24px 20px 0 !important;
+  padding: 6px 20px 12px 0;
+  box-sizing: border-box;
 }
 
 .gallery-single.align-right,
 .gallery-single.inline-image-right,
-.figure-full.align-right {
-  float: right;
-  margin: 8px 0 24px 24px !important;
+.figure-full.align-right,
+figure.traven-image-figure.align-right,
+img.traven-image.align-right {
+  float: right !important;
+  margin: 8px 0 20px 24px !important;
+  padding: 6px 0 12px 20px;
+  box-sizing: border-box;
 }
 
 .gallery-single.align-center,
@@ -2100,20 +2110,52 @@ figcaption.caption {
   float: none !important;
 }
 
+figure.traven-image-figure {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  transform: none;
+}
+
+figure.traven-image-figure img.traven-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  box-sizing: border-box;
+}
+
 .post-prose .align-fullbleed,
 .post-prose .gallery-single.align-fullbleed,
 .post-prose figure.traven-image-figure.align-fullbleed,
 .post-prose figure.traven-video-figure.align-fullbleed,
 .post-prose figure.traven-audio-figure.align-fullbleed,
 .post-prose .traven-video-container.align-fullbleed,
-.post-prose .traven-audio-container.align-fullbleed {
-  width: calc(100% + 4vw) !important;
-  max-width: none !important;
-  margin-left: -2vw !important;
-  margin-right: -2vw !important;
+.post-prose .traven-audio-container.align-fullbleed,
+figure.traven-image-figure.align-fullbleed {
+  width: calc(100% + 2 * clamp(1.2rem, 4vw, 2.8rem)) !important;
+  max-width: calc(100% + 2 * clamp(1.2rem, 4vw, 2.8rem)) !important;
+  margin-left: calc(-1 * clamp(1.2rem, 4vw, 2.8rem)) !important;
+  margin-right: calc(-1 * clamp(1.2rem, 4vw, 2.8rem)) !important;
+  margin-top: 1.8rem !important;
+  margin-bottom: 1.8rem !important;
   float: none !important;
   clear: both !important;
-  transform: none;
+}
+
+.post-prose figure.traven-image-figure.align-fullbleed img.traven-image,
+figure.traven-image-figure.align-fullbleed img.traven-image,
+img.traven-image.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto;
+  margin: 0 auto !important;
+  display: block;
+  transform: rotate(-1.2deg) !important;
+  border: 8px solid var(--paper) !important;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--violet) 16%, transparent) !important;
+  box-sizing: border-box;
 }
 
 /* ═══ RESPONSIVE ═══════════════════════════════════════════════ */
