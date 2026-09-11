@@ -138,10 +138,12 @@
 
             {{ theme.partial('faqs') | raw }}
 
-            <section class="marut-discussion marut-article-card">
-                {{ theme.partial('comment-thread') | raw }}
-                {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
-            </section>
+            {% if (comments_enabled is not defined or comments_enabled) and (comments is defined and comments is not empty) %}
+                <section class="marut-discussion marut-article-card">
+                    {{ theme.partial('comment-thread') | raw }}
+                    {{ theme.partial('feedback-form', { kind: 'comment', parent_slug: slug is defined ? slug : '' }) | raw }}
+                </section>
+            {% endif %}
         </div>
 
         <!-- Right Sidebar: Table of Contents -->
