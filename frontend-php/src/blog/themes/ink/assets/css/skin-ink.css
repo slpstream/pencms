@@ -801,18 +801,46 @@ details:not([open]) .component-body {
   border: 0 !important;
 }
 
-.traven-preview figure.traven-video-figure {
+.traven-preview figure.traven-video-figure,
+.traven-preview figure.traven-image-figure,
+.traven-preview .traven-image-figure {
   margin: 2rem 0 !important;
   height: auto !important;
 }
 
-.traven-preview figcaption {
+.traven-preview figure.traven-image-figure img.traven-image,
+.traven-preview figure.traven-image-figure img,
+.traven-preview img.traven-image {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 0.5rem !important;
+  display: block !important;
+}
+
+.traven-preview figure.classic-markdown-figure {
+  margin: 2rem auto !important;
+}
+
+.traven-preview figure.classic-markdown-figure img.classic-markdown,
+.traven-preview img.classic-markdown {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 0.5rem !important;
+  display: block !important;
+}
+
+.traven-preview figcaption,
+.traven-preview figcaption.traven-image-caption,
+.traven-preview figcaption.caption {
   font-family: var(--traven-font-mono);
   font-size: 0.7875rem;
   color: var(--traven-muted);
   font-style: normal;
   text-align: center;
   margin-top: 0.75rem;
+  display: block;
 }
 
 /* Audio Container */
@@ -826,23 +854,28 @@ details:not([open]) .component-body {
 }
 
 /* Shortcode Alignment & Size Matrix */
-.size-small {
+.size-small,
+.traven-preview figure.traven-image-figure.size-small {
   width: 30% !important;
   max-width: 100% !important;
 }
 
-.size-medium {
+.size-medium,
+.traven-preview figure.traven-image-figure.size-medium {
   width: 50% !important;
   max-width: 100% !important;
 }
 
-.size-large {
+.size-large,
+.traven-preview figure.traven-image-figure.size-large {
   width: 70% !important;
   max-width: 100% !important;
 }
 
-.size-full {
+.size-full,
+.traven-preview figure.traven-image-figure.size-full {
   width: 100% !important;
+  max-width: 100% !important;
 }
 
 /* Editor Auto Margins (No Floats - CodeMirror §4.4) */
@@ -870,24 +903,29 @@ details:not([open]) .component-body {
 }
 
 /* Preview Floats */
-.traven-preview .align-left {
+.traven-preview .align-left,
+.traven-preview figure.traven-image-figure.align-left {
   float: left !important;
   margin: 0.5rem 1.5rem 1rem 0 !important;
 }
 
-.traven-preview .align-right {
+.traven-preview .align-right,
+.traven-preview figure.traven-image-figure.align-right {
   float: right !important;
   margin: 0.5rem 0 1rem 1.5rem !important;
 }
 
-.traven-preview .align-center {
+.traven-preview .align-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed) {
   float: none !important;
   margin-left: auto !important;
   margin-right: auto !important;
   display: block !important;
 }
 
-.traven-preview .align-fullbleed {
+.traven-preview .align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed {
   width: 100% !important;
   max-width: 100% !important;
   float: none !important;
@@ -897,10 +935,51 @@ details:not([open]) .component-body {
 }
 
 @media (min-width: 768px) {
-  .traven-preview .align-fullbleed {
+  .traven-preview .align-fullbleed,
+  .traven-preview figure.traven-image-figure.align-fullbleed {
     width: calc(100% + 4rem) !important;
     margin-left: -2rem !important;
     margin-right: -2rem !important;
+  }
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed img,
+.traven-preview figure.traven-image-figure.align-fullbleed img.traven-image {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 500px !important;
+  object-fit: cover !important;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+@media (max-width: 640px) {
+  .traven-preview figure.traven-image-figure.size-small,
+  .traven-preview figure.traven-image-figure.size-medium,
+  .traven-preview figure.traven-image-figure.size-large,
+  .traven-preview .size-small,
+  .traven-preview .size-medium,
+  .traven-preview .size-large {
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .traven-preview figure.traven-image-figure.align-left,
+  .traven-preview figure.traven-image-figure.align-right,
+  .traven-preview .align-left,
+  .traven-preview .align-right {
+    float: none !important;
+    margin: 1.5rem auto !important;
   }
 }
 

@@ -643,10 +643,25 @@ html.cm-wysiwym-dark,
 .cm-editor .align-fullbleed { width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
 
 /* Size helpers (editor + published shortcodes) */
-.size-small { width: 30%; max-width: 100%; }
-.size-medium { width: 50%; max-width: 100%; }
-.size-large { width: 70%; max-width: 100%; }
-.size-full { width: 100%; }
+.size-small,
+figure.traven-image-figure.size-small,
+img.traven-image.size-small,
+.gallery-single.size-small { width: 30% !important; max-width: 100% !important; }
+
+.size-medium,
+figure.traven-image-figure.size-medium,
+img.traven-image.size-medium,
+.gallery-single.size-medium { width: 50% !important; max-width: 100% !important; }
+
+.size-large,
+figure.traven-image-figure.size-large,
+img.traven-image.size-large,
+.gallery-single.size-large { width: 70% !important; max-width: 100% !important; }
+
+.size-full,
+figure.traven-image-figure.size-full,
+img.traven-image.size-full,
+.gallery-single.size-full { width: 100% !important; max-width: 100% !important; }
 
 /* ═══════════════════════════════════════════════════════════════
    2. PUBLISHED / PREVIEW SCOPE (.traven-preview)
@@ -1034,26 +1049,38 @@ details:not([open]) .component-header {
 .traven-preview .traven-video-container.align-left,
 .traven-preview figure.traven-video-figure.align-left,
 .traven-preview .traven-audio-container.align-left,
-.traven-preview figure.traven-audio-figure.align-left {
-  float: left;
+.traven-preview figure.traven-audio-figure.align-left,
+.traven-preview figure.traven-image-figure.align-left,
+.traven-preview img.traven-image.align-left,
+.traven-preview .align-left {
+  float: left !important;
   margin: 0 1em 1em 0 !important;
 }
 
 .traven-preview .traven-video-container.align-right,
 .traven-preview figure.traven-video-figure.align-right,
 .traven-preview .traven-audio-container.align-right,
-.traven-preview figure.traven-audio-figure.align-right {
-  float: right;
+.traven-preview figure.traven-audio-figure.align-right,
+.traven-preview figure.traven-image-figure.align-right,
+.traven-preview img.traven-image.align-right,
+.traven-preview .align-right {
+  float: right !important;
   margin: 0 0 1em 1em !important;
 }
 
 .traven-preview .traven-video-container.align-center,
 .traven-preview figure.traven-video-figure.align-center,
 .traven-preview .traven-audio-container.align-center,
-.traven-preview figure.traven-audio-figure.align-center {
+.traven-preview figure.traven-audio-figure.align-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+.traven-preview img.traven-image.align-center,
+.traven-preview img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed),
+.traven-preview .align-center {
   margin-left: auto !important;
   margin-right: auto !important;
   float: none !important;
+  display: block !important;
 }
 
 .traven-preview .traven-video-container.align-fullbleed,
@@ -1079,6 +1106,17 @@ details:not([open]) .component-header {
   object-fit: cover;
   object-position: center;
   height: auto;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 8px 16px 14px !important;
+  text-align: center !important;
+  box-sizing: border-box;
 }
 
 .cm-editor figure.traven-image-figure.align-fullbleed img,

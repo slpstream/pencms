@@ -1455,11 +1455,13 @@ body.traven-preview .search-result-excerpt {
 }
 
 /* ═══════════════════
-   PenCMS PHP GALLERY — .gallery-single
+   PenCMS PHP GALLERY & MDX FIGURES
    ═══════════════════ */
 
 .gallery-single,
-.figure-full {
+.figure-full,
+figure.traven-image-figure,
+.traven-image-figure {
     display: flex;
     flex-direction: column;
     margin: 0 0 1.5em;
@@ -1468,18 +1470,18 @@ body.traven-preview .search-result-excerpt {
 
 .gallery-single.inline-image-center,
 .gallery-single.align-center,
-.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
-    float: none;
-    margin-left: auto;
-    margin-right: auto;
-}
-
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
 .figure-full.inline-image-center,
 .figure-full.align-center,
-.figure-full:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
-    float: none;
-    margin-left: auto;
-    margin-right: auto;
+.figure-full:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+figure.traven-image-figure.align-center,
+figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+img.traven-image.align-center,
+img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
 }
 
 .photo-wrapper {
@@ -1493,8 +1495,23 @@ body.traven-preview .search-result-excerpt {
     height: auto;
 }
 
+figure.traven-image-figure img.traven-image,
+figure.traven-image-figure img,
+img.traven-image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
 .gallery-single .caption,
-.figure-full .caption {
+.figure-full .caption,
+figcaption.traven-image-caption,
+.traven-image-caption,
+.traven-preview figcaption.traven-image-caption,
+figure.traven-image-figure figcaption {
     font-size: 0.8125rem;
     padding: 0.5em;
     border: 2px solid currentColor;
@@ -1505,51 +1522,69 @@ body.traven-preview .search-result-excerpt {
 .gallery-single.img--small,
 .gallery-single.size-small,
 .figure-full.img--small,
-.figure-full.size-small {
-    width: 30%;
-    max-width: 100%;
+.figure-full.size-small,
+figure.traven-image-figure.size-small,
+img.traven-image.size-small,
+.size-small:not(.align-fullbleed) {
+    width: 30% !important;
+    max-width: 100% !important;
 }
 
 .gallery-single.img--medium,
 .gallery-single.size-medium,
 .figure-full.img--medium,
-.figure-full.size-medium {
-    width: 50%;
-    max-width: 100%;
+.figure-full.size-medium,
+figure.traven-image-figure.size-medium,
+img.traven-image.size-medium,
+.size-medium:not(.align-fullbleed) {
+    width: 50% !important;
+    max-width: 100% !important;
 }
 
 .gallery-single.img--large,
 .gallery-single.size-large,
 .figure-full.img--large,
-.figure-full.size-large {
-    width: 70%;
-    max-width: 100%;
+.figure-full.size-large,
+figure.traven-image-figure.size-large,
+img.traven-image.size-large,
+.size-large:not(.align-fullbleed) {
+    width: 70% !important;
+    max-width: 100% !important;
 }
 
 .gallery-single.img--full,
 .gallery-single.size-full,
 .figure-full.img--full,
-.figure-full.size-full {
-    width: 100%;
-    max-width: 100%;
+.figure-full.size-full,
+figure.traven-image-figure.size-full,
+img.traven-image.size-full,
+.size-full:not(.align-fullbleed) {
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .gallery-single.align-left,
 .gallery-single.inline-image-left,
 .figure-full.align-left,
-.figure-full.inline-image-left {
-    float: left;
-    margin-right: 1em;
-    margin-bottom: 1em;
+.figure-full.inline-image-left,
+figure.traven-image-figure.align-left,
+img.traven-image.align-left,
+.align-left {
+    float: left !important;
+    margin-right: 1em !important;
+    margin-bottom: 1em !important;
 }
 
 .gallery-single.align-right,
 .gallery-single.inline-image-right,
 .figure-full.align-right,
-.figure-full.inline-image-right {
-    float: right;
-    margin-left: 1em;
-    margin-bottom: 1em;
+.figure-full.inline-image-right,
+figure.traven-image-figure.align-right,
+img.traven-image.align-right,
+.align-right {
+    float: right !important;
+    margin-left: 1em !important;
+    margin-bottom: 1em !important;
 }
 
 /* ─── Viewport fullbleed (break out of centered 80ch column) ─── */
@@ -1613,6 +1648,17 @@ body.traven-preview .search-result-excerpt {
     width: 100%;
 }
 
+.main-container figure.traven-image-figure.align-fullbleed figcaption,
+.main-container figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.main-container .align-fullbleed figcaption {
+    max-width: 65ch !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 8px 16px 14px !important;
+    text-align: center !important;
+    box-sizing: border-box;
+}
+
 .classic-markdown-figure {
     display: flex;
     flex-direction: column;
@@ -1649,8 +1695,18 @@ body.traven-preview .search-result-excerpt {
     .figure-full.img--medium,
     .figure-full.size-medium,
     .figure-full.img--large,
-    .figure-full.size-large {
-        width: 100%;
+    .figure-full.size-large,
+    figure.traven-image-figure.size-small,
+    figure.traven-image-figure.size-medium,
+    figure.traven-image-figure.size-large,
+    img.traven-image.size-small,
+    img.traven-image.size-medium,
+    img.traven-image.size-large,
+    .size-small:not(.align-fullbleed),
+    .size-medium:not(.align-fullbleed),
+    .size-large:not(.align-fullbleed) {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .gallery-single.align-left,
@@ -1660,9 +1716,15 @@ body.traven-preview .search-result-excerpt {
     .figure-full.align-left,
     .figure-full.inline-image-left,
     .figure-full.align-right,
-    .figure-full.inline-image-right {
-        float: none;
-        margin-left: auto;
+    .figure-full.inline-image-right,
+    figure.traven-image-figure.align-left,
+    figure.traven-image-figure.align-right,
+    img.traven-image.align-left,
+    img.traven-image.align-right {
+        float: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
         margin-right: auto;
     }
 }

@@ -330,10 +330,48 @@ html[data-theme="light"] {
 /* 4. Traven Shortcode Alignment & Size Matrix                                 */
 /* -------------------------------------------------------------------------- */
 
-.size-small  { width: 30% !important; max-width: 300px; }
-.size-medium { width: 50% !important; max-width: 500px; }
-.size-large  { width: 70% !important; }
-.size-full   { width: 100% !important; }
+.traven-preview figure.traven-image-figure,
+.traven-preview .traven-image-figure,
+.traven-preview .gallery-single,
+.traven-preview .figure-full {
+  margin: 1.5rem 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  clear: both !important;
+}
+
+.traven-preview figure.traven-image-figure img.traven-image,
+.traven-preview figure.traven-image-figure img,
+.traven-preview img.traven-image {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+}
+
+.traven-preview img.classic-markdown {
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 1.5rem auto !important;
+}
+
+.traven-preview .classic-markdown-figure {
+  display: block !important;
+  margin: 1.5rem auto !important;
+  clear: both !important;
+}
+
+.traven-preview .classic-markdown-figure img.classic-markdown {
+  margin: 0 auto !important;
+}
+
+.size-small, figure.traven-image-figure.size-small, img.traven-image.size-small   { width: 30% !important; max-width: 100% !important; }
+.size-medium, figure.traven-image-figure.size-medium, img.traven-image.size-medium { width: 50% !important; max-width: 100% !important; }
+.size-large, figure.traven-image-figure.size-large, img.traven-image.size-large   { width: 70% !important; max-width: 100% !important; }
+.size-full, figure.traven-image-figure.size-full, img.traven-image.size-full     { width: 100% !important; max-width: 100% !important; }
 
 /* Editor Auto-Margins for Alignment */
 .cm-wysiwym-image-container.align-left,
@@ -353,13 +391,117 @@ html[data-theme="light"] {
 
 /* Preview Floats for Alignment */
 .traven-preview figure.align-left,
-.traven-preview .align-left { float: left; margin: 0 1.5rem 1rem 0; }
+.traven-preview .align-left,
+.traven-preview figure.traven-image-figure.align-left,
+.traven-preview img.traven-image.align-left {
+  float: left !important;
+  margin: 0 1.5rem 1rem 0 !important;
+  clear: none !important;
+}
 
 .traven-preview figure.align-right,
-.traven-preview .align-right { float: right; margin: 0 0 1rem 1.5rem; }
+.traven-preview .align-right,
+.traven-preview figure.traven-image-figure.align-right,
+.traven-preview img.traven-image.align-right {
+  float: right !important;
+  margin: 0 0 1rem 1.5rem !important;
+  clear: none !important;
+}
 
 .traven-preview figure.align-center,
-.traven-preview .align-center { display: block; margin-left: auto; margin-right: auto; clear: both; }
+.traven-preview .align-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+.traven-preview img.traven-image.align-center,
+.traven-preview img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  float: none !important;
+  text-align: center !important;
+}
+
+.traven-preview .align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  float: none !important;
+  clear: both !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+}
+
+@media (min-width: 768px) {
+  .traven-preview .align-fullbleed,
+  .traven-preview figure.traven-image-figure.align-fullbleed,
+  .traven-preview img.traven-image.align-fullbleed {
+    width: calc(100% + 4rem) !important;
+    margin-left: -2rem !important;
+    margin-right: -2rem !important;
+  }
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed img,
+.traven-preview figure.traven-image-figure.align-fullbleed img.traven-image {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 500px !important;
+  object-fit: cover !important;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+/* Captions */
+.traven-preview figcaption,
+.traven-preview figcaption.traven-image-caption,
+.traven-preview figcaption.caption,
+.traven-preview .traven-image-caption,
+figure.traven-image-figure figcaption {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.4 !important;
+  color: var(--traven-muted);
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .traven-preview figure.traven-image-figure.size-small,
+  .traven-preview figure.traven-image-figure.size-medium,
+  .traven-preview figure.traven-image-figure.size-large,
+  .traven-preview img.traven-image.size-small,
+  .traven-preview img.traven-image.size-medium,
+  .traven-preview img.traven-image.size-large,
+  .size-small,
+  .size-medium,
+  .size-large {
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .traven-preview figure.traven-image-figure.align-left,
+  .traven-preview figure.traven-image-figure.align-right,
+  .traven-preview img.traven-image.align-left,
+  .traven-preview img.traven-image.align-right,
+  .traven-preview .align-left,
+  .traven-preview .align-right {
+    float: none !important;
+    margin: 1.5rem auto !important;
+  }
+}
 
 /* -------------------------------------------------------------------------- */
 /* 5. Strong Studio Pullquotes & Component Cards                              */

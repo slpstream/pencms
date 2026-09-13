@@ -366,7 +366,9 @@ details:not([open]) summary.component-header {
 }
 
 /* Shortcode Image Matrix & Single Gallery Centering (GOTCHAS §6) */
-.gallery-single, .figure-full {
+.gallery-single, .figure-full,
+figure.traven-image-figure,
+.traven-image-figure {
   margin: 1.5rem 0;
   display: flex;
   flex-direction: column;
@@ -387,6 +389,17 @@ details:not([open]) summary.component-header {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+figure.traven-image-figure img.traven-image,
+figure.traven-image-figure img,
+img.traven-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 img.classic-markdown {
@@ -456,21 +469,27 @@ img.classic-markdown {
 .traven-preview .align-left,
 .gallery-single.align-left,
 .inline-image-left,
-.traven-preview .inline-image-left {
+.traven-preview .inline-image-left,
+figure.traven-image-figure.align-left,
+img.traven-image.align-left {
   float: left !important;
   margin: 8px 24px 24px 0 !important;
 }
 .traven-preview .align-right,
 .gallery-single.align-right,
 .inline-image-right,
-.traven-preview .inline-image-right {
+.traven-preview .inline-image-right,
+figure.traven-image-figure.align-right,
+img.traven-image.align-right {
   float: right !important;
   margin: 8px 0 24px 24px !important;
 }
 .traven-preview .align-center,
 .gallery-single.align-center,
 .inline-image-center,
-.traven-preview .inline-image-center {
+.traven-preview .inline-image-center,
+figure.traven-image-figure.align-center,
+img.traven-image.align-center {
   display: block !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -478,11 +497,44 @@ img.classic-markdown {
 }
 .traven-preview .align-fullbleed,
 .gallery-single.align-fullbleed,
-.inline-image-fullbleed {
+.inline-image-fullbleed,
+figure.traven-image-figure.align-fullbleed,
+img.traven-image.align-fullbleed {
   width: 100% !important;
   max-width: 100% !important;
   float: none !important;
   clear: both !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+}
+
+@media (min-width: 768px) {
+  .traven-preview .align-fullbleed,
+  .gallery-single.align-fullbleed,
+  .inline-image-fullbleed,
+  figure.traven-image-figure.align-fullbleed,
+  img.traven-image.align-fullbleed {
+    width: calc(100% + 4rem) !important;
+    margin-left: -2rem !important;
+    margin-right: -2rem !important;
+  }
+}
+
+figure.traven-image-figure.align-fullbleed img,
+figure.traven-image-figure.align-fullbleed img.traven-image {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 500px !important;
+  object-fit: cover !important;
+  aspect-ratio: 16 / 9 !important;
+}
+
+figure.traven-image-figure.align-fullbleed figcaption,
+figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
 }
 
 .cm-wysiwym-image-container,
@@ -510,7 +562,11 @@ img.classic-markdown {
 .traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
 .gallery-single.inline-image-center,
 .gallery-single.align-center,
-.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed) {
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right):not(.align-fullbleed),
+figure.traven-image-figure.align-center,
+figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+img.traven-image.align-center,
+img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   display: block !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -518,24 +574,58 @@ img.classic-markdown {
   text-align: center;
 }
 
-.size-small, .img--small, .img-30 { width: 30% !important; max-width: 300px; }
-.size-medium, .img--medium, .img-50 { width: 50% !important; max-width: 500px; }
-.size-large, .img--large, .img-70 { width: 70% !important; }
-.size-full, .img--full, .img-100 { width: 100% !important; }
+.size-small, .img--small, .img-30, figure.traven-image-figure.size-small, img.traven-image.size-small { width: 30% !important; max-width: 100% !important; }
+.size-medium, .img--medium, .img-50, figure.traven-image-figure.size-medium, img.traven-image.size-medium { width: 50% !important; max-width: 100% !important; }
+.size-large, .img--large, .img-70, figure.traven-image-figure.size-large, img.traven-image.size-large { width: 70% !important; max-width: 100% !important; }
+.size-full, .img--full, .img-100, figure.traven-image-figure.size-full, img.traven-image.size-full { width: 100% !important; max-width: 100% !important; }
 
 /* Captions (GOTCHAS §8) */
 .gallery-single .caption,
 .figure-full .caption,
 .classic-markdown-figure .caption,
 figcaption.caption,
+figcaption.traven-image-caption,
+.traven-image-caption,
+figure.traven-image-figure figcaption,
 span.caption {
   font-size: 0.85rem;
-  line-height: 1.05 !important;
+  line-height: 1.4 !important;
   color: var(--traven-muted);
   text-align: center;
   margin-top: 8px;
   font-style: italic;
   display: block;
+}
+
+@media (max-width: 640px) {
+  figure.traven-image-figure.size-small,
+  figure.traven-image-figure.size-medium,
+  figure.traven-image-figure.size-large,
+  img.traven-image.size-small,
+  img.traven-image.size-medium,
+  img.traven-image.size-large,
+  .size-small,
+  .size-medium,
+  .size-large,
+  .img--small,
+  .img--medium,
+  .img--large {
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  figure.traven-image-figure.align-left,
+  figure.traven-image-figure.align-right,
+  img.traven-image.align-left,
+  img.traven-image.align-right,
+  .traven-preview .align-left,
+  .traven-preview .align-right {
+    float: none !important;
+    margin: 1.5rem auto !important;
+  }
 }
 
 /* Code & Pre Formatting */

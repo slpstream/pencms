@@ -452,10 +452,10 @@ img.classic-markdown {
   margin: 0 auto;
 }
 
-.gallery-single.img--small, .gallery-single.size-small, .size-small  { width: 30% !important; max-width: 300px; }
-.gallery-single.img--medium, .gallery-single.size-medium, .size-medium { width: 50% !important; max-width: 500px; }
-.gallery-single.img--large, .gallery-single.size-large, .size-large  { width: 70% !important; }
-.gallery-single.img--full, .gallery-single.size-full, .size-full   { width: 100% !important; }
+.gallery-single.img--small, .gallery-single.size-small, figure.traven-image-figure.size-small, img.traven-image.size-small, .size-small  { width: 30% !important; max-width: 100% !important; }
+.gallery-single.img--medium, .gallery-single.size-medium, figure.traven-image-figure.size-medium, img.traven-image.size-medium, .size-medium { width: 50% !important; max-width: 100% !important; }
+.gallery-single.img--large, .gallery-single.size-large, figure.traven-image-figure.size-large, img.traven-image.size-large, .size-large  { width: 70% !important; max-width: 100% !important; }
+.gallery-single.img--full, .gallery-single.size-full, figure.traven-image-figure.size-full, img.traven-image.size-full, .size-full   { width: 100% !important; max-width: 100% !important; }
 
 /* Editor alignment — auto-margins only (§4.4); never float CM widgets */
 .align-left,
@@ -501,43 +501,110 @@ img.classic-markdown {
   border-radius: 0 !important;
 }
 
-/* Preview / published gallery — floats and vertical margins are fine */
+/* Preview / published gallery & MDX figures */
+.traven-preview figure.traven-image-figure,
+.traven-preview .traven-image-figure {
+  display: block;
+  margin: 1.5rem auto;
+  clear: both;
+  max-width: 100%;
+}
+
+.traven-preview figure.traven-image-figure img.traven-image,
+.traven-preview figure.traven-image-figure img,
+.traven-preview img.traven-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 .traven-preview .align-left,
-.gallery-single.align-left,
-.inline-image-left,
-.traven-preview .inline-image-left {
+.traven-preview .gallery-single.align-left,
+.traven-preview .inline-image-left,
+.traven-preview figure.traven-image-figure.align-left,
+.traven-preview img.traven-image.align-left {
   float: left !important;
   margin: 0 1.5rem 1rem 0 !important;
 }
+
 .traven-preview .align-right,
-.gallery-single.align-right,
-.inline-image-right,
-.traven-preview .inline-image-right {
+.traven-preview .gallery-single.align-right,
+.traven-preview .inline-image-right,
+.traven-preview figure.traven-image-figure.align-right,
+.traven-preview img.traven-image.align-right {
   float: right !important;
   margin: 0 0 1rem 1.5rem !important;
 }
+
 .traven-preview .align-center,
-.gallery-single.align-center,
-.inline-image-center,
-.traven-preview .inline-image-center {
+.traven-preview .gallery-single.align-center,
+.traven-preview .inline-image-center,
+.traven-preview figure.traven-image-figure.align-center,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right):not(.align-fullbleed),
+.traven-preview img.traven-image.align-center,
+.traven-preview img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   display: block !important;
   margin-left: auto !important;
   margin-right: auto !important;
   float: none !important;
-}
-.traven-preview .align-fullbleed,
-.gallery-single.align-fullbleed,
-.inline-image-fullbleed {
-  width: 100% !important;
-  max-width: 100% !important;
-  float: none !important;
-  clear: both !important;
+  text-align: center;
 }
 
-.traven-preview figure.traven-image-figure.align-left  { float: left; margin: 0 1.5rem 1rem 0; }
-.traven-preview figure.traven-image-figure.align-right { float: right; margin: 0 0 1rem 1.5rem; }
-.traven-preview figure.traven-image-figure.align-center { margin: 1.5rem auto; display: block; text-align: center; }
-.traven-preview figure.traven-image-figure.align-fullbleed { width: 100% !important; max-width: 100% !important; }
+.traven-preview .align-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview .inline-image-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  float: none !important;
+  clear: both !important;
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed img,
+.traven-preview img.traven-image.align-fullbleed {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 500px;
+  object-fit: cover !important;
+  object-position: center !important;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+.traven-preview figcaption.traven-image-caption,
+.traven-preview .traven-image-caption,
+.traven-preview figure.traven-image-figure figcaption {
+  font-family: var(--font-body, sans-serif) !important;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--color-muted, #666);
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-style: italic;
+  display: block;
+}
+
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption,
+.traven-preview figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
+.traven-preview .align-fullbleed figcaption {
+  max-width: 65ch !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 8px 16px 14px !important;
+  text-align: center !important;
+  box-sizing: border-box;
+}
 
 /* Image / video / audio shortcode widgets — zero outer margin (§4.4) */
 .cm-wysiwym-image-container,
