@@ -996,7 +996,10 @@ img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   text-align: center;
 }
 
-/* Fullbleed Images & Videos (16:9 aspect ratio & centered margin breakout) */
+/* Fullbleed Images & Videos (viewport breakout).
+   Prefix with .traven-preview / .post-body so these beat skin-ink.css
+   (.traven-preview figure.align-fullbleed { width: 100% }) — body and
+   article-content both carry .traven-preview, and the post column is centered. */
 .align-fullbleed,
 .inline-image-fullbleed,
 .gallery-single.align-fullbleed,
@@ -1010,7 +1013,28 @@ img.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
 .traven-video.align-fullbleed,
-.cm-wysiwym-video-container.align-fullbleed {
+.cm-wysiwym-video-container.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview .inline-image-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview .figure-full.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed,
+.traven-preview figure.align-fullbleed,
+.traven-preview img.align-fullbleed,
+.traven-preview .traven-figure.align-fullbleed,
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed,
+.traven-preview .traven-video.align-fullbleed,
+body.traven-preview .post-body .align-fullbleed,
+body.traven-preview .post-body figure.traven-image-figure.align-fullbleed,
+body.traven-preview .post-body img.traven-image.align-fullbleed,
+body.traven-preview .post-body .gallery-single.align-fullbleed,
+body.traven-preview .post-body figure.traven-video-figure.align-fullbleed,
+body.traven-preview .post-body .traven-video-container.align-fullbleed,
+.post-body .traven-preview .align-fullbleed,
+.post-body .traven-preview figure.traven-image-figure.align-fullbleed,
+.post-body .article-content.traven-preview .align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
   margin-left: calc(50% - 50vw) !important;
@@ -1021,6 +1045,9 @@ figure.traven-video-figure.align-fullbleed,
   margin-bottom: 2.5rem !important;
   border-radius: 0 !important;
   box-sizing: border-box;
+  position: relative;
+  left: auto;
+  transform: none;
 }
 
 .align-fullbleed .photo-wrapper,

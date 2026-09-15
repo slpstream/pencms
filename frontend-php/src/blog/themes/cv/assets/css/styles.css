@@ -130,6 +130,7 @@ body {
   line-height: var(--leading-body);
   color: var(--color-text);
   background: var(--color-bg);
+  overflow-x: clip;
 }
 
 ::selection { background: var(--color-mark); }
@@ -680,7 +681,11 @@ img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   text-align: center;
 }
 
-/* Fullbleed Breakout */
+/* Fullbleed — stage breakout, not 100vw.
+   Body is a centered 62rem shell; from 900px .has-rail is 15rem profile + main,
+   so calc(50% - 50vw) flush-lefts the figure, underlaps the rail, and
+   overflows the page. Expand only by body gutter (--space-3) so the band
+   stays centered on the reading column and inside the page. */
 .align-fullbleed,
 .inline-image-fullbleed,
 .gallery-single.align-fullbleed,
@@ -690,16 +695,34 @@ img.traven-image.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
 .traven-audio-container.align-fullbleed,
-figure.traven-audio-figure.align-fullbleed {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
+figure.traven-audio-figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed,
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed,
+.traven-preview .traven-audio-container.align-fullbleed,
+.traven-preview figure.traven-audio-figure.align-fullbleed,
+body.traven-preview .prose .align-fullbleed,
+body.traven-preview .prose figure.traven-image-figure.align-fullbleed,
+body.traven-preview .prose img.traven-image.align-fullbleed,
+body.traven-preview .prose .gallery-single.align-fullbleed,
+.prose.traven-preview .align-fullbleed,
+.prose.traven-preview figure.traven-image-figure.align-fullbleed {
+  width: calc(100% + 2 * var(--space-3)) !important;
+  max-width: none !important;
+  margin-left: calc(-1 * var(--space-3)) !important;
+  margin-right: calc(-1 * var(--space-3)) !important;
   float: none !important;
   clear: both !important;
   border-radius: 0 !important;
   box-sizing: border-box;
+  position: relative;
+  left: auto;
+  transform: none;
 }
+
 
 figure.traven-image-figure.align-fullbleed img,
 figure.traven-image-figure.align-fullbleed img.traven-image,

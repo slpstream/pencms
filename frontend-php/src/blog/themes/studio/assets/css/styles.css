@@ -748,8 +748,9 @@ img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   text-align: center;
 }
 
-/* Viewport Full-bleed Image & Figure Breakout (100vw wall-to-wall) */
-.traven-preview .align-fullbleed,
+/* Viewport Full-bleed Image & Figure Breakout (100vw wall-to-wall).
+   .column is margin-inline: auto — centered, so 50%/50vw math is valid.
+   Prefix .traven-preview / .prose so this beats skin-studio.css. */
 .align-fullbleed,
 .inline-image-fullbleed,
 .gallery-single.align-fullbleed,
@@ -759,7 +760,25 @@ img.traven-image.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
 .traven-audio-container.align-fullbleed,
-figure.traven-audio-figure.align-fullbleed {
+figure.traven-audio-figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview .inline-image-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed,
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed,
+.traven-preview .traven-audio-container.align-fullbleed,
+.traven-preview figure.traven-audio-figure.align-fullbleed,
+body.traven-preview .prose .align-fullbleed,
+body.traven-preview .prose figure.traven-image-figure.align-fullbleed,
+body.traven-preview .prose img.traven-image.align-fullbleed,
+body.traven-preview .prose .gallery-single.align-fullbleed,
+body.traven-preview .prose figure.traven-video-figure.align-fullbleed,
+body.traven-preview .prose .traven-video-container.align-fullbleed,
+body.traven-preview .prose figure.traven-audio-figure.align-fullbleed,
+.prose.traven-preview .align-fullbleed,
+.prose.traven-preview figure.traven-image-figure.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
   margin-left: calc(50% - 50vw) !important;
@@ -768,6 +787,9 @@ figure.traven-audio-figure.align-fullbleed {
   clear: both !important;
   border-radius: 0 !important;
   box-sizing: border-box;
+  position: relative;
+  left: auto;
+  transform: none;
 }
 
 figure.traven-image-figure.align-fullbleed img,

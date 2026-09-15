@@ -592,28 +592,18 @@ img.traven-image.align-center {
   float: none !important;
   text-align: center;
 }
+/* Editor/preview pane: stay inside the preview column. Published breakout
+   lives in styles.css. Do not set max-width: 100% + negative margins. */
 .traven-preview .align-fullbleed,
 .gallery-single.align-fullbleed,
 .inline-image-fullbleed,
 figure.traven-image-figure.align-fullbleed,
 img.traven-image.align-fullbleed {
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: none !important;
   margin: 2rem 0 !important;
   float: none !important;
   clear: both !important;
-}
-
-@media (min-width: 768px) {
-  .traven-preview .align-fullbleed,
-  .gallery-single.align-fullbleed,
-  .inline-image-fullbleed,
-  figure.traven-image-figure.align-fullbleed,
-  img.traven-image.align-fullbleed {
-    width: calc(100% + 4rem) !important;
-    margin-left: -2rem !important;
-    margin-right: -2rem !important;
-  }
 }
 
 figure.traven-image-figure.align-fullbleed img,
@@ -630,6 +620,7 @@ figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption {
   max-width: 65ch !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  padding-bottom: 1.5rem !important;
   text-align: center !important;
 }
 
@@ -669,6 +660,18 @@ span.caption {
   margin-top: 8px;
   font-style: italic;
   display: block !important;
+}
+
+.traven-preview figure.traven-image-figure.align-center figcaption,
+.traven-preview figure.traven-image-figure.align-center figcaption.traven-image-caption,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right) figcaption,
+.traven-preview figure.traven-image-figure:not(.align-left):not(.align-right) figcaption.traven-image-caption,
+.traven-preview .gallery-single.align-center .caption,
+.traven-preview .gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right) .caption,
+.traven-preview .align-center figcaption,
+.traven-preview .align-center .caption {
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 @media (max-width: 640px) {

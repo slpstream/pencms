@@ -924,23 +924,18 @@ details:not([open]) .component-body {
   display: block !important;
 }
 
+/* Editor/preview pane: stay inside the preview column. Published wall-to-wall
+   breakout lives in styles.css (higher-specificity .post-body rules). Do not
+   set max-width: 100% + negative margins — width is capped and the box shifts. */
 .traven-preview .align-fullbleed,
-.traven-preview figure.traven-image-figure.align-fullbleed {
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed {
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: none !important;
   float: none !important;
   clear: both !important;
   margin-top: 2rem !important;
   margin-bottom: 2rem !important;
-}
-
-@media (min-width: 768px) {
-  .traven-preview .align-fullbleed,
-  .traven-preview figure.traven-image-figure.align-fullbleed {
-    width: calc(100% + 4rem) !important;
-    margin-left: -2rem !important;
-    margin-right: -2rem !important;
-  }
 }
 
 .traven-preview figure.traven-image-figure.align-fullbleed img,

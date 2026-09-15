@@ -558,14 +558,11 @@ img.classic-markdown {
 .traven-preview .inline-image-fullbleed,
 .traven-preview figure.traven-image-figure.align-fullbleed,
 .traven-preview img.traven-image.align-fullbleed {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
+  width: 100% !important;
+  max-width: none !important;
   float: none !important;
   clear: both !important;
   border-radius: 0 !important;
-  box-sizing: border-box;
 }
 
 .traven-preview figure.traven-image-figure.align-fullbleed img,

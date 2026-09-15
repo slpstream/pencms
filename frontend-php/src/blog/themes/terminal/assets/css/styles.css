@@ -969,7 +969,11 @@ img.traven-image:not(.align-left):not(.align-right):not(.align-fullbleed) {
   text-align: center;
 }
 
-/* Fullbleed Breakout */
+/* Fullbleed breakout.
+   Below 900px the body column is centered — viewport 100vw is valid.
+   At 900px+ posts/pages use layout-with-sidebar (content + 15rem), so 100vw
+   flush-lefts and underlaps the sidebar. Use a stage breakout there, and
+   max-width: none so width: calc(100% + N) is not capped at 100%. */
 .align-fullbleed,
 .inline-image-fullbleed,
 .gallery-single.align-fullbleed,
@@ -979,7 +983,21 @@ img.traven-image.align-fullbleed,
 .traven-video-container.align-fullbleed,
 figure.traven-video-figure.align-fullbleed,
 .traven-audio-container.align-fullbleed,
-figure.traven-audio-figure.align-fullbleed {
+figure.traven-audio-figure.align-fullbleed,
+.traven-preview .align-fullbleed,
+.traven-preview .gallery-single.align-fullbleed,
+.traven-preview figure.traven-image-figure.align-fullbleed,
+.traven-preview img.traven-image.align-fullbleed,
+.traven-preview .traven-video-container.align-fullbleed,
+.traven-preview figure.traven-video-figure.align-fullbleed,
+.traven-preview .traven-audio-container.align-fullbleed,
+.traven-preview figure.traven-audio-figure.align-fullbleed,
+body.traven-preview .prose .align-fullbleed,
+body.traven-preview .prose figure.traven-image-figure.align-fullbleed,
+body.traven-preview .prose img.traven-image.align-fullbleed,
+body.traven-preview .prose .gallery-single.align-fullbleed,
+.prose.traven-preview .align-fullbleed,
+.prose.traven-preview figure.traven-image-figure.align-fullbleed {
   width: 100vw !important;
   max-width: 100vw !important;
   margin-left: calc(50% - 50vw) !important;
@@ -988,6 +1006,29 @@ figure.traven-audio-figure.align-fullbleed {
   clear: both !important;
   border-radius: 0 !important;
   box-sizing: border-box;
+  position: relative;
+  left: auto;
+  transform: none;
+}
+
+@media (min-width: 900px) {
+  body.traven-preview .layout-with-sidebar .align-fullbleed,
+  body.traven-preview .layout-with-sidebar .gallery-single.align-fullbleed,
+  body.traven-preview .layout-with-sidebar figure.traven-image-figure.align-fullbleed,
+  body.traven-preview .layout-with-sidebar img.traven-image.align-fullbleed,
+  body.traven-preview .layout-with-sidebar .traven-video-container.align-fullbleed,
+  body.traven-preview .layout-with-sidebar figure.traven-video-figure.align-fullbleed,
+  body.traven-preview .layout-with-sidebar .traven-audio-container.align-fullbleed,
+  body.traven-preview .layout-with-sidebar figure.traven-audio-figure.align-fullbleed,
+  .layout-with-sidebar .prose.traven-preview .align-fullbleed,
+  .layout-with-sidebar .prose.traven-preview figure.traven-image-figure.align-fullbleed,
+  .layout-with-sidebar .traven-preview .align-fullbleed {
+    /* gap is --space-5 (4rem); stay inside the gutter, do not use 100vw */
+    width: calc(100% + 4rem) !important;
+    max-width: none !important;
+    margin-left: -2rem !important;
+    margin-right: -2rem !important;
+  }
 }
 
 figure.traven-image-figure.align-fullbleed img,
@@ -1013,7 +1054,7 @@ figure.traven-image-figure.align-fullbleed figcaption.traven-image-caption,
   max-width: 65ch !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding: 8px 16px 14px !important;
+  padding: 8px 16px 1.5rem !important;
   text-align: center !important;
   box-sizing: border-box;
 }
@@ -1037,6 +1078,18 @@ span.caption {
   margin-bottom: 0;
   font-style: italic;
   display: block !important;
+}
+
+figure.traven-image-figure.align-center figcaption,
+figure.traven-image-figure.align-center figcaption.traven-image-caption,
+figure.traven-image-figure:not(.align-left):not(.align-right) figcaption,
+figure.traven-image-figure:not(.align-left):not(.align-right) figcaption.traven-image-caption,
+.gallery-single.align-center .caption,
+.gallery-single:not(.align-left):not(.align-right):not(.inline-image-left):not(.inline-image-right) .caption,
+.align-center figcaption,
+.align-center .caption {
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 @media (max-width: 640px) {
