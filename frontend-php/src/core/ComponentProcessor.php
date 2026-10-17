@@ -264,17 +264,29 @@ class ComponentProcessor {
         $alt = self::attr($attrs, 'alt', $caption);
         $align = self::attr($attrs, 'align', 'center');
         $size = self::attr($attrs, 'size', 'medium');
+        $loading = self::attr($attrs, 'loading', 'lazy');
+        $decoding = self::attr($attrs, 'decoding', 'async');
+        $width = self::attr($attrs, 'width', '');
+        $height = self::attr($attrs, 'height', '');
+        $dimAttrs = '';
+        if ($width !== '') {
+            $dimAttrs .= ' width="' . htmlspecialchars($width, ENT_QUOTES, 'UTF-8') . '"';
+        }
+        if ($height !== '') {
+            $dimAttrs .= ' height="' . htmlspecialchars($height, ENT_QUOTES, 'UTF-8') . '"';
+        }
         $customClass = self::attr($attrs, 'class', '');
         $customClass = $customClass !== '' ? ' ' . $customClass : '';
         if ($caption !== '') {
             return '<figure class="traven-image-figure align-' . htmlspecialchars($align, ENT_QUOTES, 'UTF-8')
                 . ' size-' . htmlspecialchars($size, ENT_QUOTES, 'UTF-8') . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8') . '">'
-                . '<img src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8') . '" class="traven-image">'
+                . '<img src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8') . '" class="traven-image" loading="' . htmlspecialchars($loading, ENT_QUOTES, 'UTF-8') . '" decoding="' . htmlspecialchars($decoding, ENT_QUOTES, 'UTF-8') . '"' . $dimAttrs . '>'
                 . '<figcaption class="traven-image-caption">' . htmlspecialchars($caption, ENT_QUOTES, 'UTF-8') . '</figcaption></figure>';
         }
         return '<img src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8')
             . '" class="traven-image align-' . htmlspecialchars($align, ENT_QUOTES, 'UTF-8')
-            . ' size-' . htmlspecialchars($size, ENT_QUOTES, 'UTF-8') . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8') . '">';
+            . ' size-' . htmlspecialchars($size, ENT_QUOTES, 'UTF-8') . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8')
+            . '" loading="' . htmlspecialchars($loading, ENT_QUOTES, 'UTF-8') . '" decoding="' . htmlspecialchars($decoding, ENT_QUOTES, 'UTF-8') . '"' . $dimAttrs . '>';
     }
 
     /** @param array<string,string> $attrs */

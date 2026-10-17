@@ -933,6 +933,14 @@ Themes that load `skin-starter.css` then `skin-editorial.css` (or similar) ship 
 
 Match shortcode caption typography on `.classic-markdown-figure .caption` / `figcaption.caption`. Put vertical margin on `.classic-markdown-figure`, not on the nested `img` (`.classic-markdown-figure img.classic-markdown { margin: 0 auto; }`).
 
+#### Custom image treatments & SVG filters
+
+If your theme applies custom visual color grading or SVG `<filter>` effects to content images (e.g. archive duotone, newsprint grain, tinting):
+
+1. **Document-scoped `<style>` for SVG filters:** External stylesheets resolve `url("#filter-id")` relative to the stylesheet URL rather than the document URL. This causes references to miss in-page `<filter>` definitions and silently drop the filter. Place such filter rules in an inline `<style>` block in `<head>` (e.g. in `partials/_head.html.twig`), with the hidden `<svg><defs>...</defs></svg>` container placed in `<body>` (as `<svg>` inside `<head>` can cause browsers to close `<head>` early).
+2. **Target current selectors:** Document-scoped filter rules must target `.traven-preview img.traven-image` (and `figure.traven-image-figure > img`), not the legacy pre-0.2.28 `img.traven-image-shortcode`.
+3. **Filter ordering:** If combining a sharpen convolution and a tone-mapping/tint filter on a single element, chain `#sharpen` before the tint (e.g. `filter: url("#sharpen") url("#tint") contrast(1.1);`) so convolution operates on raw luminances before color re-mapping.
+
 #### QA — image size matrix (published)
 
 On `demo-markdown` or equivalent fixture, confirm **on the published post page**:
