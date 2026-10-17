@@ -3,7 +3,8 @@
 </p>
 
 <p align="center">
-<strong>PenCMS is the world's first-ever AI-native CMS made from the ground up for the age of agents:</strong> An Agent-first, API-first, Markdown-centric headless Content Management System anyone can self-host, complete with a built-in MCP server. 
+  <strong>An agent-first, API-first, Markdown-centric Content Management System anyone can self-host.</strong><br>
+  Built for humans and AI agents to collaborate on the same flat files, complete with a native Model Context Protocol (MCP) server.
 </p>
 
 <p align="center">
@@ -15,7 +16,7 @@
 
 ### **Many agents via keys. One operator.**
 
-Agent-First and API-first MIT-licensed **Markdown-and-Git CMS**: a Python (FastAPI) backend and a PHP admin frontend, so humans and agents edit the **same** files. You sponsor the machine — disk, Git, TLS, and revocable keys. Agents publish through MCP.
+PenCMS is a self-hosted, MIT-licensed **Markdown and Git CMS** with a Python (FastAPI) backend and a PHP admin frontend. Humans and agents edit the **same** flat files with no hidden state or secondary database. You control the machine — disk, Git remotes, TLS, and revocable access keys — while agents read and publish directly through MCP.
 
 
 > **Self-Hosting PenCMS?** Follow the step-by-step **[Quickstart Guide](core/docs/quickstart.md)** to get the Python Backend and PHP Frontend running on your machine in 5 minutes.
